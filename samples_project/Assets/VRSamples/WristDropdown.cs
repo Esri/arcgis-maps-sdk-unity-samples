@@ -25,8 +25,8 @@ public class WristDropdown : MonoBehaviour
 			SceneChanged();
 		});
 		PopulateSampleSceneList();
-		//DisplayWristUI();
-		SetupVR();
+		DisplayWristUI();
+		//SetupVR();
 	}
 	public void MenuPressed(InputAction.CallbackContext context)
 	{
@@ -44,7 +44,7 @@ public class WristDropdown : MonoBehaviour
 	{
 		SceneDropdown.options.Clear();
 		var ApplicationPath = Application.dataPath;
-		var SamplePath = ApplicationPath + "/VRSample/Resources/SampleScenes/";
+		var SamplePath = ApplicationPath + "/VRSamples/Resources/SampleScenes/";
 		List<string> SceneList = new List<string>();
 		if (Directory.Exists(SamplePath))
 		{
