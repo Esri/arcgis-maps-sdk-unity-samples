@@ -16,18 +16,28 @@ public class WristDropdown : MonoBehaviour
 	public Dropdown SceneDropdown;
 	private string SceneName;
 	private XROrigin XRRig;
-	public GameObject One;
-	public GameObject Two;
 
-	void Start()
+    void Start()
 	{
+		DisplayWristUI();
+		
 		SceneDropdown.onValueChanged.AddListener(delegate {
 			SceneChanged();
 		});
 		PopulateSampleSceneList();
-		DisplayWristUI();
-		//SetupVR();
 	}
+
+	private void SceneChanged()
+	{
+		AddScene();
+	}
+	private void AddScene()
+	{
+		SceneName = SceneDropdown.options[SceneDropdown.value].text;
+		//The scene must also be added to the build settings list of scenes
+		SceneManager.LoadScene(SceneName);
+	}
+
 	public void MenuPressed(InputAction.CallbackContext context)
 	{
 		if (context.performed)
@@ -56,14 +66,9 @@ public class WristDropdown : MonoBehaviour
 			}
 		}
 		SceneDropdown.AddOptions(SceneList);
-		AddScene();
+		//AddScene();
 	}
-	private void AddScene()
-	{
-		SceneName = SceneDropdown.options[SceneDropdown.value].text;
-		//The scene must also be added to the build settings list of scenes
-		SceneManager.LoadSceneAsync(SceneName, new LoadSceneParameters(LoadSceneMode.Additive));
-	}
+
 	/*
 		//The ArcGISMapView object gets instantiated in our scenes and that results in the object living in the SampleViewer scene,
 		//not the scene we loaded. To work around this we need to remove it before loading the next scene
@@ -81,15 +86,7 @@ public class WristDropdown : MonoBehaviour
 			}
 		}
 	*/
-	private void SceneChanged()
-	{
-		var DoneUnLoadingOperation = SceneManager.UnloadSceneAsync(SceneName);
-		DoneUnLoadingOperation.completed += (AsyncOperation Operation) =>
-		{
-			//	RemoveArcGISMapView();
-			AddScene();
-		};
-	}
+
 
 	public void DisplayWristUI()
 	{
@@ -105,20 +102,6 @@ public class WristDropdown : MonoBehaviour
 		}
 	}
 
-	private void SetupVR()
-	{
-		ArcGISMapViewComponent arcGISMapViewComponent = FindObjectOfType<ArcGISMapViewComponent>();
-		XRRig = FindObjectOfType<XROrigin>();
-		if (arcGISMapViewComponent)
-			Debug.Log("found mapview component");
-		if (XRRig)
-			Debug.Log("found xr rig");
-
-		XRRig.transform.parent = arcGISMapViewComponent.transform;
-		One.transform.parent = Two.transform;
-
-
-	}
 	// Update is called once per frame
 	void Update()
 	{
