@@ -15,7 +15,6 @@ public class WristDropdown : MonoBehaviour
 	public bool activeWristUI = true;
 	public Dropdown SceneDropdown;
 	private string SceneName;
-	private XROrigin XRRig;
 
     void Start()
 	{
@@ -25,6 +24,13 @@ public class WristDropdown : MonoBehaviour
 			SceneChanged();
 		});
 		PopulateSampleSceneList();
+		//create initial scene
+		if(SceneManager.GetActiveScene().name == "SampleStart")
+        {
+			
+			AddScene();
+		}
+			
 	}
 
 	private void SceneChanged()
@@ -35,7 +41,8 @@ public class WristDropdown : MonoBehaviour
 	{
 		SceneName = SceneDropdown.options[SceneDropdown.value].text;
 		//The scene must also be added to the build settings list of scenes
-		SceneManager.LoadScene(SceneName);
+		if(SceneManager.GetActiveScene().name!=SceneName)
+			SceneManager.LoadScene(SceneName);
 	}
 
 	public void MenuPressed(InputAction.CallbackContext context)
