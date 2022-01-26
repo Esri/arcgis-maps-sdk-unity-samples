@@ -11,45 +11,58 @@ using Unity.XR.CoreUtils;
 public class WristDropdown : MonoBehaviour
 {
 	// Start is called before the first frame update
-	public GameObject wristUI;
-	public bool activeWristUI = true;
+	public GameObject HandUI;
+	public bool HandtUIActive = true;
 	public Dropdown SceneDropdown;
 	private string SceneName;
+	Dictionary<string,int> SceneMapping = new Dictionary<string, int>();
 
-    void Start()
+
+	void Start()
 	{
-		DisplayWristUI();
-		
-		SceneDropdown.onValueChanged.AddListener(delegate {
-			SceneChanged();
-		});
+		DisplayHandUI();
 		PopulateSampleSceneList();
+		SceneDropdown.onValueChanged.AddListener(delegate {
+				SceneChanged();
+		});
+		
 		//create initial scene
-		if(SceneManager.GetActiveScene().name == "SampleStart")
+		if (SceneManager.GetActiveScene().name == "SampleStart")
         {
-			
 			AddScene();
 		}
-			
+		UpdateDropDownSelection();		
 	}
 
 	private void SceneChanged()
 	{
-		AddScene();
+		string CurrentSelection = SceneDropdown.options[SceneDropdown.value].text;
+		string CurrentScene = SceneManager.GetActiveScene().name;
+		if (CurrentScene != CurrentSelection)
+			AddScene();
+	}
+	private void UpdateDropDownSelection()
+    {
+		string CurrentSelection = SceneDropdown.options[SceneDropdown.value].text;
+		string CurrentScene=SceneManager.GetActiveScene().name;
+		if(CurrentScene !=CurrentSelection)	
+		{
+			SceneDropdown.value = SceneMapping[CurrentScene];
+		}	
 	}
 	private void AddScene()
 	{
 		SceneName = SceneDropdown.options[SceneDropdown.value].text;
-		//The scene must also be added to the build settings list of scenes
-		if(SceneManager.GetActiveScene().name!=SceneName)
-			SceneManager.LoadScene(SceneName);
+		
+		SceneManager.LoadScene(SceneName);
+		//The scene must also be added to the build settings list of scenes		
 	}
 
 	public void MenuPressed(InputAction.CallbackContext context)
 	{
 		if (context.performed)
 		{
-			DisplayWristUI();
+			DisplayHandUI();
 		}
 	}
 	public void ExitGame()
@@ -63,6 +76,7 @@ public class WristDropdown : MonoBehaviour
 		var ApplicationPath = Application.dataPath;
 		var SamplePath = ApplicationPath + "/VRSamples/Resources/SampleScenes/";
 		List<string> SceneList = new List<string>();
+		int n = 0;
 		if (Directory.Exists(SamplePath))
 		{
 			var Scenes = Directory.EnumerateFiles(SamplePath, "*.unity");
@@ -70,42 +84,25 @@ public class WristDropdown : MonoBehaviour
 			{
 				string FileName = CurrentFile.Substring(SamplePath.Length, CurrentFile.Length - (".unity").Length - SamplePath.Length);
 				SceneList.Add(FileName);
+				SceneMapping[FileName] = n;
+				n++;
 			}
 		}
 		SceneDropdown.AddOptions(SceneList);
-		//AddScene();
 	}
 
-	/*
-		//The ArcGISMapView object gets instantiated in our scenes and that results in the object living in the SampleViewer scene,
-		//not the scene we loaded. To work around this we need to remove it before loading the next scene
-		private void RemoveArcGISMapView()
-		{
-			var ActiveScene = SceneManager.GetActiveScene();
-			var RootGOs = ActiveScene.GetRootGameObjects();
-			foreach (var RootGO in RootGOs)
-			{
-				var HP = RootGO.GetComponent<HPRoot>();
-				if (HP != null)
-				{
-					Destroy(RootGO);
-				}
-			}
-		}
-	*/
 
-
-	public void DisplayWristUI()
+	public void DisplayHandUI()
 	{
-		if (activeWristUI)
+		if (HandtUIActive)
 		{
-			wristUI.SetActive(false);
-			activeWristUI = false;
+			HandUI.SetActive(false);
+			HandtUIActive = false;
 		}
 		else
 		{
-			wristUI.SetActive(true);
-			activeWristUI = true;
+			HandUI.SetActive(true);
+			HandtUIActive = true;
 		}
 	}
 
