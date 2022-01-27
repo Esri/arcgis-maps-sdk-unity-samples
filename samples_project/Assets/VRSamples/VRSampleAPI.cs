@@ -37,6 +37,9 @@ public class VRSampleAPI : MonoBehaviour
 	public GameObject VRCamera;
 	private ArcGISMapViewComponent arcGISMapViewComponent;
 	private ArcGISCameraComponent cameraComponent;
+	private ArcGISCameraControllerComponent cameraControllerComponent;
+	private ArcGISLocationComponent cameraLocationComponent;
+	private ArcGISRebaseComponent cameraRebaseComponent;
 
 	private GeoPosition geographicCoordinates = new GeoPosition(-74.054921, 40.691242, 3000, (int)SpatialReferenceWkid.WGS84);
 
@@ -81,44 +84,26 @@ public class VRSampleAPI : MonoBehaviour
 	// ArcGIS Camera and Location components are added to a Camera game object to enable map rendering, player movement and tile loading
 	private void CreateArcGISCamera()
 	{
-		//cameraComponent = Camera.main.gameObject.GetComponent<ArcGISCameraComponent>();
 
-		var cameraComponent = VRCamera.AddComponent<ArcGISCameraComponent>();
+		VRRig.transform.SetParent(arcGISMapViewComponent.transform, false);
 
-		if (!cameraComponent)
-		{
-			//var cameraGameObject = Camera.main.gameObject;
-			var cameraGameObject = VRRig.gameObject;
+		if(!VRCamera.GetComponent<ArcGISCameraComponent>())
+			cameraComponent = VRCamera.AddComponent<ArcGISCameraComponent>();
+		// The Camera Controller component provides player movement to the Camera game object
+		if(!VRCamera.GetComponent<ArcGISCameraControllerComponent>())
+			cameraControllerComponent=VRCamera.AddComponent<ArcGISCameraControllerComponent>();
 
-			VRRig.AddComponent<ArcGISRebaseComponent>();
-
-			VRRig.transform.SetParent(arcGISMapViewComponent.transform, false);
-
-			// The Camera game object needs to be a child of the Map View game object in order for it to be correctly placed in the world
-			//cameraGameObject.transform.SetParent(arcGISMapViewComponent.transform, false);
-			VRRig.transform.SetParent(arcGISMapViewComponent.transform, false);
-
-			// The Camera Controller component provides player movement to the Camera game object
-			//cameraGameObject.AddComponent<ArcGISCameraControllerComponent>();
-
-			// The Rebase component adjusts the world origin to accound for 32 bit floating point precision issues as the camera moves around the scene
-			//cameraGameObject.AddComponent<ArcGISRebaseComponent>();
-			VRRig.AddComponent<ArcGISRebaseComponent>();
-		}
-
-		//var cameraLocationComponent = cameraComponent.GetComponent<ArcGISLocationComponent>();
-		ArcGISLocationComponent cameraLocationComponent = VRRig.GetComponent<ArcGISLocationComponent>();
-
-		if (!cameraLocationComponent)
-		{
-			// We need to add an ArcGISLocation component...
-			//cameraLocationComponent = cameraComponent.gameObject.AddComponent<ArcGISLocationComponent>();
-
-			// ...and update its position and rotation in geographic coordinates
-			cameraLocationComponent = VRRig.AddComponent<ArcGISLocationComponent>();
+		// The Rebase component adjusts the world origin to accound for 32 bit floating point precision issues as the camera moves around the scene
+		if(!VRCamera.GetComponent<ArcGISRebaseComponent>())
+			cameraRebaseComponent=VRCamera.AddComponent<ArcGISRebaseComponent>();
+		if(!VRCamera.GetComponent <ArcGISLocationComponent>())
+        {
+			cameraLocationComponent = VRCamera.AddComponent<ArcGISLocationComponent>();
 			cameraLocationComponent.Position = geographicCoordinates;
 			cameraLocationComponent.Rotation = new Rotator(65, 68, 0);
 		}
+		
+
 	}
 
 	// The ArcGISRenderer component holds and updates the map's tiles
@@ -256,40 +241,6 @@ public class VRSampleAPI : MonoBehaviour
 
 		// We have completed setup and are ready to assign the ArcGISMap object to the RendererView
 		arcGISMapViewComponent.RendererView.Map = arcGISMap;
-
-#if UNITY_EDITOR
-		// The editor camera is moved to the position of the Camera game object when the map type is changed in editor
-		if (!Application.isPlaying && SceneView.lastActiveSceneView != null)
-		{
-			SceneView.lastActiveSceneView.pivot = cameraComponent.transform.position;
-			SceneView.lastActiveSceneView.rotation = cameraComponent.transform.rotation;
-		}
-#endif
 	}
-	/*	void Update()
-		{
-			if (Left.Plus)
-			{
-				var HP = VRCamera.GetComponent<HPTransform>();
-				HP.UniversePosition = new Vector3(HP.UniversePosition.x + 1, HP.UniversePosition.y, HP.UniversePosition.z);
-			}
-			if (Left.Minus)
-			{
-				var HP = VRCamera.GetComponent<HPTransform>();
-				HP.UniversePosition = new Vector3(HP.UniversePosition.x - 1, HP.UniversePosition.y, HP.UniversePosition.z);
-			}
-
-			if (Right.Plus)
-			{
-				var HP = VRCamera.GetComponent<HPTransform>();
-				HP.UniversePosition = new Vector3(HP.UniversePosition.x, HP.UniversePosition.y, HP.UniversePosition.z + 1);
-			}
-			if (Right.Minus)
-			{
-				var HP = VRCamera.GetComponent<HPTransform>();
-				HP.UniversePosition = new Vector3(HP.UniversePosition.x, HP.UniversePosition.y, HP.UniversePosition.z - 1);
-			}
-		}
-
-		*/
+	
 }

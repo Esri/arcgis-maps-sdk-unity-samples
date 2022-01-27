@@ -2481,6 +2481,9 @@ GameObject:
   - component: {fileID: 2045082902}
   - component: {fileID: 2045082905}
   - component: {fileID: 2045082907}
+  - component: {fileID: 2045082910}
+  - component: {fileID: 2045082909}
+  - component: {fileID: 2045082908}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2690,6 +2693,53 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
+--- !u!114 &2045082908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2045082900}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6715ece696adb074bbe6b0103cdafcff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2045082909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2045082900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e295d62bf65a7247bc772a43507fd4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  position:
+    X: -8243722.540280868
+    Y: 4968424.1483094
+    Z: 2940.666248321533
+    SRWkid: 3857
+  rotation:
+    Heading: 0
+    Pitch: 90
+    Roll: 0
+--- !u!114 &2045082910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2045082900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27afbdfc83e47004e95ef7726ed4a9cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxSpeed: 2000000
+  MinSpeed: 1000
 --- !u!1 &2099179427
 GameObject:
   m_ObjectHideFlags: 0
