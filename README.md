@@ -7,3 +7,5 @@
 5. Open `SampleViewer.unity` from the `Assets/SampleViewer` folder in the Project window.
 
 To add a new sample scene add the `.unity` file in this directory `/SampleViewer/Resources/SampleScenes/` and also add the scene to the project settings build list(`File -> Build Settings` ).
+
+- [Unity C# Coding Style](coding-style-csharp.md)
