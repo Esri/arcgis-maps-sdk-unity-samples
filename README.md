@@ -1,3 +1,5 @@
+# This repo is currently private
+
 # arcgis-maps-sdk-unity-samples
 
 1. Clone this repo and add `samples_project` in the Unity Hub
@@ -9,3 +11,12 @@
 To add a new sample scene add the `.unity` file in this directory `/SampleViewer/Resources/SampleScenes/` and also add the scene to the project settings build list(`File -> Build Settings` ).
 
 - [Unity C# Coding Style](coding-style-csharp.md)
+- [List of sample ideas](https://esriis.sharepoint.com/:x:/r/teams/GameEngine/_layouts/15/Doc.aspx?sourcedoc=%7B0dcb8b4d-f1ab-406c-9286-8a79ab2f7bc8%7D&action=editnew)
+
+## PR Process
+
+Especially as we begin the process of figuring out how we structure our new samples the more the merrier on your PRs. Also while this is private PRs can be created against main. Testing on as many devices as possible and stating what testing has been done is also a good idea.
+
+## Issue management
+
+If you find a bug with the ArcGIS Maps SDK for Unity or with this sample viewer you can create an issue here. Same goes for a feature request on the sample viewer.
