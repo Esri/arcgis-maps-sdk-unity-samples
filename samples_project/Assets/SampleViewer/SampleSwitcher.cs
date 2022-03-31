@@ -58,6 +58,7 @@ public class SampleSwitcher : MonoBehaviour
         }
 
         SceneDropdown.AddOptions(SceneList);
+        AddScene();
     }
 
     private void AddScene()
