@@ -1,35 +1,33 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PathMovement : MonoBehaviour
 {
-
     public List<Transform> movements = new List<Transform>();
 
-    private float speed = 5f;
+    [SerializeField] private float speed = 5f;
 
-    private float distanceThreshold = 0.1f;
+    [SerializeField] private float distanceThreshold = 0.1f;
 
-    private int currentWaypoint;
-
+    private int waypointIndex;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         // Start player at first waypoint.
         transform.position = movements[0].position;
-
+        transform.LookAt(movements[0].position);
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        transform.position = Vector3.MoveTowards(transform.position, movements[currentWaypoint].position, speed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, movements[waypointIndex].position, speed * Time.deltaTime);
 
-        if(Vector3.Distance(transform.position, movements[currentWaypoint].position) < distanceThreshold)
+        if (Vector3.Distance(transform.position, movements[waypointIndex].position) < distanceThreshold)
         {
-            currentWaypoint = (currentWaypoint+1)%movements.Count;
+            waypointIndex = (waypointIndex + 1) % movements.Count;
+            transform.LookAt(movements[waypointIndex]);
         }
     }
 }
