@@ -168,6 +168,53 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &485871392
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 485871393}
+  - component: {fileID: 485871395}
+  m_Layer: 0
+  m_Name: Waypoints
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &485871393
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 485871392}
+  m_LocalRotation: {x: 0.0000027131637, y: 0.000000019877653, z: 0.000000024415222, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1280777579}
+  - {fileID: 620530753}
+  - {fileID: 908799258}
+  - {fileID: 2071250081}
+  m_Father: {fileID: 1681604015}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &485871395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 485871392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f723ccb10c914647aebe5f589cf775c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &520332239
 GameObject:
   m_ObjectHideFlags: 0
@@ -181,6 +228,7 @@ GameObject:
   - component: {fileID: 520332243}
   - component: {fileID: 520332242}
   - component: {fileID: 520332241}
+  - component: {fileID: 520332245}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -195,13 +243,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 520332239}
-  m_LocalRotation: {x: 0.000002067908, y: 0.28035197, z: 0.000011645702, w: 0.9598973}
-  m_LocalPosition: {x: -56.58211, y: -128.37172, z: 57.32973}
-  m_LocalScale: {x: 10, y: 5, z: 5}
+  m_LocalRotation: {x: 0.000002713111, y: 0.000000019878676, z: 0.000000024415222, w: 1}
+  m_LocalPosition: {x: -35.3, y: -168.7, z: 1.8}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 1681604015}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 32.562, z: 0.001}
+  m_LocalEulerAnglesHint: {x: 0.912, y: 2.012, z: -0.165}
 --- !u!65 &520332241
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -278,11 +326,58 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_IsInitialized: 1
   m_LocalPosition:
-    x: 40.61210459082657
-    y: -18.741732246786505
-    z: -41.949571864478976
-  m_LocalRotation: {x: 0.000003762641, y: 0.28034386, z: 0.0000019038482, w: 0.95989966}
+    x: 5.448710168711841
+    y: 23.612916717451753
+    z: -140.52464784681797
+  m_LocalRotation: {x: -5.2750693e-11, y: 1.0231815e-12, z: -6.433961e-16, w: 1}
+  m_LocalScale: {x: 5, y: 5, z: 5}
+--- !u!114 &520332245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 520332239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306ac83f97315f4479880e1632d56b52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movements:
+  - {fileID: 1280777579}
+  - {fileID: 620530753}
+  - {fileID: 908799258}
+  - {fileID: 2071250081}
+--- !u!1 &620530752
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 620530753}
+  m_Layer: 0
+  m_Name: Waypoint (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &620530753
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 620530752}
+  m_LocalRotation: {x: 0, y: 0.28034437, z: 0, w: 0.9598995}
+  m_LocalPosition: {x: 2.7, y: -166.5, z: 91.4}
   m_LocalScale: {x: 10, y: 5, z: 5}
+  m_Children: []
+  m_Father: {fileID: 485871393}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 32.56152, z: 0}
 --- !u!1 &684003164
 GameObject:
   m_ObjectHideFlags: 0
@@ -313,9 +408,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 684003164}
-  m_LocalRotation: {x: 0.4226219, y: 0.000011846432, z: 0.0000053339886, w: 0.9063061}
-  m_LocalPosition: {x: -125.696175, y: -34.31785, z: 51.79516}
-  m_LocalScale: {x: 1, y: 1, z: 0.9999999}
+  m_LocalRotation: {x: 0.34202015, y: -0, z: -0, w: 0.9396926}
+  m_LocalPosition: {x: -78.314316, y: 7.6871014, z: 79.492134}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 990959145}
   m_RootOrder: 1
@@ -458,15 +553,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e295d62bf65a7247bc772a43507fd4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isInitialized: 1
   position:
     X: -73.984988
     Y: 40.748131
-    Z: 150
+    Z: 200
     SRWkid: 4326
   rotation:
     Heading: 0
-    Pitch: 40
+    Pitch: 50
     Roll: 0
 --- !u!114 &684003169
 MonoBehaviour:
@@ -551,11 +645,41 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_IsInitialized: 1
   m_LocalPosition:
-    x: 1335030.1950463434
-    y: 4141371.299092987
-    z: -4651203.83521808
-  m_LocalRotation: {x: 0.0064650117, y: -0.13929985, z: 0.0009094618, w: 0.9902287}
-  m_LocalScale: {x: 1, y: 1, z: 0.9999999}
+    x: -8235971.1905064555
+    y: 200
+    z: 4975261.726933933
+  m_LocalRotation: {x: 0.34202015, y: 0, z: 0, w: 0.9396926}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+--- !u!1 &908799257
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 908799258}
+  m_Layer: 0
+  m_Name: Waypoint (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &908799258
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 908799257}
+  m_LocalRotation: {x: 0, y: 0.28034437, z: 0, w: 0.9598995}
+  m_LocalPosition: {x: -76.8, y: -166.5, z: 198.1}
+  m_LocalScale: {x: 10, y: 5, z: 5}
+  m_Children: []
+  m_Father: {fileID: 485871393}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 32.56152, z: 0}
 --- !u!850595691 &956311754
 LightingSettings:
   m_ObjectHideFlags: 0
@@ -627,8 +751,8 @@ GameObject:
   m_Component:
   - component: {fileID: 990959145}
   - component: {fileID: 990959144}
-  - component: {fileID: 990959143}
   - component: {fileID: 990959142}
+  - component: {fileID: 990959143}
   m_Layer: 0
   m_Name: LineOfSight
   m_TagString: Untagged
@@ -657,55 +781,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 990959141}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f82a9667e13ade543ab705cb0191e62c, type: 3}
+  m_Script: {fileID: 11500000, guid: c703502c1493f5b4eb3e95b2efe0271e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isInitialized: 1
   position:
-    X: -73.9834997074381
-    Y: 40.74766460361712
-    Z: 184.31640673856438
+    X: -73.984988
+    Y: 40.748131
+    Z: 200
     SRWkid: 4326
-  viewMode: 0
+  viewMode: 1
+  editorModeEnabled: 1
+  meshCollidersEnabled: 1
   RootChanged:
     m_PersistentCalls:
       m_Calls: []
-  CameraLocation:
-    position:
-      X: -73.984988
-      Y: 40.748131
-      Z: 150
-      SRWkid: 4326
-    rotation:
-      Heading: 0
-      Pitch: 40
-      Roll: 0
-  APIKey: 
-  Layers:
-  - Name: Buildings
-    Source: https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/New_York_LoD2_3D_Buildings/SceneServer/layers/0
-    Opacity: 100
-    Visible: 1
-    LayerType: 1
-  - Name: Elevation
-    Source: https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer
-    Opacity: 100
-    Visible: 1
-    LayerType: 2
-  BaseMap: 0
-  Extent:
-    Latitude: 40.73061
-    Longitude: -73.935242
-    Altitude: 0
-    Width: 100000
-    Length: 0
-    ExtentType: 2
-  TerrainElevation: 1
-  Configurations: []
-  ConfigMappings: []
-  cameraLocationComponent: {fileID: 684003168}
-  references:
-    version: 1
 --- !u!114 &990959144
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -719,10 +808,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_LocalPosition:
-    x: 1335167.5136109355
-    y: 4141354.4597725174
-    z: -4651226.63939814
-  m_LocalRotation: {x: -0.41263235, y: -0.12664436, z: -0.058052287, w: 0.90018094}
+    x: -8235892.876191419
+    y: 192.31289840690488
+    z: 4975182.234796494
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
 --- !u!4 &990959145
 Transform:
   m_ObjectHideFlags: 0
@@ -740,6 +829,36 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1280777578
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1280777579}
+  m_Layer: 0
+  m_Name: Waypoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1280777579
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1280777578}
+  m_LocalRotation: {x: 0, y: 0.28034437, z: 0, w: 0.9598995}
+  m_LocalPosition: {x: -55.9, y: -166.5, z: 25.9}
+  m_LocalScale: {x: 10, y: 5, z: 5}
+  m_Children: []
+  m_Father: {fileID: 485871393}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 32.56152, z: 0}
 --- !u!1 &1681604014
 GameObject:
   m_ObjectHideFlags: 0
@@ -771,6 +890,7 @@ Transform:
   m_Children:
   - {fileID: 1967499313}
   - {fileID: 520332240}
+  - {fileID: 485871393}
   m_Father: {fileID: 990959145}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -786,16 +906,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e295d62bf65a7247bc772a43507fd4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isInitialized: 1
   position:
-    X: -73.98465054249158
-    Y: 40.7485586123313
-    Z: 74.68757105269341
-    SRWkid: 4326
+    X: -8235933.624908454
+    Y: 4975324.560358271
+    Z: 0
+    SRWkid: 3857
   rotation:
-    Heading: 0.00021697546393444666
-    Pitch: 90.00107502199353
-    Roll: 0.00025126197227012
+    Heading: 0
+    Pitch: 90
+    Roll: 0
 --- !u!114 &1681604017
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -810,10 +929,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_IsInitialized: 1
   m_LocalPosition:
-    x: 1335033.2963590056
-    y: 4141358.115036119
-    z: -4651111.337737916
-  m_LocalRotation: {x: -0.41263455, y: -0.12663262, z: -0.058047153, w: 0.9001819}
+    x: -8235933.624908454
+    y: 0
+    z: 4975324.560358271
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
 --- !u!1 &1704199869
 GameObject:
@@ -825,6 +944,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1704199870}
   - component: {fileID: 1704199871}
+  - component: {fileID: 1704199872}
   m_Layer: 0
   m_Name: ArcGISMap
   m_TagString: Untagged
@@ -858,6 +978,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1adb07e07fe0aac4a848279015c917f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1704199872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1704199869}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc32dc1ae6b317946b4e7e8db5fc1e04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  APIKey: 
+  Basemap: https://www.arcgis.com/sharing/rest/content/items/8d569fbc4dc34f68abae8d72178cee05/data
+  Elevation: 
+  Layers:
+  - Type: 1
+    Url: https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/New_York_LoD2_3D_Buildings/SceneServer/layers/0
+    Opacity: 1
+  - Type: 2
+    Url: https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer
+    Opacity: 1
 --- !u!1 &1967499312
 GameObject:
   m_ObjectHideFlags: 0
@@ -871,6 +1013,7 @@ GameObject:
   - component: {fileID: 1967499316}
   - component: {fileID: 1967499315}
   - component: {fileID: 1967499314}
+  - component: {fileID: 1967499318}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -885,8 +1028,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1967499312}
-  m_LocalRotation: {x: 0.0000011095037, y: 0.000008475872, z: 0.000009832172, w: 1}
-  m_LocalPosition: {x: -93.78216, y: -109.57201, z: 71.32999}
+  m_LocalRotation: {x: 0.000002713111, y: 0.000000019878676, z: 0.000000024415222, w: 1}
+  m_LocalPosition: {x: -56.557205, y: -79.970406, z: 68.93056}
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 1681604015}
@@ -968,11 +1111,54 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_IsInitialized: 1
   m_LocalPosition:
-    x: 3.412191340326416
-    y: 0.058750762399967016
-    z: -27.949981499208164
-  m_LocalRotation: {x: -5.1759864e-11, y: 1.087578e-12, z: 5.2559276e-11, w: 1}
+    x: -15.808497701771557
+    y: 112.3428704833209
+    z: -73.3945696502924
+  m_LocalRotation: {x: -5.2750693e-11, y: 1.0231815e-12, z: -6.433961e-16, w: 1}
   m_LocalScale: {x: 5, y: 5, z: 5}
+--- !u!114 &1967499318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1967499312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be42a5f3231c6b64aae2288bbca101dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OtherTransform: {fileID: 520332240}
+--- !u!1 &2071250080
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2071250081}
+  m_Layer: 0
+  m_Name: Waypoint (3)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2071250081
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2071250080}
+  m_LocalRotation: {x: 0, y: 0.28034437, z: 0, w: 0.9598995}
+  m_LocalPosition: {x: -184.6, y: -166.5, z: 86.9}
+  m_LocalScale: {x: 10, y: 5, z: 5}
+  m_Children: []
+  m_Father: {fileID: 485871393}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 32.56152, z: 0}
 --- !u!1 &2126474166
 GameObject:
   m_ObjectHideFlags: 0
