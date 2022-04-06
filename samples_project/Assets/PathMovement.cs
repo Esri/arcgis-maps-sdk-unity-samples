@@ -1,11 +1,13 @@
-using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PathMovement : MonoBehaviour
 {
-    public List<Transform> movements = new List<Transform>();
+    [SerializeField] private GameObject waypointParent;
 
-    [SerializeField] private float speed = 5f;
+    private Transform[] waypointTransforms;
+
+    [SerializeField] private float speed = 15f;
 
     [SerializeField] private float distanceThreshold = 0.1f;
 
@@ -14,20 +16,27 @@ public class PathMovement : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        // Start player at first waypoint.
-        transform.position = movements[0].position;
-        transform.LookAt(movements[0].position);
+        // Get all of the child waypoint transforms.
+        waypointTransforms = waypointParent.GetComponentsInChildren<Transform>().Skip(1).ToArray();
+
+        // Start the player at the first waypoint.
+        transform.position = waypointTransforms[0].position;
     }
 
     // Update is called once per frame
     private void Update()
     {
-        transform.position = Vector3.MoveTowards(transform.position, movements[waypointIndex].position, speed * Time.deltaTime);
+        // Move the object in the direction of the next waypoint.
+        transform.position = Vector3.MoveTowards(transform.position, waypointTransforms[waypointIndex].position, speed * Time.deltaTime);
 
-        if (Vector3.Distance(transform.position, movements[waypointIndex].position) < distanceThreshold)
+        // Check if the object is close to the next waypoint.
+        if (Vector3.Distance(transform.position, waypointTransforms[waypointIndex].position) < distanceThreshold)
         {
-            waypointIndex = (waypointIndex + 1) % movements.Count;
-            transform.LookAt(movements[waypointIndex]);
+            // Increment the next waypoint.
+            waypointIndex = (waypointIndex + 1) % waypointTransforms.Length;
+
+            // Point the object towards the next waypoint.
+            transform.LookAt(waypointTransforms[waypointIndex]);
         }
     }
 }
