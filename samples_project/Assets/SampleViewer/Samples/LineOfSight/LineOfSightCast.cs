@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LineOfSightCast : MonoBehaviour
@@ -8,11 +6,13 @@ public class LineOfSightCast : MonoBehaviour
 
     public Transform Cylinder;
 
+    public Renderer LineMaterial;
+
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (TargetTransform == null || Cylinder == null) return;
-        
+
         // Calculate the direction between the sphere and the target.
         var rayDirection = TargetTransform.position - transform.position;
 
@@ -25,13 +25,13 @@ public class LineOfSightCast : MonoBehaviour
             // Check if the raycast hit the target object.
             if (HitInfo.transform == TargetTransform)
             {
-                // enemy can see the player!
-                Debug.Log("Hit!");
+                // Set the visible property of the shader graph.
+                LineMaterial.material.SetInt("Visible", 1);
             }
             else
             {
-                // there is something obstructing the view
-                Debug.Log("No hit!");
+                // Set the visible property of the shader graph.
+                LineMaterial.material.SetInt("Visible", 0);
             }
 
             // Rotate the cylinder to the look towards the raycast hit.
