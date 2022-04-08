@@ -2,16 +2,16 @@ using UnityEngine;
 
 public class LineOfSightCast : MonoBehaviour
 {
-    public Transform TargetTransform;
+    [SerializeField] private Transform TargetTransform;
 
-    public Transform Cylinder;
+    [SerializeField] private Transform LOSCylinder;
 
-    public Renderer LineMaterial;
+    [SerializeField] private Renderer LineMaterial;
 
     // Update is called once per frame
     private void Update()
     {
-        if (TargetTransform == null || Cylinder == null) return;
+        if (TargetTransform == null || LOSCylinder == null) return;
 
         // Calculate the direction between the sphere and the target.
         var rayDirection = TargetTransform.position - transform.position;
@@ -26,22 +26,22 @@ public class LineOfSightCast : MonoBehaviour
             if (HitInfo.transform == TargetTransform)
             {
                 // Set the visible property of the shader graph.
-                LineMaterial.material.SetInt("Visible", 1);
+                LineMaterial.material.SetInt("LineOfSightHit", 1);
             }
             else
             {
                 // Set the visible property of the shader graph.
-                LineMaterial.material.SetInt("Visible", 0);
+                LineMaterial.material.SetInt("LineOfSightHit", 0);
             }
 
             // Rotate the cylinder to the look towards the raycast hit.
-            Cylinder.LookAt(HitInfo.point);
+            LOSCylinder.LookAt(HitInfo.point);
 
             // Move the cylinder to halfway between the sphere and the hit point.
-            Cylinder.position = (transform.position + HitInfo.point) / 2;
+            LOSCylinder.position = (transform.position + HitInfo.point) / 2;
 
             // Set the cylinder height to the distance of the ray cast.
-            Cylinder.localScale = new Vector3(Cylinder.localScale.x, Cylinder.localScale.y, HitInfo.distance);
+            LOSCylinder.localScale = new Vector3(LOSCylinder.localScale.x, LOSCylinder.localScale.y, HitInfo.distance);
         }
     }
 }
