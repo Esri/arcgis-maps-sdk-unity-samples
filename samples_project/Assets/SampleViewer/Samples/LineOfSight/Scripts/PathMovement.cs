@@ -3,13 +3,13 @@ using UnityEngine;
 
 public class PathMovement : MonoBehaviour
 {
-    [SerializeField] private GameObject waypointParent;
+    [SerializeField] private GameObject WaypointParent;
 
     private Transform[] waypointTransforms;
 
-    [SerializeField] private float speed = 15f;
+    [SerializeField] private float Speed = 15f;
 
-    [SerializeField] private float distanceThreshold = 0.1f;
+    [SerializeField] private float DistanceThreshold = 0.1f;
 
     private int waypointIndex;
 
@@ -17,7 +17,7 @@ public class PathMovement : MonoBehaviour
     private void Start()
     {
         // Get all of the child waypoint transforms.
-        waypointTransforms = waypointParent.GetComponentsInChildren<Transform>().Skip(1).ToArray();
+        waypointTransforms = WaypointParent.GetComponentsInChildren<Transform>().Skip(1).ToArray();
 
         // Start the player at the first waypoint.
         transform.position = waypointTransforms[0].position;
@@ -27,10 +27,10 @@ public class PathMovement : MonoBehaviour
     private void Update()
     {
         // Move the object in the direction of the next waypoint.
-        transform.position = Vector3.MoveTowards(transform.position, waypointTransforms[waypointIndex].position, speed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, waypointTransforms[waypointIndex].position, Speed * Time.deltaTime);
 
         // Check if the object is close to the next waypoint.
-        if (Vector3.Distance(transform.position, waypointTransforms[waypointIndex].position) < distanceThreshold)
+        if (Vector3.Distance(transform.position, waypointTransforms[waypointIndex].position) < DistanceThreshold)
         {
             // Increment the next waypoint.
             waypointIndex = (waypointIndex + 1) % waypointTransforms.Length;
