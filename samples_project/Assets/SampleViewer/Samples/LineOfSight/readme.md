@@ -10,8 +10,9 @@ Show a line of sight between two objects. Check if the line of sight is obstruct
 2. Create a parent object with an `Arc GIS Location` Component.
 3. Create child game objects in the scene that use `Transform` components.
 4. Move an object around the scene so that it comes in and out of the "view" of another object.
-5. Check for any obstructions between objects using the `Physics.Raycast` method.
-6. Use the `RaycastHit.point` property to determine where the line of sight from the first object collides.
+5. Add any objects that may interfere with the raycast check to the "Ignore Raycast" layer.
+6. Check for any obstructions between objects using the `Physics.Raycast` method.
+7. Use the `RaycastHit.point` property to determine where the line of sight from the first object collides.
 
 ## Tags
 
