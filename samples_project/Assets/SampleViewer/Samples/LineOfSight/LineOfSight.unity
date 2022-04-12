@@ -246,7 +246,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 684003164}
   m_LocalRotation: {x: 0.24607295, y: 0.75372463, z: -0.4207213, w: 0.44084117}
-  m_LocalPosition: {x: -59.12329, y: 122.41003, z: 28.387953}
+  m_LocalPosition: {x: -32.833847, y: 48.98179, z: 19.482552}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 990959145}
@@ -726,9 +726,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_LocalPosition:
-    x: -8235944.901063916
-    y: 126.57175922393799
-    z: 4975252.821532822
+    x: -8235971.1905064555
+    y: 200
+    z: 4975261.726933933
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
 --- !u!4 &990959145
 Transform:
@@ -818,8 +818,7 @@ GameObject:
   - component: {fileID: 1458383922}
   - component: {fileID: 1458383925}
   - component: {fileID: 1458383924}
-  - component: {fileID: 1458383923}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: SightLine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -840,20 +839,6 @@ Transform:
   m_Father: {fileID: 1681604015}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &1458383923
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1458383921}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!23 &1458383924
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -873,7 +858,7 @@ MeshRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 306f0e7179564444491b57fac707761f, type: 2}
+  - {fileID: 2100000, guid: df85fd9fe8585564ca72f292f3f82a1e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -959,7 +944,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1681604014}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 11.276155, y: -126.57176, z: 71.73882}
+  m_LocalPosition: {x: 37.565598, y: -200, z: 62.833424}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1967499313}
@@ -1085,7 +1070,7 @@ GameObject:
   - component: {fileID: 1967499315}
   - component: {fileID: 1967499314}
   - component: {fileID: 1967499318}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1115,7 +1100,7 @@ SphereCollider:
   m_GameObject: {fileID: 1967499312}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
