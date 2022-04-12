@@ -32,17 +32,17 @@ public class LineOfSightCast : MonoBehaviour
             {
                 // Set the visible property of the shader graph.
                 LineMaterial.material.SetColor("ShaderColor", Color.red);
-
             }
 
             // Rotate the cylinder to the look towards the raycast hit.
             LOSCylinder.LookAt(HitInfo.point);
+            LOSCylinder.Rotate(new Vector3(90, 0, 0));
 
             // Move the cylinder to halfway between the sphere and the hit point.
             LOSCylinder.position = (transform.position + HitInfo.point) / 2;
 
             // Set the cylinder height to the distance of the ray cast.
-            LOSCylinder.localScale = new Vector3(LOSCylinder.localScale.x, LOSCylinder.localScale.y, HitInfo.distance);
+            LOSCylinder.localScale = new Vector3(LOSCylinder.localScale.x, HitInfo.distance / 2, LOSCylinder.localScale.z);
         }
     }
 }
