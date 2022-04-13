@@ -17,7 +17,10 @@ public class PathMovement : MonoBehaviour
     private void Start()
     {
         // Get all of the child waypoint transforms.
-        waypointTransforms = WaypointParent.GetComponentsInChildren<Transform>().Skip(1).ToArray();
+        Transform[] transforms = WaypointParent.GetComponentsInChildren<Transform>();
+
+        // Remove the first transform (the parent game object's transform).
+        waypointTransforms = transforms.Skip(1).ToArray();
 
         // Start the player at the first waypoint.
         transform.position = waypointTransforms[0].position;
