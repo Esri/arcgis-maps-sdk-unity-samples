@@ -258,6 +258,7 @@ GameObject:
   - component: {fileID: 177257149}
   - component: {fileID: 177257148}
   - component: {fileID: 177257147}
+  - component: {fileID: 177257150}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -313,6 +314,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &177257150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 177257146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7a1fcb0d5e135d429750d74680ff277, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &292090700
 GameObject:
   m_ObjectHideFlags: 0
@@ -385,7 +398,6 @@ GameObject:
   - component: {fileID: 338373443}
   - component: {fileID: 338373442}
   - component: {fileID: 338373441}
-  - component: {fileID: 338373444}
   m_Layer: 5
   m_Name: StadiumSelector
   m_TagString: Untagged
@@ -508,18 +520,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 338373439}
   m_CullTransparentMesh: 1
---- !u!114 &338373444
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 338373439}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e8d8f1a298e617419414020f7fc802e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &506338018
 GameObject:
   m_ObjectHideFlags: 0
