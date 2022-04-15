@@ -48,11 +48,6 @@ public class FeatureLayerQuery : MonoBehaviour
         // To learn more about the Feature Layer rest API and all the things that are possible checkout
         // https://developers.arcgis.com/rest/services-reference/enterprise/query-feature-service-layer-.htm
 
-        // f=geojson is the output format
-        // where=1=1 gets every feature. geometry based or more intelligent where clauses should be used
-        //     with larger datasets
-        // outSR=4326 gets the return geometries in the SR 4326
-        // outFields=LEAGUE,TEAM,NAME specifies the fields we want in the response
         string QueryRequestURL = FeatureLayerURL + "/Query?" + MakeRequestHeaders();
         UnityWebRequest Request = UnityWebRequest.Get(QueryRequestURL);
         yield return Request.SendWebRequest();
@@ -69,6 +64,11 @@ public class FeatureLayerQuery : MonoBehaviour
     }
 
     // Creates the Request Headers to be used in our HTTP Request
+    // f=geojson is the output format
+    // where=1=1 gets every feature. geometry based or more intelligent where clauses should be used
+    //     with larger datasets
+    // outSR=4326 gets the return geometries in the SR 4326
+    // outFields=LEAGUE,TEAM,NAME specifies the fields we want in the response
     private string MakeRequestHeaders()
     {
         string[] OutFields =
@@ -93,7 +93,7 @@ public class FeatureLayerQuery : MonoBehaviour
         {
             "f=geojson",
             "where=1=1",
-            "outSR=" +FeatureSRWKID.ToString(),
+            "outSR=" + FeatureSRWKID.ToString(),
             OutFieldHeader
         };
 
@@ -123,8 +123,10 @@ public class FeatureLayerQuery : MonoBehaviour
         string GeometryPrefix = "coordinates\":[";
         string PropertyPrefix = "properties\":{";
 
-        while (MoreFeatures)
+        do
         {
+            MoreFeatures = false;
+
             int GeometryIndex = RemainingResponse.IndexOf(GeometryPrefix);
             int PropertyIndex = RemainingResponse.IndexOf(PropertyPrefix, GeometryIndex);
             int NextGeometryIndex = RemainingResponse.IndexOf(GeometryPrefix, PropertyIndex);
@@ -133,13 +135,14 @@ public class FeatureLayerQuery : MonoBehaviour
             string PropertyInfo;
             if (NextGeometryIndex <= 0)
             {
+                // This is the last feature
                 PropertyInfo = RemainingResponse.Substring(PropertyIndex);
-                MoreFeatures = false;
             }
             else
             {
                 PropertyInfo = RemainingResponse.Substring(PropertyIndex, NextGeometryIndex - PropertyIndex);
                 RemainingResponse = RemainingResponse.Substring(NextGeometryIndex);
+                MoreFeatures = true;
             }
 
             string[] LonLat = GeometryInfo.Substring(GeometryPrefix.Length, GeometryInfo.IndexOf(']') - GeometryPrefix.Length).Split(',');
@@ -173,7 +176,7 @@ public class FeatureLayerQuery : MonoBehaviour
             }
             StadiumInfo.ArcGISCamera = ArcGISCamera;
             StadiumInfo.SetSpawnHeight(StadiumSpawnHeight);
-        }
+        } while (MoreFeatures);
     }
 
     // Populates the stadium drown down with all the stadium names from the Stadiums list
@@ -203,7 +206,7 @@ public class FeatureLayerQuery : MonoBehaviour
                     return;
                 }
                 var CameraLocation = ArcGISCamera.GetComponent<ArcGISLocationComponent>();
-                var NewPosition = StadiumLocation.Position;
+                GeoPosition NewPosition = StadiumLocation.Position;
                 NewPosition.Z = StadiumSpawnHeight;
                 CameraLocation.Position = NewPosition;
                 CameraLocation.Rotation = StadiumLocation.Rotation;

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Esri.ArcGISMapsSDK.Components;
@@ -29,7 +28,7 @@ public class StadiumInfo : MonoBehaviour
     {
         Infos.Add(Info);
 
-        // Based on if the stadium is in the national or amerian league we will render the stadium differently
+        // Based on which leage team belongs to, either the national or american league, we will render the stadium differently
         // See StadiumMaterial.shadergraph for how this is being accomplished
         var StadiumMaterials = StadiumRender.materials;
         if (Info == "National")
@@ -79,7 +78,7 @@ public class StadiumInfo : MonoBehaviour
         }
     }
 
-    // Feature Layer's do not contain information about the object height.
+    // This Feature Layer does not contain information about the feature's altitude.
     // To account for this when we get within a certain distance. Cast a ray down
     // to find the height of the ground.
     // The reason we are checking within a distance is because we only stream data for what we are looking 
@@ -98,7 +97,7 @@ public class StadiumInfo : MonoBehaviour
             {
                 // Modify the Stadiums altitude based off the raycast hit
                 var StadiumLocationComponent = transform.GetComponent<ArcGISLocationComponent>();
-                var Position = StadiumLocationComponent.Position;
+                GeoPosition Position = StadiumLocationComponent.Position;
                 Position.Z -= hitInfo.distance;
                 StadiumLocationComponent.Position = Position;
 
