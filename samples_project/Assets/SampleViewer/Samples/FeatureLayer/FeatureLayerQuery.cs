@@ -6,6 +6,40 @@ using UnityEngine.UI;
 using Esri.ArcGISMapsSDK.Components;
 using Esri.ArcGISMapsSDK.Utils.GeoCoord;
 
+// The follow System.Serializable classes are used to define the REST API response
+// in order to leverage Unity's JsonUtility.
+// When implementing your own version of this the Baseball Properties would need to 
+// be updated.
+[System.Serializable]
+public class FeatureCollectionData
+{
+    public string type;
+    public Feature[] features;
+}
+
+[System.Serializable]
+public class Feature
+{
+    public string type;
+    public Geometry geometry;
+    public BaseballProperties properties;
+}
+
+[System.Serializable]
+public class BaseballProperties
+{
+    public string LEAGUE;
+    public string TEAM;
+    public string NAME;
+}
+
+[System.Serializable]
+public class Geometry
+{
+    public string type;
+    public double[] coordinates;
+}
+
 // This class issues a query request to a Feature Layer which it then parses to create GameObjects at accurate locations
 // with correct property values. This is a good starting point if you are looking to parse your own feature layer into Unity.
 public class FeatureLayerQuery : MonoBehaviour
@@ -110,48 +144,24 @@ public class FeatureLayerQuery : MonoBehaviour
 
         return ReturnValue;
     }
-    
+
     // Given a valid response from our query request to the feature layer, this method will parse the response text
     // into geometries and properties which it will use to create new GameObjects and locate them correctly in the world.
     // This logic will differ based on the properties you are trying to parse out of the response.
     private void CreateGameObjectsFromResponse(string Response)
     {
-        bool MoreFeatures = true;
+        // Deserialize the JSON response from the query.
+        var deserialized = JsonUtility.FromJson<FeatureCollectionData>(Response);
 
-        string RemainingResponse = Response;
-
-        string GeometryPrefix = "coordinates\":[";
-        string PropertyPrefix = "properties\":{";
-
-        do
+        foreach (Feature feature in deserialized.features)
         {
-            MoreFeatures = false;
-
-            int GeometryIndex = RemainingResponse.IndexOf(GeometryPrefix);
-            int PropertyIndex = RemainingResponse.IndexOf(PropertyPrefix, GeometryIndex);
-            int NextGeometryIndex = RemainingResponse.IndexOf(GeometryPrefix, PropertyIndex);
-
-            string GeometryInfo = RemainingResponse.Substring(GeometryIndex, PropertyIndex - GeometryIndex);
-            string PropertyInfo;
-            if (NextGeometryIndex <= 0)
-            {
-                // This is the last feature
-                PropertyInfo = RemainingResponse.Substring(PropertyIndex);
-            }
-            else
-            {
-                PropertyInfo = RemainingResponse.Substring(PropertyIndex, NextGeometryIndex - PropertyIndex);
-                RemainingResponse = RemainingResponse.Substring(NextGeometryIndex);
-                MoreFeatures = true;
-            }
-
-            string[] LonLat = GeometryInfo.Substring(GeometryPrefix.Length, GeometryInfo.IndexOf(']') - GeometryPrefix.Length).Split(',');
-            double Longitude = double.Parse(LonLat[0]);
-            double Latitude = double.Parse(LonLat[1]);
+            double Longitude = feature.geometry.coordinates[0];
+            double Latitude = feature.geometry.coordinates[1];
 
             GeoPosition Position = new GeoPosition(Longitude, Latitude, StadiumSpawnHeight, FeatureSRWKID);
 
             var NewStadium = Instantiate(StadiumPrefab, this.transform);
+            NewStadium.name = feature.properties.NAME;
             Stadiums.Add(NewStadium);
             NewStadium.SetActive(true);
 
@@ -159,28 +169,19 @@ public class FeatureLayerQuery : MonoBehaviour
             LocationComponent.enabled = true;
             LocationComponent.Position = Position;
 
-            string[] Properties = PropertyInfo.Substring(PropertyPrefix.Length, PropertyInfo.IndexOf('}') - PropertyPrefix.Length).Split(',');
-
             var StadiumInfo = NewStadium.GetComponent<StadiumInfo>();
-            foreach (string Property in Properties)
-            {
-                string[] KeyValue = Property.Split(':');
-                string Key = KeyValue[0].Replace("\"", "");
-                string Value = KeyValue[1].Replace("\"", "");
-                StadiumInfo.SetInfo(Value);
 
-                if (Key.Equals("name", System.StringComparison.CurrentCultureIgnoreCase))
-                {
-                    NewStadium.name = Value;
-                }
-            }
+            StadiumInfo.SetInfo(feature.properties.NAME);
+            StadiumInfo.SetInfo(feature.properties.TEAM);
+            StadiumInfo.SetInfo(feature.properties.LEAGUE);
+
             StadiumInfo.ArcGISCamera = ArcGISCamera;
             StadiumInfo.SetSpawnHeight(StadiumSpawnHeight);
-        } while (MoreFeatures);
+        }
     }
 
-    // Populates the stadium drown down with all the stadium names from the Stadiums list
-    private void PopulateStadiumDropdown()
+        // Populates the stadium drown down with all the stadium names from the Stadiums list
+        private void PopulateStadiumDropdown()
     {
         //Populate Stadium name drop down
         List<string> StadiumNames = new List<string>();
