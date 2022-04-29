@@ -180,8 +180,8 @@ public class FeatureLayerQuery : MonoBehaviour
         }
     }
 
-        // Populates the stadium drown down with all the stadium names from the Stadiums list
-        private void PopulateStadiumDropdown()
+    // Populates the stadium drown down with all the stadium names from the Stadiums list
+    private void PopulateStadiumDropdown()
     {
         //Populate Stadium name drop down
         List<string> StadiumNames = new List<string>();
