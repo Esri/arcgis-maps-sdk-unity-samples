@@ -19,7 +19,6 @@ public class SampleSwitcher : MonoBehaviour
 {
     public Dropdown PipelineTypeDropdown;
     public Dropdown SceneDropdown;
-    public GameObject LightingObject;
     private string PipelineType;
     private string SceneName;
 
@@ -99,15 +98,6 @@ public class SampleSwitcher : MonoBehaviour
         PipelineType = PipelineTypeDropdown.options[PipelineTypeDropdown.value].text;
         RenderPipelineAsset pipeline = Resources.Load<RenderPipelineAsset>("SampleGraphicSettings/Sample" + PipelineType + "ipeline");
         GraphicsSettings.renderPipelineAsset = pipeline;
-
-        if (PipelineType == "HDRP")
-        {
-            LightingObject.SetActive(true);
-        }
-        else
-        {
-            LightingObject.SetActive(false);
-        }
 
         SceneChanged();
     }
