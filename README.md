@@ -8,7 +8,8 @@
 4. Install the most recent `ArcGISMapsSDK.unitypackage`. In the header bar navigate to `Assets -> Import Package -> Custom Package` and select `ArcGISMapsSDK.unitypackage`.
 5. Open `SampleViewer.unity` from the `Assets/SampleViewer` folder in the Project window.
 
-To add a new sample scene add the `.unity` file in this directory `/SampleViewer/Resources/SampleScenes/` and also add the scene to the project settings build list(`File -> Build Settings` ).
+To add a new sample scene add the `.unity` file in this directory `Assets/SampleViewer/Samples/` and also add the scene to the project settings build list(`File -> Build Settings`).
+In addition, to ensure your scene and the `SampleViewer.unity` scene (which is used to preview all scenes) has good lighting add the `LightingManager` prefab to your scene found in `Assets/SampleViewer/Resources/SampleGraphicSettings`.
 
 - [Unity C# Coding Style](coding-style-csharp.md)
 - [List of sample ideas](https://esriis.sharepoint.com/:x:/r/teams/GameEngine/_layouts/15/Doc.aspx?sourcedoc=%7B0dcb8b4d-f1ab-406c-9286-8a79ab2f7bc8%7D&action=editnew)
