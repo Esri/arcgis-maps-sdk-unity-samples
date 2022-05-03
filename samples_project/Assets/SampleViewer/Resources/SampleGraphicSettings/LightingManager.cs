@@ -14,15 +14,7 @@ public class LightingManager : MonoBehaviour
 
     void Start()
     {
-        if (ActivePipelineIsHDRP())
-        {
-            HDRPLighting.SetActive(true);
-            URPLighting.SetActive(false);
-        }
-        else if (!ActivePipelineIsHDRP())
-        {
-            HDRPLighting.SetActive(false);
-            URPLighting.SetActive(true);
-        }
+        HDRPLighting.SetActive(ActivePipelineIsHDRP());
+        URPLighting.SetActive(!ActivePipelineIsHDRP());
     }
 }
