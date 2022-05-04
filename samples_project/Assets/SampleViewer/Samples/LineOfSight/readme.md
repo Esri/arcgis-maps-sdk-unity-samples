@@ -14,6 +14,12 @@ Show a line of sight between two objects. Check if the line of sight is obstruct
 6. Check for any obstructions between objects using the `Physics.Raycast` method.
 7. Use the `RaycastHit.point` property to determine where the line of sight from the first object collides.
 
+## About the data
+
+Building models for New York are loaded from a [3D object layer](https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/New_York_LoD2_3D_Buildings/SceneServer/layers/0) hosted by Esri.
+
+Elevation data is loaded from the [Terrain 3D elevation layer](https://www.arcgis.com/home/item.html?id=7029fb60158543ad845c7e1527af11e4) hosted by Esri.
+
 ## Tags
 
 line of sight, raycast, visibility, visibility analysis
