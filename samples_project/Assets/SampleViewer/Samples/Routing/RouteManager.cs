@@ -1,34 +1,22 @@
+using System.Net.Http;
+using System.Threading.Tasks;
+
 using Esri.ArcGISMapsSDK.Utils.GeoCoord;
 using Esri.ArcGISMapsSDK.Utils.Math;
 using Esri.HPFramework;
 using Esri.ArcGISMapsSDK.Components;
 
 using UnityEngine;
-
+using Newtonsoft.Json.Linq;
 
 public class RouteManager : MonoBehaviour
 {
-    public static RouteManager Instance;
-
-    public GeoPosition ActiveStadium;
     public GameObject RouteMarker;
 
     private HPRoot hpRoot;
     private GameObject ActiveWayPoint;
     private ArcGISMapViewComponent arcGISMapViewComponent;
 
-
-    void Awake()
-    {
-        if (Instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
-    }
 
     void Start()
     {
@@ -58,22 +46,20 @@ public class RouteManager : MonoBehaviour
                 var locationComponent = routeMarker.GetComponent<ArcGISLocationComponent>();
                 locationComponent.enabled = true;
                 locationComponent.Position = geoPosition;
-
-                if (ActiveStadium != null)
-                    HandleRoute(ActiveStadium, locationComponent.Position);
+                locationComponent.Rotation = new Rotator(0, 90, 0);
             }
         }
     }
     
     /// <summary>
     /// Return GeoPosition Based on RaycastHit; I.E. Where the user clicked in the Scene.
-    /// We are using RootUniversePosition over RootUniversePosition because "Input Reason Here".
+    /// We are using DRootUniversePosition over RootUniversePosition because it is more specific.
     /// </summary>
     /// <param name="hit"></param>
     /// <returns></returns>
     private GeoPosition HitToGeoPosition(RaycastHit hit)
     {
-        var rup = hpRoot.RootUniversePosition;
+        var rup = hpRoot.DRootUniversePosition;
 
         var v3 = new Vector3d(
             hit.point.x + rup.x, 
@@ -86,7 +72,8 @@ public class RouteManager : MonoBehaviour
 
     private async void HandleRoute(GeoPosition start, GeoPosition end)
     {
-
+        var s = new JArray();
+        var e = new JArray();
     }
 
 }

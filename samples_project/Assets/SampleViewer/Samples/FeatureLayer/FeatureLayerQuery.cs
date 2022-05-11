@@ -211,8 +211,6 @@ public class FeatureLayerQuery : MonoBehaviour
                 NewPosition.SetZ(StadiumSpawnHeight);
                 CameraLocation.Position = NewPosition;
                 CameraLocation.Rotation = StadiumLocation.Rotation;
-
-                RouteManager.Instance.ActiveStadium = NewPosition;
             }
         }
     }
