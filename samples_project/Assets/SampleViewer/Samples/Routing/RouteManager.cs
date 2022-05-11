@@ -66,7 +66,10 @@ public class RouteManager : MonoBehaviour
             hit.point.z + rup.z
             );
 
-        return arcGISMapViewComponent.RendererView.FromCartesianPosition(v3);
+        // Spatial Reference of geoPosition will be Determined Spatial Reference of layers currently being rendered
+        var geoPosition = arcGISMapViewComponent.RendererView.FromCartesianPosition(v3);
+
+        return GeoUtils.ProjectToWGS84(geoPosition);
     }
 
     private async void HandleRoute(GeoPosition start, GeoPosition end)
