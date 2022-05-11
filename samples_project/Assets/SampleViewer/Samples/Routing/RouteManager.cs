@@ -53,7 +53,6 @@ public class RouteManager : MonoBehaviour
     
     /// <summary>
     /// Return GeoPosition Based on RaycastHit; I.E. Where the user clicked in the Scene.
-    /// We are using DRootUniversePosition over RootUniversePosition because it is more specific.
     /// </summary>
     /// <param name="hit"></param>
     /// <returns></returns>
