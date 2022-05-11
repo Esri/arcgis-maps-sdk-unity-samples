@@ -16,8 +16,11 @@ public class Routing : MonoBehaviour
 
     void Start()
     {
-        // Highlander Comment Here - We Expect Only 1 For Each of These
+        // We need HPRoot for the HitToGeoPosition Method
         hpRoot = FindObjectOfType<HPRoot>();
+
+        // We need this ArcGISMapViewComponent for the FromCartesianPosition Method
+        // defined on the ArcGISRendererView defined on the instnace of ArcGISMapViewComponent
         arcGISMapViewComponent = FindObjectOfType<ArcGISMapViewComponent>();
     }
 
@@ -30,10 +33,10 @@ public class Routing : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
-                var routeMarker = Instantiate(RouteMarker, hit.point, Quaternion.Euler(0.0f, 0.0f, 90.0f), arcGISMapViewComponent.transform);
+                var routeMarker = Instantiate(RouteMarker, hit.point, Quaternion.identity, arcGISMapViewComponent.transform);
 
                 var geoPosition = HitToGeoPosition(hit);
-                geoPosition.Z = 200;
+                geoPosition.Z = 200;  // TODO - Review hit.distacne as shown in FeatureLayer example to "snap" to ground
 
                 var locationComponent = routeMarker.GetComponent<ArcGISLocationComponent>();
                 locationComponent.enabled = true;
@@ -41,7 +44,13 @@ public class Routing : MonoBehaviour
             }
         }
     }
-
+    
+    /// <summary>
+    /// Return GeoPosition Based on RaycastHit; I.E. Where the user clicked in the Scene.
+    /// We are using DRootUniversePosition over RootUniversePosition because "Input Reason Here".
+    /// </summary>
+    /// <param name="hit"></param>
+    /// <returns></returns>
     private GeoPosition HitToGeoPosition(RaycastHit hit)
     {
         var rup = hpRoot.DRootUniversePosition;
