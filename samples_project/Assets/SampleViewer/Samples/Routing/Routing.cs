@@ -26,7 +26,8 @@ public class Routing : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        // Only Create Marker when Shift is Held and Mouse is Clicked
+        if (Input.GetKey(KeyCode.LeftShift) && Input.GetMouseButtonDown(0))
         {
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -36,7 +37,7 @@ public class Routing : MonoBehaviour
                 var routeMarker = Instantiate(RouteMarker, hit.point, Quaternion.identity, arcGISMapViewComponent.transform);
 
                 var geoPosition = HitToGeoPosition(hit);
-                geoPosition.Z = 200;  // TODO - Review hit.distacne as shown in FeatureLayer example to "snap" to ground
+                geoPosition.Z = 200;  // TODO - Review hit.distance as shown in FeatureLayer example to "snap" to ground
 
                 var locationComponent = routeMarker.GetComponent<ArcGISLocationComponent>();
                 locationComponent.enabled = true;
