@@ -1,5 +1,6 @@
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 using Esri.ArcGISMapsSDK.Utils.GeoCoord;
 using Esri.ArcGISMapsSDK.Utils.Math;
@@ -9,13 +10,17 @@ using Esri.ArcGISMapsSDK.Components;
 using UnityEngine;
 using Newtonsoft.Json.Linq;
 
+
 public class RouteManager : MonoBehaviour
 {
     public GameObject RouteMarker;
 
     private HPRoot hpRoot;
-    private GameObject ActiveWayPoint;
     private ArcGISMapViewComponent arcGISMapViewComponent;
+
+    private int StopCount = 2;
+    private Queue<GameObject> stops = new Queue<GameObject>();
+    private bool routing = false;
 
 
     void Start()
@@ -33,6 +38,12 @@ public class RouteManager : MonoBehaviour
         // Only Create Marker when Shift is Held and Mouse is Clicked
         if (Input.GetKey(KeyCode.LeftShift) && Input.GetMouseButtonDown(0))
         {
+            if (routing)
+            {
+                Debug.Log("Please Wait for Results or Cancel");
+                return;
+            }
+
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -47,6 +58,16 @@ public class RouteManager : MonoBehaviour
                 locationComponent.enabled = true;
                 locationComponent.Position = geoPosition;
                 locationComponent.Rotation = new Rotator(0, 90, 0);
+
+                stops.Enqueue(routeMarker);
+
+                if (stops.Count == StopCount)
+                    HandleRoute(stops.ToArray());
+                else if (stops.Count > StopCount)
+                {
+                    Destroy(stops.Dequeue());
+                    HandleRoute(stops.ToArray());
+                }
             }
         }
     }
@@ -72,10 +93,13 @@ public class RouteManager : MonoBehaviour
         return GeoUtils.ProjectToWGS84(geoPosition);
     }
 
-    private async void HandleRoute(GeoPosition start, GeoPosition end)
+    private async void HandleRoute(GameObject[] stops)
     {
-        var s = new JArray();
-        var e = new JArray();
+        routing = true;
+
+        await Task.Delay(2000);
+
+        routing = false;
     }
 
 }
