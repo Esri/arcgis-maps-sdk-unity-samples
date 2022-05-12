@@ -14,6 +14,7 @@ using Newtonsoft.Json.Linq;
 public class RouteManager : MonoBehaviour
 {
     public GameObject RouteMarker;
+    public string apiKey;
 
     private HPRoot hpRoot;
     private ArcGISMapViewComponent arcGISMapViewComponent;
@@ -21,7 +22,9 @@ public class RouteManager : MonoBehaviour
     private int StopCount = 2;
     private Queue<GameObject> stops = new Queue<GameObject>();
     private bool routing = false;
+    private string routingURL = "https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve";
 
+    private HttpClient client = new HttpClient();
 
     void Start()
     {
@@ -33,7 +36,7 @@ public class RouteManager : MonoBehaviour
         arcGISMapViewComponent = FindObjectOfType<ArcGISMapViewComponent>();
     }
 
-    void Update()
+    async void Update()
     {
         // Only Create Marker when Shift is Held and Mouse is Clicked
         if (Input.GetKey(KeyCode.LeftShift) && Input.GetMouseButtonDown(0))
@@ -61,12 +64,17 @@ public class RouteManager : MonoBehaviour
 
                 stops.Enqueue(routeMarker);
 
-                if (stops.Count == StopCount)
-                    HandleRoute(stops.ToArray());
-                else if (stops.Count > StopCount)
-                {
+                if (stops.Count > StopCount)
                     Destroy(stops.Dequeue());
-                    HandleRoute(stops.ToArray());
+
+                if (stops.Count == StopCount)
+                {
+                    routing = true;
+
+                    string results = await FetchRoute(stops.ToArray());
+                    DrawRoute(results);
+
+                    routing = false;
                 }
             }
         }
@@ -93,13 +101,43 @@ public class RouteManager : MonoBehaviour
         return GeoUtils.ProjectToWGS84(geoPosition);
     }
 
-    private async void HandleRoute(GameObject[] stops)
+    private async Task<string> FetchRoute(GameObject[] stops)
     {
-        routing = true;
+        if (stops.Length != StopCount)
+            return "";
 
-        await Task.Delay(2000);
+        IEnumerable<KeyValuePair<string, string>> payload = new List<KeyValuePair<string, string>>()
+        {
+            new KeyValuePair<string, string>("stops", GetRouteString(stops)),
+            new KeyValuePair<string, string>("returnRoutes", "true"),
+            new KeyValuePair<string, string>("token", apiKey),
+            new KeyValuePair<string, string>("f", "json"),
+        };
 
-        routing = false;
+        HttpContent content = new FormUrlEncodedContent(payload);
+
+        HttpResponseMessage response = await client.PostAsync(routingURL, content);
+        response.EnsureSuccessStatusCode();
+
+        string results = await response.Content.ReadAsStringAsync();
+        return results;
+    }
+
+    private string GetRouteString(GameObject[] stops)
+    {
+        GeoPosition startGP = stops[0].GetComponent<ArcGISLocationComponent>().Position;
+        GeoPosition endGP = stops[1].GetComponent<ArcGISLocationComponent>().Position;
+
+        string startString = $"{startGP.X}, {startGP.Y}";
+        string endString = $"{endGP.X}, {endGP.Y}";
+        
+        return $"{startString};{endString}";
+    }
+
+    private void DrawRoute(string routeInfo)
+    {
+        var info = JObject.Parse(routeInfo);
+        Debug.Log(info); // TODO - Parse & Draw with "ArcFactory" Logic
     }
 
 }
