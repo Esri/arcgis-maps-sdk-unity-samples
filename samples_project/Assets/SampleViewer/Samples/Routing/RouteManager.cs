@@ -9,20 +9,24 @@ using Esri.ArcGISMapsSDK.Components;
 
 using UnityEngine;
 using Newtonsoft.Json.Linq;
-
+using System.Collections;
 
 public class RouteManager : MonoBehaviour
 {
     public GameObject RouteMarker;
+    public GameObject RouteBreadcrumb;
     public string apiKey;
 
     private HPRoot hpRoot;
     private ArcGISMapViewComponent arcGISMapViewComponent;
 
+    private float elevation = 50.0f;
+
     private int StopCount = 2;
     private Queue<GameObject> stops = new Queue<GameObject>();
     private bool routing = false;
     private string routingURL = "https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve";
+    private List<GameObject> breadcrumbs = new List<GameObject>();
 
     private HttpClient client = new HttpClient();
 
@@ -55,7 +59,7 @@ public class RouteManager : MonoBehaviour
                 var routeMarker = Instantiate(RouteMarker, hit.point, Quaternion.identity, arcGISMapViewComponent.transform);
 
                 var geoPosition = HitToGeoPosition(hit);
-                geoPosition.Z = 200;  // TODO - Review hit.distance as shown in FeatureLayer example to "snap" to ground
+                geoPosition.Z = elevation;  // TODO - Review hit.distance as shown in FeatureLayer example to "snap" to ground
 
                 var locationComponent = routeMarker.GetComponent<ArcGISLocationComponent>();
                 locationComponent.enabled = true;
@@ -72,7 +76,7 @@ public class RouteManager : MonoBehaviour
                     routing = true;
 
                     string results = await FetchRoute(stops.ToArray());
-                    DrawRoute(results);
+                    StartCoroutine(DrawRoute(results));
 
                     routing = false;
                 }
@@ -134,10 +138,49 @@ public class RouteManager : MonoBehaviour
         return $"{startString};{endString}";
     }
 
-    private void DrawRoute(string routeInfo)
+    private GameObject CreateBreadCrumb(float lat, float lon, float alt)
     {
+        GameObject breadcrumb = Instantiate(RouteBreadcrumb, arcGISMapViewComponent.transform);
+
+        breadcrumb.name = "Breadcrumb";
+
+        ArcGISLocationComponent location = breadcrumb.AddComponent<ArcGISLocationComponent>();
+        location.Position = new GeoPosition(lat, lon, alt, 4326);
+
+        return breadcrumb;
+    }
+
+    IEnumerator DrawRoute(string routeInfo)
+    {
+        ClearBreadcrumbs();
+
         var info = JObject.Parse(routeInfo);
-        Debug.Log(info); // TODO - Parse & Draw with "ArcFactory" Logic
+
+        var routes = info.SelectToken("routes");
+        var features = routes.SelectToken("features");
+
+        foreach (var feature in features)
+        {
+            var geometry = feature.SelectToken("geometry");
+            var paths = geometry.SelectToken("paths")[0];
+
+            foreach(var path in paths)
+            {
+                var lat = (float)path[0];
+                var lon = (float)path[1];
+
+                breadcrumbs.Add(CreateBreadCrumb(lat, lon, elevation));
+
+                yield return null;
+            }
+        }
+
+    }
+
+    private void ClearBreadcrumbs()
+    {
+        foreach (var breadcrumb in breadcrumbs)
+            Destroy(breadcrumb);
     }
 
 }
