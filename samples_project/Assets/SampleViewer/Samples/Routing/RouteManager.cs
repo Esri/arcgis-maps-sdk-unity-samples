@@ -28,6 +28,9 @@ public class RouteManager : MonoBehaviour
     private string routingURL = "https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve";
     private List<GameObject> breadcrumbs = new List<GameObject>();
 
+    private LineRenderer lineRenderer;
+    private GameObject line;
+
     private HttpClient client = new HttpClient();
 
     void Start()
@@ -174,12 +177,38 @@ public class RouteManager : MonoBehaviour
             }
         }
 
+        RenderLine();
     }
 
     private void ClearBreadcrumbs()
     {
         foreach (var breadcrumb in breadcrumbs)
             Destroy(breadcrumb);
+    }
+
+    private void RenderLine() 
+    {
+        Debug.Log(breadcrumbs.Count);
+        if (breadcrumbs.Count > 1) {
+            if (line) {
+                lineRenderer = line.GetComponent(typeof(LineRenderer)) as LineRenderer;
+            } else {
+                line = new GameObject("line");
+                line.transform.SetParent(this.transform, false);
+                lineRenderer = line.AddComponent<LineRenderer>();
+                ArcGISLocationComponent location = line.AddComponent<ArcGISLocationComponent>();
+                lineRenderer.material = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+                lineRenderer.widthMultiplier = 5;
+                lineRenderer.positionCount = breadcrumbs.Count;
+            }
+
+            List<Vector3> allPoints = new List<Vector3>();
+            for (int v = 0; v < breadcrumbs.Count; v++) {
+                allPoints.Add(breadcrumbs[v].transform.position);
+            }
+
+            lineRenderer.SetPositions(allPoints.ToArray());
+        }
     }
 
 }
