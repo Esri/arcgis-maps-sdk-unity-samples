@@ -59,7 +59,6 @@ public class RouteManager : MonoBehaviour
                 var routeMarker = Instantiate(RouteMarker, hit.point, Quaternion.identity, arcGISMapViewComponent.transform);
 
                 var geoPosition = HitToGeoPosition(hit);
-                geoPosition.Z = elevation;  // TODO - Review hit.distance as shown in FeatureLayer example to "snap" to ground
 
                 var locationComponent = routeMarker.GetComponent<ArcGISLocationComponent>();
                 locationComponent.enabled = true;
