@@ -15,6 +15,7 @@ public class RouteManager : MonoBehaviour
 {
     public GameObject RouteMarker;
     public GameObject RouteBreadcrumb;
+    public GameObject Route;
     public string apiKey;
 
     private HPRoot hpRoot;
@@ -29,7 +30,6 @@ public class RouteManager : MonoBehaviour
     private List<GameObject> breadcrumbs = new List<GameObject>();
 
     private LineRenderer lineRenderer;
-    private GameObject line;
 
     private HttpClient client = new HttpClient();
 
@@ -41,6 +41,8 @@ public class RouteManager : MonoBehaviour
         // We need this ArcGISMapViewComponent for the FromCartesianPosition Method
         // defined on the ArcGISRendererView defined on the instnace of ArcGISMapViewComponent
         arcGISMapViewComponent = FindObjectOfType<ArcGISMapViewComponent>();
+
+        lineRenderer = Route.GetComponent<LineRenderer>();
     }
 
     async void Update()
@@ -154,7 +156,7 @@ public class RouteManager : MonoBehaviour
 
     IEnumerator DrawRoute(string routeInfo)
     {
-        ClearBreadcrumbs();
+        ClearRoute();
 
         var info = JObject.Parse(routeInfo);
 
@@ -180,35 +182,39 @@ public class RouteManager : MonoBehaviour
         RenderLine();
     }
 
-    private void ClearBreadcrumbs()
+    private void ClearRoute()
     {
         foreach (var breadcrumb in breadcrumbs)
             Destroy(breadcrumb);
+
+        breadcrumbs.Clear();
+
+        if (lineRenderer)
+            lineRenderer.positionCount = 0;
     }
 
     private void RenderLine() 
     {
-        Debug.Log(breadcrumbs.Count);
-        if (breadcrumbs.Count > 1) {
-            if (line) {
-                lineRenderer = line.GetComponent(typeof(LineRenderer)) as LineRenderer;
-            } else {
-                line = new GameObject("line");
-                line.transform.SetParent(this.transform, false);
-                lineRenderer = line.AddComponent<LineRenderer>();
-                ArcGISLocationComponent location = line.AddComponent<ArcGISLocationComponent>();
-                lineRenderer.material = new Material(Shader.Find("Universal Render Pipeline/Lit"));
-                lineRenderer.widthMultiplier = 5;
-                lineRenderer.positionCount = breadcrumbs.Count;
+        if (breadcrumbs.Count < 1)
+            return;
+
+        lineRenderer.widthMultiplier = 5;
+
+        var allPoints = new List<Vector3>();
+
+        foreach (var breadcrumb in breadcrumbs)
+        {
+            if (breadcrumb.transform.position.Equals(Vector3.zero))
+            {
+                Destroy(breadcrumb);
+                continue;
             }
 
-            List<Vector3> allPoints = new List<Vector3>();
-            for (int v = 0; v < breadcrumbs.Count; v++) {
-                allPoints.Add(breadcrumbs[v].transform.position);
-            }
-
-            lineRenderer.SetPositions(allPoints.ToArray());
+            allPoints.Add(breadcrumb.transform.position);
         }
+
+        lineRenderer.positionCount = allPoints.Count;
+        lineRenderer.SetPositions(allPoints.ToArray());
     }
 
 }
