@@ -1,4 +1,6 @@
+using System;
 using System.Net.Http;
+using System.Collections;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -8,14 +10,16 @@ using Esri.HPFramework;
 using Esri.ArcGISMapsSDK.Components;
 
 using UnityEngine;
+using TMPro;
+
 using Newtonsoft.Json.Linq;
-using System.Collections;
 
 public class RouteManager : MonoBehaviour
 {
     public GameObject RouteMarker;
     public GameObject RouteBreadcrumb;
     public GameObject Route;
+    public GameObject RouteInfo;
     public string apiKey;
 
     private HPRoot hpRoot;
@@ -158,10 +162,11 @@ public class RouteManager : MonoBehaviour
     {
         ClearRoute();
 
-        var info = JObject.Parse(routeInfo);
-
-        var routes = info.SelectToken("routes");
+        var info    = JObject.Parse(routeInfo);
+        var routes   = info.SelectToken("routes");
         var features = routes.SelectToken("features");
+
+        UpdateRouteInfo(features);
 
         foreach (var feature in features)
         {
@@ -180,6 +185,19 @@ public class RouteManager : MonoBehaviour
         }
 
         RenderLine();
+    }
+
+    private void UpdateRouteInfo(JToken features)
+    {
+        var tmp = RouteInfo.GetComponent<TextMeshProUGUI>();
+
+        var target_feature = features[0];
+        var attributes = target_feature.SelectToken("attributes");
+
+        var travel_time = (float)attributes.SelectToken("Total_TravelTime");
+        var travel_text = string.Format("{0:0.00}", travel_time);
+
+        tmp.text = $"Time: {travel_text} Minutes";
     }
 
     private void ClearRoute()
