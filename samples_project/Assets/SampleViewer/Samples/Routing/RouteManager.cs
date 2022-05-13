@@ -15,6 +15,7 @@ public class RouteManager : MonoBehaviour
 {
     public GameObject RouteMarker;
     public GameObject RouteBreadcrumb;
+    public GameObject Route;
     public string apiKey;
 
     private HPRoot hpRoot;
@@ -28,6 +29,8 @@ public class RouteManager : MonoBehaviour
     private string routingURL = "https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve";
     private List<GameObject> breadcrumbs = new List<GameObject>();
 
+    private LineRenderer lineRenderer;
+
     private HttpClient client = new HttpClient();
 
     void Start()
@@ -38,6 +41,8 @@ public class RouteManager : MonoBehaviour
         // We need this ArcGISMapViewComponent for the FromCartesianPosition Method
         // defined on the ArcGISRendererView defined on the instnace of ArcGISMapViewComponent
         arcGISMapViewComponent = FindObjectOfType<ArcGISMapViewComponent>();
+
+        lineRenderer = Route.GetComponent<LineRenderer>();
     }
 
     async void Update()
@@ -151,7 +156,7 @@ public class RouteManager : MonoBehaviour
 
     IEnumerator DrawRoute(string routeInfo)
     {
-        ClearBreadcrumbs();
+        ClearRoute();
 
         var info = JObject.Parse(routeInfo);
 
@@ -174,12 +179,42 @@ public class RouteManager : MonoBehaviour
             }
         }
 
+        RenderLine();
     }
 
-    private void ClearBreadcrumbs()
+    private void ClearRoute()
     {
         foreach (var breadcrumb in breadcrumbs)
             Destroy(breadcrumb);
+
+        breadcrumbs.Clear();
+
+        if (lineRenderer)
+            lineRenderer.positionCount = 0;
+    }
+
+    private void RenderLine() 
+    {
+        if (breadcrumbs.Count < 1)
+            return;
+
+        lineRenderer.widthMultiplier = 5;
+
+        var allPoints = new List<Vector3>();
+
+        foreach (var breadcrumb in breadcrumbs)
+        {
+            if (breadcrumb.transform.position.Equals(Vector3.zero))
+            {
+                Destroy(breadcrumb);
+                continue;
+            }
+
+            allPoints.Add(breadcrumb.transform.position);
+        }
+
+        lineRenderer.positionCount = allPoints.Count;
+        lineRenderer.SetPositions(allPoints.ToArray());
     }
 
 }
