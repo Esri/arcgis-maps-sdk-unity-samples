@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 479.2976, g: 533.6577, b: 641.90137, a: 1}
+  m_IndirectSpecularColor: {r: 479.2915, g: 533.6196, b: 641.8672, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -320,7 +320,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0.16092668, y: 0.5274279, z: -0.10252158, w: 0.82789594}
-  m_LocalPosition: {x: -15447586, y: -2053.202, z: -4215834.5}
+  m_LocalPosition: {x: -15447875, y: -2695.346, z: -4214789}
   m_LocalScale: {x: 1.0000001, y: 1.0000001, z: 1.0000001}
   m_Children: []
   m_Father: {fileID: 1808036064}
@@ -588,9 +588,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_LocalPosition:
-    x: 7203830.102468516
-    y: 5053.20192193985
-    z: 9182740.734788321
+    x: 7204119.166639353
+    y: 5695.3459815979
+    z: 9181694.931378745
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
 --- !u!1001 &1975001128
 PrefabInstance:
@@ -655,5 +655,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: LightingManager
       objectReference: {fileID: 0}
+    - target: {fileID: 3071704059086465574, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3071704059086465574, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
+      propertyPath: CameraComponent
+      value: 
+      objectReference: {fileID: 963194230}
+    - target: {fileID: 3071704059086465574, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
+      propertyPath: MapViewComponent
+      value: 
+      objectReference: {fileID: 1808036065}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}

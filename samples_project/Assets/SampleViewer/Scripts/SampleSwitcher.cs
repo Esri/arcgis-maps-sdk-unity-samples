@@ -7,7 +7,9 @@
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific
 // language governing permissions and limitations under the License.
 
+using Esri.ArcGISMapsSDK.Components;
 using Esri.HPFramework;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -31,7 +33,7 @@ public class SampleSwitcher : MonoBehaviour
 
         PipelineTypeDropdown.onValueChanged.AddListener(delegate
         {
-            PipelineChanged();
+           StartCoroutine(PipelineChanged());
         });
         PipelineType = PipelineTypeDropdown.options[PipelineTypeDropdown.value].text;
 
@@ -93,8 +95,16 @@ public class SampleSwitcher : MonoBehaviour
         };
     }
 
-    private void PipelineChanged()
+    private IEnumerator PipelineChanged()
     {
+        var Sky = FindObjectOfType<ArcGISSkyRepositionComponent>();
+        if (Sky != null)
+        {
+            DestroyImmediate(Sky.gameObject);
+        }
+
+        yield return null;
+
         PipelineType = PipelineTypeDropdown.options[PipelineTypeDropdown.value].text;
         RenderPipelineAsset pipeline = Resources.Load<RenderPipelineAsset>("SampleGraphicSettings/Sample" + PipelineType + "ipeline");
         GraphicsSettings.renderPipelineAsset = pipeline;
