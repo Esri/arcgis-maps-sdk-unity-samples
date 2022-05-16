@@ -21,6 +21,7 @@ public class SampleSwitcher : MonoBehaviour
 {
     public Dropdown PipelineTypeDropdown;
     public Dropdown SceneDropdown;
+    public List<string> SceneList = new List<string>();
     private string PipelineType;
     private string SceneName;
 
@@ -43,21 +44,6 @@ public class SampleSwitcher : MonoBehaviour
     private void PopulateSampleSceneList()
     {
         SceneDropdown.options.Clear();
-
-        // Make a list of the formal names of the samples.
-        var ApplicationPath = Application.dataPath;
-        var SamplePath = ApplicationPath + "/SampleViewer/Samples/";
-        List<string> SceneList = new List<string>();
-        if (Directory.Exists(SamplePath))
-        {
-            var SampleScenePaths = Directory.EnumerateFiles(SamplePath, "*.unity", SearchOption.AllDirectories);
-            foreach (string CurrentFile in SampleScenePaths)
-            {
-                string SceneName = Path.GetFileNameWithoutExtension(CurrentFile);
-                SceneList.Add(SceneName);
-            }
-        }
-
         SceneDropdown.AddOptions(SceneList);
         AddScene();
     }
