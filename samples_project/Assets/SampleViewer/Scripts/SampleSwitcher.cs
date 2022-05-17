@@ -37,7 +37,7 @@ public class SampleSwitcher : MonoBehaviour
            StartCoroutine(PipelineChanged());
         });
 
-#if USE_HDRP_PACKAGE
+#if !(UNITY_ANDROID || UNITY_IOS || UNITY_WSA)
         PipelineType = PipelineTypeDropdown.options[PipelineTypeDropdown.value].text;
 #else
         PipelineType = "URP";
