@@ -84,7 +84,15 @@ public class RouteManager : MonoBehaviour
                     routing = true;
 
                     string results = await FetchRoute(stops.ToArray());
-                    StartCoroutine(DrawRoute(results));
+
+                    if (results.Contains("error"))
+                    {
+                        DisplayError(results);
+                    }
+                    else
+                    {
+                        StartCoroutine(DrawRoute(results));
+                    }
 
                     routing = false;
                 }
@@ -111,6 +119,15 @@ public class RouteManager : MonoBehaviour
         var geoPosition = arcGISMapViewComponent.RendererView.FromCartesianPosition(v3);
 
         return GeoUtils.ProjectToWGS84(geoPosition);
+    }
+
+    private void DisplayError(string error_text)
+    {
+        var error = JObject.Parse(error_text).SelectToken("error");
+        var message = error.SelectToken("message");
+
+        var tmp = RouteInfo.GetComponent<TextMeshProUGUI>();
+        tmp.text = $"Error: {message}";
     }
 
     private async Task<string> FetchRoute(GameObject[] stops)
