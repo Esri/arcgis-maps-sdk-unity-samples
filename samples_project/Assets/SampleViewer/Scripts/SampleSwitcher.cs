@@ -36,8 +36,15 @@ public class SampleSwitcher : MonoBehaviour
         {
            StartCoroutine(PipelineChanged());
         });
-        PipelineType = PipelineTypeDropdown.options[PipelineTypeDropdown.value].text;
 
+#if USE_HDRP_PACKAGE
+        PipelineType = PipelineTypeDropdown.options[PipelineTypeDropdown.value].text;
+#else
+        PipelineType = "URP";
+        PipelineTypeDropdown.gameObject.SetActive(false);
+        RenderPipelineAsset pipeline = Resources.Load<RenderPipelineAsset>("SampleGraphicSettings/Sample" + PipelineType + "ipeline");
+        GraphicsSettings.renderPipelineAsset = pipeline;
+#endif
         PopulateSampleSceneList();
     }
 
