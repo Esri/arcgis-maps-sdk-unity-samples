@@ -7,7 +7,9 @@
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific
 // language governing permissions and limitations under the License.
 
+using Esri.ArcGISMapsSDK.Components;
 using Esri.HPFramework;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -19,6 +21,7 @@ public class SampleSwitcher : MonoBehaviour
 {
     public Dropdown PipelineTypeDropdown;
     public Dropdown SceneDropdown;
+    public List<string> SceneList = new List<string>();
     private string PipelineType;
     private string SceneName;
 
@@ -31,31 +34,23 @@ public class SampleSwitcher : MonoBehaviour
 
         PipelineTypeDropdown.onValueChanged.AddListener(delegate
         {
-            PipelineChanged();
+           StartCoroutine(PipelineChanged());
         });
-        PipelineType = PipelineTypeDropdown.options[PipelineTypeDropdown.value].text;
 
+#if !(UNITY_ANDROID || UNITY_IOS || UNITY_WSA)
+        PipelineType = PipelineTypeDropdown.options[PipelineTypeDropdown.value].text;
+#else
+        PipelineType = "URP";
+        PipelineTypeDropdown.gameObject.SetActive(false);
+        RenderPipelineAsset pipeline = Resources.Load<RenderPipelineAsset>("SampleGraphicSettings/Sample" + PipelineType + "ipeline");
+        GraphicsSettings.renderPipelineAsset = pipeline;
+#endif
         PopulateSampleSceneList();
     }
 
     private void PopulateSampleSceneList()
     {
         SceneDropdown.options.Clear();
-
-        // Make a list of the formal names of the samples.
-        var ApplicationPath = Application.dataPath;
-        var SamplePath = ApplicationPath + "/SampleViewer/Samples/";
-        List<string> SceneList = new List<string>();
-        if (Directory.Exists(SamplePath))
-        {
-            var SampleScenePaths = Directory.EnumerateFiles(SamplePath, "*.unity", SearchOption.AllDirectories);
-            foreach (string CurrentFile in SampleScenePaths)
-            {
-                string SceneName = Path.GetFileNameWithoutExtension(CurrentFile);
-                SceneList.Add(SceneName);
-            }
-        }
-
         SceneDropdown.AddOptions(SceneList);
         AddScene();
     }
@@ -93,8 +88,16 @@ public class SampleSwitcher : MonoBehaviour
         };
     }
 
-    private void PipelineChanged()
+    private IEnumerator PipelineChanged()
     {
+        var Sky = FindObjectOfType<ArcGISSkyRepositionComponent>();
+        if (Sky != null)
+        {
+            DestroyImmediate(Sky.gameObject);
+        }
+
+        yield return null;
+
         PipelineType = PipelineTypeDropdown.options[PipelineTypeDropdown.value].text;
         RenderPipelineAsset pipeline = Resources.Load<RenderPipelineAsset>("SampleGraphicSettings/Sample" + PipelineType + "ipeline");
         GraphicsSettings.renderPipelineAsset = pipeline;
