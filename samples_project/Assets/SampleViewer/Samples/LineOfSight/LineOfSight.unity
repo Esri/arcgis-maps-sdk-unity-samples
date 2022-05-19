@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 479.2915, g: 533.6196, b: 641.8672, a: 1}
+  m_IndirectSpecularColor: {r: 479.95508, g: 535.8613, b: 648.98926, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -245,7 +245,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 684003164}
-  m_LocalRotation: {x: 0.3784302, y: 0.47267175, z: -0.23527524, w: 0.7602747}
+  m_LocalRotation: {x: 0.37843022, y: 0.47267172, z: -0.23527527, w: 0.7602747}
   m_LocalPosition: {x: -72.03389, y: 132.59747, z: -130.73235}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -391,9 +391,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position:
-    X: -8236043.224393001
-    Y: 4975130.994585434
-    Z: 332.59747655849264
+    x: -8236043.224393001
+    y: 4975130.994585434
+    z: 332.59747655849264
     SRWkid: 3857
   rotation:
     Heading: 63.73936125917789
@@ -425,6 +425,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bbba49acb848c0448694828560b07fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UpdateClippingPlanes: 1
 --- !u!20 &684003171
 Camera:
   m_ObjectHideFlags: 0
@@ -485,8 +486,16 @@ MonoBehaviour:
     x: -8236043.224393001
     y: 332.59747655849264
     z: 4975130.994585434
-  m_LocalRotation: {x: -0.37843022, y: -0.47267175, z: 0.23527527, w: -0.76027465}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation:
+    value:
+      x: -0.37843022
+      y: -0.47267175
+      z: 0.23527527
+      w: -0.76027465
+  m_LocalScale:
+    x: 1
+    y: 1
+    z: 1
 --- !u!1 &884447677
 GameObject:
   m_ObjectHideFlags: 0
@@ -670,13 +679,26 @@ GameObject:
   - component: {fileID: 990959145}
   - component: {fileID: 990959144}
   - component: {fileID: 990959143}
+  - component: {fileID: 990959142}
   m_Layer: 0
-  m_Name: LineOfSightMapView
+  m_Name: LineOfSightMap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &990959142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 990959141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1adb07e07fe0aac4a848279015c917f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &990959143
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -689,14 +711,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c703502c1493f5b4eb3e95b2efe0271e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  position:
-    X: -73.984988
-    Y: 40.748131
-    Z: 200
+  apiKey: 
+  basemap: https://www.arcgis.com/sharing/rest/content/items/8d569fbc4dc34f68abae8d72178cee05/data
+  basemapType: 0
+  elevation: https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer
+  enableExtent: 0
+  extent:
+    GeographicCenter:
+      x: 0
+      y: 0
+      z: 0
+      SRWkid: 4326
+    ExtentShape: 0
+    ShapeDimensions:
+      x: 0
+      y: 0
+  layers:
+  - Type: 1
+    Url: https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/New_York_LoD2_3D_Buildings/SceneServer/layers/0
+    Opacity: 1
+  originPosition:
+    x: -73.984988
+    y: 40.748131
+    z: 200
     SRWkid: 4326
   viewMode: 1
   editorModeEnabled: 1
+  dataFetchWithSceneView: 1
+  rebaseWithSceneView: 0
   meshCollidersEnabled: 1
+  Configurations: []
+  ConfigMappings: []
   RootChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -716,7 +761,12 @@ MonoBehaviour:
     x: -8235971.1905064555
     y: 200
     z: 4975261.726933933
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation:
+    value:
+      x: 0
+      y: 0
+      z: 0
+      w: 1
 --- !u!4 &990959145
 Transform:
   m_ObjectHideFlags: 0
@@ -730,7 +780,6 @@ Transform:
   m_Children:
   - {fileID: 1681604015}
   - {fileID: 684003165}
-  - {fileID: 1704199870}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -863,6 +912,10 @@ PrefabInstance:
       objectReference: {fileID: 684003170}
     - target: {fileID: 3071704059086465574, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
       propertyPath: MapViewComponent
+      value: 
+      objectReference: {fileID: 990959143}
+    - target: {fileID: 3071704059086465574, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
+      propertyPath: arcGISMapComponent
       value: 
       objectReference: {fileID: 990959143}
     m_RemovedComponents: []
@@ -1027,9 +1080,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position:
-    X: -8235933.624908454
-    Y: 4975324.560358271
-    Z: 0
+    x: -8235933.624908454
+    y: 4975324.560358271
+    z: 0
     SRWkid: 3857
   rotation:
     Heading: 0
@@ -1052,71 +1105,16 @@ MonoBehaviour:
     x: -8235933.624908454
     y: 0
     z: 4975324.560358271
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
---- !u!1 &1704199869
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1704199870}
-  - component: {fileID: 1704199871}
-  - component: {fileID: 1704199872}
-  m_Layer: 0
-  m_Name: ArcGISMap
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1704199870
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1704199869}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 990959145}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1704199871
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1704199869}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1adb07e07fe0aac4a848279015c917f4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1704199872
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1704199869}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc32dc1ae6b317946b4e7e8db5fc1e04, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  APIKey: 
-  Basemap: https://www.arcgis.com/sharing/rest/content/items/8d569fbc4dc34f68abae8d72178cee05/data
-  Elevation: https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer
-  Layers:
-  - Type: 1
-    Url: https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/New_York_LoD2_3D_Buildings/SceneServer/layers/0
-    Opacity: 1
+  m_LocalRotation:
+    value:
+      x: 0
+      y: 0
+      z: 0
+      w: 1
+  m_LocalScale:
+    x: 1
+    y: 1
+    z: 1
 --- !u!1 &1967499312
 GameObject:
   m_ObjectHideFlags: 0

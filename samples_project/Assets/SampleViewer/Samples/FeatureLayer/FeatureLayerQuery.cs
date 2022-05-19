@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using Esri.ArcGISMapsSDK.Components;
-using Esri.ArcGISMapsSDK.Utils.GeoCoord;
+using Esri.GameEngine.Geometry;
 
 // The follow System.Serializable classes are used to define the REST API response
 // in order to leverage Unity's JsonUtility.
@@ -158,7 +158,7 @@ public class FeatureLayerQuery : MonoBehaviour
             double Longitude = feature.geometry.coordinates[0];
             double Latitude = feature.geometry.coordinates[1];
 
-            GeoPosition Position = new GeoPosition(Longitude, Latitude, StadiumSpawnHeight, FeatureSRWKID);
+            ArcGISPoint Position = new ArcGISPoint(Longitude, Latitude, StadiumSpawnHeight, new ArcGISSpatialReference(FeatureSRWKID));
 
             var NewStadium = Instantiate(StadiumPrefab, this.transform);
             NewStadium.name = feature.properties.NAME;
@@ -207,8 +207,8 @@ public class FeatureLayerQuery : MonoBehaviour
                     return;
                 }
                 var CameraLocation = ArcGISCamera.GetComponent<ArcGISLocationComponent>();
-                GeoPosition NewPosition = StadiumLocation.Position;
-                NewPosition.Z = StadiumSpawnHeight;
+                ArcGISPoint NewPosition = StadiumLocation.Position;
+                NewPosition.SetZ(StadiumSpawnHeight);
                 CameraLocation.Position = NewPosition;
                 CameraLocation.Rotation = StadiumLocation.Rotation;
             }
