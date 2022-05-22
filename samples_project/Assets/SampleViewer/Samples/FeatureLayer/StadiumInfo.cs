@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Esri.ArcGISMapsSDK.Components;
-using Esri.ArcGISMapsSDK.Utils.GeoCoord;
+using Esri.GameEngine.Geometry;
 using Esri.HPFramework;
 
 
@@ -89,7 +89,7 @@ public class StadiumInfo : MonoBehaviour
     {
         var CameraHP = ArcGISCamera.GetComponent<HPTransform>();
         var StadiumHP = transform.GetComponent<HPTransform>();
-        var Distance = (CameraHP.UniversePosition - StadiumHP.UniversePosition).magnitude;
+        var Distance = (CameraHP.UniversePosition - StadiumHP.UniversePosition).ToVector3().magnitude;
 
         if (Distance < RayCastDistanceThreshold)
         {
@@ -97,8 +97,8 @@ public class StadiumInfo : MonoBehaviour
             {
                 // Modify the Stadiums altitude based off the raycast hit
                 var StadiumLocationComponent = transform.GetComponent<ArcGISLocationComponent>();
-                GeoPosition Position = StadiumLocationComponent.Position;
-                Position.Z -= hitInfo.distance;
+                ArcGISPoint Position = StadiumLocationComponent.Position;
+                Position.SetZ(Position.Z - hitInfo.distance);
                 StadiumLocationComponent.Position = Position;
 
                 OnGround = true;

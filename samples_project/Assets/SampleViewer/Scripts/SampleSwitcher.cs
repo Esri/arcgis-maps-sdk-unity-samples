@@ -37,14 +37,34 @@ public class SampleSwitcher : MonoBehaviour
            StartCoroutine(PipelineChanged());
         });
 
-#if !(UNITY_ANDROID || UNITY_IOS || UNITY_WSA)
-        PipelineType = PipelineTypeDropdown.options[PipelineTypeDropdown.value].text;
-#else
-        PipelineType = "URP";
-        PipelineTypeDropdown.gameObject.SetActive(false);
-        RenderPipelineAsset pipeline = Resources.Load<RenderPipelineAsset>("SampleGraphicSettings/Sample" + PipelineType + "ipeline");
-        GraphicsSettings.renderPipelineAsset = pipeline;
+#if USE_HDRP_PACKAGE
+        PipelineTypeDropdown.options.Add(new Dropdown.OptionData("HDRP"));
 #endif
+
+#if USE_URP_PACKAGE
+        PipelineTypeDropdown.options.Add(new Dropdown.OptionData("URP"));
+#endif
+
+        if (PipelineTypeDropdown.options.Count == 0)
+        {
+            Debug.LogError("Either HDRP or URP is required for the ArcGIS Maps SDK to work");
+            return;
+        }
+        else if (PipelineTypeDropdown.options.Count == 1)
+        {
+            SetPipeline(PipelineTypeDropdown.options[PipelineTypeDropdown.value].text);
+            PipelineTypeDropdown.gameObject.SetActive(false);
+        }
+        else
+        {
+#if !(UNITY_ANDROID || UNITY_IOS || UNITY_WSA)
+            SetPipeline(PipelineTypeDropdown.options[PipelineTypeDropdown.value].text);
+#else
+            PipelineTypeDropdown.gameObject.SetActive(false);
+            SetPipeline("URP");
+#endif
+        }
+
         PopulateSampleSceneList();
     }
 
@@ -88,6 +108,14 @@ public class SampleSwitcher : MonoBehaviour
         };
     }
 
+    // pipelineType must be HDRP or URP
+    private void SetPipeline(string pipelineType)
+    {
+        PipelineType = pipelineType;
+        RenderPipelineAsset pipeline = Resources.Load<RenderPipelineAsset>("SampleGraphicSettings/Sample" + PipelineType + "ipeline");
+        GraphicsSettings.renderPipelineAsset = pipeline;
+    }
+
     private IEnumerator PipelineChanged()
     {
         var Sky = FindObjectOfType<ArcGISSkyRepositionComponent>();
@@ -98,9 +126,7 @@ public class SampleSwitcher : MonoBehaviour
 
         yield return null;
 
-        PipelineType = PipelineTypeDropdown.options[PipelineTypeDropdown.value].text;
-        RenderPipelineAsset pipeline = Resources.Load<RenderPipelineAsset>("SampleGraphicSettings/Sample" + PipelineType + "ipeline");
-        GraphicsSettings.renderPipelineAsset = pipeline;
+        SetPipeline(PipelineTypeDropdown.options[PipelineTypeDropdown.value].text);
 
         SceneChanged();
     }
