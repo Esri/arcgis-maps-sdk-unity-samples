@@ -2,11 +2,12 @@
 
 # arcgis-maps-sdk-unity-samples
 
-1. Clone this repo and add `samples_project` in the Unity Hub
-2. Open the `samples_project` and launch the Unity Editor. If there is a pop-up asking to open the project in Safe Mode, click `Ignore`.
-3. Get the most recent build of the plugin from here https://runtime-zip.esri.com/userContent/runtime/setups/gameengine/100.14.0/ (Right now the sample repo is using version 3472)
-4. Install the most recent `ArcGISMapsSDK.unitypackage`. In the header bar navigate to `Assets -> Import Package -> Custom Package` and select `ArcGISMapsSDK.unitypackage`.
-5. Open `SampleViewer.unity` from the `Assets/SampleViewer` folder in the Project window.
+1. Download Unity 2021.3
+2. Clone this repo and add `samples_project` in the Unity Hub
+3. Open the `samples_project` and launch the Unity Editor. If there is a pop-up asking to open the project in Safe Mode, click `Ignore`.
+4. Get the most recent build of the plugin from here https://runtime-zip.esri.com/userContent/runtime/setups/gameengine/100.15.0/ (Right now the sample repo is using version 3518)
+5. Install the most recent `ArcGISMapsSDK.unitypackage`. In the header bar navigate to `Assets -> Import Package -> Custom Package` and select `ArcGISMapsSDK.unitypackage`.
+6. Open `SampleViewer.unity` from the `Assets/SampleViewer` folder in the Project window.
 
 To add a new sample scene add the `.unity` file in this directory `Assets/SampleViewer/Samples/` and also add the scene to the project settings build list(`File -> Build Settings`). If your new scene is called `ExampleName.unity` in the `SampleViewer` level on the `SampleSwitcher` object add a new element under `Scene List` with the name `ExampleName`
 In addition, to ensure your scene and the `SampleViewer.unity` scene (which is used to preview all scenes) has good lighting add the `LightingManager` prefab to your scene found in `Assets/SampleViewer/Resources/SampleGraphicSettings`.
