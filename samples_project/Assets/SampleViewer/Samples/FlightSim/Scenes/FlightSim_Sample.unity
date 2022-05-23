@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 472.5923, g: 537.24146, b: 692.1089, a: 1}
+  m_IndirectSpecularColor: {r: 473.2306, g: 537.6914, b: 691.292, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -431,8 +431,8 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
+  near clip plane: 0.5
+  far clip plane: 299985
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -692,6 +692,7 @@ GameObject:
   - component: {fileID: 1623673878}
   - component: {fileID: 1623673877}
   - component: {fileID: 1623673876}
+  - component: {fileID: 1623673879}
   m_Layer: 0
   m_Name: Sky and Fog Volume
   m_TagString: Untagged
@@ -745,6 +746,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1623673879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1623673875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45e282a69abc2614595183cf6e6a89d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1962847587
 GameObject:
   m_ObjectHideFlags: 0
@@ -754,27 +767,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1962847589}
-  - component: {fileID: 1962847588}
+  - component: {fileID: 1962847590}
   m_Layer: 0
-  m_Name: SampleAPIMapCreator
+  m_Name: MapCreator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1962847588
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1962847587}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44f3381abd4f52e48928147257044361, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cameraComponent: {fileID: 293492545}
 --- !u!4 &1962847589
 Transform:
   m_ObjectHideFlags: 0
@@ -790,6 +790,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1962847590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1962847587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0ebc2278af84dc468ff8605bde7a654, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraComponent: {fileID: 293492545}
 --- !u!23 &69297689797962783
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -8464,13 +8477,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
-  inertia: 0
-  speed: 100
+  acceleration: 5000
+  initialVelocity: 0
+  mass: 175
+  speed: 0
   upSpeed: 25
   rollRate: 100
   yawRate: 100
   pitchRate: 100
   engineOn: 0
+  released: 0
   maxRoll: 45
   minRoll: -45
   maxYaw: 180
@@ -8502,7 +8518,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8523011270635610324}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 175000
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 0
