@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7771576047154188518}
   - component: {fileID: 6083613393643751086}
   - component: {fileID: 1470609490244652417}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29,6 +29,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6041946974618217634}
   m_RootOrder: 0
@@ -52,6 +53,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -106,7 +108,7 @@ GameObject:
   - component: {fileID: 6041946974618217634}
   - component: {fileID: 2999064712877146563}
   - component: {fileID: 1015221677309724350}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Marker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -123,6 +125,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 25, y: 25, z: 25}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5632643909688599785}
   - {fileID: 2497708034012513752}
@@ -146,8 +149,16 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalScale: {x: 25, y: 25, z: 25}
+  m_LocalRotation:
+    value:
+      x: 0
+      y: 0
+      z: 0
+      w: 1
+  m_LocalScale:
+    x: 25
+    y: 25
+    z: 25
 --- !u!114 &1015221677309724350
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -161,9 +172,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position:
-    X: NaN
-    Y: NaN
-    Z: NaN
+    x: NaN
+    y: NaN
+    z: NaN
     SRWkid: 4326
   rotation:
     Heading: 0
@@ -181,7 +192,7 @@ GameObject:
   - component: {fileID: 8836662617761242505}
   - component: {fileID: 7261553745393073069}
   - component: {fileID: 2074065960653839237}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -198,6 +209,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 1, z: 0.5}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6041946974618217634}
   m_RootOrder: 1
@@ -221,6 +233,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1

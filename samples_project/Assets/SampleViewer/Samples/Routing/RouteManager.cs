@@ -1,18 +1,18 @@
-using System;
 using System.Net.Http;
 using System.Collections;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-using Esri.ArcGISMapsSDK.Utils.GeoCoord;
-using Esri.ArcGISMapsSDK.Utils.Math;
-using Esri.HPFramework;
 using Esri.ArcGISMapsSDK.Components;
+using Esri.ArcGISMapsSDK.Utils.GeoCoord;
+using Esri.GameEngine.Geometry;
+using Esri.HPFramework;
 
 using UnityEngine;
 using TMPro;
 
 using Newtonsoft.Json.Linq;
+using Unity.Mathematics;
 
 public class RouteManager : MonoBehaviour
 {
@@ -23,9 +23,9 @@ public class RouteManager : MonoBehaviour
     public string apiKey;
 
     private HPRoot hpRoot;
-    private ArcGISMapViewComponent arcGISMapViewComponent;
+    private ArcGISMapComponent arcGISMapComponent;
 
-    private float elevation = 50.0f;
+    private float elevationOffset = 20.0f;
 
     private int StopCount = 2;
     private Queue<GameObject> stops = new Queue<GameObject>();
@@ -37,16 +37,20 @@ public class RouteManager : MonoBehaviour
 
     private HttpClient client = new HttpClient();
 
+    double3 lastRootPosition;
+
     void Start()
     {
         // We need HPRoot for the HitToGeoPosition Method
         hpRoot = FindObjectOfType<HPRoot>();
 
-        // We need this ArcGISMapViewComponent for the FromCartesianPosition Method
-        // defined on the ArcGISRendererView defined on the instnace of ArcGISMapViewComponent
-        arcGISMapViewComponent = FindObjectOfType<ArcGISMapViewComponent>();
+        // We need this ArcGISMapComponent for the FromCartesianPosition Method
+        // defined on the ArcGISMapComponent.View
+        arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
 
         lineRenderer = Route.GetComponent<LineRenderer>();
+
+        lastRootPosition = arcGISMapComponent.GetComponent<HPRoot>().RootUniversePosition;
     }
 
     async void Update()
@@ -65,14 +69,14 @@ public class RouteManager : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
-                var routeMarker = Instantiate(RouteMarker, hit.point, Quaternion.identity, arcGISMapViewComponent.transform);
+                var routeMarker = Instantiate(RouteMarker, hit.point, Quaternion.identity, arcGISMapComponent.transform);
 
                 var geoPosition = HitToGeoPosition(hit);
 
                 var locationComponent = routeMarker.GetComponent<ArcGISLocationComponent>();
                 locationComponent.enabled = true;
                 locationComponent.Position = geoPosition;
-                locationComponent.Rotation = new Rotator(0, 90, 0);
+                locationComponent.Rotation = new ArcGISRotation(0, 90, 0);
 
                 stops.Enqueue(routeMarker);
 
@@ -98,6 +102,8 @@ public class RouteManager : MonoBehaviour
                 }
             }
         }
+
+        RebaseRoute();
     }
     
     /// <summary>
@@ -105,20 +111,20 @@ public class RouteManager : MonoBehaviour
     /// </summary>
     /// <param name="hit"></param>
     /// <returns></returns>
-    private GeoPosition HitToGeoPosition(RaycastHit hit)
+    private ArcGISPoint HitToGeoPosition(RaycastHit hit, float yOffset = 0)
     {
-        var rup = hpRoot.DRootUniversePosition;
+        var rup = hpRoot.RootUniversePosition;
 
-        var v3 = new Vector3d(
-            hit.point.x + rup.x, 
-            hit.point.y + rup.y, 
+        var v3 = new double3(
+            hit.point.x + rup.x,
+            hit.point.y + rup.y + yOffset, 
             hit.point.z + rup.z
             );
 
         // Spatial Reference of geoPosition will be Determined Spatial Reference of layers currently being rendered
-        var geoPosition = arcGISMapViewComponent.RendererView.FromCartesianPosition(v3);
+        var geoPosition = arcGISMapComponent.View.WorldToGeographic(v3);
 
-        return GeoUtils.ProjectToWGS84(geoPosition);
+        return GeoUtils.ProjectToSpatialReference(geoPosition, new ArcGISSpatialReference(4326));
     }
 
     private void DisplayError(string error_text)
@@ -154,8 +160,8 @@ public class RouteManager : MonoBehaviour
 
     private string GetRouteString(GameObject[] stops)
     {
-        GeoPosition startGP = stops[0].GetComponent<ArcGISLocationComponent>().Position;
-        GeoPosition endGP = stops[1].GetComponent<ArcGISLocationComponent>().Position;
+        ArcGISPoint startGP = stops[0].GetComponent<ArcGISLocationComponent>().Position;
+        ArcGISPoint endGP = stops[1].GetComponent<ArcGISLocationComponent>().Position;
 
         string startString = $"{startGP.X}, {startGP.Y}";
         string endString = $"{endGP.X}, {endGP.Y}";
@@ -163,14 +169,14 @@ public class RouteManager : MonoBehaviour
         return $"{startString};{endString}";
     }
 
-    private GameObject CreateBreadCrumb(float lat, float lon, float alt)
+    private GameObject CreateBreadCrumb(float lat, float lon)
     {
-        GameObject breadcrumb = Instantiate(RouteBreadcrumb, arcGISMapViewComponent.transform);
+        GameObject breadcrumb = Instantiate(RouteBreadcrumb, arcGISMapComponent.transform);
 
         breadcrumb.name = "Breadcrumb";
 
         ArcGISLocationComponent location = breadcrumb.AddComponent<ArcGISLocationComponent>();
-        location.Position = new GeoPosition(lat, lon, alt, 4326);
+        location.Position = new ArcGISPoint(lat, lon, elevationOffset, new ArcGISSpatialReference(4326));
 
         return breadcrumb;
     }
@@ -179,8 +185,8 @@ public class RouteManager : MonoBehaviour
     {
         ClearRoute();
 
-        var info    = JObject.Parse(routeInfo);
-        var routes   = info.SelectToken("routes");
+        var info = JObject.Parse(routeInfo);
+        var routes = info.SelectToken("routes");
         var features = routes.SelectToken("features");
 
         UpdateRouteInfo(features);
@@ -195,13 +201,44 @@ public class RouteManager : MonoBehaviour
                 var lat = (float)path[0];
                 var lon = (float)path[1];
 
-                breadcrumbs.Add(CreateBreadCrumb(lat, lon, elevation));
+                breadcrumbs.Add(CreateBreadCrumb(lat, lon));
 
                 yield return null;
             }
         }
 
+        SetBreadcrumbHeight();
+
+        // need a frame for location component updates to occur
+        yield return null;
+
         RenderLine();
+    }
+
+    // Does a raycast to get the elevation for each point. SyncPositionWithHPTransform is used here to ensure the location component is updated in the next frame
+    // For routes covering long distances the raycast will only hit elevation that is actively loaded. If you are doing something like this the raycast
+    // needs to happen dynamically when the data is loaded. This can be accomplished by only raycasting for breadcrums within a distance of the camera.
+    private void SetBreadcrumbHeight()
+    {
+        for (int i = 1; i < breadcrumbs.Count - 1; i++)
+        {
+            SetElevation(breadcrumbs[i]);
+        }    
+    }
+
+    // Does a raycast to find the ground
+    void SetElevation(GameObject breadcrumb)
+    {
+        // start the raycast in the air at an arbitrary to ensure it is above the ground
+        var raycastHeight = 5000;
+        var position = breadcrumb.transform.position;
+        var raycastStart = new Vector3(position.x, position.y + raycastHeight, position.z);
+        if (Physics.Raycast(raycastStart, Vector3.down, out RaycastHit hitInfo))
+        {
+            var location = breadcrumb.GetComponent<ArcGISLocationComponent>();
+            location.Position = HitToGeoPosition(hitInfo, elevationOffset);
+            location.SyncPositionWithHPTransform();
+        }
     }
 
     private void UpdateRouteInfo(JToken features)
@@ -250,6 +287,27 @@ public class RouteManager : MonoBehaviour
 
         lineRenderer.positionCount = allPoints.Count;
         lineRenderer.SetPositions(allPoints.ToArray());
+    }
+
+    // The ArcGIS Rebase component
+    private void RebaseRoute()
+    {
+        var rootPosition = arcGISMapComponent.GetComponent<HPRoot>().RootUniversePosition;
+        var delta = (lastRootPosition - rootPosition).ToVector3();
+        if (delta.magnitude > 1) // 1km
+        {
+            if (lineRenderer != null)
+            {
+                Vector3[] points = new Vector3[lineRenderer.positionCount];
+                lineRenderer.GetPositions(points);
+                for (int i = 0; i < points.Length; i++)
+                {
+                    points[i] += delta;
+                }
+                lineRenderer.SetPositions(points);
+            }
+            lastRootPosition = rootPosition;
+        }
     }
 
 }
