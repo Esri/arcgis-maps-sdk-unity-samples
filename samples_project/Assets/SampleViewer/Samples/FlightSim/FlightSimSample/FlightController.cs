@@ -1,14 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Esri.ArcGISMapsSDK.Utils.GeoCoord;
-using Esri.GameEngine.Geometry;
-using Esri.ArcGISMapsSDK.Components;
+using UnityEngine.InputSystem;
 
 public class FlightController : MonoBehaviour
 {
+    private bool released;
+    private bool isGrounded = false;
+    private float rotationX;
+    private float rotationY;
+    private float rotationZ;
     [Header ("Components")]
-    public Rigidbody rb;
+    private Rigidbody rb;
+    private PlayerInput playerInput;
     [Header("Rates and Speeds")]
     public float acceleration;
     public float speed;
@@ -17,10 +21,6 @@ public class FlightController : MonoBehaviour
     public float rollRate;
     public float yawRate;
     public float pitchRate;
-    [Header("Bools")]
-    public bool engineOn;
-    public bool released;
-    public bool isGrounded = false;
     [Header ("Roll")]
     public float maxRoll;
     public float minRoll;
@@ -30,16 +30,16 @@ public class FlightController : MonoBehaviour
     [Header ("Pitch")]
     public float maxPitch;
     public float minPitch;
-    [Header ("Rotation Fields")]
-    public float rotationX;
-    public float rotationY;
-    public float rotationZ;
-    [Header ("Timer")]
-    public float currentTime;
-    public float startTime;
+
+    private InputAction accelerate;
+
     private void Awake()
     {
+        Keyboard keyboard = Keyboard.current;
         rb = GetComponent<Rigidbody>();
+        playerInput = GetComponent<PlayerInput>();
+        accelerate = playerInput.actions["Accelerate"];
+        accelerate.ReadValue<bool>();
     }
     // Update is called once per frame
     void Update()
@@ -67,11 +67,6 @@ public class FlightController : MonoBehaviour
         else
         {
             rb.useGravity = true;
-        }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            engineOn = true;
-            speed = 0.1f;
         }
         if (!isGrounded && speed > 1000)
         {
@@ -214,9 +209,5 @@ public class FlightController : MonoBehaviour
     {
         isGrounded = false;
         Debug.Log("Flying");
-    }
-    public void UpTick()
-    {
-
     }
 }
