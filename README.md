@@ -1,24 +1,46 @@
-# This repo is currently private
-
 # arcgis-maps-sdk-unity-samples
 
-1. Download Unity 2021.3
-2. Clone this repo and add `samples_project` in the Unity Hub
-3. Open the `samples_project` and launch the Unity Editor. If there is a pop-up asking to open the project in Safe Mode, click `Ignore`.
-4. Get the most recent build of the plugin from here https://runtime-zip.esri.com/userContent/runtime/setups/gameengine/100.15.0/ (Right now the sample repo is using version 3518)
-5. Install the most recent `ArcGISMapsSDK.unitypackage`. In the header bar navigate to `Assets -> Import Package -> Custom Package` and select `ArcGISMapsSDK.unitypackage`.
-6. Open `SampleViewer.unity` from the `Assets/SampleViewer` folder in the Project window.
+![image](arcgis-maps-sdk-unity-samples.png)
 
-To add a new sample scene add the `.unity` file in this directory `Assets/SampleViewer/Samples/` and also add the scene to the project settings build list(`File -> Build Settings`). If your new scene is called `ExampleName.unity` in the `SampleViewer` level on the `SampleSwitcher` object add a new element under `Scene List` with the name `ExampleName`
-In addition, to ensure your scene and the `SampleViewer.unity` scene (which is used to preview all scenes) has good lighting add the `LightingManager` prefab to your scene found in `Assets/SampleViewer/Resources/SampleGraphicSettings`.
+Here is a Unity project containing a set of samples showing you how to accomplish various things using the combined features of Unity and the ArcGIS Maps SDK for Unity.
 
-- [Unity C# Coding Style](coding-style-csharp.md)
-- [List of sample ideas](https://esriis.sharepoint.com/:x:/r/teams/GameEngine/_layouts/15/Doc.aspx?sourcedoc=%7B0dcb8b4d-f1ab-406c-9286-8a79ab2f7bc8%7D&action=editnew)
+## Instructions
 
-## PR Process
+1. Clone this repo.
+2. Refer to the [ArcGIS Maps SDK for Unity's documentation on getting started](https://developers.arcgis.com/unity-sdk/get-started/) on how to download `Unity` and the `ArcGIS Maps SDK for Unity`. This project does not contain the Maps SDK so it needs to be included into any other project.
+3. Launch Unity and play the `SampleViewer` level.
 
-Especially as we begin the process of figuring out how we structure our new samples the more the merrier on your PRs. Also while this is private PRs can be created against main. Testing on as many devices as possible and stating what testing has been done is also a good idea.
+## Requirements
 
-## Issue management
+* Refer to the [ArcGIS Maps SDK for Unity's documentation on system requirements](https://developers.arcgis.com/unity-sdk/reference/system-requirements/)
 
-If you find a bug with the ArcGIS Maps SDK for Unity or with this sample viewer you can create an issue here. Same goes for a feature request on the sample viewer.
+## Resources
+
+* [ArcGIS Maps SDK for Unity's documentation](https://developers.arcgis.com/unity-sdk/)
+* [Unity's documentation](https://docs.unity.com/)
+* [Esri Community forum](https://community.esri.com/t5/arcgis-maps-sdks-for-unity-questions/bd-p/arcgis-maps-sdks-unity-questions)
+
+## Issues
+
+Find a bug or want to request a new feature?  Please let us know by submitting an issue.
+
+## Contributing
+
+Esri welcomes contributions from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing).
+
+## Licensing
+Copyright 2022 Esri
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+A copy of the license is available in the repository's [license.txt]( https://raw.github.com/Esri/arcgis-maps-sdk-unity-samples/master/license.txt) file.
