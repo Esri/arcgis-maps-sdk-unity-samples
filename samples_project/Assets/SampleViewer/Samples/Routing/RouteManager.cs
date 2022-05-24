@@ -204,6 +204,7 @@ public class RouteManager : MonoBehaviour
                 breadcrumbs.Add(CreateBreadCrumb(lat, lon));
 
                 yield return null;
+                yield return null;
             }
         }
 
@@ -211,19 +212,19 @@ public class RouteManager : MonoBehaviour
 
         // need a frame for location component updates to occur
         yield return null;
+        yield return null;
 
         RenderLine();
     }
 
-    // Does a raycast to get the elevation for each point. SyncPositionWithHPTransform is used here to ensure the location component is updated in the next frame
-    // For routes covering long distances the raycast will only hit elevation that is actively loaded. If you are doing something like this the raycast
-    // needs to happen dynamically when the data is loaded. This can be accomplished by only raycasting for breadcrums within a distance of the camera.
+    // Does a raycast to get the elevation for each point.  For routes covering long distances the raycast will only hit elevation that is actively loaded. If you are doing 
+    // something like this the raycast needs to happen dynamically when the data is loaded. This can be accomplished by only raycasting for breadcrums within a distance of the camera.
     private void SetBreadcrumbHeight()
     {
-        for (int i = 1; i < breadcrumbs.Count - 1; i++)
+        for (int i = 0; i < breadcrumbs.Count; i++)
         {
             SetElevation(breadcrumbs[i]);
-        }    
+        }
     }
 
     // Does a raycast to find the ground
@@ -237,7 +238,6 @@ public class RouteManager : MonoBehaviour
         {
             var location = breadcrumb.GetComponent<ArcGISLocationComponent>();
             location.Position = HitToGeoPosition(hitInfo, elevationOffset);
-            location.SyncPositionWithHPTransform();
         }
     }
 
