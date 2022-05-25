@@ -7,7 +7,7 @@ Here is a Unity project containing a set of samples showing you how to accomplis
 ## Instructions
 
 1. Clone this repo.
-2. Refer to the [ArcGIS Maps SDK for Unity's documentation on getting started](https://developers.arcgis.com/unity-sdk/get-started/) on how to download `Unity` and the `ArcGIS Maps SDK for Unity`. This project does not contain the Maps SDK so it needs to be included into any other project.
+2. Refer to the [ArcGIS Maps SDK for Unity's documentation on getting started](https://developers.arcgis.com/unity-sdk/get-started/) on how to download `Unity` and the `ArcGIS Maps SDK for Unity`. This project does not contain the Maps SDK so it needs to be included like it would into any other project.
 3. Launch Unity and play the `SampleViewer` level.
 
 ## Requirements
