@@ -72,7 +72,7 @@ public class FeatureLayerQuery : MonoBehaviour
 
         StadiumSelector.onValueChanged.AddListener(delegate
         {
-            StadiumSelcted();
+            StadiumSelected();
         });
     }
 
@@ -194,7 +194,7 @@ public class FeatureLayerQuery : MonoBehaviour
     }
 
     // When a new entry is selected in the stadium dropdown move the camera to the new position
-    private void StadiumSelcted()
+    private void StadiumSelected()
     {
         var StadiumName = StadiumSelector.options[StadiumSelector.value].text;
         foreach (GameObject Stadium in Stadiums)
