@@ -1,32 +1,36 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
+using Esri.HPFramework;
+using System;
 public class FlightController_NewInput : MonoBehaviour
 {
-    //Private Variables
-    [SerializeField]private bool isGrounded = false;
+    [Header ("Private Variables")]
+    private bool isGrounded = false;
+    private bool speedIncreasing;
     private float rotationX;
-    private float rotationY;
+    private float rotationY = 120;
     private float rotationZ;
     private Vector2 accelerate;
     private Vector2 pitch;
     [Header("Components")]
     private Rigidbody rb;
     private PlayerInput playerInput;
+    private HPTransform hpTransform;
     private FlightSimControls flightSimControls;
+    public TextMeshProUGUI[] text;
     [Header("Rates and Speeds")]
     public float acceleration;
     public float speed;
+    public float reverseSpeed;
     public float upSpeed;
-    public float glidingSpeed;
+    public float turnSpeed;
     public float rollRate;
     public float yawRate;
     public float pitchRate;
     [Header("Roll")]
     public float maxRoll;
     public float minRoll;
-    [Header("Yaw")]
-    public float maxYaw;
-    public float minYaw;
     [Header("Pitch")]
     public float maxPitch;
     public float minPitch;
@@ -36,6 +40,7 @@ public class FlightController_NewInput : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         playerInput = GetComponent<PlayerInput>();
         flightSimControls = new FlightSimControls();
+        hpTransform = GetComponent<HPTransform>();
     }
     private void OnEnable()
     {
@@ -48,31 +53,35 @@ public class FlightController_NewInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Update Text on Screen
+        float value = Convert.ToSingle(hpTransform.LocalPosition.y);
+        text[0].text = "Altitude: " + Math.Round(value);
+        text[1].text = "Speed: " + Math.Round(speed);
+        text[2].text = "Pitch: " + Math.Round(transform.rotation.x, 2) + "\n" + 
+            "Yaw: " + Math.Round(transform.rotation.y, 2) + "\n" + 
+            "Roll: " + Math.Round(transform.rotation.z, 2) + "\n";
+        //Get Input
         accelerate = flightSimControls.PlaneMovement.Accelerate.ReadValue<Vector2>();
-        pitch = flightSimControls.PlaneMovement.KeyboardMovement.ReadValue<Vector2>();
+        pitch = flightSimControls.PlaneMovement.PitchandRoll.ReadValue<Vector2>();
+        //Set Angles & Position to Vectors
         Vector3 rot = transform.localEulerAngles;
         Vector3 pos = transform.position;
-        transform.position = pos;
         //Clamp X/Pitch Rotation
         rotationX = Mathf.Clamp(rotationX, minPitch, maxPitch);
         rot.x = rotationX;
         //Clamp Y Position
-        pos.y = Mathf.Clamp(transform.position.y, -3000f, 16500f);
+        pos.y = Mathf.Clamp(transform.position.y, -3000f, 13500f);
         transform.position = pos;
-        rotationY = Mathf.Clamp(rotationY, minYaw, maxYaw);
+        //rotationY = Mathf.Clamp(rotationY, minYaw, maxYaw);
         rot.y = rotationY;
         //Clamp Z/Roll Rotation
         rotationZ = Mathf.Clamp(rotationZ, minRoll, maxRoll);
         rot.z = rotationZ;
         transform.localEulerAngles = rot;
-
-        if (!isGrounded && speed > 1000)
+        //Check if Plane is on Ground or Not
+        if (!isGrounded)
         {
             AirControls();
-        }
-        else if (speed < 1000 && !isGrounded)
-        {
-            //Gliding();
         }
         else
         {
@@ -81,13 +90,21 @@ public class FlightController_NewInput : MonoBehaviour
     }
     public void Grounded()
     {
-        if (accelerate.y > 0.1f)
+        if (accelerate.y > 0f)
         {
             if (speed < 5000)
             {
                 speed += acceleration + Time.deltaTime;
+                rb.AddForce(speed * Time.deltaTime * Vector3.forward);
             }
-            rb.AddRelativeForce(Vector3.forward * speed * Time.deltaTime);
+        }
+        else if(accelerate.y < 0f)
+        {
+            rb.MovePosition(transform.position + (transform.forward * reverseSpeed * Time.deltaTime));
+        }
+        else
+        {
+            speed = 0;
         }
         if (speed > 1000)
         {
@@ -95,42 +112,32 @@ public class FlightController_NewInput : MonoBehaviour
             if (pitch.y > 0)
             {
                 rotationX += -pitchRate * Time.deltaTime;
-                rb.AddRelativeForce(Vector3.up * 1000 * Time.deltaTime);
-                //transform.position += transform.up * upSpeed * Time.deltaTime;
+                rb.AddForce(upSpeed * Time.deltaTime * Vector3.up);
             }    
         }
         //Yaw Rotation
         if (accelerate.x > 0f)
         {
+            rb.AddForce(turnSpeed * Time.deltaTime * Vector3.up);
             rotationY += yawRate * Time.deltaTime;
-            if(transform.rotation.y > 0f)
-            {
-                rb.AddRelativeForce(speed * Time.deltaTime * Vector3.right);
-            }
         }
         else if (accelerate.x < 0f)
         {
-            rb.AddRelativeTorque(speed * Time.deltaTime * Vector3.right);
+            rb.AddForce(-turnSpeed * Time.deltaTime * Vector3.up);
             rotationY += -yawRate * Time.deltaTime;
         }
-        else if(accelerate.x == 0f)
-        {
-            rotationY = 0f;
-        }
-
     }
     public void AirControls()
     {
-        if (pitch.y > 0)
+        if (pitch.y > 0 && speedIncreasing)
         {
             rotationX += -pitchRate * Time.deltaTime;
-            rb.AddRelativeForce(1000 * Time.deltaTime * Vector3.up);
-            //transform.position += transform.up * upSpeed * Time.deltaTime;
+            rb.AddForce(upSpeed * Time.deltaTime * Vector3.up);
         }
         else if(pitch.y < 0)
         {
             rotationX += pitchRate * Time.deltaTime;
-            rb.AddRelativeForce(-1000 * Time.deltaTime * Vector3.up);
+            rb.AddForce(-upSpeed * Time.deltaTime * Vector3.up);
         }
         //Movement Input
         if (accelerate.y > 0.1f)
@@ -138,25 +145,44 @@ public class FlightController_NewInput : MonoBehaviour
             if (speed < 5000)
             {
                 speed += acceleration * Time.deltaTime;
+                speedIncreasing = true;
             }
-            rb.AddRelativeForce(speed * Time.deltaTime * Vector3.forward);
-            //transform.Translate(Vector3.forward * speed * Time.deltaTime);
+            rb.MovePosition(transform.position + (transform.forward * speed * Time.deltaTime));
         }
-        else
+        else if (accelerate.y < 0f && speed > 0)
         {
-            rb.AddRelativeForce(speed * Time.deltaTime * Vector3.forward);
+            rb.MovePosition(transform.position + (transform.forward * speed * Time.deltaTime));
+            speed += reverseSpeed * Time.deltaTime;
+            speedIncreasing = false;
+        }
+        else if(speed > 0)
+        {
+            rb.MovePosition(transform.position + (transform.forward * speed * Time.deltaTime));
             speed -= 10 * Time.deltaTime;
+            speedIncreasing = false;
         }
-        //Yaw Rotation
-        if (accelerate.x > 0f)
+        //Yaw
+        if(transform.rotation.z != 0)
         {
-            rb.AddRelativeTorque(-100 * accelerate.x * Vector3.up);
-            rotationY += yawRate * Time.deltaTime;
+            if (accelerate.x > 0f)
+            {
+                rb.AddForce(turnSpeed * Time.deltaTime * Vector3.up);
+                rotationY += yawRate * Time.deltaTime;
+            }
+            else if (accelerate.x < 0f)
+            {
+                rb.AddForce(-turnSpeed * Time.deltaTime * Vector3.up);
+                rotationY += -yawRate * Time.deltaTime;
+            }
         }
-        else if (accelerate.x < 0f)
+        //Roll
+        if (pitch.x > 0f)
         {
-            rb.AddRelativeTorque(100 * accelerate.x * Vector3.up);
-            rotationY += -yawRate * Time.deltaTime;
+            rotationZ += -rollRate * Time.deltaTime;
+        }
+        else if(pitch.x < 0f)
+        {
+            rotationZ += rollRate * Time.deltaTime;
         }
     }
     public void Gliding()

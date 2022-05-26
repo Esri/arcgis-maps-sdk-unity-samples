@@ -6,18 +6,9 @@
             "id": "15dd230d-c085-44a7-81ef-926d9f37aa5f",
             "actions": [
                 {
-                    "name": "Keyboard Movement",
+                    "name": "PitchandRoll",
                     "type": "Value",
                     "id": "3d87fa90-5e51-455f-8fd9-26d5b88be985",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
-                    "name": "Controller Movement",
-                    "type": "Value",
-                    "id": "d39e534a-b47d-4bde-b069-b5b66f1bbd44",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
@@ -35,29 +26,7 @@
             ],
             "bindings": [
                 {
-                    "name": "",
-                    "id": "bb57450e-02bc-4b69-82b5-3247500aaa2a",
-                    "path": "<Gamepad>/leftStick",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Controller Movement",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "ef5d4da4-08fe-4e62-b435-53f2d9a357bd",
-                    "path": "<Gamepad>/rightTrigger",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Accelerate",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "Acceleration",
+                    "name": "Keyboard Acceleration",
                     "id": "e3c5db3a-a3f2-4938-91f6-1b04adabb9c1",
                     "path": "2DVector",
                     "interactions": "",
@@ -112,13 +81,68 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "Pitch",
+                    "name": "Gamepad Acceleration",
+                    "id": "2a7a0f1e-ac5a-4d59-aa66-216538a57559",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Accelerate",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "Up",
+                    "id": "54ddef46-5fae-404d-9b38-a56e867e693c",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "AxisDeadzone",
+                    "groups": "",
+                    "action": "Accelerate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Down",
+                    "id": "a1b0dbf3-4fe6-481a-ba92-7cd9b7288224",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "AxisDeadzone",
+                    "groups": "",
+                    "action": "Accelerate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "6a6ba18d-9cca-48f3-813d-6c5edb5dfcb0",
+                    "path": "<Gamepad>/leftStick/right",
+                    "interactions": "",
+                    "processors": "AxisDeadzone",
+                    "groups": "",
+                    "action": "Accelerate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "e1d3f329-2e14-489e-a3b8-84ba38556cf2",
+                    "path": "<Gamepad>/leftStick/left",
+                    "interactions": "",
+                    "processors": "AxisDeadzone",
+                    "groups": "",
+                    "action": "Accelerate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Keyboard Pitch",
                     "id": "20b76cf8-e0fb-4f3a-a2bb-51c42cdc5aee",
                     "path": "2DVector",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Keyboard Movement",
+                    "action": "PitchandRoll",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -129,7 +153,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Keyboard Movement",
+                    "action": "PitchandRoll",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -140,7 +164,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Keyboard Movement",
+                    "action": "PitchandRoll",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -151,7 +175,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Keyboard Movement",
+                    "action": "PitchandRoll",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -162,7 +186,62 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Keyboard Movement",
+                    "action": "PitchandRoll",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Gamepad Pitch",
+                    "id": "0509816b-9724-488c-9da6-26626199ad93",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PitchandRoll",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "00b62bfb-e88b-49fd-a5a7-acbe25001038",
+                    "path": "<Gamepad>/rightStick/down",
+                    "interactions": "",
+                    "processors": "AxisDeadzone",
+                    "groups": "",
+                    "action": "PitchandRoll",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "2e95383e-34b0-4da8-8ad2-72c394221fba",
+                    "path": "<Gamepad>/rightStick/up",
+                    "interactions": "",
+                    "processors": "AxisDeadzone",
+                    "groups": "",
+                    "action": "PitchandRoll",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "bb0b1672-10bb-4226-9bf3-8be869d2400e",
+                    "path": "<Gamepad>/rightStick/left",
+                    "interactions": "",
+                    "processors": "AxisDeadzone",
+                    "groups": "",
+                    "action": "PitchandRoll",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "e0ba8576-31b3-47b2-a2a5-d62a5f022417",
+                    "path": "<Gamepad>/rightStick/right",
+                    "interactions": "",
+                    "processors": "AxisDeadzone",
+                    "groups": "",
+                    "action": "PitchandRoll",
                     "isComposite": false,
                     "isPartOfComposite": true
                 }

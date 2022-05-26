@@ -28,18 +28,9 @@ public partial class @FlightSimControls : IInputActionCollection2, IDisposable
             ""id"": ""15dd230d-c085-44a7-81ef-926d9f37aa5f"",
             ""actions"": [
                 {
-                    ""name"": ""Keyboard Movement"",
+                    ""name"": ""PitchandRoll"",
                     ""type"": ""Value"",
                     ""id"": ""3d87fa90-5e51-455f-8fd9-26d5b88be985"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""Controller Movement"",
-                    ""type"": ""Value"",
-                    ""id"": ""d39e534a-b47d-4bde-b069-b5b66f1bbd44"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -57,29 +48,7 @@ public partial class @FlightSimControls : IInputActionCollection2, IDisposable
             ],
             ""bindings"": [
                 {
-                    ""name"": """",
-                    ""id"": ""bb57450e-02bc-4b69-82b5-3247500aaa2a"",
-                    ""path"": ""<Gamepad>/leftStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Controller Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""ef5d4da4-08fe-4e62-b435-53f2d9a357bd"",
-                    ""path"": ""<Gamepad>/rightTrigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Accelerate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""Acceleration"",
+                    ""name"": ""Keyboard Acceleration"",
                     ""id"": ""e3c5db3a-a3f2-4938-91f6-1b04adabb9c1"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
@@ -134,13 +103,68 @@ public partial class @FlightSimControls : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""Pitch"",
+                    ""name"": ""Gamepad Acceleration"",
+                    ""id"": ""2a7a0f1e-ac5a-4d59-aa66-216538a57559"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Accelerate"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Up"",
+                    ""id"": ""54ddef46-5fae-404d-9b38-a56e867e693c"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": ""AxisDeadzone"",
+                    ""groups"": """",
+                    ""action"": ""Accelerate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Down"",
+                    ""id"": ""a1b0dbf3-4fe6-481a-ba92-7cd9b7288224"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": ""AxisDeadzone"",
+                    ""groups"": """",
+                    ""action"": ""Accelerate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""6a6ba18d-9cca-48f3-813d-6c5edb5dfcb0"",
+                    ""path"": ""<Gamepad>/leftStick/right"",
+                    ""interactions"": """",
+                    ""processors"": ""AxisDeadzone"",
+                    ""groups"": """",
+                    ""action"": ""Accelerate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""e1d3f329-2e14-489e-a3b8-84ba38556cf2"",
+                    ""path"": ""<Gamepad>/leftStick/left"",
+                    ""interactions"": """",
+                    ""processors"": ""AxisDeadzone"",
+                    ""groups"": """",
+                    ""action"": ""Accelerate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Keyboard Pitch"",
                     ""id"": ""20b76cf8-e0fb-4f3a-a2bb-51c42cdc5aee"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Keyboard Movement"",
+                    ""action"": ""PitchandRoll"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
@@ -151,7 +175,7 @@ public partial class @FlightSimControls : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Keyboard Movement"",
+                    ""action"": ""PitchandRoll"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -162,7 +186,7 @@ public partial class @FlightSimControls : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Keyboard Movement"",
+                    ""action"": ""PitchandRoll"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -173,7 +197,7 @@ public partial class @FlightSimControls : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Keyboard Movement"",
+                    ""action"": ""PitchandRoll"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -184,7 +208,62 @@ public partial class @FlightSimControls : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Keyboard Movement"",
+                    ""action"": ""PitchandRoll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Gamepad Pitch"",
+                    ""id"": ""0509816b-9724-488c-9da6-26626199ad93"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PitchandRoll"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""00b62bfb-e88b-49fd-a5a7-acbe25001038"",
+                    ""path"": ""<Gamepad>/rightStick/down"",
+                    ""interactions"": """",
+                    ""processors"": ""AxisDeadzone"",
+                    ""groups"": """",
+                    ""action"": ""PitchandRoll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""2e95383e-34b0-4da8-8ad2-72c394221fba"",
+                    ""path"": ""<Gamepad>/rightStick/up"",
+                    ""interactions"": """",
+                    ""processors"": ""AxisDeadzone"",
+                    ""groups"": """",
+                    ""action"": ""PitchandRoll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""bb0b1672-10bb-4226-9bf3-8be869d2400e"",
+                    ""path"": ""<Gamepad>/rightStick/left"",
+                    ""interactions"": """",
+                    ""processors"": ""AxisDeadzone"",
+                    ""groups"": """",
+                    ""action"": ""PitchandRoll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""e0ba8576-31b3-47b2-a2a5-d62a5f022417"",
+                    ""path"": ""<Gamepad>/rightStick/right"",
+                    ""interactions"": """",
+                    ""processors"": ""AxisDeadzone"",
+                    ""groups"": """",
+                    ""action"": ""PitchandRoll"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 }
@@ -195,8 +274,7 @@ public partial class @FlightSimControls : IInputActionCollection2, IDisposable
 }");
         // Plane Movement
         m_PlaneMovement = asset.FindActionMap("Plane Movement", throwIfNotFound: true);
-        m_PlaneMovement_KeyboardMovement = m_PlaneMovement.FindAction("Keyboard Movement", throwIfNotFound: true);
-        m_PlaneMovement_ControllerMovement = m_PlaneMovement.FindAction("Controller Movement", throwIfNotFound: true);
+        m_PlaneMovement_PitchandRoll = m_PlaneMovement.FindAction("PitchandRoll", throwIfNotFound: true);
         m_PlaneMovement_Accelerate = m_PlaneMovement.FindAction("Accelerate", throwIfNotFound: true);
     }
 
@@ -257,15 +335,13 @@ public partial class @FlightSimControls : IInputActionCollection2, IDisposable
     // Plane Movement
     private readonly InputActionMap m_PlaneMovement;
     private IPlaneMovementActions m_PlaneMovementActionsCallbackInterface;
-    private readonly InputAction m_PlaneMovement_KeyboardMovement;
-    private readonly InputAction m_PlaneMovement_ControllerMovement;
+    private readonly InputAction m_PlaneMovement_PitchandRoll;
     private readonly InputAction m_PlaneMovement_Accelerate;
     public struct PlaneMovementActions
     {
         private @FlightSimControls m_Wrapper;
         public PlaneMovementActions(@FlightSimControls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @KeyboardMovement => m_Wrapper.m_PlaneMovement_KeyboardMovement;
-        public InputAction @ControllerMovement => m_Wrapper.m_PlaneMovement_ControllerMovement;
+        public InputAction @PitchandRoll => m_Wrapper.m_PlaneMovement_PitchandRoll;
         public InputAction @Accelerate => m_Wrapper.m_PlaneMovement_Accelerate;
         public InputActionMap Get() { return m_Wrapper.m_PlaneMovement; }
         public void Enable() { Get().Enable(); }
@@ -276,12 +352,9 @@ public partial class @FlightSimControls : IInputActionCollection2, IDisposable
         {
             if (m_Wrapper.m_PlaneMovementActionsCallbackInterface != null)
             {
-                @KeyboardMovement.started -= m_Wrapper.m_PlaneMovementActionsCallbackInterface.OnKeyboardMovement;
-                @KeyboardMovement.performed -= m_Wrapper.m_PlaneMovementActionsCallbackInterface.OnKeyboardMovement;
-                @KeyboardMovement.canceled -= m_Wrapper.m_PlaneMovementActionsCallbackInterface.OnKeyboardMovement;
-                @ControllerMovement.started -= m_Wrapper.m_PlaneMovementActionsCallbackInterface.OnControllerMovement;
-                @ControllerMovement.performed -= m_Wrapper.m_PlaneMovementActionsCallbackInterface.OnControllerMovement;
-                @ControllerMovement.canceled -= m_Wrapper.m_PlaneMovementActionsCallbackInterface.OnControllerMovement;
+                @PitchandRoll.started -= m_Wrapper.m_PlaneMovementActionsCallbackInterface.OnPitchandRoll;
+                @PitchandRoll.performed -= m_Wrapper.m_PlaneMovementActionsCallbackInterface.OnPitchandRoll;
+                @PitchandRoll.canceled -= m_Wrapper.m_PlaneMovementActionsCallbackInterface.OnPitchandRoll;
                 @Accelerate.started -= m_Wrapper.m_PlaneMovementActionsCallbackInterface.OnAccelerate;
                 @Accelerate.performed -= m_Wrapper.m_PlaneMovementActionsCallbackInterface.OnAccelerate;
                 @Accelerate.canceled -= m_Wrapper.m_PlaneMovementActionsCallbackInterface.OnAccelerate;
@@ -289,12 +362,9 @@ public partial class @FlightSimControls : IInputActionCollection2, IDisposable
             m_Wrapper.m_PlaneMovementActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @KeyboardMovement.started += instance.OnKeyboardMovement;
-                @KeyboardMovement.performed += instance.OnKeyboardMovement;
-                @KeyboardMovement.canceled += instance.OnKeyboardMovement;
-                @ControllerMovement.started += instance.OnControllerMovement;
-                @ControllerMovement.performed += instance.OnControllerMovement;
-                @ControllerMovement.canceled += instance.OnControllerMovement;
+                @PitchandRoll.started += instance.OnPitchandRoll;
+                @PitchandRoll.performed += instance.OnPitchandRoll;
+                @PitchandRoll.canceled += instance.OnPitchandRoll;
                 @Accelerate.started += instance.OnAccelerate;
                 @Accelerate.performed += instance.OnAccelerate;
                 @Accelerate.canceled += instance.OnAccelerate;
@@ -304,8 +374,7 @@ public partial class @FlightSimControls : IInputActionCollection2, IDisposable
     public PlaneMovementActions @PlaneMovement => new PlaneMovementActions(this);
     public interface IPlaneMovementActions
     {
-        void OnKeyboardMovement(InputAction.CallbackContext context);
-        void OnControllerMovement(InputAction.CallbackContext context);
+        void OnPitchandRoll(InputAction.CallbackContext context);
         void OnAccelerate(InputAction.CallbackContext context);
     }
 }
