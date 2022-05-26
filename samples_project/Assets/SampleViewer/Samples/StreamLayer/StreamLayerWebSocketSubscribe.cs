@@ -56,7 +56,7 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
 {
 	public GameObject trackSymbolPrefab;
 	public float symbolScaleFactor = 2000.0f;
-	//public float timeToLive = 5.0f; //minutes
+	public float timeToLive = 5.0f; //minutes
 
 	public string wsUrl = "ws://geoeventsample1.esri.com:6180/arcgis/ws/services/FAAStream/StreamServer/subscribe";
 	public string nameField;
@@ -293,6 +293,14 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
 				GameObject gobjTrack = GameObject.Find(trackFeature.attributes.name);
 				if (gobjTrack != null)
 				{
+					// If elapse time since last update is more than 5 minutes remove the game object to conserve memory
+					TimeSpan timespan = DateTime.Now - trackFeature.attributes.dateTimeStamp.ToLocalTime();
+					if (timespan.TotalMinutes > timeToLive)
+                    {
+						Destroy(gobjTrack);
+						trackData.Remove(track);
+						continue;
+                    }
 					var locationComponent = gobjTrack.GetComponent<ArcGISLocationComponent>();
 					locationComponent.Position = new ArcGISPoint(trackFeature.predictedPoint.x, trackFeature.predictedPoint.y, trackFeature.predictedPoint.z, new ArcGISSpatialReference(FeatureSRWKID));
 
