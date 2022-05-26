@@ -25,12 +25,12 @@
                 },
                 {
                     "name": "Accelerate",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "cdab6b99-dbf1-4b74-bedb-875b0890dab1",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "Vector2",
                     "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
+                    "interactions": "Hold",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -57,18 +57,62 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "5df93f89-d71a-46b9-98ab-7b70806af2ca",
+                    "name": "Acceleration",
+                    "id": "e3c5db3a-a3f2-4938-91f6-1b04adabb9c1",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Accelerate",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "Up",
+                    "id": "53e5526d-f8a6-4c66-b97f-2f5287528d8a",
                     "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Accelerate",
                     "isComposite": false,
-                    "isPartOfComposite": false
+                    "isPartOfComposite": true
                 },
                 {
-                    "name": "Pitch/Roll",
+                    "name": "Down",
+                    "id": "2623e428-f44e-40e5-8643-2636b310211d",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Accelerate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Left",
+                    "id": "c7b571c4-b5b6-4f60-aa4b-10aafd81d8f5",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Accelerate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Right",
+                    "id": "7ce3e3f8-2454-44ca-a322-0ceb886a6133",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Accelerate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Pitch",
                     "id": "20b76cf8-e0fb-4f3a-a2bb-51c42cdc5aee",
                     "path": "2DVector",
                     "interactions": "",
@@ -79,7 +123,7 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "up",
+                    "name": "Up",
                     "id": "e07fa387-577f-4c08-8f84-78a5489832c6",
                     "path": "<Keyboard>/numpad5",
                     "interactions": "",
@@ -90,7 +134,7 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "down",
+                    "name": "Down",
                     "id": "8006f329-e53d-4d59-8db3-f2ea85bc572b",
                     "path": "<Keyboard>/numpad8",
                     "interactions": "",
@@ -101,19 +145,8 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "left",
-                    "id": "129097ba-5c35-49f0-a21b-597b98a77c82",
-                    "path": "<Keyboard>/numpad4",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Keyboard Movement",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "right",
-                    "id": "6efa5e9e-40bc-4685-a92c-7c9f1643508c",
+                    "name": "Left",
+                    "id": "5c17c81d-44bc-448e-8435-bf3ad06aa18c",
                     "path": "<Keyboard>/numpad6",
                     "interactions": "",
                     "processors": "",
@@ -123,31 +156,9 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "Yaw",
-                    "id": "f815889c-5ed4-4a70-9dce-103ee7765a5a",
-                    "path": "1DAxis",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Keyboard Movement",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "negative",
-                    "id": "7ce3e3f8-2454-44ca-a322-0ceb886a6133",
-                    "path": "<Keyboard>/d",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Keyboard Movement",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "positive",
-                    "id": "c7b571c4-b5b6-4f60-aa4b-10aafd81d8f5",
-                    "path": "<Keyboard>/a",
+                    "name": "Right",
+                    "id": "081c250f-37a8-4981-b5fa-7b41bc27bd5f",
+                    "path": "<Keyboard>/numpad4",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

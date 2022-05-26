@@ -12,7 +12,6 @@ public class FlightController : MonoBehaviour
     private float rotationZ;
     [Header ("Components")]
     private Rigidbody rb;
-    private PlayerInput playerInput;
     [Header("Rates and Speeds")]
     public float acceleration;
     public float speed;
@@ -31,15 +30,10 @@ public class FlightController : MonoBehaviour
     public float maxPitch;
     public float minPitch;
 
-    private InputAction accelerate;
-
     private void Awake()
     {
         Keyboard keyboard = Keyboard.current;
         rb = GetComponent<Rigidbody>();
-        playerInput = GetComponent<PlayerInput>();
-        accelerate = playerInput.actions["Accelerate"];
-        accelerate.ReadValue<bool>();
     }
     // Update is called once per frame
     void Update()
@@ -83,8 +77,7 @@ public class FlightController : MonoBehaviour
             //Input for Pitch Down
             if (Input.GetKey(KeyCode.Keypad8))
             {
-                rotationX += pitchRate * Time.deltaTime;
-                transform.position += transform.up * -upSpeed * Time.deltaTime;
+                rotationZ += -rollRate * Time.deltaTime;
             }
             //Input for Pitch Up
             if (Input.GetKey(KeyCode.Keypad5))
