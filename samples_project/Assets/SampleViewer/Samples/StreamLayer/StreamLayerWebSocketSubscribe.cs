@@ -136,22 +136,24 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
 		}
 	}
 
-	/*"
+	/* Json Data should be in this format
 	 *	{
-	 *		\"geometry\": {
-	 *			\"x\":-81.55,
-	 *			\"y\":38.76666667,
-	 *			\"z\":8132.30691036,
-	 *			\"spatialReference\":{\"wkid\":4326}
-	 *	},\"attributes\":
-	 *		{
-	 *			\"FlightID\":11946171,
-	 *			\"ACID\":\"JBU669\",
-	 *			\"DateTimeStamp\":1652836010718,
-	 *			\"Longitude\":-81.55,
-	 *			\"Latitude\":38.76666667,
-	 *			\"Heading\":266.8079695,
-	 *			\"GroundSpeedKnots\":5"
+	 *		"geometry": {
+	 *			"x":-81.55,
+	 *			"y":38.76666667,
+	 *			"z":8132.30691036,
+	 *			"spatialReference":{"wkid":4326}
+	 *		},
+	 *		"attributes": {
+	 *			"FlightID":11946171,
+	 *			"ACID":"JBU669",
+	 *			"DateTimeStamp":1652836010718,
+	 *			"Longitude":-81.55,
+	 *			"Latitude":38.76666667,
+	 *			"Heading":266.8079695,
+	 *			"GroundSpeedKnots":5
+	 *		}
+	 *	}
 	*/
 	private void ParseFeedAndUpdateTrack(string data)
 	{
@@ -161,8 +163,6 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
 			trackFeature.predictedPoint.x = trackFeature.geometry.x;
 			trackFeature.predictedPoint.y = trackFeature.geometry.y;
 			trackFeature.predictedPoint.z = trackFeature.geometry.z;
-
-			//GeoPosition Position = new GeoPosition(Longitude, Latitude, Altitude, FeatureSRWKID);
 
 			var trackList = trackData.ContainsKey(trackFeature.attributes.name) ? trackData[trackFeature.attributes.name] : new List<TrackFeature>();
 			// Don't exceed 10 observations per track
@@ -266,21 +266,6 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
 		}
 	}
 
-#if UNITY_EDITOR
-
-	private async void EditorApplication_playModeStateChanged(PlayModeStateChange playModeState)
-	{
-		if (playModeState == PlayModeStateChange.ExitingPlayMode)
-		{
-			if (wsClient != null)
-			{
-				await Disconnect();
-			}
-		}
-	}
-#endif
-
-
 	private void DisplayTrackData()
 	{
 		try
@@ -333,4 +318,17 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
 			Debug.Log("Failed to create game object: " + ex.Message);
 		}
 	}
+
+#if UNITY_EDITOR
+	private async void EditorApplication_playModeStateChanged(PlayModeStateChange playModeState)
+	{
+		if (playModeState == PlayModeStateChange.ExitingPlayMode)
+		{
+			if (wsClient != null)
+			{
+				await Disconnect();
+			}
+		}
+	}
+#endif
 }
