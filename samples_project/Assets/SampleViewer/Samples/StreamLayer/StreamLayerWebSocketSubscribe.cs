@@ -294,6 +294,14 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
 					var rotator = locationComponent.Rotation;
 					rotator.Heading = trackFeature.attributes.heading;
 					locationComponent.Rotation = rotator;
+					Transform nameLabelTransform = gobjTrack.transform.GetChild(1);
+					if (nameLabelTransform != null)
+					{
+						GameObject nameLabel = nameLabelTransform.gameObject;
+						NameLabel nameLabelComponent = nameLabel.GetComponent<NameLabel>();
+						nameLabelComponent.slider.maxValue = timeToLive;
+						nameLabelComponent.slider.value = timeToLive - (float)timespan.TotalMinutes;
+					}
 				}
 				else
 				{
@@ -308,6 +316,16 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
 					rotator.Pitch = 90.0;
 					rotator.Heading = trackFeature.attributes.heading;
 					locationComponent.Rotation = rotator;
+
+					Transform nameLabelTransform = clonePrefab.transform.GetChild(1);
+					if (nameLabelTransform != null)
+                    {
+						GameObject nameLabel = nameLabelTransform.gameObject;
+						NameLabel nameLabelComponent = nameLabel.GetComponent<NameLabel>();
+						nameLabelComponent.nameLabel = clonePrefab.name;
+						nameLabelComponent.slider.maxValue = timeToLive;
+						nameLabelComponent.slider.value = timeToLive;
+					}
 				}
 
 				// remove trackFeature if it is not updated within a specified time interval
