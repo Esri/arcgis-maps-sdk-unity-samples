@@ -207,8 +207,11 @@ public class FeatureLayerQuery : MonoBehaviour
                     return;
                 }
                 var CameraLocation = ArcGISCamera.GetComponent<ArcGISLocationComponent>();
-                ArcGISPoint NewPosition = StadiumLocation.Position;
-                NewPosition.SetZ(StadiumSpawnHeight);
+                double Longitude = StadiumLocation.Position.X;
+                double Latitude  = StadiumLocation.Position.Y;
+
+                ArcGISPoint NewPosition = new ArcGISPoint(Longitude, Latitude, StadiumSpawnHeight, StadiumLocation.Position.SpatialReference);
+
                 CameraLocation.Position = NewPosition;
                 CameraLocation.Rotation = StadiumLocation.Rotation;
             }
