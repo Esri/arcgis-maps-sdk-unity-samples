@@ -119,18 +119,12 @@ public class RouteManager : MonoBehaviour
     /// <returns></returns>
     private ArcGISPoint HitToGeoPosition(RaycastHit hit, float yOffset = 0)
     {
-        var rup = hpRoot.RootUniversePosition;
+        var worldPosition = math.inverse(arcGISMapComponent.WorldMatrix).HomogeneousTransformPoint(hit.point.ToDouble3());
 
-        var v3 = new double3(
-            hit.point.x + rup.x,
-            hit.point.y + rup.y + yOffset, 
-            hit.point.z + rup.z
-            );
+        var geoPosition = arcGISMapComponent.View.WorldToGeographic(worldPosition);
+        var offsetPosition = new ArcGISPoint(geoPosition.X, geoPosition.Y, geoPosition.Z + yOffset, geoPosition.SpatialReference);
 
-        // Spatial Reference of geoPosition will be Determined Spatial Reference of layers currently being rendered
-        var geoPosition = arcGISMapComponent.View.WorldToGeographic(v3);
-
-        return GeoUtils.ProjectToSpatialReference(geoPosition, new ArcGISSpatialReference(4326));
+        return GeoUtils.ProjectToSpatialReference(offsetPosition, new ArcGISSpatialReference(4326));
     }
 
     private void DisplayError(string error_text)

@@ -12,8 +12,13 @@ Here is a Unity project containing a set of samples showing you how to accomplis
 ## Instructions
 
 1. Clone this repo.
-2. Refer to the [ArcGIS Maps SDK for Unity's documentation on getting started](https://developers.arcgis.com/unity-sdk/get-started/) on how to download `Unity` and the `ArcGIS Maps SDK for Unity`. This project does not contain the Maps SDK so it needs to be included like it would into any other project.
-3. Launch Unity and play the `SampleViewer` level.
+2. Refer to the [ArcGIS Maps SDK for Unity's documentation on getting started](https://developers.arcgis.com/unity-sdk/get-started/) on how to download `Unity` and the `ArcGIS Maps SDK for Unity`.
+3. Open the project in Unity ignoring the errors when prompted to enter `Safe Mode`.
+4. Use the package manager to import the `.tarball` downloaded in step 2.
+![image](package-manager.png)
+5. Import the samples. These samples include some components necessary for this repo to function including the `ArcGIS Camera Controller` component.
+![image](import-samples.png)
+6. Launch Unity and play the `SampleViewer` level.
 
 ## Requirements
 

@@ -21,6 +21,7 @@ public class SampleSwitcher : MonoBehaviour
     public List<string> SceneList = new List<string>();
     private string PipelineType;
     private string SceneName;
+    private bool EnablePipelineSwitching = false;
 
     private void Start()
     {
@@ -31,15 +32,15 @@ public class SampleSwitcher : MonoBehaviour
 
         PipelineTypeDropdown.onValueChanged.AddListener(delegate
         {
-           StartCoroutine(PipelineChanged());
+            StartCoroutine(PipelineChanged());
         });
 
 #if USE_HDRP_PACKAGE
-        PipelineTypeDropdown.options.Add(new Dropdown.OptionData("HDRP"));
+            PipelineTypeDropdown.options.Add(new Dropdown.OptionData("HDRP"));
 #endif
 
 #if USE_URP_PACKAGE
-        PipelineTypeDropdown.options.Add(new Dropdown.OptionData("URP"));
+            PipelineTypeDropdown.options.Add(new Dropdown.OptionData("URP"));
 #endif
 
         if (PipelineTypeDropdown.options.Count == 0)
@@ -61,6 +62,12 @@ public class SampleSwitcher : MonoBehaviour
             SetPipeline("URP");
 #endif
         }
+
+        if (!EnablePipelineSwitching)
+        {
+            PipelineTypeDropdown.gameObject.SetActive(false);
+        }
+
 
         PopulateSampleSceneList();
     }
