@@ -16,12 +16,22 @@ using UnityEngine.UI;
 
 public class SampleSwitcher : MonoBehaviour
 {
+    public string APIKey = "";
     public Dropdown PipelineTypeDropdown;
     public Dropdown SceneDropdown;
     public List<string> SceneList = new List<string>();
     private string PipelineType;
     private string SceneName;
     private bool EnablePipelineSwitching = false;
+
+    private void Update()
+    {
+        var mapComponent = FindObjectOfType<ArcGISMapComponent>();
+        if (mapComponent != null && mapComponent.APIKey == "")
+        {
+            mapComponent.APIKey = APIKey;
+        }
+    }
 
     private void Start()
     {
@@ -68,8 +78,15 @@ public class SampleSwitcher : MonoBehaviour
             PipelineTypeDropdown.gameObject.SetActive(false);
         }
 
-
         PopulateSampleSceneList();
+    }
+
+    private void OnEnable()
+    {
+        if (APIKey == "")
+        {
+            Debug.LogError("Set an API Key on the SampleSwitcher Game Object for the samples to function.\nThe README.MD of this repo provides more information on API Keys.");
+        }
     }
 
     private void PopulateSampleSceneList()

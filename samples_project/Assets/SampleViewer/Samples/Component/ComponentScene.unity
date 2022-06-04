@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 340.94238, g: 356.44012, b: 421.18945, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -272,10 +272,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   apiKey: 
-  basemap: https://www.arcgis.com/sharing/rest/content/items/8d569fbc4dc34f68abae8d72178cee05/data
-  basemapType: 0
+  basemap: https://ibasemaps-api.arcgis.com/arcgis/rest/services/World_Imagery/MapServer
+  basemapType: 1
+  basemapAuthentication:
+    ConfigurationIndex: -1
   elevation: https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer
   enableExtent: 1
+  elevationAuthentication:
+    ConfigurationIndex: -1
   extent:
     GeographicCenter:
       x: -74
@@ -291,26 +295,34 @@ MonoBehaviour:
     Type: 0
     Source: https://tiles.arcgis.com/tiles/nGt4QxSblgDfeJn9/arcgis/rest/services/UrbanObservatory_NYC_TransitFrequency/MapServer
     Opacity: 0.91
+    IsVisible: 0
+    Authentication:
+      ConfigurationIndex: -1
   - Name: Industrial Map
     Type: 0
     Source: https://tiles.arcgis.com/tiles/nGt4QxSblgDfeJn9/arcgis/rest/services/New_York_Industrial/MapServer
     Opacity: 0.6
+    IsVisible: 0
+    Authentication:
+      ConfigurationIndex: -1
   - Name: New York Buildings
     Type: 1
     Source: https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_NewYork_17/SceneServer
     Opacity: 1
+    IsVisible: 0
+    Authentication:
+      ConfigurationIndex: -1
   originPosition:
     x: -74
     y: 40.72
     z: 1000
     SRWkid: 4326
-  viewMode: 1
+  mapType: 1
   editorModeEnabled: 1
   dataFetchWithSceneView: 1
   rebaseWithSceneView: 0
   meshCollidersEnabled: 0
-  Configurations: []
-  ConfigMappings: []
+  configurations: []
   RootChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -342,6 +354,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1adb07e07fe0aac4a848279015c917f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  disableTerrainOcclusion: 0
 --- !u!114 &451407078
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -401,6 +414,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UpdateClippingPlanes: 1
+  UseCameraViewportProperties: 1
+  verticalFov: 0
+  horizontalFov: 0
+  viewportSizeX: 0
+  viewportSizeY: 0
 --- !u!114 &1718510515
 MonoBehaviour:
   m_ObjectHideFlags: 0

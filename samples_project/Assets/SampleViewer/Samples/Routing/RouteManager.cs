@@ -145,7 +145,7 @@ public class RouteManager : MonoBehaviour
         {
             new KeyValuePair<string, string>("stops", GetRouteString(stops)),
             new KeyValuePair<string, string>("returnRoutes", "true"),
-            new KeyValuePair<string, string>("token", apiKey),
+            new KeyValuePair<string, string>("token", arcGISMapComponent.APIKey),
             new KeyValuePair<string, string>("f", "json"),
         };
 
