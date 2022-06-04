@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 479.94873, g: 536.375, b: 650.13086, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -703,6 +703,7 @@ GameObject:
   - component: {fileID: 990959144}
   - component: {fileID: 990959143}
   - component: {fileID: 990959142}
+  - component: {fileID: 990959146}
   m_Layer: 0
   m_Name: LineOfSightMap
   m_TagString: Untagged
@@ -759,7 +760,7 @@ MonoBehaviour:
     Type: 1
     Source: https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/New_York_LoD2_3D_Buildings/SceneServer/layers/0
     Opacity: 1
-    IsVisible: 0
+    IsVisible: 1
     Authentication:
       ConfigurationIndex: -1
   originPosition:
@@ -815,6 +816,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &990959146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 990959141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 100949aafaf00444f8fc621b1a77835c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableLogging: 1
 --- !u!1 &1177524711
 GameObject:
   m_ObjectHideFlags: 0

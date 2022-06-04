@@ -26,6 +26,16 @@ public class SampleSwitcher : MonoBehaviour
 
     private void Update()
     {
+        // API Script handles api key differently than the mapcomponent
+        var api = FindObjectOfType<SampleAPIMapCreator>();
+        if (api != null)
+        {
+            if (api.APIKey == "")
+            {
+                api.APIKey = APIKey;
+            }
+            return;
+        }
         var mapComponent = FindObjectOfType<ArcGISMapComponent>();
         if (mapComponent != null && mapComponent.APIKey == "")
         {
