@@ -342,6 +342,14 @@ PrefabInstance:
       propertyPath: MapViewComponent
       value: 
       objectReference: {fileID: 1808036065}
+    - target: {fileID: 1008701132462866390, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1008701132580570349, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1008701132769291292, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -906,11 +914,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   volumeAnchorOverride: {fileID: 0}
-  antialiasing: 2
+  antialiasing: 0
   SMAAQuality: 2
   dithering: 0
   stopNaNs: 0
-  taaSharpenStrength: 0.6
+  taaSharpenStrength: 0.5
   TAAQuality: 1
   taaHistorySharpening: 0.35
   taaAntiFlicker: 0.5
@@ -946,8 +954,8 @@ MonoBehaviour:
   materialMipBias: 0
   m_RenderingPathCustomFrameSettings:
     bitDatas:
-      data1: 70297877217101
-      data2: 4539628425463136256
+      data1: 72198260625768269
+      data2: 13763000477350330392
     lodBias: 1
     lodBiasMode: 0
     lodBiasQualityLevel: 0
@@ -1024,6 +1032,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UpdateClippingPlanes: 1
+  UseCameraViewportProperties: 1
+  verticalFov: 0
+  horizontalFov: 0
+  viewportSizeX: 0
+  viewportSizeY: 0
 --- !u!114 &963194231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1064,7 +1077,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxSpeed: 2000000
-  MinSpeed: 30000
+  MinSpeed: 1000
 --- !u!114 &963194233
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1553,8 +1566,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   apiKey: 
-  basemap: https://www.arcgis.com/sharing/rest/content/items/1970c1995b8f44749f4b9b6e81b5ba45/data
-  basemapType: 0
+  basemap: https://ibasemaps-api.arcgis.com/arcgis/rest/services/World_Imagery/MapServer
+  basemapType: 1
   basemapAuthentication:
     ConfigurationIndex: -1
   elevation: https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer
@@ -1620,6 +1633,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1adb07e07fe0aac4a848279015c917f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  disableTerrainOcclusion: 0
 --- !u!1 &1850770787
 GameObject:
   m_ObjectHideFlags: 0

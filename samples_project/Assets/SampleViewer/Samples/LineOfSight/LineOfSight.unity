@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 351.53088, g: 368.747, b: 437.58264, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -441,6 +441,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UpdateClippingPlanes: 1
+  UseCameraViewportProperties: 1
+  verticalFov: 0
+  horizontalFov: 0
+  viewportSizeX: 0
+  viewportSizeY: 0
 --- !u!20 &684003171
 Camera:
   m_ObjectHideFlags: 0
@@ -717,6 +722,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1adb07e07fe0aac4a848279015c917f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  disableTerrainOcclusion: 0
 --- !u!114 &990959143
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -730,10 +736,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   apiKey: 
-  basemap: https://www.arcgis.com/sharing/rest/content/items/8d569fbc4dc34f68abae8d72178cee05/data
-  basemapType: 0
+  basemap: https://ibasemaps-api.arcgis.com/arcgis/rest/services/World_Imagery/MapServer
+  basemapType: 1
+  basemapAuthentication:
+    ConfigurationIndex: -1
   elevation: https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer
   enableExtent: 0
+  elevationAuthentication:
+    ConfigurationIndex: -1
   extent:
     GeographicCenter:
       x: 0
@@ -749,18 +759,20 @@ MonoBehaviour:
     Type: 1
     Source: https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/New_York_LoD2_3D_Buildings/SceneServer/layers/0
     Opacity: 1
+    IsVisible: 0
+    Authentication:
+      ConfigurationIndex: -1
   originPosition:
     x: -73.984988
     y: 40.748131
     z: 200
     SRWkid: 4326
-  viewMode: 1
+  mapType: 1
   editorModeEnabled: 1
   dataFetchWithSceneView: 1
   rebaseWithSceneView: 0
   meshCollidersEnabled: 1
-  Configurations: []
-  ConfigMappings: []
+  configurations: []
   RootChanged:
     m_PersistentCalls:
       m_Calls: []

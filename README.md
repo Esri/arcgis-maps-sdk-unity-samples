@@ -22,7 +22,11 @@ Here is a Unity project containing a set of samples showing you how to accomplis
 
 ![image](import-samples.png)
 
-6. Launch Unity and play the `SampleViewer` level.
+6. Launch Unity and open the `SampleViewer` level (it should open by default).
+
+7. In the heirarchy select the `SampleSwitcher` Game Object and then in the inspector set your API Key. You can learn more about [API keys](https://developers.arcgis.com/documentation/mapping-apis-and-services/security/api-keys/) and [Accounts](xref://site.documentation/accounts/) in the _Mapping APIs and location services_ guide.
+
+8. (Optional) If you want to be able to open the `.cs` files in this project and have intellisense recognize variable correctly, in Unity navigate to `Edit -> Preferences -> External Tools -> Generate .csproj files for 'local tarball`
 
 ## Requirements
 
