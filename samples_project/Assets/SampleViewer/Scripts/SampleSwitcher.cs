@@ -78,8 +78,15 @@ public class SampleSwitcher : MonoBehaviour
             PipelineTypeDropdown.gameObject.SetActive(false);
         }
 
-
         PopulateSampleSceneList();
+    }
+
+    private void OnEnable()
+    {
+        if (APIKey == "")
+        {
+            Debug.LogError("Set an API Key on the SampleSwitcher Game Object for the samples to function.\nThe README.MD of this repo provides more information on API Keys.");
+        }
     }
 
     private void PopulateSampleSceneList()
