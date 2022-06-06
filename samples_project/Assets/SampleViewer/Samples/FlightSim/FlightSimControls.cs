@@ -193,7 +193,7 @@ public partial class @FlightSimControls : IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Left"",
                     ""id"": ""5c17c81d-44bc-448e-8435-bf3ad06aa18c"",
-                    ""path"": ""<Keyboard>/numpad6"",
+                    ""path"": ""<Keyboard>/numpad4"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -204,7 +204,7 @@ public partial class @FlightSimControls : IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Right"",
                     ""id"": ""081c250f-37a8-4981-b5fa-7b41bc27bd5f"",
-                    ""path"": ""<Keyboard>/numpad4"",
+                    ""path"": ""<Keyboard>/numpad6"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
