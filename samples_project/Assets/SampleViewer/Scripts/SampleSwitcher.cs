@@ -61,6 +61,9 @@ public class SampleSwitcher : MonoBehaviour
 
 #if USE_URP_PACKAGE
             PipelineTypeDropdown.options.Add(new Dropdown.OptionData("URP"));
+
+            Debug.LogError("There is a bug where this project does not work with URP, please remove it until this is resolved");
+            return;
 #endif
 
         if (PipelineTypeDropdown.options.Count == 0)
@@ -75,6 +78,8 @@ public class SampleSwitcher : MonoBehaviour
         }
         else
         {
+            Debug.LogError("This project is configured to only work with eaither the HDRP or URP but not both.\nPlease remove one for this to function");
+
 #if !(UNITY_ANDROID || UNITY_IOS || UNITY_WSA)
             SetPipeline(PipelineTypeDropdown.options[PipelineTypeDropdown.value].text);
 #else
