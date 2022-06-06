@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 478.4165, g: 533.01855, b: 640.4678, a: 1}
+  m_IndirectSpecularColor: {r: 478.5923, g: 533.2407, b: 640.69727, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -171,6 +171,136 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &75526810
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 75526814}
+  - component: {fileID: 75526813}
+  - component: {fileID: 75526812}
+  - component: {fileID: 75526811}
+  m_Layer: 0
+  m_Name: ArcGISMap
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &75526811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 75526810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 100949aafaf00444f8fc621b1a77835c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableLogging: 1
+--- !u!114 &75526812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 75526810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c703502c1493f5b4eb3e95b2efe0271e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  apiKey: 
+  basemap: https://ibasemaps-api.arcgis.com/arcgis/rest/services/World_Imagery/MapServer
+  basemapType: 1
+  basemapAuthentication:
+    ConfigurationIndex: -1
+  elevation: https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer
+  enableExtent: 1
+  elevationAuthentication:
+    ConfigurationIndex: -1
+  extent:
+    GeographicCenter:
+      x: -74
+      y: 40.72
+      z: 0
+      SRWkid: 4326
+    ExtentShape: 2
+    ShapeDimensions:
+      x: 5000
+      y: 0
+  layers:
+  - Name: ' San Francisco 3D Buildings'
+    Type: 1
+    Source: https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/SanFrancisco_Bldgs/SceneServer
+    Opacity: 1
+    IsVisible: 1
+    Authentication:
+      ConfigurationIndex: -1
+  - Name: MDF-HDF Total Population
+    Type: 0
+    Source: https://tiles.arcgis.com/tiles/oZfKvdlWHN1MwS48/arcgis/rest/services/TotPopTile2/MapServer
+    Opacity: 0.2
+    IsVisible: 1
+    Authentication:
+      ConfigurationIndex: -1
+  originPosition:
+    x: -122.38
+    y: 37.79
+    z: 0
+    SRWkid: 4326
+  mapType: 0
+  editorModeEnabled: 1
+  dataFetchWithSceneView: 1
+  rebaseWithSceneView: 0
+  meshCollidersEnabled: 0
+  configurations: []
+  RootChanged:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &75526813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 75526810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 265b6a392115d8a4aa7154d8c9356e26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_LocalPosition:
+    x: -2702694.154520188
+    y: 3887050.092309295
+    z: -4262052.246725602
+  m_LocalRotation:
+    value:
+      x: -0.4225675
+      y: 0.2503805
+      z: 0.12268723
+      w: 0.86237705
+--- !u!4 &75526814
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 75526810}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2110303921}
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &167111047
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -229,18 +359,18 @@ PrefabInstance:
     - target: {fileID: 3071704059086465574, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
       propertyPath: CameraComponent
       value: 
-      objectReference: {fileID: 1718510514}
+      objectReference: {fileID: 2110303925}
     - target: {fileID: 3071704059086465574, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
       propertyPath: arcGISMapComponent
       value: 
-      objectReference: {fileID: 451407075}
+      objectReference: {fileID: 75526812}
     - target: {fileID: 9004487264473097773, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
---- !u!1 &451407074
+--- !u!1 &2110303920
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -248,152 +378,15 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 451407076}
-  - component: {fileID: 451407078}
-  - component: {fileID: 451407075}
-  - component: {fileID: 451407077}
-  m_Layer: 0
-  m_Name: ArcGISMap
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &451407075
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 451407074}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c703502c1493f5b4eb3e95b2efe0271e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  apiKey: 
-  basemap: https://ibasemaps-api.arcgis.com/arcgis/rest/services/World_Imagery/MapServer
-  basemapType: 1
-  basemapAuthentication:
-    ConfigurationIndex: -1
-  elevation: https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer
-  enableExtent: 1
-  elevationAuthentication:
-    ConfigurationIndex: -1
-  extent:
-    GeographicCenter:
-      x: -74
-      y: 40.72
-      z: 0
-      SRWkid: 4326
-    ExtentShape: 2
-    ShapeDimensions:
-      x: 5000
-      y: 0
-  layers:
-  - Name: Transit Frequency
-    Type: 0
-    Source: https://tiles.arcgis.com/tiles/nGt4QxSblgDfeJn9/arcgis/rest/services/UrbanObservatory_NYC_TransitFrequency/MapServer
-    Opacity: 0.91
-    IsVisible: 1
-    Authentication:
-      ConfigurationIndex: -1
-  - Name: Industrial Map
-    Type: 0
-    Source: https://tiles.arcgis.com/tiles/nGt4QxSblgDfeJn9/arcgis/rest/services/New_York_Industrial/MapServer
-    Opacity: 0.6
-    IsVisible: 1
-    Authentication:
-      ConfigurationIndex: -1
-  - Name: New York Buildings
-    Type: 1
-    Source: https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_NewYork_17/SceneServer
-    Opacity: 1
-    IsVisible: 1
-    Authentication:
-      ConfigurationIndex: -1
-  originPosition:
-    x: -74
-    y: 40.72
-    z: 1000
-    SRWkid: 4326
-  mapType: 1
-  editorModeEnabled: 1
-  dataFetchWithSceneView: 1
-  rebaseWithSceneView: 0
-  meshCollidersEnabled: 0
-  configurations: []
-  RootChanged:
-    m_PersistentCalls:
-      m_Calls: []
---- !u!4 &451407076
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 451407074}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1718510522}
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &451407077
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 451407074}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1adb07e07fe0aac4a848279015c917f4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  disableTerrainOcclusion: 0
---- !u!114 &451407078
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 451407074}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 265b6a392115d8a4aa7154d8c9356e26, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_LocalPosition:
-    x: -8237642.318702245
-    y: 1000
-    z: 4971129.040475637
-  m_LocalRotation:
-    value:
-      x: 0
-      y: 0
-      z: 0
-      w: 1
---- !u!1 &1718510513
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1718510522}
-  - component: {fileID: 1718510521}
-  - component: {fileID: 1718510520}
-  - component: {fileID: 1718510519}
-  - component: {fileID: 1718510518}
-  - component: {fileID: 1718510514}
-  - component: {fileID: 1718510517}
-  - component: {fileID: 1718510516}
-  - component: {fileID: 1718510515}
+  - component: {fileID: 2110303921}
+  - component: {fileID: 2110303929}
+  - component: {fileID: 2110303928}
+  - component: {fileID: 2110303927}
+  - component: {fileID: 2110303926}
+  - component: {fileID: 2110303925}
+  - component: {fileID: 2110303924}
+  - component: {fileID: 2110303923}
+  - component: {fileID: 2110303922}
   m_Layer: 0
   m_Name: ArcGISCamera
   m_TagString: MainCamera
@@ -401,13 +394,75 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1718510514
+--- !u!4 &2110303921
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2110303920}
+  m_LocalRotation: {x: 0.15813167, y: -0.6352305, z: 0.13504435, w: 0.7438008}
+  m_LocalPosition: {x: -467.84225, y: 599.9816, z: 122.78261}
+  m_LocalScale: {x: 1.0000001, y: 1.0000001, z: 1.0000001}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 75526814}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2110303922
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1718510513}
+  m_GameObject: {fileID: 2110303920}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6715ece696adb074bbe6b0103cdafcff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2110303923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2110303920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e295d62bf65a7247bc772a43507fd4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  position:
+    x: -122.385311
+    y: 37.791106
+    z: 600
+    SRWkid: 4326
+  rotation:
+    Heading: -81
+    Pitch: 66
+    Roll: 0
+--- !u!114 &2110303924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2110303920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27afbdfc83e47004e95ef7726ed4a9cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxSpeed: 2000000
+  MinSpeed: 1000
+--- !u!114 &2110303925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2110303920}
   m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8bbba49acb848c0448694828560b07fc, type: 3}
@@ -419,60 +474,13 @@ MonoBehaviour:
   horizontalFov: 0
   viewportSizeX: 0
   viewportSizeY: 0
---- !u!114 &1718510515
+--- !u!114 &2110303926
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1718510513}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6715ece696adb074bbe6b0103cdafcff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1718510516
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1718510513}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e295d62bf65a7247bc772a43507fd4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  position:
-    x: -74.054921
-    y: 40.691242
-    z: 3000
-    SRWkid: 4326
-  rotation:
-    Heading: 65
-    Pitch: 68
-    Roll: 0
---- !u!114 &1718510517
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1718510513}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 27afbdfc83e47004e95ef7726ed4a9cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MaxSpeed: 2000000
-  MinSpeed: 1000
---- !u!114 &1718510518
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1718510513}
+  m_GameObject: {fileID: 2110303920}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 23c1ce4fb46143f46bc5cb5224c934f6, type: 3}
@@ -590,21 +598,21 @@ MonoBehaviour:
       enableFptlForForwardOpaque: 0
       enableBigTilePrepass: 0
       isFptlEnabled: 0
---- !u!81 &1718510519
+--- !u!81 &2110303927
 AudioListener:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1718510513}
+  m_GameObject: {fileID: 2110303920}
   m_Enabled: 1
---- !u!20 &1718510520
+--- !u!20 &2110303928
 Camera:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1718510513}
+  m_GameObject: {fileID: 2110303920}
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
@@ -621,9 +629,9 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.5
-  far clip plane: 299985
-  field of view: 45
+  near clip plane: 0.01
+  far clip plane: 1000
+  field of view: 60
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -641,13 +649,13 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!114 &1718510521
+--- !u!114 &2110303929
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1718510513}
+  m_GameObject: {fileID: 2110303920}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ea4c056ecab070c43bf3f5e9fb15b826, type: 3}
@@ -655,31 +663,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_IsInitialized: 1
   m_LocalPosition:
-    x: -8243756.096456101
-    y: 3000
-    z: 4966906.047235179
+    x: -2703302.880859732
+    y: 3887514.772978747
+    z: -4262138.583704796
   m_LocalRotation:
     value:
-      x: 0.16092668
-      y: 0.52742785
-      z: -0.102521576
-      w: 0.82789594
+      x: -0.066189766
+      y: -0.28510886
+      z: 0.43654868
+      w: 0.8507392
   m_LocalScale:
-    x: 0.9999994
+    x: 1.0000001
     y: 1.0000001
-    z: 1
---- !u!4 &1718510522
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1718510513}
-  m_LocalRotation: {x: 0.1609267, y: 0.5274279, z: -0.10252159, w: 0.827896}
-  m_LocalPosition: {x: -6113.778, y: 2000, z: -4222.993}
-  m_LocalScale: {x: 0.9999994, y: 1.0000001, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 451407076}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+    z: 1.0000001
