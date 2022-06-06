@@ -213,11 +213,7 @@ MonoBehaviour:
   m_ItemImage: {fileID: 0}
   m_Value: 0
   m_Options:
-    m_Options:
-    - m_Text: HDRP
-      m_Image: {fileID: 0}
-    - m_Text: URP
-      m_Image: {fileID: 0}
+    m_Options: []
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -323,15 +319,15 @@ MonoBehaviour:
     m_FontSize: 14
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
-    m_MaxSize: 40
+    m_MinSize: 1
+    m_MaxSize: 112
     m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
+    m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: HDRP
+  m_Text: 
 --- !u!222 &281046225
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1212,14 +1208,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fe10a2d8890b014c8d776c7143c1d7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  APIKey: 
   PipelineTypeDropdown: {fileID: 158661649}
   SceneDropdown: {fileID: 307260416}
   SceneList:
-  - APISampleScene
-  - ComponentSampleScene
+  - APIScene
+  - ComponentScene
   - FeatureLayer
   - LineOfSight
-  - FlightSim_Sample
+  - Routing
 --- !u!4 &1201840878
 Transform:
   m_ObjectHideFlags: 0
@@ -2340,13 +2337,13 @@ MonoBehaviour:
     m_FontSize: 14
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 1
     m_MaxSize: 40
     m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
+    m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: APISampleScene.unity
 --- !u!222 &1901607337

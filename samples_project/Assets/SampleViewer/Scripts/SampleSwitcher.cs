@@ -1,11 +1,8 @@
-// Copyright 2021 Esri.
+// Copyright 2022 Esri.
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
 //
-// Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an
-// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific
-// language governing permissions and limitations under the License.
 
 using Esri.ArcGISMapsSDK.Components;
 using Esri.HPFramework;
@@ -19,11 +16,32 @@ using UnityEngine.UI;
 
 public class SampleSwitcher : MonoBehaviour
 {
+    public string APIKey = "";
     public Dropdown PipelineTypeDropdown;
     public Dropdown SceneDropdown;
     public List<string> SceneList = new List<string>();
     private string PipelineType;
     private string SceneName;
+    private bool EnablePipelineSwitching = false;
+
+    private void Update()
+    {
+        // API Script handles api key differently than the mapcomponent
+        var api = FindObjectOfType<SampleAPIMapCreator>();
+        if (api != null)
+        {
+            if (api.APIKey == "")
+            {
+                api.APIKey = APIKey;
+            }
+            return;
+        }
+        var mapComponent = FindObjectOfType<ArcGISMapComponent>();
+        if (mapComponent != null && mapComponent.APIKey == "")
+        {
+            mapComponent.APIKey = APIKey;
+        }
+    }
 
     private void Start()
     {
@@ -34,18 +52,51 @@ public class SampleSwitcher : MonoBehaviour
 
         PipelineTypeDropdown.onValueChanged.AddListener(delegate
         {
-           StartCoroutine(PipelineChanged());
+            StartCoroutine(PipelineChanged());
         });
 
-#if !(UNITY_ANDROID || UNITY_IOS || UNITY_WSA)
-        PipelineType = PipelineTypeDropdown.options[PipelineTypeDropdown.value].text;
-#else
-        PipelineType = "URP";
-        PipelineTypeDropdown.gameObject.SetActive(false);
-        RenderPipelineAsset pipeline = Resources.Load<RenderPipelineAsset>("SampleGraphicSettings/Sample" + PipelineType + "ipeline");
-        GraphicsSettings.renderPipelineAsset = pipeline;
+#if USE_HDRP_PACKAGE
+            PipelineTypeDropdown.options.Add(new Dropdown.OptionData("HDRP"));
 #endif
+
+#if USE_URP_PACKAGE
+            PipelineTypeDropdown.options.Add(new Dropdown.OptionData("URP"));
+#endif
+
+        if (PipelineTypeDropdown.options.Count == 0)
+        {
+            Debug.LogError("Either HDRP or URP is required for the ArcGIS Maps SDK to work");
+            return;
+        }
+        else if (PipelineTypeDropdown.options.Count == 1)
+        {
+            SetPipeline(PipelineTypeDropdown.options[PipelineTypeDropdown.value].text);
+            PipelineTypeDropdown.gameObject.SetActive(false);
+        }
+        else
+        {
+#if !(UNITY_ANDROID || UNITY_IOS || UNITY_WSA)
+            SetPipeline(PipelineTypeDropdown.options[PipelineTypeDropdown.value].text);
+#else
+            PipelineTypeDropdown.gameObject.SetActive(false);
+            SetPipeline("URP");
+#endif
+        }
+
+        if (!EnablePipelineSwitching)
+        {
+            PipelineTypeDropdown.gameObject.SetActive(false);
+        }
+
         PopulateSampleSceneList();
+    }
+
+    private void OnEnable()
+    {
+        if (APIKey == "")
+        {
+            Debug.LogError("Set an API Key on the SampleSwitcher Game Object for the samples to function.\nThe README.MD of this repo provides more information on API Keys.");
+        }
     }
 
     private void PopulateSampleSceneList()
@@ -88,6 +139,14 @@ public class SampleSwitcher : MonoBehaviour
         };
     }
 
+    // pipelineType must be HDRP or URP
+    private void SetPipeline(string pipelineType)
+    {
+        PipelineType = pipelineType;
+        RenderPipelineAsset pipeline = Resources.Load<RenderPipelineAsset>("SampleGraphicSettings/Sample" + PipelineType + "ipeline");
+        GraphicsSettings.renderPipelineAsset = pipeline;
+    }
+
     private IEnumerator PipelineChanged()
     {
         var Sky = FindObjectOfType<ArcGISSkyRepositionComponent>();
@@ -98,9 +157,7 @@ public class SampleSwitcher : MonoBehaviour
 
         yield return null;
 
-        PipelineType = PipelineTypeDropdown.options[PipelineTypeDropdown.value].text;
-        RenderPipelineAsset pipeline = Resources.Load<RenderPipelineAsset>("SampleGraphicSettings/Sample" + PipelineType + "ipeline");
-        GraphicsSettings.renderPipelineAsset = pipeline;
+        SetPipeline(PipelineTypeDropdown.options[PipelineTypeDropdown.value].text);
 
         SceneChanged();
     }

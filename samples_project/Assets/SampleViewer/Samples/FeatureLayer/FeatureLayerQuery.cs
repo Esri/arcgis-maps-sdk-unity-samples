@@ -1,3 +1,9 @@
+// Copyright 2022 Esri.
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+//
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -72,7 +78,7 @@ public class FeatureLayerQuery : MonoBehaviour
 
         StadiumSelector.onValueChanged.AddListener(delegate
         {
-            StadiumSelcted();
+            StadiumSelected();
         });
     }
 
@@ -194,7 +200,7 @@ public class FeatureLayerQuery : MonoBehaviour
     }
 
     // When a new entry is selected in the stadium dropdown move the camera to the new position
-    private void StadiumSelcted()
+    private void StadiumSelected()
     {
         var StadiumName = StadiumSelector.options[StadiumSelector.value].text;
         foreach (GameObject Stadium in Stadiums)
@@ -207,8 +213,11 @@ public class FeatureLayerQuery : MonoBehaviour
                     return;
                 }
                 var CameraLocation = ArcGISCamera.GetComponent<ArcGISLocationComponent>();
-                ArcGISPoint NewPosition = StadiumLocation.Position;
-                NewPosition.SetZ(StadiumSpawnHeight);
+                double Longitude = StadiumLocation.Position.X;
+                double Latitude  = StadiumLocation.Position.Y;
+
+                ArcGISPoint NewPosition = new ArcGISPoint(Longitude, Latitude, StadiumSpawnHeight, StadiumLocation.Position.SpatialReference);
+
                 CameraLocation.Position = NewPosition;
                 CameraLocation.Rotation = StadiumLocation.Rotation;
             }
