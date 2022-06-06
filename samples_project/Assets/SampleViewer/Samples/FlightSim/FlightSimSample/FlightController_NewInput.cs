@@ -9,7 +9,7 @@ public class FlightController_NewInput : MonoBehaviour
     private bool isGrounded = false;
     private bool speedIncreasing;
     private float rotationX;
-    private float rotationY = 120;
+    private float rotationY;
     private float rotationZ;
     private Vector2 accelerate;
     private Vector2 pitch;
@@ -18,7 +18,6 @@ public class FlightController_NewInput : MonoBehaviour
     private PlayerInput playerInput;
     private HPTransform hpTransform;
     private FlightSimControls flightSimControls;
-    public TextMeshProUGUI[] text;
     [Header("Rates and Speeds")]
     public float acceleration;
     public float speed;
@@ -53,13 +52,6 @@ public class FlightController_NewInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Update Text on Screen
-        float value = Convert.ToSingle(hpTransform.LocalPosition.y);
-        text[0].text = "Altitude: " + Math.Round(value);
-        text[1].text = "Speed: " + Math.Round(speed);
-        text[2].text = "Pitch: " + Math.Round(transform.rotation.x, 2) + "\n" + 
-            "Yaw: " + Math.Round(transform.rotation.y, 2) + "\n" + 
-            "Roll: " + Math.Round(transform.rotation.z, 2) + "\n";
         //Get Input
         accelerate = flightSimControls.PlaneMovement.Accelerate.ReadValue<Vector2>();
         pitch = flightSimControls.PlaneMovement.PitchandRoll.ReadValue<Vector2>();
@@ -70,7 +62,7 @@ public class FlightController_NewInput : MonoBehaviour
         rotationX = Mathf.Clamp(rotationX, minPitch, maxPitch);
         rot.x = rotationX;
         //Clamp Y Position
-        pos.y = Mathf.Clamp(transform.position.y, -3000f, 13500f);
+        pos.y = Mathf.Clamp(transform.position.y, -3050f, 13500f);
         transform.position = pos;
         //rotationY = Mathf.Clamp(rotationY, minYaw, maxYaw);
         rot.y = rotationY;
@@ -95,8 +87,9 @@ public class FlightController_NewInput : MonoBehaviour
             if (speed < 5000)
             {
                 speed += acceleration + Time.deltaTime;
-                rb.AddForce(speed * Time.deltaTime * Vector3.forward);
+                rb.AddForce(speed * Time.deltaTime * transform.forward);
             }
+            rb.MovePosition(transform.position + (speed * Time.deltaTime * transform.forward));
         }
         else if(accelerate.y < 0f)
         {
@@ -118,12 +111,12 @@ public class FlightController_NewInput : MonoBehaviour
         //Yaw Rotation
         if (accelerate.x > 0f)
         {
-            rb.AddForce(turnSpeed * Time.deltaTime * Vector3.up);
+            //rb.AddForce(turnSpeed * Time.deltaTime * Vector3.up);
             rotationY += yawRate * Time.deltaTime;
         }
         else if (accelerate.x < 0f)
         {
-            rb.AddForce(-turnSpeed * Time.deltaTime * Vector3.up);
+            //rb.AddForce(-turnSpeed * Time.deltaTime * Vector3.up);
             rotationY += -yawRate * Time.deltaTime;
         }
     }
@@ -185,10 +178,7 @@ public class FlightController_NewInput : MonoBehaviour
             rotationZ += rollRate * Time.deltaTime;
         }
     }
-    public void Gliding()
-    {
 
-    }
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.name == "Runway")
