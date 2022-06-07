@@ -12,7 +12,7 @@ Here is a Unity project containing a set of samples showing you how to accomplis
 ## Instructions
 
 1. Clone this repo.
-2. Refer to the [ArcGIS Maps SDK for Unity's documentation on getting started](https://developers.arcgis.com/unity-sdk/get-started/) on how to download `Unity` and the `ArcGIS Maps SDK for Unity`.
+2. Refer to the [ArcGIS Maps SDK for Unity's documentation on getting started](https://developers.arcgis.com/unity/get-started/) on how to download `Unity` and the `ArcGIS Maps SDK for Unity`.
 3. Open the project in Unity ignoring the errors when prompted to enter `Safe Mode`.
 4. Use the package manager to import the `.tarball` downloaded in step 2.
 
@@ -30,11 +30,11 @@ Here is a Unity project containing a set of samples showing you how to accomplis
 
 ## Requirements
 
-* Refer to the [ArcGIS Maps SDK for Unity's documentation on system requirements](https://developers.arcgis.com/unity-sdk/reference/system-requirements/)
+* Refer to the [ArcGIS Maps SDK for Unity's documentation on system requirements](https://developers.arcgis.com/unity/reference/system-requirements/)
 
 ## Resources
 
-* [ArcGIS Maps SDK for Unity's documentation](https://developers.arcgis.com/unity-sdk/)
+* [ArcGIS Maps SDK for Unity's documentation](https://developers.arcgis.com/unity/)
 * [Unity's documentation](https://docs.unity.com/)
 * [Esri Community forum](https://community.esri.com/t5/arcgis-maps-sdks-for-unity-questions/bd-p/arcgis-maps-sdks-unity-questions)
 
