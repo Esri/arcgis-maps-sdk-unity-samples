@@ -5,9 +5,9 @@
 Here is a Unity project containing a set of samples showing you how to accomplish various things using the combined features of Unity and the ArcGIS Maps SDK for Unity.
 
 ## Features
-* Line of sight - See how to check line of sight between two object in Unity.
-* Feature service REST API - See how to query a feature service to create game objects in Unity located at real world positions.
-* Routing - See how to query Esri's routing service to get the shortest path between two points and visualize that route in Unity.
+* [Line of sight](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/samples_project/Assets/SampleViewer/Samples/LineOfSight) - See how to check line of sight between two object in Unity.
+* [Feature service REST API](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/samples_project/Assets/SampleViewer/Samples/FeatureLayer) - See how to query a feature service to create game objects in Unity located at real world positions.
+* [Routing](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/samples_project/Assets/SampleViewer/Samples/Routing) - See how to query Esri's routing service to get the shortest path between two points and visualize that route in Unity.
 
 ## Instructions
 
