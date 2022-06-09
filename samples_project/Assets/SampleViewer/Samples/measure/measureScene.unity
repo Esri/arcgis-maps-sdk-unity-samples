@@ -267,7 +267,6 @@ GameObject:
   - component: {fileID: 150318285}
   - component: {fileID: 150318284}
   - component: {fileID: 150318283}
-  - component: {fileID: 150318282}
   m_Layer: 0
   m_Name: ArcGISCamera
   m_TagString: MainCamera
@@ -283,25 +282,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 150318280}
   m_LocalRotation: {x: 0.6861027, y: 0.17106463, z: -0.17106463, w: 0.6861027}
-  m_LocalPosition: {x: 4452.78, y: 5900, z: 10050.505}
+  m_LocalPosition: {x: -8233783.5, y: 200, z: 4980081.5}
   m_LocalScale: {x: 1.0000001, y: 1.0000001, z: 1.0000001}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1808036064}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &150318282
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 150318280}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6715ece696adb074bbe6b0103cdafcff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &150318283
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -317,7 +304,7 @@ MonoBehaviour:
   position:
     x: -73.966
     y: 40.7812
-    z: 6000
+    z: 300
     SRWkid: 4326
   rotation:
     Heading: 28
@@ -545,7 +532,7 @@ MonoBehaviour:
   m_IsInitialized: 1
   m_LocalPosition:
     x: -8233857.456015273
-    y: 6000
+    y: 300
     z: 4980122.084314471
   m_LocalRotation:
     value:
@@ -957,7 +944,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 820472294}
   m_LocalRotation: {x: 0.70710677, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -8238236, y: 0, z: 4970031}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1422,14 +1409,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1654661342}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64add1a079a847246adc117d82318f17, type: 3}
+  m_Script: {fileID: 11500000, guid: 14cb8f001e9e08841ad1f70716d31093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RouteMarker: {fileID: 5022259574890728151, guid: 4a39d5da76a48014d93cc6059717dc44, type: 3}
-  RouteBreadcrumb: {fileID: 8817086168170497351, guid: dfabd5a1a53ff0943b4a3b35964b1920, type: 3}
   Route: {fileID: 820472294}
-  RouteInfo: {fileID: 1179877446}
+  RouteInfo: {fileID: 0}
   apiKey: 
+  RouteMarker: {fileID: 5022259574890728151, guid: 4a39d5da76a48014d93cc6059717dc44, type: 3}
+  FeaturePoint: {fileID: 8817086168170497351, guid: dfabd5a1a53ff0943b4a3b35964b1920, type: 3}
 --- !u!1 &1802369977
 GameObject:
   m_ObjectHideFlags: 0
@@ -1614,7 +1601,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   apiKey: AAPK96f82c38e3244c4a9657470a50161630EhEXBwo-hfr-mUURUul0B1QfttBU-VFtvrGh2_QitvgvvSe3jODuwqgMBCZfFOqX
-  basemap: https://ibasemaps-api.arcgis.com/arcgis/rest/services/World_Imagery/MapServer
+  basemap: https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer
   basemapType: 1
   basemapAuthentication:
     ConfigurationIndex: -1
@@ -1660,9 +1647,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_LocalPosition:
-    x: -8238310.235647004
+    x: -74.006
     y: 100
-    z: 4970071.579142429
+    z: 40.7128
   m_LocalRotation:
     value:
       x: 0
