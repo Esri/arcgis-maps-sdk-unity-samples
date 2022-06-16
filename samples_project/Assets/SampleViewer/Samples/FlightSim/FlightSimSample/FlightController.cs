@@ -32,7 +32,6 @@ public class FlightController : MonoBehaviour
 
     private void Awake()
     {
-        Keyboard keyboard = Keyboard.current;
         rb = GetComponent<Rigidbody>();
     }
     // Update is called once per frame
