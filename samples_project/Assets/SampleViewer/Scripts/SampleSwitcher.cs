@@ -13,8 +13,6 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using Esri.GameEngine.View.State;
-using Esri.GameEngine.View;
 
 public class SampleSwitcher : MonoBehaviour
 {
@@ -40,7 +38,7 @@ public class SampleSwitcher : MonoBehaviour
         }
         
         var mapComponent = FindObjectOfType<ArcGISMapComponent>();
-        if (mapComponent != null && mapComponent.APIKey=="")
+        if (mapComponent != null && mapComponent.APIKey == "")
         {
             mapComponent.APIKey = APIKey;
             mapComponent.MapType = Esri.GameEngine.Map.ArcGISMapType.Local;
@@ -120,7 +118,7 @@ public class SampleSwitcher : MonoBehaviour
     {
         SceneName = SceneDropdown.options[SceneDropdown.value].text;
         //The scene must also be added to the build settings list of scenes
-        SceneManager.LoadScene(SceneName, new LoadSceneParameters(LoadSceneMode.Additive));   
+        SceneManager.LoadSceneAsync(SceneName, new LoadSceneParameters(LoadSceneMode.Additive));   
     }
 
     //The ArcGISMapView object gets instantiated in our scenes and that results in the object living in the SampleViewer scene,
