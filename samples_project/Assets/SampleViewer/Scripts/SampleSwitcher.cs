@@ -19,7 +19,9 @@ public class SampleSwitcher : MonoBehaviour
     public string APIKey = "";
     public Dropdown PipelineTypeDropdown;
     public Dropdown SceneDropdown;
+    public Button ExitButton;
     public List<string> SceneList = new List<string>();
+    public List<string> PipelineList = new List<string>();
     private string PipelineType;
     private string SceneName;
     private bool EnablePipelineSwitching = true;
@@ -41,13 +43,19 @@ public class SampleSwitcher : MonoBehaviour
         if (mapComponent != null && mapComponent.APIKey == "")
         {
             mapComponent.APIKey = APIKey;
+#if (UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX)
             mapComponent.MapType = Esri.GameEngine.Map.ArcGISMapType.Local;
             mapComponent.EnableExtent = false;
+#endif
         }
     }
 
     private void Start()
     {
+        ExitButton.onClick.AddListener(delegate
+        {
+            doExitGame();
+        });
         SceneDropdown.onValueChanged.AddListener(delegate
         {
             SceneChanged();
@@ -59,15 +67,15 @@ public class SampleSwitcher : MonoBehaviour
         });
 
 #if USE_HDRP_PACKAGE
-            PipelineTypeDropdown.options.Add(new Dropdown.OptionData("HDRP"));
+            PipelineList.Add("HDRP");
 #endif
 
 #if USE_URP_PACKAGE
-            PipelineTypeDropdown.options.Add(new Dropdown.OptionData("URP"));
-
-            //Debug.LogError("There is a bug where this project does not work with URP, please remove it until this is resolved");
-            //return;
+            PipelineList.Add("URP");
 #endif
+
+        PipelineTypeDropdown.options.Clear();
+        PipelineTypeDropdown.AddOptions(PipelineList);
 
         if (PipelineTypeDropdown.options.Count == 0)
         {
@@ -168,5 +176,10 @@ public class SampleSwitcher : MonoBehaviour
         SetPipeline(PipelineTypeDropdown.options[PipelineTypeDropdown.value].text);
 
         SceneChanged();
+    }
+    //Exits the Sample Viewer App
+    private void doExitGame()
+    {
+        Application.Quit();
     }
 }
