@@ -125,9 +125,10 @@ public class measure : MonoBehaviour
         double d= ArcGISGeometryEngine.Distance(startPoint, endPoint);
         if (d < 50)
             return;
-        
+        if (startLocation.Position.X > endLocation.Position.X)
+            swap(ref startLocation, ref endLocation);
         GameObject mid = Instantiate(FeaturePoint, arcGISMapComponent.transform);
-        double midX=(math.abs(startLocation.Position.X)- math.abs(endLocation.Position.X))/-2;
+        double midX=(math.abs(startLocation.Position.X)- math.abs(endLocation.Position.X))/2;
         double midY = (startLocation.Position.Y - endLocation.Position.Y)/2;
         //mid.GetComponent<ArcGISLocationComponent>().Position = GetMiddlePoint(startPoint.Y, startPoint.X, endPoint.Y, endPoint.X);
         mid.GetComponent<ArcGISLocationComponent>().Position = new ArcGISPoint(midX,midY,spatialRef);
