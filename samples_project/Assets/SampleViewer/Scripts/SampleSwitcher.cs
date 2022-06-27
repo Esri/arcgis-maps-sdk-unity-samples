@@ -19,10 +19,12 @@ public class SampleSwitcher : MonoBehaviour
     public string APIKey = "";
     public Dropdown PipelineTypeDropdown;
     public Dropdown SceneDropdown;
+    public Button ExitButton;
     public List<string> SceneList = new List<string>();
+    public List<string> PipelineList = new List<string>();
     private string PipelineType;
     private string SceneName;
-    private bool EnablePipelineSwitching = false;
+    private bool EnablePipelineSwitching = true;
 
     private void Update()
     {
@@ -36,15 +38,24 @@ public class SampleSwitcher : MonoBehaviour
             }
             return;
         }
+        
         var mapComponent = FindObjectOfType<ArcGISMapComponent>();
         if (mapComponent != null && mapComponent.APIKey == "")
         {
             mapComponent.APIKey = APIKey;
+#if (UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX)
+            mapComponent.MapType = Esri.GameEngine.Map.ArcGISMapType.Local;
+            mapComponent.EnableExtent = false;
+#endif
         }
     }
 
     private void Start()
     {
+        ExitButton.onClick.AddListener(delegate
+        {
+            doExitGame();
+        });
         SceneDropdown.onValueChanged.AddListener(delegate
         {
             SceneChanged();
@@ -56,15 +67,15 @@ public class SampleSwitcher : MonoBehaviour
         });
 
 #if USE_HDRP_PACKAGE
-            PipelineTypeDropdown.options.Add(new Dropdown.OptionData("HDRP"));
+            PipelineList.Add("HDRP");
 #endif
 
 #if USE_URP_PACKAGE
-            PipelineTypeDropdown.options.Add(new Dropdown.OptionData("URP"));
-
-            Debug.LogError("There is a bug where this project does not work with URP, please remove it until this is resolved");
-            return;
+            PipelineList.Add("URP");
 #endif
+
+        PipelineTypeDropdown.options.Clear();
+        PipelineTypeDropdown.AddOptions(PipelineList);
 
         if (PipelineTypeDropdown.options.Count == 0)
         {
@@ -78,7 +89,7 @@ public class SampleSwitcher : MonoBehaviour
         }
         else
         {
-            Debug.LogError("This project is configured to only work with eaither the HDRP or URP but not both.\nPlease remove one for this to function");
+            //Debug.LogError("This project is configured to only work with either the HDRP or URP but not both.\nPlease remove one for this to function");
 
 #if !(UNITY_ANDROID || UNITY_IOS || UNITY_WSA)
             SetPipeline(PipelineTypeDropdown.options[PipelineTypeDropdown.value].text);
@@ -115,7 +126,7 @@ public class SampleSwitcher : MonoBehaviour
     {
         SceneName = SceneDropdown.options[SceneDropdown.value].text;
         //The scene must also be added to the build settings list of scenes
-        SceneManager.LoadSceneAsync(SceneName, new LoadSceneParameters(LoadSceneMode.Additive));
+        SceneManager.LoadSceneAsync(SceneName, new LoadSceneParameters(LoadSceneMode.Additive));   
     }
 
     //The ArcGISMapView object gets instantiated in our scenes and that results in the object living in the SampleViewer scene,
@@ -165,5 +176,10 @@ public class SampleSwitcher : MonoBehaviour
         SetPipeline(PipelineTypeDropdown.options[PipelineTypeDropdown.value].text);
 
         SceneChanged();
+    }
+    //Exits the Sample Viewer App
+    private void doExitGame()
+    {
+        Application.Quit();
     }
 }
