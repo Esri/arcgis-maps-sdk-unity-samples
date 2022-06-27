@@ -6,43 +6,41 @@
 
 
 using System.Collections;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using TMPro;
 using Esri.ArcGISMapsSDK.Components;
 using Esri.ArcGISMapsSDK.Utils.GeoCoord;
 using Esri.GameEngine.Geometry;
 using Esri.HPFramework;
-
 using UnityEngine;
-using TMPro;
-
 using Unity.Mathematics;
 
 public class measure : MonoBehaviour
 {
-    public GameObject Route;
+    public GameObject Line;
     public string apiKey;
     public Text txt;
-    public GameObject RouteMarker;
+    public GameObject LineMarker;
     public GameObject InterpolationMarker;
+    public double InterpolationInterval=100;
     private HPRoot hpRoot;
     private ArcGISMapComponent arcGISMapComponent;
-    private GameObject lastStop;
     private float elevationOffset = 20.0f;
+    private GameObject FeaturePoint;
     private List<GameObject> featurePoints = new List<GameObject>();
     private Stack<GameObject> stops = new Stack<GameObject>();
-    private double distance;
+    private GameObject lastStop;
+    private ArcGISLocationComponent lastStopLocation;
+    private Vector3 midPosition;
+    private double3 lastRootPosition;
     private ArcGISPoint thisPoint;
     private ArcGISPoint lastPoint;
-    private ArcGISLocationComponent lastStopLocation;
+    private double distance;
     private LineRenderer lineRenderer;
     private List<LineRenderer> lines;
-    GameObject FeaturePoint;
-    ArcGISSpatialReference spatialRef = new ArcGISSpatialReference(3857);
-    private Vector3 midPosition;
+    private ArcGISSpatialReference spatialRef = new ArcGISSpatialReference(3857);
 
-    double3 lastRootPosition;
 
     void Start()
     {
@@ -52,9 +50,7 @@ public class measure : MonoBehaviour
         // We need this ArcGISMapComponent for the FromCartesianPosition Method
         // defined on the ArcGISMapComponent.View
         arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
-
-        lineRenderer = Route.GetComponent<LineRenderer>();
-
+        lineRenderer = Line.GetComponent<LineRenderer>();
         lastRootPosition = arcGISMapComponent.GetComponent<HPRoot>().RootUniversePosition;
         distance = 0;
 
@@ -62,7 +58,7 @@ public class measure : MonoBehaviour
 
     void Update()
     {
-        // Only Create Marker when Shift is Held and Mouse is Clicked
+ 
         if (Input.GetKey(KeyCode.LeftShift) && Input.GetMouseButtonDown(0))
         {
             RaycastHit hit;
@@ -70,49 +66,45 @@ public class measure : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
-                var routeMarker = Instantiate(RouteMarker, hit.point, Quaternion.identity, arcGISMapComponent.transform);
+                var lineMarker = Instantiate(LineMarker, hit.point, Quaternion.identity, arcGISMapComponent.transform);
 
                 var geoPosition = HitToGeoPosition(hit);
 
-                routeMarker.GetComponent<ArcGISLocationComponent>().enabled = true;
-                routeMarker.GetComponent<ArcGISLocationComponent>().Position = geoPosition;
-                routeMarker.GetComponent<ArcGISLocationComponent>().Rotation = new ArcGISRotation(0, 90, 0);
+                lineMarker.GetComponent<ArcGISLocationComponent>().enabled = true;
+                lineMarker.GetComponent<ArcGISLocationComponent>().Position = geoPosition;
+                lineMarker.GetComponent<ArcGISLocationComponent>().Rotation = new ArcGISRotation(0, 90, 0);
 
                 var thisPoint = new ArcGISPoint(geoPosition.X, geoPosition.Y, geoPosition.Z, spatialRef);
 
 
                 if (stops.Count > 0)
                 {
-                    featurePoints.Add(routeMarker);
+                    featurePoints.Add(lineMarker);
 
-                    //calculating distance
                     lastStop = stops.Peek();
                     lastStopLocation = lastStop.GetComponent<ArcGISLocationComponent>();
                     lastPoint = new ArcGISPoint(lastStopLocation.Position.X, lastStopLocation.Position.Y, lastStopLocation.Position.Z, spatialRef);
-                    distance = distance + ArcGISGeometryEngine.Distance(lastPoint, thisPoint);
+                    //using degree
+                    ArcGISAngularUnitId angularUnitID = (ArcGISAngularUnitId)9102;
+                    //using meters
+                    ArcGISLinearUnitId linearUnitID = (ArcGISLinearUnitId)9001;
+                    distance = distance+ArcGISGeometryEngine.DistanceGeodetic(lastPoint, thisPoint, new ArcGISLinearUnit(linearUnitID), new ArcGISAngularUnit(angularUnitID), ArcGISGeodeticCurveType.Geodesic).Distance;
                     txt.text = distance.ToString();
 
 
-                    Insert(lastStop, routeMarker, featurePoints);
+                    Insert(lastStop, lineMarker, featurePoints);
                     SetBreadcrumbHeight();
                     RenderLine(ref featurePoints);
-                    RebaseRoute();
-                    //featurePoints.Clear();
+                    RebaseLine();
+                    
 
 
                 }
 
-                stops.Push(routeMarker);
-                featurePoints.Add(routeMarker);
+                stops.Push(lineMarker);
+                featurePoints.Add(lineMarker);
 
             }
-        }
-        if (Input.GetKey(KeyCode.KeypadEnter) || Input.GetKey(KeyCode.Return))
-        {
-            /* 
-             SetBreadcrumbHeight();
-             RenderLine();
-             RebaseRoute();*/
         }
 
     }
@@ -123,6 +115,7 @@ public class measure : MonoBehaviour
     /// <param name="hit"></param>
     /// <returns></returns>
 
+    //Interpolate points between start and end to draw points on top of the terrain
     private void Insert(GameObject start, GameObject end, List<GameObject> featurePoints)
     {
         //calculating distance 
@@ -130,11 +123,13 @@ public class measure : MonoBehaviour
         ArcGISLocationComponent endLocation = end.GetComponent<ArcGISLocationComponent>();
         ArcGISPoint startPoint = new ArcGISPoint(startLocation.Position.X, startLocation.Position.Y, startLocation.Position.Z, spatialRef);
         ArcGISPoint endPoint = new ArcGISPoint(endLocation.Position.X, endLocation.Position.Y, endLocation.Position.Z, spatialRef);
-        double d = ArcGISGeometryEngine.Distance(startPoint, endPoint);
-        if (d < 200)
+        ArcGISAngularUnitId angularUnitID = (ArcGISAngularUnitId)9102;
+        ArcGISLinearUnitId linearUnitID = (ArcGISLinearUnitId)9001;
+        double d = ArcGISGeometryEngine.DistanceGeodetic(startPoint, endPoint, new ArcGISLinearUnit(linearUnitID), new ArcGISAngularUnit(angularUnitID), ArcGISGeodeticCurveType.Geodesic).Distance;
+        if (d < InterpolationInterval)
             return;
 
-        //calculating geolocation for next loop
+
         GameObject mid = Instantiate(InterpolationMarker, arcGISMapComponent.transform);
         double midLocationComponentX = startLocation.Position.X + (endLocation.Position.X - startLocation.Position.X) / 2;
         double midLocaitonComponentY = startLocation.Position.Y + (endLocation.Position.Y - startLocation.Position.Y) / 2;
@@ -142,7 +137,6 @@ public class measure : MonoBehaviour
         mid.GetComponent<ArcGISLocationComponent>().Position = new ArcGISPoint(midLocationComponentX, midLocaitonComponentY, 0, spatialRef);
         mid.GetComponent<ArcGISLocationComponent>().Rotation = new ArcGISRotation(0, 90, 0);
 
-        //calculating unity location to draw points 
         float midX = start.transform.position.x + (end.transform.position.x - start.transform.position.x) / 2;
         float midY = start.transform.position.y + (end.transform.position.y - start.transform.position.y) / 2;
         float midZ = start.transform.position.z + (end.transform.position.z - start.transform.position.z) / 2;
@@ -188,7 +182,7 @@ public class measure : MonoBehaviour
         }
     }
 
-    private void ClearRoute()
+    private void ClearLine()
     {
         /*
         foreach (var stop in stops)
@@ -221,8 +215,7 @@ public class measure : MonoBehaviour
         lineRenderer.SetPositions(allPoints.ToArray());
     }
 
-    // The ArcGIS Rebase component
-    private void RebaseRoute()
+    private void RebaseLine()
     {
         var rootPosition = arcGISMapComponent.GetComponent<HPRoot>().RootUniversePosition;
         var delta = (lastRootPosition - rootPosition).ToVector3();
