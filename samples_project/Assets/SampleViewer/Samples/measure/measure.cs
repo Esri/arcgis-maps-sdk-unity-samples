@@ -16,14 +16,18 @@ using Esri.HPFramework;
 using UnityEngine;
 using Unity.Mathematics;
 
+
 public class measure : MonoBehaviour
 {
     public GameObject Line;
     public string apiKey;
     public Text txt;
+    public Text unitTxt;
     public GameObject LineMarker;
     public GameObject InterpolationMarker;
     public double InterpolationInterval=100;
+    public Dropdown UnitDropdown;
+    public Button ClearButton;
     private HPRoot hpRoot;
     private ArcGISMapComponent arcGISMapComponent;
     private float elevationOffset = 20.0f;
@@ -40,6 +44,8 @@ public class measure : MonoBehaviour
     private LineRenderer lineRenderer;
     private List<LineRenderer> lines;
     private ArcGISSpatialReference spatialRef = new ArcGISSpatialReference(3857);
+    private ArcGISLinearUnitId unit;
+    private ArcGISAngularUnitId unitDegree = (ArcGISAngularUnitId)9102;
 
 
     void Start()
@@ -53,9 +59,18 @@ public class measure : MonoBehaviour
         lineRenderer = Line.GetComponent<LineRenderer>();
         lastRootPosition = arcGISMapComponent.GetComponent<HPRoot>().RootUniversePosition;
         distance = 0;
+        unit = (ArcGISLinearUnitId)9001;
+        unitTxt.text = "m";
+        UnitDropdown.onValueChanged.AddListener(delegate {
+            UnitChanged();
+        });
+        ClearButton.onClick.AddListener(delegate {
+            ClearLine();
+        });
 
+       
     }
-
+    
     void Update()
     {
  
@@ -85,12 +100,9 @@ public class measure : MonoBehaviour
                     lastStopLocation = lastStop.GetComponent<ArcGISLocationComponent>();
                     lastPoint = new ArcGISPoint(lastStopLocation.Position.X, lastStopLocation.Position.Y, lastStopLocation.Position.Z, spatialRef);
                     //using degree
-                    ArcGISAngularUnitId angularUnitID = (ArcGISAngularUnitId)9102;
-                    //using meters
-                    ArcGISLinearUnitId linearUnitID = (ArcGISLinearUnitId)9001;
-                    distance = distance+ArcGISGeometryEngine.DistanceGeodetic(lastPoint, thisPoint, new ArcGISLinearUnit(linearUnitID), new ArcGISAngularUnit(angularUnitID), ArcGISGeodeticCurveType.Geodesic).Distance;
+                    
+                    distance = distance+ArcGISGeometryEngine.DistanceGeodetic(lastPoint, thisPoint, new ArcGISLinearUnit(unit), new ArcGISAngularUnit(unitDegree), ArcGISGeodeticCurveType.Geodesic).Distance;
                     txt.text = distance.ToString();
-
 
                     Insert(lastStop, lineMarker, featurePoints);
                     SetBreadcrumbHeight();
@@ -103,6 +115,9 @@ public class measure : MonoBehaviour
 
                 stops.Push(lineMarker);
                 featurePoints.Add(lineMarker);
+
+
+
 
             }
         }
@@ -123,9 +138,7 @@ public class measure : MonoBehaviour
         ArcGISLocationComponent endLocation = end.GetComponent<ArcGISLocationComponent>();
         ArcGISPoint startPoint = new ArcGISPoint(startLocation.Position.X, startLocation.Position.Y, startLocation.Position.Z, spatialRef);
         ArcGISPoint endPoint = new ArcGISPoint(endLocation.Position.X, endLocation.Position.Y, endLocation.Position.Z, spatialRef);
-        ArcGISAngularUnitId angularUnitID = (ArcGISAngularUnitId)9102;
-        ArcGISLinearUnitId linearUnitID = (ArcGISLinearUnitId)9001;
-        double d = ArcGISGeometryEngine.DistanceGeodetic(startPoint, endPoint, new ArcGISLinearUnit(linearUnitID), new ArcGISAngularUnit(angularUnitID), ArcGISGeodeticCurveType.Geodesic).Distance;
+        double d = ArcGISGeometryEngine.DistanceGeodetic(startPoint, endPoint, new ArcGISLinearUnit((ArcGISLinearUnitId)9001), new ArcGISAngularUnit(unitDegree), ArcGISGeodeticCurveType.Geodesic).Distance;
         if (d < InterpolationInterval)
             return;
 
@@ -182,17 +195,7 @@ public class measure : MonoBehaviour
         }
     }
 
-    private void ClearLine()
-    {
-        /*
-        foreach (var stop in stops)
-            Destroy(stop);
 
-        stops.Clear();
-
-        if (lineRenderer)
-            lineRenderer.positionCount = 0;*/
-    }
 
     private void RenderLine(ref List<GameObject> featurePoints)
     {
@@ -215,6 +218,22 @@ public class measure : MonoBehaviour
         lineRenderer.SetPositions(allPoints.ToArray());
     }
 
+    private void ClearLine()
+    {
+
+        foreach (var stop in featurePoints)
+            Destroy(stop);
+
+        stops.Clear();
+
+        if (lineRenderer)
+            lineRenderer.positionCount = 0;
+
+        txt.text = "Distance: "+unitTxt.text;
+        txt.fontSize = 32;
+        txt.color = Color.white;
+    }
+
     private void RebaseLine()
     {
         var rootPosition = arcGISMapComponent.GetComponent<HPRoot>().RootUniversePosition;
@@ -232,6 +251,34 @@ public class measure : MonoBehaviour
                 lineRenderer.SetPositions(points);
             }
             lastRootPosition = rootPosition;
+        }
+    }
+
+    void UnitChanged()
+    {
+        if (UnitDropdown.options[UnitDropdown.value].text == "Meters")
+        {
+            ArcGISLinearUnitId unitMeter = (ArcGISLinearUnitId)9001;
+            unit = unitMeter;
+            unitTxt.text = "m";
+        }
+        else if (UnitDropdown.options[UnitDropdown.value].text == "Kilometers")
+        {
+            ArcGISLinearUnitId unitKm = (ArcGISLinearUnitId)9036;
+            unit = unitKm;
+            unitTxt.text = "km";
+        }
+        else if (UnitDropdown.options[UnitDropdown.value].text == "Feet")
+        {
+            ArcGISLinearUnitId unitFt = (ArcGISLinearUnitId)9002;
+            unit = unitFt;
+            unitTxt.text = "ft";
+        }
+        else if (UnitDropdown.options[UnitDropdown.value].text == "Miles")
+        {
+            ArcGISLinearUnitId unitMi = (ArcGISLinearUnitId)9093;
+            unit = unitMi;
+            unitTxt.text = "mi";
         }
     }
 
