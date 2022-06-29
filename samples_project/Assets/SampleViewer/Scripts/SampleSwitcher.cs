@@ -66,6 +66,7 @@ public class SampleSwitcher : MonoBehaviour
             StartCoroutine(PipelineChanged());
         });
 
+	//Populates Pipeline Dropdown
 #if USE_HDRP_PACKAGE
             PipelineList.Add("HDRP");
 #endif
