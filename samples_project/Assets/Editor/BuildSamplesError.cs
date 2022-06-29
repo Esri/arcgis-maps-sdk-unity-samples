@@ -14,7 +14,7 @@ public class BuildSamplesError
     {
         BuildTarget buildTarget = EditorUserBuildSettings.activeBuildTarget;
 #if USE_URP_PACKAGE && USE_HDRP_PACKAGE
-        EditorUtility.DisplayDialog("Pipeline Error:", "\nBuilding with both pipelines is not available. Please remove the HDRP package if building for a mobile device, or remove the URP package if building for Windows or MacOS.", "OK");
+        EditorUtility.DisplayDialog("Pipeline Error:", "\nBuilding with both render pipelines installed is not available. Please remove the HDRP package if building for a mobile device, or remove the URP package if building for Windows or MacOS.", "OK");
         
         throw new BuildFailedException("Cannot build with both render pipeline packages installed. Please remove one.");
 #else
