@@ -4,7 +4,7 @@
 // You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
 //
 
-
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
@@ -16,6 +16,22 @@ using Esri.HPFramework;
 using UnityEngine;
 using Unity.Mathematics;
 
+/*
+public struct UnitType
+{
+    public const double m = 1;
+    public const double km = 0.001;
+    public const double mi = 0.000621371;
+    public const double ft = 3.28084;
+}
+*/
+public enum UnitType
+{
+    m = 0,
+    km = 1,
+    mi = 2,
+    ft=3
+}
 
 public class measure : MonoBehaviour
 {
@@ -46,7 +62,7 @@ public class measure : MonoBehaviour
     private ArcGISSpatialReference spatialRef = new ArcGISSpatialReference(3857);
     private ArcGISLinearUnitId unit;
     private ArcGISAngularUnitId unitDegree = (ArcGISAngularUnitId)9102;
-
+    UnitType currentUnit;
 
     void Start()
     {
@@ -60,7 +76,7 @@ public class measure : MonoBehaviour
         lastRootPosition = arcGISMapComponent.GetComponent<HPRoot>().RootUniversePosition;
         distance = 0;
         unit = (ArcGISLinearUnitId)9001;
-        unitTxt.text = "m";
+        currentUnit = 0;
         UnitDropdown.onValueChanged.AddListener(delegate {
             UnitChanged();
         });
@@ -102,15 +118,14 @@ public class measure : MonoBehaviour
                     //using degree
                     
                     distance = distance+ArcGISGeometryEngine.DistanceGeodetic(lastPoint, thisPoint, new ArcGISLinearUnit(unit), new ArcGISAngularUnit(unitDegree), ArcGISGeodeticCurveType.Geodesic).Distance;
-                    txt.text = distance.ToString();
+                    txt.text = Math.Round(distance,3).ToString();
+                    
 
                     Insert(lastStop, lineMarker, featurePoints);
                     SetBreadcrumbHeight();
                     RenderLine(ref featurePoints);
                     RebaseLine();
                     
-
-
                 }
 
                 stops.Push(lineMarker);
@@ -218,20 +233,17 @@ public class measure : MonoBehaviour
         lineRenderer.SetPositions(allPoints.ToArray());
     }
 
-    private void ClearLine()
+    public void ClearLine()
     {
-
         foreach (var stop in featurePoints)
             Destroy(stop);
-
+        featurePoints.Clear();
         stops.Clear();
+        distance = 0;
 
         if (lineRenderer)
             lineRenderer.positionCount = 0;
 
-        txt.text = "Distance: "+unitTxt.text;
-        txt.fontSize = 32;
-        txt.color = Color.white;
     }
 
     private void RebaseLine()
@@ -258,28 +270,48 @@ public class measure : MonoBehaviour
     {
         if (UnitDropdown.options[UnitDropdown.value].text == "Meters")
         {
-            ArcGISLinearUnitId unitMeter = (ArcGISLinearUnitId)9001;
-            unit = unitMeter;
-            unitTxt.text = "m";
+            ArcGISLinearUnitId unitM = (ArcGISLinearUnitId)9001;
+            unit = unitM;
+            distance=ConvertUnits(distance, currentUnit, UnitType.m);
+            currentUnit=UnitType.m;
         }
         else if (UnitDropdown.options[UnitDropdown.value].text == "Kilometers")
         {
             ArcGISLinearUnitId unitKm = (ArcGISLinearUnitId)9036;
             unit = unitKm;
-            unitTxt.text = "km";
-        }
-        else if (UnitDropdown.options[UnitDropdown.value].text == "Feet")
-        {
-            ArcGISLinearUnitId unitFt = (ArcGISLinearUnitId)9002;
-            unit = unitFt;
-            unitTxt.text = "ft";
+            distance=ConvertUnits(distance, currentUnit, UnitType.km);
+            currentUnit = UnitType.km;
         }
         else if (UnitDropdown.options[UnitDropdown.value].text == "Miles")
         {
             ArcGISLinearUnitId unitMi = (ArcGISLinearUnitId)9093;
             unit = unitMi;
-            unitTxt.text = "mi";
+            distance = ConvertUnits(distance, currentUnit, UnitType.mi);
+            currentUnit = UnitType.mi;
         }
+        else if (UnitDropdown.options[UnitDropdown.value].text == "Feet")
+        {
+            ArcGISLinearUnitId unitFt = (ArcGISLinearUnitId)9002;
+            unit = unitFt;
+            distance = ConvertUnits(distance, currentUnit, UnitType.ft);
+            currentUnit = UnitType.ft;
+        }
+        txt.text = Math.Round(distance, 3).ToString();
+        //UnitDropdown.interactable=false;
+
+    }
+
+    public static double ConvertUnits(double units, UnitType from, UnitType to)
+    {
+        double[][] factor =
+        {
+            new double[] { 1, 0.001, 0.000621371, 3.28084 },
+            new double[] { 1000,   1,     0.621371,   3280.84},
+            new double[] { 1609.344,     1.609344,       1,   5280},
+            new double[] { 0.3048,    0.0003048,  0.00018939,    1}
+        };
+            
+        return units * factor[(int)from][(int)to];
     }
 
 }
