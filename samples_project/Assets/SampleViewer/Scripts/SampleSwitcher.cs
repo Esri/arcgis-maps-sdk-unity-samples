@@ -43,7 +43,7 @@ public class SampleSwitcher : MonoBehaviour
         if (mapComponent != null && mapComponent.APIKey == "")
         {
             mapComponent.APIKey = APIKey;
-#if (UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX)
+#if (UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX || UNITY_IOS)
             mapComponent.MapType = Esri.GameEngine.Map.ArcGISMapType.Local;
             mapComponent.EnableExtent = false;
 #endif
