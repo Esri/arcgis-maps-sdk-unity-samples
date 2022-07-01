@@ -76,7 +76,8 @@ public class measure : MonoBehaviour
         lastRootPosition = arcGISMapComponent.GetComponent<HPRoot>().RootUniversePosition;
         distance = 0;
         unit = (ArcGISLinearUnitId)9001;
-        currentUnit = 0;
+        currentUnit = UnitType.m;
+        unitTxt.text = "m";
         UnitDropdown.onValueChanged.AddListener(delegate {
             UnitChanged();
         });
@@ -240,7 +241,7 @@ public class measure : MonoBehaviour
         featurePoints.Clear();
         stops.Clear();
         distance = 0;
-
+        txt.text = "0";
         if (lineRenderer)
             lineRenderer.positionCount = 0;
 
@@ -274,6 +275,7 @@ public class measure : MonoBehaviour
             unit = unitM;
             distance=ConvertUnits(distance, currentUnit, UnitType.m);
             currentUnit=UnitType.m;
+            unitTxt.text = "m";
         }
         else if (UnitDropdown.options[UnitDropdown.value].text == "Kilometers")
         {
@@ -281,6 +283,7 @@ public class measure : MonoBehaviour
             unit = unitKm;
             distance=ConvertUnits(distance, currentUnit, UnitType.km);
             currentUnit = UnitType.km;
+            unitTxt.text = "km";
         }
         else if (UnitDropdown.options[UnitDropdown.value].text == "Miles")
         {
@@ -288,6 +291,7 @@ public class measure : MonoBehaviour
             unit = unitMi;
             distance = ConvertUnits(distance, currentUnit, UnitType.mi);
             currentUnit = UnitType.mi;
+            unitTxt.text = "mi";
         }
         else if (UnitDropdown.options[UnitDropdown.value].text == "Feet")
         {
@@ -295,6 +299,7 @@ public class measure : MonoBehaviour
             unit = unitFt;
             distance = ConvertUnits(distance, currentUnit, UnitType.ft);
             currentUnit = UnitType.ft;
+            unitTxt.text = "ft";
         }
         txt.text = Math.Round(distance, 3).ToString();
         //UnitDropdown.interactable=false;
