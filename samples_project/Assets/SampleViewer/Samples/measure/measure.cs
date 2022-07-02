@@ -38,7 +38,7 @@ public class measure : MonoBehaviour
     public GameObject Line;
     public string apiKey;
     public Text txt;
-    public Text unitTxt;
+    private String unitTxt;
     public GameObject LineMarker;
     public GameObject InterpolationMarker;
     public double InterpolationInterval=100;
@@ -77,7 +77,7 @@ public class measure : MonoBehaviour
         distance = 0;
         unit = (ArcGISLinearUnitId)9001;
         currentUnit = UnitType.m;
-        unitTxt.text = "m";
+        unitTxt = " m";
         UnitDropdown.onValueChanged.AddListener(delegate {
             UnitChanged();
         });
@@ -119,7 +119,7 @@ public class measure : MonoBehaviour
                     //using degree
                     
                     distance = distance+ArcGISGeometryEngine.DistanceGeodetic(lastPoint, thisPoint, new ArcGISLinearUnit(unit), new ArcGISAngularUnit(unitDegree), ArcGISGeodeticCurveType.Geodesic).Distance;
-                    txt.text = Math.Round(distance,3).ToString();
+                    txt.text = "Distance: "+ Math.Round(distance,3).ToString()+unitTxt;
                     
 
                     Insert(lastStop, lineMarker, featurePoints);
@@ -241,7 +241,7 @@ public class measure : MonoBehaviour
         featurePoints.Clear();
         stops.Clear();
         distance = 0;
-        txt.text = "0";
+        txt.text = "Distance: " + distance + unitTxt;
         if (lineRenderer)
             lineRenderer.positionCount = 0;
 
@@ -275,7 +275,7 @@ public class measure : MonoBehaviour
             unit = unitM;
             distance=ConvertUnits(distance, currentUnit, UnitType.m);
             currentUnit=UnitType.m;
-            unitTxt.text = "m";
+            unitTxt = " m";
         }
         else if (UnitDropdown.options[UnitDropdown.value].text == "Kilometers")
         {
@@ -283,7 +283,7 @@ public class measure : MonoBehaviour
             unit = unitKm;
             distance=ConvertUnits(distance, currentUnit, UnitType.km);
             currentUnit = UnitType.km;
-            unitTxt.text = "km";
+            unitTxt = " km";
         }
         else if (UnitDropdown.options[UnitDropdown.value].text == "Miles")
         {
@@ -291,7 +291,7 @@ public class measure : MonoBehaviour
             unit = unitMi;
             distance = ConvertUnits(distance, currentUnit, UnitType.mi);
             currentUnit = UnitType.mi;
-            unitTxt.text = "mi";
+            unitTxt = " mi";
         }
         else if (UnitDropdown.options[UnitDropdown.value].text == "Feet")
         {
@@ -299,9 +299,9 @@ public class measure : MonoBehaviour
             unit = unitFt;
             distance = ConvertUnits(distance, currentUnit, UnitType.ft);
             currentUnit = UnitType.ft;
-            unitTxt.text = "ft";
+            unitTxt = " ft";
         }
-        txt.text = Math.Round(distance, 3).ToString();
+        txt.text = "Distance: " + Math.Round(distance, 3).ToString() + unitTxt;
         //UnitDropdown.interactable=false;
 
     }

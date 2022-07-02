@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 262.3369, g: 325.0498, b: 430.21924, a: 1}
+  m_IndirectSpecularColor: {r: 261.85736, g: 324.42407, b: 429.44516, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -362,8 +362,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -41.1, y: 690}
-  m_SizeDelta: {x: 300, y: 50}
+  m_AnchoredPosition: {x: 103.9, y: 690}
+  m_SizeDelta: {x: 590, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &134436593
 MonoBehaviour:
@@ -1029,86 +1029,6 @@ RectTransform:
   m_AnchoredPosition: {x: -7.5, y: -0.5}
   m_SizeDelta: {x: -35, y: -13}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &542006243
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 542006244}
-  - component: {fileID: 542006246}
-  - component: {fileID: 542006245}
-  m_Layer: 0
-  m_Name: Unit
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &542006244
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 542006243}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 633858221}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 229.7, y: 690}
-  m_SizeDelta: {x: 200, y: 50}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &542006245
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 542006243}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 30
-    m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 3
-    m_MaxSize: 40
-    m_Alignment: 0
-    m_AlignByGeometry: 0
-    m_RichText: 1
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: 
---- !u!222 &542006246
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 542006243}
-  m_CullTransparentMesh: 1
 --- !u!1 &600171708
 GameObject:
   m_ObjectHideFlags: 0
@@ -1378,7 +1298,6 @@ RectTransform:
   m_Children:
   - {fileID: 134436592}
   - {fileID: 215868583}
-  - {fileID: 542006244}
   m_Father: {fileID: 600171712}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2428,7 +2347,6 @@ MonoBehaviour:
   Line: {fileID: 820472294}
   apiKey: 
   txt: {fileID: 134436593}
-  unitTxt: {fileID: 542006245}
   LineMarker: {fileID: 5022259574890728151, guid: 4a39d5da76a48014d93cc6059717dc44, type: 3}
   InterpolationMarker: {fileID: 5022259574890728151, guid: 4a39d5da76a48014d93cc6059717dc44, type: 3}
   InterpolationInterval: 100
@@ -2827,7 +2745,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c703502c1493f5b4eb3e95b2efe0271e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  apiKey: AAPK96f82c38e3244c4a9657470a50161630EhEXBwo-hfr-mUURUul0B1QfttBU-VFtvrGh2_QitvgvvSe3jODuwqgMBCZfFOqX
+  apiKey: 
   basemap: https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer
   basemapType: 1
   basemapAuthentication:
