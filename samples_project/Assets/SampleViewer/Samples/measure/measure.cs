@@ -33,7 +33,7 @@ public enum UnitType
     ft=3
 }
 
-public class measure : MonoBehaviour
+public class Measure : MonoBehaviour
 {
     public GameObject Line;
     public string apiKey;
