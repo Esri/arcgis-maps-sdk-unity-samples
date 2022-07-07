@@ -90,7 +90,6 @@ public class SampleSwitcher : MonoBehaviour
         }
         else
         {
-            //Debug.LogError("This project is configured to only work with either the HDRP or URP but not both.\nPlease remove one for this to function");
 
 #if !(UNITY_ANDROID || UNITY_IOS || UNITY_WSA)
             SetPipeline(PipelineTypeDropdown.options[PipelineTypeDropdown.value].text);
