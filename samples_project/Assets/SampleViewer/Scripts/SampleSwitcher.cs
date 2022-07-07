@@ -43,7 +43,7 @@ public class SampleSwitcher : MonoBehaviour
         if (mapComponent != null && mapComponent.APIKey == "")
         {
             mapComponent.APIKey = APIKey;
-#if (UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX)
+#if (UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX || UNITY_IOS)
             mapComponent.MapType = Esri.GameEngine.Map.ArcGISMapType.Local;
             mapComponent.EnableExtent = false;
 #endif
@@ -66,6 +66,7 @@ public class SampleSwitcher : MonoBehaviour
             StartCoroutine(PipelineChanged());
         });
 
+	//Populates Pipeline Dropdown
 #if USE_HDRP_PACKAGE
             PipelineList.Add("HDRP");
 #endif
@@ -89,7 +90,6 @@ public class SampleSwitcher : MonoBehaviour
         }
         else
         {
-            //Debug.LogError("This project is configured to only work with either the HDRP or URP but not both.\nPlease remove one for this to function");
 
 #if !(UNITY_ANDROID || UNITY_IOS || UNITY_WSA)
             SetPipeline(PipelineTypeDropdown.options[PipelineTypeDropdown.value].text);

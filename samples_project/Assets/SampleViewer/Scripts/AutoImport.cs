@@ -5,8 +5,9 @@
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.PackageManager;
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Rendering;
 
 [InitializeOnLoad]
 public static class CallReImport
@@ -15,7 +16,15 @@ public static class CallReImport
     {
         void Handle(PackageRegistrationEventArgs args)
         {
-            reImport();
+#if USE_HDRP_PACKAGE
+            RenderPipelineAsset HDRPasset = AssetDatabase.LoadAssetAtPath<RenderPipelineAsset>("Assets/SampleViewer/Resources/SampleGraphicSettings/SampleHDRPipeline.asset");
+            GraphicsSettings.renderPipelineAsset = HDRPasset;
+#elif USE_URP_PACKAGE
+            RenderPipelineAsset URPasset = AssetDatabase.LoadAssetAtPath<RenderPipelineAsset>("Assets/SampleViewer/Resources/SampleGraphicSettings/SampleURPipeline.asset");
+            GraphicsSettings.renderPipelineAsset = URPasset;
+#endif
+        reImport();
+
         }
         Events.registeredPackages += Handle;
     }
@@ -36,9 +45,9 @@ public static class CallReImport
         foreach (string path in importPaths)
         {
             AssetDatabase.ImportAsset(path, ImportAssetOptions.ImportRecursive);
-            Debug.Log("Re-Imported material at: " + path);
         }
     }
+
     [MenuItem("ArcGIS Maps SDK/Re-Import Samples Materials")]
     public static void ManualCall()
     {
