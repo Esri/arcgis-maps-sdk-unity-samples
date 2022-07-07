@@ -16,16 +16,12 @@ public static class CallReImport
     {
         void Handle(PackageRegistrationEventArgs args)
         {
-#if USE_HDRP_PACKAGE && USE_URP_PACKAGE
+#if USE_HDRP_PACKAGE
             RenderPipelineAsset HDRPasset = AssetDatabase.LoadAssetAtPath<RenderPipelineAsset>("Assets/SampleViewer/Resources/SampleGraphicSettings/SampleHDRPipeline.asset");
             GraphicsSettings.renderPipelineAsset = HDRPasset;
-
 #elif USE_URP_PACKAGE
             RenderPipelineAsset URPasset = AssetDatabase.LoadAssetAtPath<RenderPipelineAsset>("Assets/SampleViewer/Resources/SampleGraphicSettings/SampleURPipeline.asset");
             GraphicsSettings.renderPipelineAsset = URPasset;
-#elif USE_HDRP_PACKAGE
-            RenderPipelineAsset HDRPasset = AssetDatabase.LoadAssetAtPath<RenderPipelineAsset>("Assets/SampleViewer/Resources/SampleGraphicSettings/SampleHDRPipeline.asset");
-            GraphicsSettings.renderPipelineAsset = HDRPasset;
 #endif
         reImport();
 
