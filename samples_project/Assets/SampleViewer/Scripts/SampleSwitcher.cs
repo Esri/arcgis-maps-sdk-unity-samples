@@ -180,6 +180,10 @@ public class SampleSwitcher : MonoBehaviour
     //Exits the Sample Viewer App
     private void doExitGame()
     {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
         Application.Quit();
+#endif
     }
 }
