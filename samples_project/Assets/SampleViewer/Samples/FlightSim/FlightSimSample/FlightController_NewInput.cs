@@ -13,11 +13,16 @@ public class FlightController_NewInput : MonoBehaviour
     private float rotationZ;
     private Vector2 accelerate;
     private Vector2 pitch;
+    private float hideLandingGear;
+    private bool hidden;
     [Header("Components")]
     private Rigidbody rb;
     private PlayerInput playerInput;
     private HPTransform hpTransform;
     private FlightSimControls flightSimControls;
+    public GameObject backLandingGear;
+    public GameObject leftLandingGear;
+    public GameObject rightLandingGear;
     [Header("Rates and Speeds")]
     public float acceleration;
     public float speed;
@@ -55,19 +60,15 @@ public class FlightController_NewInput : MonoBehaviour
         //Get Input
         accelerate = flightSimControls.PlaneMovement.Accelerate.ReadValue<Vector2>();
         pitch = flightSimControls.PlaneMovement.PitchandRoll.ReadValue<Vector2>();
+        hideLandingGear = flightSimControls.PlaneMovement.HideLandingGear.ReadValue<float>();
         //Set Angles & Position to Vectors
         Vector3 rot = transform.localEulerAngles;
         Vector3 pos = transform.position;
-        //Clamp X/Pitch Rotation
-        rotationX = Mathf.Clamp(rotationX, minPitch, maxPitch);
         rot.x = rotationX;
         //Clamp Y Position
         pos.y = Mathf.Clamp(transform.position.y, -3050f, 13500f);
         transform.position = pos;
-        //rotationY = Mathf.Clamp(rotationY, minYaw, maxYaw);
         rot.y = rotationY;
-        //Clamp Z/Roll Rotation
-        rotationZ = Mathf.Clamp(rotationZ, minRoll, maxRoll);
         rot.z = rotationZ;
         transform.localEulerAngles = rot;
         //Check if Plane is on Ground or Not
@@ -80,6 +81,7 @@ public class FlightController_NewInput : MonoBehaviour
             Grounded();
         }
     }
+
     public void Grounded()
     {
         if (accelerate.y > 0f)
@@ -111,12 +113,10 @@ public class FlightController_NewInput : MonoBehaviour
         //Yaw Rotation
         if (accelerate.x > 0f)
         {
-            //rb.AddForce(turnSpeed * Time.deltaTime * Vector3.up);
             rotationY += yawRate * Time.deltaTime;
         }
         else if (accelerate.x < 0f)
         {
-            //rb.AddForce(-turnSpeed * Time.deltaTime * Vector3.up);
             rotationY += -yawRate * Time.deltaTime;
         }
     }

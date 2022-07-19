@@ -5,201 +5,127 @@ using UnityEngine.InputSystem;
 
 public class FlightController : MonoBehaviour
 {
-    private bool released;
-    private bool isGrounded = false;
-    private float rotationX;
-    private float rotationY;
-    private float rotationZ;
-    [Header ("Components")]
+    [Header("Input")]
+    private Vector2 accelerate;
+    private Vector2 pitch;
+    [Header("Components")]
     private Rigidbody rb;
-    [Header("Rates and Speeds")]
-    public float acceleration;
-    public float speed;
-    public float upSpeed;
-    public float glidingSpeed;
-    public float rollRate;
-    public float yawRate;
-    public float pitchRate;
-    [Header ("Roll")]
-    public float maxRoll;
-    public float minRoll;
-    [Header ("Yaw")]
-    public float maxYaw;
-    public float minYaw;
-    [Header ("Pitch")]
-    public float maxPitch;
-    public float minPitch;
+    private PlayerInput playerInput;
+    private FlightSimControls flightSimControls;
+    [Header("Constants")]
+    private float maxThrustSpeed = 100000;
+    private float thrustMultiplier = 50000;
+    //private float minThrustToNotFall = 4000;
+    //private float gravity = 981f;
+    private float drag = 0.25f;
+    private float startSpeed;
+    private float takeOffSpeed = 5000;
+    [Header("Dynamic Variables")]
+    public float thrustSpeed;
+    public float currentSpeed;
+    //public float appliedGravity;
+    [Header("Control Surfaces")]
+    private float maxFlapPitch = 10;
+    private float maxElevatorPitch = 25;
+    private float maxRudderYaw = 45;
+    private float maxAileronPitch = 45;
+    [Header("Roll")]
+    private float targetRoll;
+    private float currentRoll;
+    [Header("Pitch")]
+    [SerializeField] private float currentPitch;
+    private float targetPitch;
+    [Header("Yaw")]
+    private float currentYaw;
+    private float targetYaw;
 
-    private void Awake()
+    private bool grounded;
+    private Vector3 rot;
+    private float rotationY;
+
+
+    void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        playerInput = GetComponent<PlayerInput>();
+        flightSimControls = new FlightSimControls();
+    }
+    private void OnEnable()
+    {
+        flightSimControls.PlaneMovement.Enable();
+    }
+    private void OnDisable()
+    {
+        flightSimControls.PlaneMovement.Disable();
     }
     // Update is called once per frame
     void Update()
     {
-        Vector3 rot = transform.localEulerAngles;
-        Vector3 pos = transform.position;
-        pos.y = Mathf.Clamp(transform.position.y, -3000f, 17500f);
-        transform.position = pos;
-        //Clamp X/Pitch Rotation
-        rotationX = Mathf.Clamp(rotationX, minPitch, maxPitch);
-        rot.x = rotationX;
-        //Clamp Y Position
-        pos.y = Mathf.Clamp(transform.position.y, -3000f, 16500f);
-        transform.position = pos;
-        rot.y = rotationY;
-        //Clamp Z/Roll Rotation
-        rotationZ = Mathf.Clamp(rotationZ, minRoll, maxRoll);
-        rot.z = rotationZ;
-        transform.localEulerAngles = rot;
+        //Get Input
+        accelerate = flightSimControls.PlaneMovement.Accelerate.ReadValue<Vector2>();
+        pitch = flightSimControls.PlaneMovement.PitchandRoll.ReadValue<Vector2>();
+        thrustSpeed = Mathf.Clamp(thrustSpeed, 0, maxThrustSpeed);
+        currentSpeed = Mathf.Clamp(currentSpeed, 0, maxThrustSpeed);
+        rot = transform.localEulerAngles;
+        rot.x = rotationY;
+        UpdatePosition();
+        UpdatePitch(pitch.y);
+        if (accelerate.y > 0)
+        {
+            thrustSpeed += accelerate.y * Time.deltaTime * thrustMultiplier;
+        }
+        else if(accelerate.y < 0)
+        {
+            thrustSpeed -= accelerate.y * Time.deltaTime * thrustMultiplier;
+        }
 
-        if(speed >= 1000 && !isGrounded)
+    }
+    void UpdatePosition()
+    {
+        currentSpeed = Mathf.SmoothStep(currentSpeed, thrustSpeed, Time.deltaTime * drag);
+        Vector3 newPosition = transform.forward * currentSpeed * Time.deltaTime;
+        if (grounded)
         {
-            rb.useGravity = false;
+            if(currentSpeed > takeOffSpeed)
+            {
+                rb.AddForce(transform.position + newPosition);
+            }
+            rb.MovePosition(transform.position + newPosition);
         }
         else
         {
-            rb.useGravity = true;
-        }
-        if (!isGrounded && speed > 1000)
-        {
-            //Input for Roll Left
-            if (Input.GetKey(KeyCode.Keypad4))
-            {
-                rotationZ += rollRate * Time.deltaTime;
-            }
-            //Input for Roll Right
-            if (Input.GetKey(KeyCode.Keypad6))
-            {
-                rotationZ += -rollRate * Time.deltaTime;
-            }
-            //Input for Pitch Down
-            if (Input.GetKey(KeyCode.Keypad8))
-            {
-                rotationZ += -rollRate * Time.deltaTime;
-            }
-            //Input for Pitch Up
-            if (Input.GetKey(KeyCode.Keypad5))
-            {
-                rotationX += -pitchRate * Time.deltaTime;
-                transform.position += transform.up * upSpeed * Time.deltaTime;
-            }
-            //Input for Yaw Right
-            if (Input.GetKey(KeyCode.D))
-            {
-                rotationY += yawRate * Time.deltaTime;
-            }
-            //Input for Yaw Left
-            if (Input.GetKey(KeyCode.A))
-            {
-                rotationY += -yawRate * Time.deltaTime;
-            }
-            //Movement Input
-            if (Input.GetKey(KeyCode.W))
-            {
-                released = false;
-                if (speed < 5000)
-                {
-                    speed += acceleration * Time.deltaTime;
-                }
-                transform.Translate(Vector3.forward * speed * Time.deltaTime);
-            }
-            if (Input.GetKeyUp(KeyCode.W))
-            {
-                released = true;
-            }
-            if (Input.GetKey(KeyCode.S) && speed > 0)
-            {
-                transform.Translate(Vector3.forward * speed * Time.deltaTime);
-                speed -= 100 * Time.deltaTime;
-            }
-            if (released && speed > 0)
-            {
-                transform.Translate(Vector3.forward * speed * Time.deltaTime);
-                speed -= 10 * Time.deltaTime;
-            }
-        }
-        else if(speed < 1000 && !isGrounded)
-        {
-            Debug.Log("Test");
-            released = false;
-            transform.Translate(Vector3.forward * glidingSpeed * Time.deltaTime);
-            //Input for Roll Left
-            if (Input.GetKey(KeyCode.Keypad4))
-            {
-                rotationZ += rollRate * Time.deltaTime;
-            }
-            //Input for Roll Right
-            if (Input.GetKey(KeyCode.Keypad6))
-            {
-                rotationZ += -rollRate * Time.deltaTime;
-            }
-            //Input for Pitch Down
-            if (Input.GetKey(KeyCode.Keypad8))
-            {
-                rotationX += pitchRate * Time.deltaTime;
-            }
-            //Input for Pitch Up
-            if (Input.GetKey(KeyCode.Keypad5))
-            {
-                rotationX += -pitchRate * Time.deltaTime;
-            }
-            //Input for Yaw Right
-            if (Input.GetKey(KeyCode.D))
-            {
-                rotationY += yawRate * Time.deltaTime;
-            }
-            //Input for Yaw Left
-            if (Input.GetKey(KeyCode.A))
-            {
-                rotationY += -yawRate * Time.deltaTime;
-            }
-        }
-        else
-        {
-            if(speed > 1000)
-            {
-                //Input for Pitch Up
-                if (Input.GetKey(KeyCode.Keypad5))
-                {
-                    rotationX += -pitchRate * Time.deltaTime;
-                    transform.position += transform.up * upSpeed * Time.deltaTime;
-                }
-            }
-            //Input for Yaw Right
-            if (Input.GetKey(KeyCode.D))
-            {
-                rotationY += yawRate * Time.deltaTime;
-            }
-            //Input for Yaw Left
-            if (Input.GetKey(KeyCode.A))
-            {
-                rotationY += -yawRate * Time.deltaTime;
-            }
-            //Movement Input
-            if (Input.GetKey(KeyCode.W))
-            {
-                if(speed < 5000)
-                {
-                    speed += acceleration + Time.deltaTime;
-                    Debug.Log("Accelerating");
-                }
-                transform.Translate(Vector3.forward * speed * Time.deltaTime);
-            }
+            rb.MovePosition(transform.position + newPosition);
         }
     }
-    void OnCollisionEnter(Collision collision)
+    void UpdateRoll(float Roll)
+    {
+
+    }
+    void UpdateYaw(float yaw)
+    {
+
+    }
+    void UpdatePitch(float input)
+    {
+        currentPitch = Mathf.SmoothStep(currentPitch, input, Time.deltaTime * 10);
+        rotationY = 45 * Time.deltaTime;
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.name == "Runway")
+        {
+            grounded = true;
+        }
+        else
+        {
+            Debug.Log("Crashed");
+        }
+    }
+    private void OnCollisionExit(Collision collision)
     {
         if(collision.gameObject.name == "Runway")
         {
-            isGrounded = true;
-            rb.useGravity = true;
-            Debug.Log("Grounded");
+            grounded = false;
         }
-    }
-    void OnCollisionExit(Collision collision)
-    {
-        isGrounded = false;
-        Debug.Log("Flying");
     }
 }

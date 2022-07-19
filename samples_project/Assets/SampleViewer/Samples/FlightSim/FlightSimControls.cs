@@ -44,6 +44,15 @@ public partial class @FlightSimControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": ""Hold"",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Hide Landing Gear"",
+                    ""type"": ""Button"",
+                    ""id"": ""2a90c672-7bd2-489c-a1da-07fa444a434a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -266,6 +275,28 @@ public partial class @FlightSimControls : IInputActionCollection2, IDisposable
                     ""action"": ""PitchandRoll"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ee905ef7-69ad-4bf8-801d-c0f0922b64a0"",
+                    ""path"": ""<Keyboard>/h"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Hide Landing Gear"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""227bfce0-3237-427d-aeda-35038a9d1593"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Hide Landing Gear"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -276,6 +307,7 @@ public partial class @FlightSimControls : IInputActionCollection2, IDisposable
         m_PlaneMovement = asset.FindActionMap("Plane Movement", throwIfNotFound: true);
         m_PlaneMovement_PitchandRoll = m_PlaneMovement.FindAction("PitchandRoll", throwIfNotFound: true);
         m_PlaneMovement_Accelerate = m_PlaneMovement.FindAction("Accelerate", throwIfNotFound: true);
+        m_PlaneMovement_HideLandingGear = m_PlaneMovement.FindAction("Hide Landing Gear", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -337,12 +369,14 @@ public partial class @FlightSimControls : IInputActionCollection2, IDisposable
     private IPlaneMovementActions m_PlaneMovementActionsCallbackInterface;
     private readonly InputAction m_PlaneMovement_PitchandRoll;
     private readonly InputAction m_PlaneMovement_Accelerate;
+    private readonly InputAction m_PlaneMovement_HideLandingGear;
     public struct PlaneMovementActions
     {
         private @FlightSimControls m_Wrapper;
         public PlaneMovementActions(@FlightSimControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @PitchandRoll => m_Wrapper.m_PlaneMovement_PitchandRoll;
         public InputAction @Accelerate => m_Wrapper.m_PlaneMovement_Accelerate;
+        public InputAction @HideLandingGear => m_Wrapper.m_PlaneMovement_HideLandingGear;
         public InputActionMap Get() { return m_Wrapper.m_PlaneMovement; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -358,6 +392,9 @@ public partial class @FlightSimControls : IInputActionCollection2, IDisposable
                 @Accelerate.started -= m_Wrapper.m_PlaneMovementActionsCallbackInterface.OnAccelerate;
                 @Accelerate.performed -= m_Wrapper.m_PlaneMovementActionsCallbackInterface.OnAccelerate;
                 @Accelerate.canceled -= m_Wrapper.m_PlaneMovementActionsCallbackInterface.OnAccelerate;
+                @HideLandingGear.started -= m_Wrapper.m_PlaneMovementActionsCallbackInterface.OnHideLandingGear;
+                @HideLandingGear.performed -= m_Wrapper.m_PlaneMovementActionsCallbackInterface.OnHideLandingGear;
+                @HideLandingGear.canceled -= m_Wrapper.m_PlaneMovementActionsCallbackInterface.OnHideLandingGear;
             }
             m_Wrapper.m_PlaneMovementActionsCallbackInterface = instance;
             if (instance != null)
@@ -368,6 +405,9 @@ public partial class @FlightSimControls : IInputActionCollection2, IDisposable
                 @Accelerate.started += instance.OnAccelerate;
                 @Accelerate.performed += instance.OnAccelerate;
                 @Accelerate.canceled += instance.OnAccelerate;
+                @HideLandingGear.started += instance.OnHideLandingGear;
+                @HideLandingGear.performed += instance.OnHideLandingGear;
+                @HideLandingGear.canceled += instance.OnHideLandingGear;
             }
         }
     }
@@ -376,5 +416,6 @@ public partial class @FlightSimControls : IInputActionCollection2, IDisposable
     {
         void OnPitchandRoll(InputAction.CallbackContext context);
         void OnAccelerate(InputAction.CallbackContext context);
+        void OnHideLandingGear(InputAction.CallbackContext context);
     }
 }
