@@ -270,7 +270,7 @@ public class RouteManager : MonoBehaviour
         if (breadcrumbs.Count < 1)
             return;
 
-        lineRenderer.widthMultiplier = 30;
+        lineRenderer.widthMultiplier = 5;
 
         var allPoints = new List<Vector3>();
 
