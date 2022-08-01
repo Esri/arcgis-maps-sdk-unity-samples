@@ -1,6 +1,6 @@
 //
 //Written by Sam the intern
-//Reimports materials after render pipeline package is added/removed
+//Reimports sample materials after render pipeline package is added/removed
 //
 #if UNITY_EDITOR
 using UnityEditor;
@@ -41,6 +41,7 @@ public static class CallReImport
         importPaths.Add("Assets/Samples/ArcGIS Maps SDK for Unity/1.0.0/All Samples/Resources/Materials/URP");
         importPaths.Add("Packages/com.esri.arcgis-maps-sdk/SDK/Resources/Shaders/Materials/HDRP");
         importPaths.Add("Assets/Samples/ArcGIS Maps SDK for Unity/1.0.0/All Samples/Resources/Materials/HDRP");
+        importPaths.Add("Assets/SampleViewer/Samples/FlightSimSample/Materials");
 
         foreach (string path in importPaths)
         {

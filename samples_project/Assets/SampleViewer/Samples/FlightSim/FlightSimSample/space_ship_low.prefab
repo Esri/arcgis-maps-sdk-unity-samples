@@ -205,9 +205,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2995616467845690772}
+  - component: {fileID: 3321448925233996764}
   - component: {fileID: 3321448925233996753}
   - component: {fileID: 3321448925233996755}
-  - component: {fileID: 3321448925233996764}
   - component: {fileID: 3321448925233996765}
   m_Layer: 0
   m_Name: space_ship_low
@@ -223,8 +223,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2511110709441523502}
-  m_LocalRotation: {x: 0.00021083924, y: 0.25752914, z: -0.000056197227, w: 0.9662705}
-  m_LocalPosition: {x: 19216.17, y: -3023.81, z: -9136.53}
+  m_LocalRotation: {x: -0.3983793, y: 0.20076902, z: -0.12253979, w: 0.88654935}
+  m_LocalPosition: {x: 1354107.9, y: 4131359.2, z: -4654461.5}
   m_LocalScale: {x: 0.99999994, y: 1.0000001, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -239,6 +239,33 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0.025, y: 29.847, z: 0}
+--- !u!114 &3321448925233996764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2511110709441523502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea4c056ecab070c43bf3f5e9fb15b826, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsInitialized: 1
+  m_LocalPosition:
+    x: 1354107.8605026314
+    y: 4131359.3275981178
+    z: -4654461.523824717
+  m_LocalRotation:
+    value:
+      x: -0.39837933
+      y: 0.200769
+      z: -0.12253981
+      w: 0.88654923
+  m_LocalScale:
+    x: 0.99999994
+    y: 1.0000001
+    z: 1
 --- !u!54 &3321448925233996753
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -262,7 +289,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2511110709441523502}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9e295d62bf65a7247bc772a43507fd4c, type: 3}
   m_Name: 
@@ -276,33 +303,6 @@ MonoBehaviour:
     Heading: 29.99508916889212
     Pitch: 89.98934773921405
     Roll: 0.19050503711009195
---- !u!114 &3321448925233996764
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2511110709441523502}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea4c056ecab070c43bf3f5e9fb15b826, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IsInitialized: 1
-  m_LocalPosition:
-    x: 1354107.8605026314
-    y: 4131359.3275981178
-    z: -4654461.523824717
-  m_LocalRotation:
-    value:
-      x: -0.38385344
-      y: 0.10957662
-      z: -0.16241507
-      w: 0.90236956
-  m_LocalScale:
-    x: 0.99999994
-    y: 1.0000001
-    z: 1
 --- !u!114 &3321448925233996765
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -315,17 +315,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22c3a65632ad3af44a7448794d992279, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backLandingGear: {fileID: 9025092216431205366}
-  leftLandingGear: {fileID: 6260149040605248773}
-  rightLandingGear: {fileID: 7948792132472092277}
-  acceleration: 100
-  speed: 0
-  reverseSpeed: -25
   upSpeed: 1000
   turnSpeed: 15
   rollRate: 60
   yawRate: 30
   pitchRate: 20
+  thrustSpeed: 0
+  currentSpeed: 0
   maxRoll: 360
   minRoll: 0
   maxPitch: 180
