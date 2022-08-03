@@ -1,7 +1,13 @@
+// Copyright 2022 Esri.
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+//
+
 using System.Collections.Generic;
 using UnityEngine;
 using Esri.ArcGISMapsSDK.Components;
-using Esri.ArcGISMapsSDK.Utils.GeoCoord;
+using Esri.GameEngine.Geometry;
 using Esri.HPFramework;
 
 
@@ -89,7 +95,7 @@ public class StadiumInfo : MonoBehaviour
     {
         var CameraHP = ArcGISCamera.GetComponent<HPTransform>();
         var StadiumHP = transform.GetComponent<HPTransform>();
-        var Distance = (CameraHP.UniversePosition - StadiumHP.UniversePosition).magnitude;
+        var Distance = (CameraHP.UniversePosition - StadiumHP.UniversePosition).ToVector3().magnitude;
 
         if (Distance < RayCastDistanceThreshold)
         {
@@ -97,8 +103,10 @@ public class StadiumInfo : MonoBehaviour
             {
                 // Modify the Stadiums altitude based off the raycast hit
                 var StadiumLocationComponent = transform.GetComponent<ArcGISLocationComponent>();
-                GeoPosition Position = StadiumLocationComponent.Position;
-                Position.Z -= hitInfo.distance;
+                double NewHeight = StadiumLocationComponent.Position.Z - hitInfo.distance;
+                double StadiumLongitude = StadiumLocationComponent.Position.X;
+                double StadiumLatitude = StadiumLocationComponent.Position.Y;
+                ArcGISPoint Position = new ArcGISPoint(StadiumLongitude, StadiumLatitude, NewHeight, StadiumLocationComponent.Position.SpatialReference);
                 StadiumLocationComponent.Position = Position;
 
                 OnGround = true;
