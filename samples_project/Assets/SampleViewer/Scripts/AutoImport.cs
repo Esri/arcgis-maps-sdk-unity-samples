@@ -41,7 +41,7 @@ public static class CallReImport
         importPaths.Add("Assets/Samples/ArcGIS Maps SDK for Unity/1.0.0/All Samples/Resources/Materials/URP");
         importPaths.Add("Packages/com.esri.arcgis-maps-sdk/SDK/Resources/Shaders/Materials/HDRP");
         importPaths.Add("Assets/Samples/ArcGIS Maps SDK for Unity/1.0.0/All Samples/Resources/Materials/HDRP");
-        importPaths.Add("Assets/SampleViewer/Samples/FlightSimSample/Materials");
+        importPaths.Add("Assets/SampleViewer/Samples/FlightSim/Space Ship/Materials");
 
         foreach (string path in importPaths)
         {
