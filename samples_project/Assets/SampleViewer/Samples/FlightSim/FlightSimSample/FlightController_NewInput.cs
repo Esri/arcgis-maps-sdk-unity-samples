@@ -1,21 +1,26 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
+using TMPro;
+using Esri.ArcGISMapsSDK.Components;
 using System;
+
 public class FlightController_NewInput : MonoBehaviour
 {
     [Header ("Private Variables")]
     private bool isGrounded = false;
     private bool speedIncreasing;
     private float rotationX;
-    private float rotationY;
+    private float rotationY = 30;
     private float rotationZ;
     private Vector2 accelerate;
     private Vector2 pitch;
-    private float maxThrustSpeed = 100000;
-    private float thrustMultiplier = 50000;
+    private float maxThrustSpeed = 25000;
+    private float thrustMultiplier = 1000;
     [Header("Components")]
+    public TextMeshProUGUI speed;
+    public TextMeshProUGUI altitude;
     private Rigidbody rb;
     private FlightSimControls flightSimControls;
+    private ArcGISLocationComponent location;
     [Header("Rates and Speeds")]
     public float upSpeed;
     public float turnSpeed;
@@ -38,6 +43,7 @@ public class FlightController_NewInput : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         flightSimControls = new FlightSimControls();
+        location = GetComponent<ArcGISLocationComponent>();
     }
     private void OnEnable()
     {
@@ -50,11 +56,12 @@ public class FlightController_NewInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        speed.text = "Speed: " + Mathf.Round(currentSpeed) + " mph";
+        altitude.text = "Altitude: " + Mathf.Round(Convert.ToSingle(location.Position.Z)) + " Meters";
         //Get Input
         accelerate = flightSimControls.PlaneMovement.Accelerate.ReadValue<Vector2>();
         pitch = flightSimControls.PlaneMovement.PitchandRoll.ReadValue<Vector2>();
         thrustSpeed = Mathf.Clamp(thrustSpeed, 0, maxThrustSpeed);
-        currentSpeed = Mathf.Clamp(currentSpeed, 0, 100000);
         if (accelerate.y > 0)
         {
             thrustSpeed += accelerate.y * Time.deltaTime * thrustMultiplier;
@@ -78,6 +85,7 @@ public class FlightController_NewInput : MonoBehaviour
 
     void UpdatePosition()
     {
+        currentSpeed = Mathf.Clamp(currentSpeed, 0, 1000);
         currentSpeed = Mathf.SmoothStep(currentSpeed, thrustSpeed, Time.deltaTime * drag);
         Vector3 newPosition = transform.forward * currentSpeed * Time.deltaTime;
         if (isGrounded)
@@ -92,7 +100,7 @@ public class FlightController_NewInput : MonoBehaviour
         {
             rb.MovePosition(transform.position + newPosition);
         }
-        if (currentSpeed > 1000)
+        if (currentSpeed > 100)
         {
             //Input for Pitch Up
             if (pitch.y > 0)
@@ -133,10 +141,6 @@ public class FlightController_NewInput : MonoBehaviour
                 rotationZ += rollRate * Time.deltaTime;
             }
         }
-    }
-    public void AirControls()
-    {
-
     }
 
     void OnCollisionEnter(Collision collision)
