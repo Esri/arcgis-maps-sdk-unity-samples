@@ -18,7 +18,6 @@ public class ContinuousMovement : MonoBehaviour
     private XROrigin rig;
     public LayerMask groundLayer;
     private float fallSpeed;
-    private float gravity = -9.81f;
     private float heightOffset = 0.2f;
     // Start is called before the first frame update
     void Start()
