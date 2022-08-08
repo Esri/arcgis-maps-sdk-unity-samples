@@ -24,7 +24,7 @@ RenderSettings:
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 0
+  m_AmbientMode: 4
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: 0.5
@@ -438,7 +438,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 150318280}
   m_LocalRotation: {x: 0.4061685, y: 0.30928043, z: -0.1483151, w: 0.8469802}
-  m_LocalPosition: {x: -1769.9799, y: 2729.329, z: -2803.9517}
+  m_LocalPosition: {x: 0, y: 1000, z: 0}
   m_LocalScale: {x: 1.0000001, y: 1.0000001, z: 1.0000001}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -458,9 +458,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position:
-    x: -122.4942
-    y: 37.8
-    z: 2829.329
+    x: -122.4783
+    y: 37.8199
+    z: 1000
     SRWkid: 4326
   rotation:
     Heading: 40.12
@@ -687,9 +687,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_IsInitialized: 1
   m_LocalPosition:
-    x: -13635991.969129413
-    y: 2829.329
-    z: 4551210.919691889
+    x: -13634221.989225801
+    y: 1000
+    z: 4554014.871240516
   m_LocalRotation:
     value:
       x: 0.4061685
@@ -1503,7 +1503,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 820472294}
   m_LocalRotation: {x: 0.70710677, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 5395912, y: 0, z: 416056.72}
+  m_LocalPosition: {x: 13634222, y: 0, z: -4554015}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1622,9 +1622,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position:
-    x: -74.006
-    y: 40.7128
-    z: 100
+    x: 0
+    y: 0
+    z: 0
     SRWkid: 4326
   rotation:
     Heading: 0
@@ -1644,9 +1644,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_IsInitialized: 1
   m_LocalPosition:
-    x: -8238310.235647004
-    y: 100
-    z: 4970071.579142429
+    x: 0
+    y: 0
+    z: -0.0000000007081154551613622
   m_LocalRotation:
     value:
       x: 0.70710677
@@ -2268,8 +2268,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Line: {fileID: 820472294}
-  apiKey: 
-  txt: {fileID: 134436593}
+  GeodedicDistanceText: {fileID: 134436593}
+  TerrainDistanceText: {fileID: 0}
   LineMarker: {fileID: 5022259574890728151, guid: 4a39d5da76a48014d93cc6059717dc44, type: 3}
   InterpolationMarker: {fileID: 5022259574890728151, guid: 4a39d5da76a48014d93cc6059717dc44, type: 3}
   InterpolationInterval: 100
@@ -2556,7 +2556,7 @@ MonoBehaviour:
   originPosition:
     x: -122.4783
     y: 37.8199
-    z: 100
+    z: 0
     SRWkid: 4326
   mapType: 1
   editorModeEnabled: 1
@@ -2581,7 +2581,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_LocalPosition:
     x: -13634221.989225801
-    y: 100
+    y: 0
     z: 4554014.871240516
   m_LocalRotation:
     value:
