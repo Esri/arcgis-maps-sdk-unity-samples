@@ -5,10 +5,8 @@
 //
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
-using TMPro;
 using Esri.ArcGISMapsSDK.Components;
 using Esri.ArcGISMapsSDK.Utils.GeoCoord;
 using Esri.GameEngine.Geometry;
@@ -28,7 +26,6 @@ public class Measure : MonoBehaviour
 {
     public GameObject Line;
     public Text GeodedicDistanceText;
-    public Text TerrainDistanceText;
     private String unitTxt;
     public GameObject LineMarker;
     public GameObject InterpolationMarker;
@@ -37,7 +34,7 @@ public class Measure : MonoBehaviour
     public Button ClearButton;
     private HPRoot hpRoot;
     private ArcGISMapComponent arcGISMapComponent;
-    private float elevationOffset = 20.0f;
+    private float elevationOffset = 5f;
     private GameObject FeaturePoint;
     private List<GameObject> featurePoints = new List<GameObject>();
     private Stack<GameObject> stops = new Stack<GameObject>();
@@ -49,7 +46,6 @@ public class Measure : MonoBehaviour
     private ArcGISPoint prePoint;
     private ArcGISPoint nextPoint;
     private double geodedicDistance=0;
-    private double terrainDistance=0;
     private LineRenderer lineRenderer;
     private ArcGISSpatialReference spatialRef = new ArcGISSpatialReference(3857);
     private ArcGISLinearUnitId unit;
@@ -114,24 +110,21 @@ public class Measure : MonoBehaviour
                     //interpolate middle points between last point and this point
                     Interpolate(lastStop, lineMarker, featurePoints);
                     featurePoints.Add(lineMarker);
-
-                    RenderLine(ref featurePoints);
-                    
-                    RebaseLine();
+                   
                    
                 }
                 //add this point to stops and also to feature points where stop is user-drawed, and feature points is a collection of user-drawed and interpolated
                 stops.Push(lineMarker);
-                
+               
             }
         }
+        RenderLine(ref featurePoints);
+        RebaseLine();
 
     }
     
     private void Interpolate(GameObject start, GameObject end, List<GameObject> featurePoints)
     {
-        SetElevation(start);
-        SetElevation(end);
         ArcGISLocationComponent startLocation = start.GetComponent<ArcGISLocationComponent>();
         ArcGISLocationComponent endLocation = end.GetComponent<ArcGISLocationComponent>();
 
@@ -146,6 +139,7 @@ public class Measure : MonoBehaviour
         prePoint = startPoint;
         GameObject pre = start;
 
+        //calculate n-1 intepolation points/n-1 segments because the last segment is already created by the end point 
         for (int i=0;i<n-1;i++)
         {
             GameObject next = Instantiate(InterpolationMarker, arcGISMapComponent.transform);
@@ -161,20 +155,13 @@ public class Measure : MonoBehaviour
 
             //define height
             SetElevation(next);
-
-            //calculate terrain distance between the next point just created and previous point 
-            ArcGISLocationComponent nextLocation = next.GetComponent<ArcGISLocationComponent>();
-            ArcGISPoint nextPoint = new ArcGISPoint(nextLocation.Position.X, nextLocation.Position.Y, nextLocation.Position.Z, spatialRef);
-            terrainDistance += ArcGISGeometryEngine.DistanceGeodetic(prePoint, nextPoint, new ArcGISLinearUnit((ArcGISLinearUnitId)9001), new ArcGISAngularUnit(unitDegree), ArcGISGeodeticCurveType.Geodesic).Distance;
-     
+ 
             featurePoints.Add(next);
 
             prePoint = nextPoint;
             pre = next;
         }
-        //calculate reminder distance
-        terrainDistance += ArcGISGeometryEngine.DistanceGeodetic(prePoint, endPoint, new ArcGISLinearUnit((ArcGISLinearUnitId)9001), new ArcGISAngularUnit(unitDegree), ArcGISGeodeticCurveType.Geodesic).Distance;
-        TerrainDistanceText.text = "Terrain distance: " + Math.Round(terrainDistance, 3).ToString() + unitTxt;
+
     }
     
     private ArcGISPoint HitToGeoPosition(RaycastHit hit, float yOffset = 0)
@@ -185,14 +172,6 @@ public class Measure : MonoBehaviour
         var offsetPosition = new ArcGISPoint(geoPosition.X, geoPosition.Y, geoPosition.Z + yOffset, geoPosition.SpatialReference);
 
         return GeoUtils.ProjectToSpatialReference(offsetPosition, spatialRef);
-    }
- 
-    private void SetBreadcrumbHeight()
-    {
-        for (int i = 0; i < featurePoints.Count; i++)
-        {
-            SetElevation(featurePoints[i]);
-        }
     }
 
     // set height for point transform and location component
@@ -206,11 +185,9 @@ public class Measure : MonoBehaviour
         {
             var location = stop.GetComponent<ArcGISLocationComponent>();
             location.Position = HitToGeoPosition(hitInfo, elevationOffset);
-            stop.transform.position =  hitInfo.point-new Vector3(0,20,0);
+            stop.transform.position =  hitInfo.point;
         }
     }
-
-    
 
     private void RenderLine(ref List<GameObject> featurePoints)
     {
@@ -240,9 +217,7 @@ public class Measure : MonoBehaviour
         featurePoints.Clear();
         stops.Clear();
         geodedicDistance = 0;
-        terrainDistance = 0;
         GeodedicDistanceText.text = "Distance: " + geodedicDistance + unitTxt;
-        TerrainDistanceText.text = "Distance: " + terrainDistance + unitTxt;
         if (lineRenderer)
             lineRenderer.positionCount = 0;
 
@@ -275,7 +250,6 @@ public class Measure : MonoBehaviour
             ArcGISLinearUnitId unitM = (ArcGISLinearUnitId)9001;
             unit = unitM;
             geodedicDistance = ConvertUnits(geodedicDistance, currentUnit, UnitType.m);
-            terrainDistance = ConvertUnits(terrainDistance, currentUnit, UnitType.m);
             currentUnit =UnitType.m;
             unitTxt = " m";
         }
@@ -284,7 +258,6 @@ public class Measure : MonoBehaviour
             ArcGISLinearUnitId unitKm = (ArcGISLinearUnitId)9036;
             unit = unitKm;
             geodedicDistance = ConvertUnits(geodedicDistance, currentUnit, UnitType.km);
-            terrainDistance = ConvertUnits(terrainDistance, currentUnit, UnitType.m);
             currentUnit = UnitType.km;
             unitTxt = " km";
         }
@@ -293,7 +266,6 @@ public class Measure : MonoBehaviour
             ArcGISLinearUnitId unitMi = (ArcGISLinearUnitId)9093;
             unit = unitMi;
             geodedicDistance = ConvertUnits(geodedicDistance, currentUnit, UnitType.mi);
-            terrainDistance = ConvertUnits(terrainDistance, currentUnit, UnitType.m);
             currentUnit = UnitType.mi;
             unitTxt = " mi";
         }
@@ -302,12 +274,10 @@ public class Measure : MonoBehaviour
             ArcGISLinearUnitId unitFt = (ArcGISLinearUnitId)9002;
             unit = unitFt;
             geodedicDistance = ConvertUnits(geodedicDistance, currentUnit, UnitType.ft);
-            terrainDistance = ConvertUnits(terrainDistance, currentUnit, UnitType.m);
             currentUnit = UnitType.ft;
             unitTxt = " ft";
         }
-        GeodedicDistanceText.text = "Geodedic distance: " + Math.Round(geodedicDistance, 3).ToString() + unitTxt;
-        TerrainDistanceText.text = "Terrain distance: " + Math.Round(terrainDistance, 3).ToString() + unitTxt;
+        GeodedicDistanceText.text = "Distance: " + Math.Round(geodedicDistance, 3).ToString() + unitTxt;
         //UnitDropdown.interactable=false;
 
     }
