@@ -105,20 +105,25 @@ public class Measure : MonoBehaviour
                     lastStop = stops.Peek();
                     lastStopLocation = lastStop.GetComponent<ArcGISLocationComponent>();
                     lastPoint = new ArcGISPoint(lastStopLocation.Position.X, lastStopLocation.Position.Y, lastStopLocation.Position.Z, spatialRef);
-                    //using degree
-
+                    
+                    //calculate distance from last point to this point
                     geodedicDistance = geodedicDistance + ArcGISGeometryEngine.DistanceGeodetic(lastPoint, thisPoint, new ArcGISLinearUnit(unit), new ArcGISAngularUnit(unitDegree), ArcGISGeodeticCurveType.Geodesic).Distance;
                     GeodedicDistanceText.text = "Distance: "+ Math.Round(geodedicDistance, 3).ToString()+unitTxt;
-     
+                    
+                    //interpolate middle points between last point and this point
                     Interpolate(lastStop, lineMarker, featurePoints);
                     TerrainDistanceText.text = "Distance: " + Math.Round(terrainDistance, 3).ToString() + unitTxt;
+                    featurePoints.Add(lineMarker);
+                    //correct height for each point
                     SetBreadcrumbHeight();
+
                     RenderLine(ref featurePoints);
                     RebaseLine();
                     
                 }
+                //add this point to stops and also to feature points where stop is user-drawed, and feature points is a collection of user-drawed and interpolated
                 stops.Push(lineMarker);
-                featurePoints.Add(lineMarker);
+                
 
 
 
@@ -138,50 +143,41 @@ public class Measure : MonoBehaviour
         ArcGISPoint endPoint = new ArcGISPoint(endLocation.Position.X, endLocation.Position.Y, endLocation.Position.Z, spatialRef);
 
         double d = ArcGISGeometryEngine.DistanceGeodetic(startPoint, endPoint, new ArcGISLinearUnit((ArcGISLinearUnitId)9001), new ArcGISAngularUnit(unitDegree), ArcGISGeodeticCurveType.Geodesic).Distance;
-        var n = Mathf.Floor((float)d / InterpolationInterval);
-        double angle = Mathf.Atan2((float)(end.transform.position.y - start.transform.position.y), (float)(end.transform.position.x - start.transform.position.x))*180/Mathf.PI;
-        /*
-        Vector2 m_MyFirstVector = new Vector2((float)startLocation.Position.X, (float)startLocation.Position.Y);
-        //Fetch the second GameObject's position
-        Vector2 m_MySecondVector = new Vector2((float)endLocation.Position.X, (float)endLocation.Position.Y);
-        //Find the angle for the two Vectors
-        float m_Angle = Vector2.Angle(m_MyFirstVector, m_MySecondVector);
-
-        float angle = m_Angle * Mathf.Deg2Rad;*/
-        double dx = InterpolationInterval * Math.Abs(Math.Cos(angle));
-        double dy = InterpolationInterval * Math.Abs(Math.Sin(angle));
+        float n = Mathf.Floor((float)d / InterpolationInterval);
+        double dx = (end.transform.position.x - start.transform.position.x) / n;
+        double dz = (end.transform.position.z - start.transform.position.z) / n;
 
         prePoint = startPoint;
+        GameObject pre = start;
 
-        for (int i=0;i<=n;i++)
+        for (int i=0;i<n-1;i++)
         {
             GameObject next = Instantiate(InterpolationMarker, arcGISMapComponent.transform);
 
-            float nextX = start.transform.position.x + (float)dx;
-            float nextY = start.transform.position.y + (float)dy;
-            next.transform.position = new Vector3(nextX, nextY, 0);
+            //calculate transform of next point
+            float nextX = pre.transform.position.x + (float)dx;
+            float nextZ = pre.transform.position.z + (float)dz;
+            next.transform.position = new Vector3(nextX, 0, nextZ);
 
-            //    double nextLocationComponentX = startLocation.Position.X + dx;
-            //   double nextLocaitonComponentY = startLocation.Position.Y + dy;
-            var worldPosition = math.inverse(arcGISMapComponent.WorldMatrix).HomogeneousTransformPoint(next.transform.position.ToDouble3());
-
-            var geoPosition = arcGISMapComponent.View.WorldToGeographic(worldPosition);
-
-            nextPoint = new ArcGISPoint(geoPosition.X, geoPosition.Y, 0, spatialRef);
+            //set default location component of next point
             next.GetComponent<ArcGISLocationComponent>().enabled = true;
-            next.GetComponent<ArcGISLocationComponent>().Position = nextPoint;
             next.GetComponent<ArcGISLocationComponent>().Rotation = new ArcGISRotation(0, 90, 0);
 
-     
+            //define height
+            SetElevation(next);
+
+            //calculate terrain distance between next point we just created and previous point 
+            ArcGISLocationComponent nextLocation = next.GetComponent<ArcGISLocationComponent>();
+            ArcGISPoint nextPoint = new ArcGISPoint(nextLocation.Position.X, nextLocation.Position.Y, nextLocation.Position.Z, spatialRef);
             terrainDistance += ArcGISGeometryEngine.DistanceGeodetic(prePoint, nextPoint, new ArcGISLinearUnit((ArcGISLinearUnitId)9001), new ArcGISAngularUnit(unitDegree), ArcGISGeodeticCurveType.Geodesic).Distance;
      
             featurePoints.Add(next);
-            prePoint = nextPoint;
 
+            prePoint = nextPoint;
+            pre = next;
         }
 
-        double r = ArcGISGeometryEngine.DistanceGeodetic(prePoint, endPoint, new ArcGISLinearUnit((ArcGISLinearUnitId)9001), new ArcGISAngularUnit(unitDegree), ArcGISGeodeticCurveType.Geodesic).Distance;
-        terrainDistance += r;
+        
     }
     
     private ArcGISPoint HitToGeoPosition(RaycastHit hit, float yOffset = 0)
@@ -193,7 +189,7 @@ public class Measure : MonoBehaviour
 
         return GeoUtils.ProjectToSpatialReference(offsetPosition, spatialRef);
     }
-
+ 
     private void SetBreadcrumbHeight()
     {
         for (int i = 0; i < featurePoints.Count; i++)
@@ -202,7 +198,7 @@ public class Measure : MonoBehaviour
         }
     }
 
-    // Does a raycast to find the ground
+    // set height for point transform and location component
     void SetElevation(GameObject stop)
     {
         // start the raycast in the air at an arbitrary to ensure it is above the ground
@@ -213,6 +209,7 @@ public class Measure : MonoBehaviour
         {
             var location = stop.GetComponent<ArcGISLocationComponent>();
             location.Position = HitToGeoPosition(hitInfo, elevationOffset);
+            stop.transform.position =  hitInfo.point;
         }
     }
 
