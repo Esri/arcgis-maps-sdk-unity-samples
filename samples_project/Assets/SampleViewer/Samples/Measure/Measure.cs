@@ -107,27 +107,22 @@ public class Measure : MonoBehaviour
                     lastPoint = new ArcGISPoint(lastStopLocation.Position.X, lastStopLocation.Position.Y, lastStopLocation.Position.Z, spatialRef);
                     
                     //calculate distance from last point to this point
-                    geodedicDistance = geodedicDistance + ArcGISGeometryEngine.DistanceGeodetic(lastPoint, thisPoint, new ArcGISLinearUnit(unit), new ArcGISAngularUnit(unitDegree), ArcGISGeodeticCurveType.Geodesic).Distance;
+                    geodedicDistance += ArcGISGeometryEngine.DistanceGeodetic(lastPoint, thisPoint, new ArcGISLinearUnit(unit), new ArcGISAngularUnit(unitDegree), ArcGISGeodeticCurveType.Geodesic).Distance;
                     GeodedicDistanceText.text = "Distance: "+ Math.Round(geodedicDistance, 3).ToString()+unitTxt;
-                    
+
+                    featurePoints.Add(lastStop);
                     //interpolate middle points between last point and this point
                     Interpolate(lastStop, lineMarker, featurePoints);
-                    TerrainDistanceText.text = "Distance: " + Math.Round(terrainDistance, 3).ToString() + unitTxt;
                     featurePoints.Add(lineMarker);
-                    //correct height for each point
-                    SetBreadcrumbHeight();
 
                     RenderLine(ref featurePoints);
-                    RebaseLine();
                     
+                    RebaseLine();
+                   
                 }
                 //add this point to stops and also to feature points where stop is user-drawed, and feature points is a collection of user-drawed and interpolated
                 stops.Push(lineMarker);
                 
-
-
-
-
             }
         }
 
@@ -135,10 +130,11 @@ public class Measure : MonoBehaviour
     
     private void Interpolate(GameObject start, GameObject end, List<GameObject> featurePoints)
     {
-        
+        SetElevation(start);
+        SetElevation(end);
         ArcGISLocationComponent startLocation = start.GetComponent<ArcGISLocationComponent>();
         ArcGISLocationComponent endLocation = end.GetComponent<ArcGISLocationComponent>();
-        
+
         ArcGISPoint startPoint = new ArcGISPoint(startLocation.Position.X, startLocation.Position.Y, startLocation.Position.Z, spatialRef);
         ArcGISPoint endPoint = new ArcGISPoint(endLocation.Position.X, endLocation.Position.Y, endLocation.Position.Z, spatialRef);
 
@@ -166,7 +162,7 @@ public class Measure : MonoBehaviour
             //define height
             SetElevation(next);
 
-            //calculate terrain distance between next point we just created and previous point 
+            //calculate terrain distance between the next point just created and previous point 
             ArcGISLocationComponent nextLocation = next.GetComponent<ArcGISLocationComponent>();
             ArcGISPoint nextPoint = new ArcGISPoint(nextLocation.Position.X, nextLocation.Position.Y, nextLocation.Position.Z, spatialRef);
             terrainDistance += ArcGISGeometryEngine.DistanceGeodetic(prePoint, nextPoint, new ArcGISLinearUnit((ArcGISLinearUnitId)9001), new ArcGISAngularUnit(unitDegree), ArcGISGeodeticCurveType.Geodesic).Distance;
@@ -176,8 +172,9 @@ public class Measure : MonoBehaviour
             prePoint = nextPoint;
             pre = next;
         }
-
-        
+        //calculate reminder distance
+        terrainDistance += ArcGISGeometryEngine.DistanceGeodetic(prePoint, endPoint, new ArcGISLinearUnit((ArcGISLinearUnitId)9001), new ArcGISAngularUnit(unitDegree), ArcGISGeodeticCurveType.Geodesic).Distance;
+        TerrainDistanceText.text = "Terrain distance: " + Math.Round(terrainDistance, 3).ToString() + unitTxt;
     }
     
     private ArcGISPoint HitToGeoPosition(RaycastHit hit, float yOffset = 0)
@@ -209,7 +206,7 @@ public class Measure : MonoBehaviour
         {
             var location = stop.GetComponent<ArcGISLocationComponent>();
             location.Position = HitToGeoPosition(hitInfo, elevationOffset);
-            stop.transform.position =  hitInfo.point;
+            stop.transform.position =  hitInfo.point-new Vector3(0,20,0);
         }
     }
 
