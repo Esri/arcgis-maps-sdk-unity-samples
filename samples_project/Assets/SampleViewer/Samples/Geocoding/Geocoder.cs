@@ -37,7 +37,7 @@ public class Geocoder : MonoBehaviour
 
     private HttpClient client = new HttpClient();
     private uint FrameCounter = 0;
-    private uint MaxMapLoadFrames = 40;
+    private uint MaxMapLoadFrames = 45;
     //private uint MaxRaycasts = 200;
     private double CameraElevationOffset = 4000;
 
@@ -67,6 +67,8 @@ public class Geocoder : MonoBehaviour
                 //ArcGISLocationComponent CamLocComp = Camera.main.GetComponent<ArcGISLocationComponent>();
 
                 PlaceOnGround(QueryLocationGO);
+                GameObject infoCard = CreateInfoCard(true);
+                infoCard.transform.SetParent(QueryLocationGO.transform, false);
 
                 ArcGISPoint MarkerPosition = QueryLocationGO.GetComponent<ArcGISLocationComponent>().Position;
                 Camera.main.GetComponent<ArcGISLocationComponent>().Position = new ArcGISPoint(
@@ -120,7 +122,7 @@ public class Geocoder : MonoBehaviour
 
     public async void Geocode(string address)
     {
-        if (WaitingForResponse)
+        if (WaitingForResponse || address.Equals(""))
         {
             return;
         }
@@ -183,6 +185,10 @@ public class Geocoder : MonoBehaviour
             var address = response.SelectToken("address");
             var label = address.SelectToken("LongLabel");
             Debug.Log(label);
+
+            ResponseAddress = (string)label;
+            GameObject infoCard = CreateInfoCard(false);
+            infoCard.transform.SetParent(QueryLocationGO.transform, false);
         }
 
         WaitingForResponse = false;
@@ -270,8 +276,6 @@ public class Geocoder : MonoBehaviour
         }
         markerGO.GetComponent<ArcGISLocationComponent>().Rotation = new ArcGISRotation(0, 90, 0);
 
-        GameObject infoCard = CreateInfoCard();
-        infoCard.transform.SetParent(markerGO.transform,false);
 
         //if (++raycastCount > MaxRaycasts)
         //{
@@ -337,21 +341,34 @@ public class Geocoder : MonoBehaviour
         //QueryLocationGO.AddComponent(typeof(HPTransform));
         //QueryLocationGO.AddComponent(typeof(ArcGISLocationComponent));
 
-
-
     }
 
 
-    GameObject CreateInfoCard()
+    GameObject CreateInfoCard(bool isAddressQuery)
     {
         GameObject card = Instantiate(InfoCardTemplate);
-        card.transform.localPosition = new Vector3(0,250,200);
-        card.transform.localRotation = Quaternion.Euler(90,0,0);
-        card.transform.localScale = new Vector3(3.5f,3.5f,3.5f);
+        TextMeshProUGUI t = card.GetComponentInChildren<TextMeshProUGUI>();
+        
+        if (isAddressQuery)
+        {
+            float localScale = (float)3 / AddressMarkerScale;
+            card.transform.localPosition = new Vector3(0,250,200);  
+            card.transform.localRotation = Quaternion.Euler(90,0,0);
+            card.transform.localScale = new Vector3(localScale, localScale, localScale);
+        }
+        else
+        {
+            card.transform.localPosition = new Vector3(0, 2, 2);
+            card.transform.localRotation = Quaternion.Euler(90, 0, 0);
+            float localScale = (float)3 / LocationMarkerScale;
+            card.transform.localScale = new Vector3(localScale, localScale, localScale);
+        }
 
-        TextMeshProUGUI t =  card.GetComponentInChildren<TextMeshProUGUI>() as TextMeshProUGUI;
 
-        t.text = ResponseAddress;
+        if (t != null)
+        {
+            t.text = ResponseAddress;
+        }
 
         return card;
     }
