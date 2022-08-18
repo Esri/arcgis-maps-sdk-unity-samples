@@ -35,22 +35,14 @@ public class Measure : MonoBehaviour
     private HPRoot hpRoot;
     private ArcGISMapComponent arcGISMapComponent;
     private float elevationOffset = 5f;
-    private GameObject FeaturePoint;
     private List<GameObject> featurePoints = new List<GameObject>();
     private Stack<GameObject> stops = new Stack<GameObject>();
-    private GameObject lastStop;
-    private ArcGISLocationComponent lastStopLocation;
     private double3 lastRootPosition;
-    private ArcGISPoint thisPoint;
-    private ArcGISPoint lastPoint;
-    private ArcGISPoint prePoint;
-    private ArcGISPoint nextPoint;
     private double geodedicDistance=0;
     private LineRenderer lineRenderer;
-    private ArcGISSpatialReference spatialRef = new ArcGISSpatialReference(3857);
     private ArcGISLinearUnitId unit;
     private ArcGISAngularUnitId unitDegree = (ArcGISAngularUnitId)9102;
-    UnitType currentUnit;
+    private UnitType currentUnit;
 
     void Start()
     {
@@ -60,6 +52,7 @@ public class Measure : MonoBehaviour
         // We need this ArcGISMapComponent for the FromCartesianPosition Method
         // defined on the ArcGISMapComponent.View
         arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
+       
         lineRenderer = Line.GetComponent<LineRenderer>();
         lastRootPosition = arcGISMapComponent.GetComponent<HPRoot>().RootUniversePosition;
         unit = (ArcGISLinearUnitId)9001;
@@ -87,20 +80,17 @@ public class Measure : MonoBehaviour
             {
                 var lineMarker = Instantiate(LineMarker, hit.point, Quaternion.identity, arcGISMapComponent.transform);
 
-                var geoPosition = HitToGeoPosition(hit);
+                var thisPoint = HitToGeoPosition(hit);
 
                 lineMarker.GetComponent<ArcGISLocationComponent>().enabled = true;
-                lineMarker.GetComponent<ArcGISLocationComponent>().Position = geoPosition;
+                lineMarker.GetComponent<ArcGISLocationComponent>().Position = thisPoint;
                 lineMarker.GetComponent<ArcGISLocationComponent>().Rotation = new ArcGISRotation(0, 90, 0);
+                   
 
-                var thisPoint = new ArcGISPoint(geoPosition.X, geoPosition.Y, geoPosition.Z, spatialRef);
-
-                
                 if (stops.Count > 0)
                 {
-                    lastStop = stops.Peek();
-                    lastStopLocation = lastStop.GetComponent<ArcGISLocationComponent>();
-                    lastPoint = new ArcGISPoint(lastStopLocation.Position.X, lastStopLocation.Position.Y, lastStopLocation.Position.Z, spatialRef);
+                    GameObject lastStop = stops.Peek();
+                    var lastPoint = lastStop.GetComponent<ArcGISLocationComponent>().Position;
                     
                     //calculate distance from last point to this point
                     geodedicDistance += ArcGISGeometryEngine.DistanceGeodetic(lastPoint, thisPoint, new ArcGISLinearUnit(unit), new ArcGISAngularUnit(unitDegree), ArcGISGeodeticCurveType.Geodesic).Distance;
@@ -110,34 +100,31 @@ public class Measure : MonoBehaviour
                     //interpolate middle points between last point and this point
                     Interpolate(lastStop, lineMarker, featurePoints);
                     featurePoints.Add(lineMarker);
-                   
-                   
+                                     
                 }
                 //add this point to stops and also to feature points where stop is user-drawed, and feature points is a collection of user-drawed and interpolated
                 stops.Push(lineMarker);
-               
+                RenderLine(ref featurePoints);
+                RebaseLine();
+
             }
+            
         }
-        RenderLine(ref featurePoints);
-        RebaseLine();
+        
 
     }
     
     private void Interpolate(GameObject start, GameObject end, List<GameObject> featurePoints)
     {
-        ArcGISLocationComponent startLocation = start.GetComponent<ArcGISLocationComponent>();
-        ArcGISLocationComponent endLocation = end.GetComponent<ArcGISLocationComponent>();
-
-        ArcGISPoint startPoint = new ArcGISPoint(startLocation.Position.X, startLocation.Position.Y, startLocation.Position.Z, spatialRef);
-        ArcGISPoint endPoint = new ArcGISPoint(endLocation.Position.X, endLocation.Position.Y, endLocation.Position.Z, spatialRef);
+        var startPoint = start.GetComponent<ArcGISLocationComponent>().Position;
+        var endPoint = end.GetComponent<ArcGISLocationComponent>().Position;
 
         double d = ArcGISGeometryEngine.DistanceGeodetic(startPoint, endPoint, new ArcGISLinearUnit((ArcGISLinearUnitId)9001), new ArcGISAngularUnit(unitDegree), ArcGISGeodeticCurveType.Geodesic).Distance;
         float n = Mathf.Floor((float)d / InterpolationInterval);
         double dx = (end.transform.position.x - start.transform.position.x) / n;
         double dz = (end.transform.position.z - start.transform.position.z) / n;
 
-        prePoint = startPoint;
-        GameObject pre = start;
+        var pre = start.transform.position;
 
         //calculate n-1 intepolation points/n-1 segments because the last segment is already created by the end point 
         for (int i=0;i<n-1;i++)
@@ -145,8 +132,8 @@ public class Measure : MonoBehaviour
             GameObject next = Instantiate(InterpolationMarker, arcGISMapComponent.transform);
 
             //calculate transform of next point
-            float nextX = pre.transform.position.x + (float)dx;
-            float nextZ = pre.transform.position.z + (float)dz;
+            float nextX = pre.x + (float)dx;
+            float nextZ = pre.z + (float)dz;
             next.transform.position = new Vector3(nextX, 0, nextZ);
 
             //set default location component of next point
@@ -158,20 +145,18 @@ public class Measure : MonoBehaviour
  
             featurePoints.Add(next);
 
-            prePoint = nextPoint;
-            pre = next;
+            pre = next.transform.position;
         }
 
     }
     
-    private ArcGISPoint HitToGeoPosition(RaycastHit hit, float yOffset = 0)
+    private ArcGISPoint HitToGeoPosition(RaycastHit hit, float zOffset = 0)
     {
         var worldPosition = math.inverse(arcGISMapComponent.WorldMatrix).HomogeneousTransformPoint(hit.point.ToDouble3());
 
         var geoPosition = arcGISMapComponent.View.WorldToGeographic(worldPosition);
-        var offsetPosition = new ArcGISPoint(geoPosition.X, geoPosition.Y, geoPosition.Z + yOffset, geoPosition.SpatialReference);
-
-        return GeoUtils.ProjectToSpatialReference(offsetPosition, spatialRef);
+        return new ArcGISPoint(geoPosition.X, geoPosition.Y, geoPosition.Z + zOffset, geoPosition.SpatialReference);
+        
     }
 
     // set height for point transform and location component
