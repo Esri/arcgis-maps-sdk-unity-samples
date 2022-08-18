@@ -19,7 +19,7 @@ public enum UnitType
     m = 0,
     km = 1,
     mi = 2,
-    ft=3
+    ft = 3
 }
 
 public class Measure : MonoBehaviour
@@ -29,7 +29,7 @@ public class Measure : MonoBehaviour
     private String unitTxt;
     public GameObject LineMarker;
     public GameObject InterpolationMarker;
-    public float InterpolationInterval=100;
+    public float InterpolationInterval = 100;
     public Dropdown UnitDropdown;
     public Button ClearButton;
     private HPRoot hpRoot;
@@ -38,7 +38,7 @@ public class Measure : MonoBehaviour
     private List<GameObject> featurePoints = new List<GameObject>();
     private Stack<GameObject> stops = new Stack<GameObject>();
     private double3 lastRootPosition;
-    private double geodedicDistance=0;
+    private double geodedicDistance = 0;
     private LineRenderer lineRenderer;
     private ArcGISLinearUnitId unit;
     private ArcGISAngularUnitId unitDegree = (ArcGISAngularUnitId)9102;
@@ -52,25 +52,27 @@ public class Measure : MonoBehaviour
         // We need this ArcGISMapComponent for the FromCartesianPosition Method
         // defined on the ArcGISMapComponent.View
         arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
-       
+
         lineRenderer = Line.GetComponent<LineRenderer>();
         lastRootPosition = arcGISMapComponent.GetComponent<HPRoot>().RootUniversePosition;
         unit = (ArcGISLinearUnitId)9001;
         currentUnit = UnitType.m;
         unitTxt = " m";
-        UnitDropdown.onValueChanged.AddListener(delegate {
+        UnitDropdown.onValueChanged.AddListener(delegate
+        {
             UnitChanged();
         });
-        ClearButton.onClick.AddListener(delegate {
+        ClearButton.onClick.AddListener(delegate
+        {
             ClearLine();
         });
 
-       
+
     }
-    
+
     void Update()
     {
- 
+
         if (Input.GetKey(KeyCode.LeftShift) && Input.GetMouseButtonDown(0))
         {
             RaycastHit hit;
@@ -85,22 +87,22 @@ public class Measure : MonoBehaviour
                 lineMarker.GetComponent<ArcGISLocationComponent>().enabled = true;
                 lineMarker.GetComponent<ArcGISLocationComponent>().Position = thisPoint;
                 lineMarker.GetComponent<ArcGISLocationComponent>().Rotation = new ArcGISRotation(0, 90, 0);
-                   
+
 
                 if (stops.Count > 0)
                 {
                     GameObject lastStop = stops.Peek();
                     var lastPoint = lastStop.GetComponent<ArcGISLocationComponent>().Position;
-                    
+
                     //calculate distance from last point to this point
                     geodedicDistance += ArcGISGeometryEngine.DistanceGeodetic(lastPoint, thisPoint, new ArcGISLinearUnit(unit), new ArcGISAngularUnit(unitDegree), ArcGISGeodeticCurveType.Geodesic).Distance;
-                    GeodedicDistanceText.text = "Distance: "+ Math.Round(geodedicDistance, 3).ToString()+unitTxt;
+                    GeodedicDistanceText.text = "Distance: " + Math.Round(geodedicDistance, 3).ToString() + unitTxt;
 
                     featurePoints.Add(lastStop);
                     //interpolate middle points between last point and this point
                     Interpolate(lastStop, lineMarker, featurePoints);
                     featurePoints.Add(lineMarker);
-                                     
+
                 }
                 //add this point to stops and also to feature points where stop is user-drawed, and feature points is a collection of user-drawed and interpolated
                 stops.Push(lineMarker);
@@ -108,12 +110,12 @@ public class Measure : MonoBehaviour
                 RebaseLine();
 
             }
-            
+
         }
-        
+
 
     }
-    
+
     private void Interpolate(GameObject start, GameObject end, List<GameObject> featurePoints)
     {
         var startPoint = start.GetComponent<ArcGISLocationComponent>().Position;
@@ -127,7 +129,7 @@ public class Measure : MonoBehaviour
         var pre = start.transform.position;
 
         //calculate n-1 intepolation points/n-1 segments because the last segment is already created by the end point 
-        for (int i=0;i<n-1;i++)
+        for (int i = 0; i < n - 1; i++)
         {
             GameObject next = Instantiate(InterpolationMarker, arcGISMapComponent.transform);
 
@@ -142,21 +144,21 @@ public class Measure : MonoBehaviour
 
             //define height
             SetElevation(next);
- 
+
             featurePoints.Add(next);
 
             pre = next.transform.position;
         }
 
     }
-    
+
     private ArcGISPoint HitToGeoPosition(RaycastHit hit, float zOffset = 0)
     {
         var worldPosition = math.inverse(arcGISMapComponent.WorldMatrix).HomogeneousTransformPoint(hit.point.ToDouble3());
 
         var geoPosition = arcGISMapComponent.View.WorldToGeographic(worldPosition);
         return new ArcGISPoint(geoPosition.X, geoPosition.Y, geoPosition.Z + zOffset, geoPosition.SpatialReference);
-        
+
     }
 
     // set height for point transform and location component
@@ -170,13 +172,13 @@ public class Measure : MonoBehaviour
         {
             var location = stop.GetComponent<ArcGISLocationComponent>();
             location.Position = HitToGeoPosition(hitInfo, elevationOffset);
-            stop.transform.position =  hitInfo.point;
+            stop.transform.position = hitInfo.point;
         }
     }
 
     private void RenderLine(ref List<GameObject> featurePoints)
     {
-       
+
         lineRenderer.widthMultiplier = 5;
 
         var allPoints = new List<Vector3>();
@@ -235,7 +237,7 @@ public class Measure : MonoBehaviour
             ArcGISLinearUnitId unitM = (ArcGISLinearUnitId)9001;
             unit = unitM;
             geodedicDistance = ConvertUnits(geodedicDistance, currentUnit, UnitType.m);
-            currentUnit =UnitType.m;
+            currentUnit = UnitType.m;
             unitTxt = " m";
         }
         else if (UnitDropdown.options[UnitDropdown.value].text == "Kilometers")
@@ -276,7 +278,7 @@ public class Measure : MonoBehaviour
             new double[] { 1609.344,     1.609344,       1,   5280},
             new double[] { 0.3048,    0.0003048,  0.00018939,    1}
         };
-            
+
         return units * factor[(int)from][(int)to];
     }
 
