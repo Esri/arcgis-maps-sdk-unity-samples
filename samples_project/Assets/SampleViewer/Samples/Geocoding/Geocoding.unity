@@ -283,8 +283,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 150318280}
-  m_LocalRotation: {x: 0.6861034, y: 0.17106481, z: -0.17106445, w: 0.68610203}
-  m_LocalPosition: {x: -0.000061062165, y: 3900, z: -0.00014407132}
+  m_LocalRotation: {x: 0.22415149, y: 0.48283133, z: -0.129543, w: 0.83656955}
+  m_LocalPosition: {x: 1762.5657, y: 749.66, z: -1109.8628}
   m_LocalScale: {x: 1.0000001, y: 1.0000001, z: 1.0000001}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -316,13 +316,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position:
-    x: -74
-    y: 40.71
-    z: 4000
+    x: -122.42
+    y: 37.76
+    z: 750
     SRWkid: 4326
   rotation:
-    Heading: 28
-    Pitch: 0
+    Heading: 60
+    Pitch: 60
     Roll: 0
 --- !u!114 &150318284
 MonoBehaviour:
@@ -336,8 +336,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27afbdfc83e47004e95ef7726ed4a9cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxSpeed: 2000000
-  MinSpeed: 1000
+  MaxSpeed: 3000000
+  MinSpeed: 2000
 --- !u!114 &150318285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -519,7 +519,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 2147483647
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -545,15 +545,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_IsInitialized: 1
   m_LocalPosition:
-    x: 1335377.4756257536
-    y: 4140673.471142642
-    z: -4657014.696477065
+    x: -2707080.3769663707
+    y: 3884877.436714674
+    z: -4262386.67914559
   m_LocalRotation:
     value:
-      x: 0.36578652
-      y: -0.04327617
-      z: -0.1776362
-      w: 0.91256386
+      x: -0.25217798
+      y: 0.59891224
+      z: -0.26912025
+      w: 0.7108338
   m_LocalScale:
     x: 1.0000001
     y: 1.0000001
@@ -621,10 +621,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AddressMarkerTemplate: {fileID: 919132149155446097, guid: 919463facfd6566498726b6c208257e0, type: 3}
-  AddressMarkerScale: 1
+  AddressMarkerScale: 0.55
   LocationMarkerTemplate: {fileID: 1394836214669357477, guid: 462c61f22be238f4da9ee0837f633a00, type: 3}
-  LocationMarkerScale: 100
-  InfoCardTemplate: {fileID: 8794308439353200324, guid: 3eb1c314cee067045a5a803a123cf342, type: 3}
+  LocationMarkerScale: 120
+  AddressCardTemplate: {fileID: 8794308439353200324, guid: 3eb1c314cee067045a5a803a123cf342, type: 3}
+  InfoField: {fileID: 1802369979}
 --- !u!4 &261685547
 Transform:
   m_ObjectHideFlags: 0
@@ -1130,7 +1131,7 @@ GameObject:
   - component: {fileID: 667037203}
   - component: {fileID: 667037202}
   m_Layer: 5
-  m_Name: Instruction Background
+  m_Name: Info Field Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1154,7 +1155,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -50, y: -110}
+  m_AnchoredPosition: {x: -50, y: -160}
   m_SizeDelta: {x: 850, y: 100}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &667037202
@@ -1232,7 +1233,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -50, y: -50}
+  m_AnchoredPosition: {x: -50, y: -100}
   m_SizeDelta: {x: 850, y: 50}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1676940012
@@ -1297,6 +1298,18 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 150318284}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
       - m_Target: {fileID: 261685546}
         m_TargetAssemblyTypeName: Geocoder, Sample Viewer
         m_MethodName: Geocode
@@ -1315,18 +1328,6 @@ MonoBehaviour:
   m_OnSelect:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 465489154}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: ' '
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 150318284}
         m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
         m_MethodName: set_enabled
@@ -1337,6 +1338,18 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 465489154}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: ' '
           m_BoolArgument: 0
         m_CallState: 2
   m_OnDeselect:
@@ -1431,7 +1444,7 @@ GameObject:
   - component: {fileID: 1802369980}
   - component: {fileID: 1802369979}
   m_Layer: 5
-  m_Name: Instructions
+  m_Name: Info Field
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1623,9 +1636,9 @@ MonoBehaviour:
       y: 0
   layers: []
   originPosition:
-    x: -74
-    y: 40.71
-    z: 100
+    x: -122.44
+    y: 37.77
+    z: 0
     SRWkid: 4326
   mapType: 0
   editorModeEnabled: 1
@@ -1649,15 +1662,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_LocalPosition:
-    x: 1334562.6144243712
-    y: 4138129.771360768
-    z: -4654172.937753638
+    x: -2707885.3800201025
+    y: 3885295.5947773275
+    z: -4260367.387943904
   m_LocalRotation:
     value:
-      x: -0.4129366
-      y: -0.12649567
-      z: -0.058034454
-      w: 0.90006346
+      x: -0.42265368
+      y: 0.25081053
+      z: 0.122952245
+      w: 0.86217207
 --- !u!1 &2134863952
 GameObject:
   m_ObjectHideFlags: 0
