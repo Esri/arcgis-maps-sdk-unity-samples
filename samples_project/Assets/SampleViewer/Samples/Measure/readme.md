@@ -2,7 +2,7 @@
 
 Draw lines on the map and show distance.
 
-![Measure](measure.PNG)
+![Measure](Measure.PNG)
 
 ## How it works
 
