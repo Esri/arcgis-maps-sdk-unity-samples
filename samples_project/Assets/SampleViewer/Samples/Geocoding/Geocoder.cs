@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using TMPro;
 using Unity.Mathematics;
+using UnityEngine.EventSystems;
 using Newtonsoft.Json.Linq;
 using Esri.HPFramework;
 using Esri.GameEngine.Geometry;
@@ -41,8 +42,8 @@ public class Geocoder : MonoBehaviour
     private string ResponseAddress = "";
     private bool ShouldPlaceMarker = false;
     private bool WaitingForResponse = false;
-    private uint FrameCounter = 0;
-    private readonly uint MaxMapLoadFrames = 45;
+    private float Timer = 0;
+    private readonly float MapLoadWaitTime = 1;
     private readonly string AddressQueryURL = "https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates";
     private readonly string LocationQueryURL = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode";
 
@@ -57,14 +58,14 @@ public class Geocoder : MonoBehaviour
         // Create a marker and address card after an address lookup
         if (ShouldPlaceMarker)
         {
-            // Wait for a certain number of frames for the map to load
-            if (FrameCounter < MaxMapLoadFrames)
+            // Wait for a fixed time for the map to load
+            if (Timer < MapLoadWaitTime)
             {
-                FrameCounter++;
+                Timer += Time.deltaTime;
             }
             else
             {
-                float CameraElevationOffset = 2000;
+                float CameraElevationOffset = 2000; // Height of the camera above the queried address
 
                 SetupQueryLocationGameObject(AddressMarkerTemplate, scale: new Vector3(AddressMarkerScale, AddressMarkerScale, AddressMarkerScale));
                 PlaceOnGround(QueryLocationGO);
@@ -97,13 +98,33 @@ public class Geocoder : MonoBehaviour
     }
 
     /// <summary>
+    /// Verify the input text and call the geocoder. This function is called when an address is entered in the text input field.
+    /// </summary>
+    /// <param name="textInput"></param>
+    public void HandleTextInput(string textInput)
+    {
+        if (!string.IsNullOrWhiteSpace(textInput))
+        {
+            Geocode(textInput);
+        }
+
+        // Deselct the text input field that was used to call this function. 
+        // It is required so that the camera controller can be enabled/disabled when the input fieled is deselected/selected 
+        var eventSystem = EventSystem.current;
+        if (!eventSystem.alreadySelecting)
+        {
+            eventSystem.SetSelectedGameObject(null);
+        }
+    }
+
+
+    /// <summary>
     /// Perform a geocoding query (address lookup) and parse the response. If the server returned an error, the message is shown to the user.
-    /// The function is called when an address is entered in the text input field.
     /// </summary>
     /// <param name="address"></param>
     public async void Geocode(string address)
     {
-        if (WaitingForResponse || address.Equals(""))
+        if (WaitingForResponse)
         {
             return;
         }
@@ -126,16 +147,26 @@ public class Geocoder : MonoBehaviour
             var candidates = response.SelectToken("candidates");
             if (candidates is JArray array)
             {
-                var location = array[0].SelectToken("location");
-                var lon = location.SelectToken("x");
-                var lat = location.SelectToken("y");
-                ResponseAddress = (string)array[0].SelectToken("address");
+                if (array.Count > 0) // Check if the response included any result  
+                {
+                    var location = array[0].SelectToken("location");
+                    var lon = location.SelectToken("x");
+                    var lat = location.SelectToken("y");
+                    ResponseAddress = (string)array[0].SelectToken("address");
 
-                // Move the camera to the queried address
-                MainCamera.GetComponent<Camera>().cullingMask = 0; // blacken the camera view until the scene is updated
-                ArcGISLocationComponent CamLocComp = MainCamera.GetComponent(typeof(ArcGISLocationComponent)) as ArcGISLocationComponent;
-                CamLocComp.Rotation = new ArcGISRotation(0, 0, 0);
-                CamLocComp.Position = new ArcGISPoint((double)lon, (double)lat, cameraStartHeight, new ArcGISSpatialReference(4326));
+                    // Move the camera to the queried address
+                    MainCamera.GetComponent<Camera>().cullingMask = 0; // blacken the camera view until the scene is updated
+                    ArcGISLocationComponent CamLocComp = MainCamera.GetComponent(typeof(ArcGISLocationComponent)) as ArcGISLocationComponent;
+                    CamLocComp.Rotation = new ArcGISRotation(0, 0, 0);
+                    CamLocComp.Position = new ArcGISPoint((double)lon, (double)lat, cameraStartHeight, new ArcGISSpatialReference(4326));
+
+                    ShouldPlaceMarker = true;
+                    Timer = 0;
+                }
+                else
+                {
+                    Destroy(QueryLocationGO);
+                }
 
                 // Update the info field in the UI
                 InfoField.text = array.Count switch
@@ -144,9 +175,6 @@ public class Geocoder : MonoBehaviour
                     1 => "Enter an address above to move there or shift+click on a location to see the address / description.",
                     _ => "Query returned multiple results. If the shown location is not the intended one, make your input more specific.",
                 };
-
-                ShouldPlaceMarker = true;
-                FrameCounter = 0;
             }
         }
         WaitingForResponse = false;
@@ -207,11 +235,11 @@ public class Geocoder : MonoBehaviour
             new KeyValuePair<string, string>("token", arcGISMapComponent.APIKey),
             new KeyValuePair<string, string>("f", "json"),
         };
-        
+
         HttpClient client = new HttpClient();
         HttpContent content = new FormUrlEncodedContent(payload);
         HttpResponseMessage response = await client.PostAsync(AddressQueryURL, content);
-        
+
         response.EnsureSuccessStatusCode();
         string results = await response.Content.ReadAsStringAsync();
         return results;
@@ -233,7 +261,7 @@ public class Geocoder : MonoBehaviour
         HttpClient client = new HttpClient();
         HttpContent content = new FormUrlEncodedContent(payload);
         HttpResponseMessage response = await client.PostAsync(LocationQueryURL, content);
-        
+
         response.EnsureSuccessStatusCode();
         string results = await response.Content.ReadAsStringAsync();
         return results;
