@@ -1,15 +1,25 @@
-# Routing
+# Find a route
 
 Show a route between two points on a map using Esri's routing service REST API.
 
 ![Routing](routing.png)
 
+## How to use the sample
+
+This sample uses Esri's [routing service's REST API](https://developers.arcgis.com/rest/network/api-reference/overview-of-network-analysis-services.htm) to query the closest route along the road network between two points. This service uses routing operations associated with your API Key. You can learn more about [API keys](https://developers.arcgis.com/documentation/mapping-apis-and-services/security/api-keys/) and [Accounts](https://developers.arcgis.com/documentation/mapping-apis-and-services/deployment/accounts/) in the _Mapping APIs and location services_ guide.
+
+1. Click on the **RouteManager** game object under **ArcGISMap** in the **Hierarchy** window.
+2. Set your API key in the **Inspector** window.
+3. While holding shift, left click on the map twice. (This sample is only setup to work with mouse and keyboard.)
+
 ## How it works
 
-1. Set your API Key in the RouteManager inspector window.
-2. While holding shift, left click on the map twice. The route will be shown between the two points. This sample is only setup to work with mouse and keyboard.
-3. This sample uses Esri's [routing service's REST API](https://developers.arcgis.com/rest/network/api-reference/overview-of-network-analysis-services.htm) to query the closest route along the road network between two points. This service uses routing operations associated with your API Key. You can learn more about [API keys](https://developers.arcgis.com/documentation/mapping-apis-and-services/security/api-keys/) and [Accounts](https://developers.arcgis.com/documentation/mapping-apis-and-services/deployment/accounts/) in the _Mapping APIs and location services_ guide.
-4. Raycasts are used to determine the elevation at each breadcrumb's position to account for elevation.
+1. The `HTTPClient` is required for using the [routing service's REST API](https://developers.arcgis.com/rest/network/api-reference/overview-of-network-analysis-services.htm). 
+2. Use the [direct request](https://developers.arcgis.com/rest/network/api-reference/route-synchronous-service.htm) to request and to obtain the routing result.
+3. Use [Raycast](https://docs.unity3d.com/ScriptReference/Physics.Raycast.html) to determine the elevation at each breadcrumb's position to account for elevation. (Enable the mesh collider from the **ArcGIS Map** component to use the Raycast.)
+4. Use Unity's [Line Renderer component](https://docs.unity3d.com/Manual/class-LineRenderer.html) to draw the route.
+
+Use Unity's LineRenderer
 
 ## Tags
 
