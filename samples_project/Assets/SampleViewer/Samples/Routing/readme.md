@@ -19,8 +19,6 @@ This sample uses Esri's [routing service's REST API](https://developers.arcgis.c
 3. Use [Raycast](https://docs.unity3d.com/ScriptReference/Physics.Raycast.html) to determine the elevation at each breadcrumb's position to account for elevation. (Enable the mesh collider from the **ArcGIS Map** component to use the Raycast.)
 4. Use Unity's [Line Renderer component](https://docs.unity3d.com/Manual/class-LineRenderer.html) to draw the route.
 
-Use Unity's LineRenderer
-
 ## Tags
 
 routing, raycast, REST API
