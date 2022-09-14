@@ -10,7 +10,7 @@ This sample uses Esri's [routing service's REST API](https://developers.arcgis.c
 
 1. Click on the **RouteManager** game object under **ArcGISMap** in the **Hierarchy** window.
 2. Set your API key in the **Inspector** window.
-3. While holding shift, left click on the map twice. (This sample is only setup to work with mouse and keyboard.)
+3. While holding shift, left click on the map twice. (This sample is only set up to work with mouse and keyboard.)
 
 ## How it works
 
