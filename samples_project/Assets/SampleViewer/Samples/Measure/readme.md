@@ -1,6 +1,6 @@
 # Measure
 
-Draw lines on the map and show distance.
+Display the measured distance by drawing lines on the map.
 
 ![Measure](measure.PNG)
 
@@ -13,7 +13,7 @@ Draw lines on the map and show distance.
 ## How it works
 
 1. This sample uses [`ArcGISGeometryEngine`](https://developers.arcgis.com/unity/api-reference/gameengine/geometry/arcgisgeometryengine#distancegeodetic) to calculate distance. 
-2. The measured distance is [geodetic/geodesic distance](https://pro.arcgis.com/en/pro-app/2.8/tool-reference/spatial-analyst/geodesic-versus-planar-distance.htm). Geodetic distance is calculated in a 3D spherical space as the distance across the curved surface of the world.
+2. The measured distance is [geodetic/geodesic distance](https://developers.arcgis.com/documentation/glossary/geodetic-measurement/). Geodetic distance is calculated in a 3D spherical space as the distance across the curved surface of the world. you can find more information about the differences between geodesic and planar distance in [ArcGIS Pro documentation](https://pro.arcgis.com/en/pro-app/2.8/tool-reference/spatial-analyst/geodesic-versus-planar-distance.htm).
 3. Interpolation points are optional and are used to align line segments to terrain. 
 
 ## Tags
