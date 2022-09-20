@@ -1,142 +1,187 @@
-using Esri.ArcGISMapsSDK.Components;
-using System;
-using System.Text;
-using System.Linq;
+// Copyright 2022 Esri.
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+//
+
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using Esri.ArcGISMapsSDK.Utils.GeoCoord;
+using UnityEngine.Networking;
+using UnityEngine.UI;
+using UnityEditor;
+using Esri.ArcGISMapsSDK.Components;
+using Esri.GameEngine.Geometry;
+using System;
+using System.Net.WebSockets;
+using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
-using System.Net.WebSockets;
-using UnityEditor;
-using UnityEngine.Rendering;
-using Esri.GameEngine.Geometry;
 using Newtonsoft.Json.Linq;
+using Esri.HPFramework;
 
 [System.Serializable]
 public class TrackFeature
 {
-	public TrackGeometry geometry;
-	public TrackProperties attributes;
-	public TrackGeometry predictedPoint;
+    public TrackGeometry geometry;
+    public TrackProperties attributes;
+    public TrackGeometry predictedPoint;
 
-	public void PredictLocation(double intervalMilliseconds)
-	{
-		var cGroundSpeedKnots = attributes.speed;
-		var metersPerSec = cGroundSpeedKnots * 0.51444444444;
-		var simulationSpeedFactor = 1.5;
-		var timespanSec = (intervalMilliseconds / 1000.0) * simulationSpeedFactor;
-		double[] currentPoint = new double[3] { predictedPoint.x, predictedPoint.y, predictedPoint.z };
-		var headingDegrees = attributes.heading;
-		var drPoint = DeadReckoning.DeadReckoningPoint(metersPerSec, timespanSec, currentPoint, headingDegrees);
-		predictedPoint.x = drPoint[0];
-		predictedPoint.y = drPoint[1];
-		predictedPoint.z = currentPoint[2];
-	}
+    public void PredictLocation(double intervalMilliseconds)
+    {
+        var cGroundSpeedKnots = attributes.speed;
+        var metersPerSec = cGroundSpeedKnots * 0.51444444444;
+        var simulationSpeedFactor = 1.5;
+        var timespanSec = (intervalMilliseconds / 1000.0) * simulationSpeedFactor;
+        double[] currentPoint = new double[3] { predictedPoint.x, predictedPoint.y, predictedPoint.z };
+        var headingDegrees = attributes.heading;
+        var drPoint = DeadReckoning.DeadReckoningPoint(metersPerSec, timespanSec, currentPoint, headingDegrees);
+        predictedPoint.x = drPoint[0];
+        predictedPoint.y = drPoint[1];
+        predictedPoint.z = currentPoint[2];
+    }
+
+    public static TrackFeature Create(string name, double x, double y, double z, float heading, float speed, DateTime dateTimeStamp)
+    {
+        TrackFeature trackFeature = new TrackFeature();
+        trackFeature.geometry = new TrackGeometry();
+        trackFeature.geometry.x = x;
+        trackFeature.geometry.y = y;
+        trackFeature.geometry.z = z;
+        trackFeature.attributes = new TrackProperties();
+        trackFeature.attributes.name = name;
+        trackFeature.attributes.heading = heading;
+        trackFeature.attributes.speed = speed;
+        trackFeature.attributes.dateTimeStamp = dateTimeStamp;
+        trackFeature.predictedPoint = new TrackGeometry();
+        trackFeature.predictedPoint.x = trackFeature.geometry.x;
+        trackFeature.predictedPoint.y = trackFeature.geometry.y;
+        trackFeature.predictedPoint.z = trackFeature.geometry.z;
+        return trackFeature;
+    }
 }
 
 [System.Serializable]
 public class TrackProperties
 {
-	public string name;
-	public float heading;
-	public float speed;
-	public DateTime dateTimeStamp;
+    public string name;
+    public float heading;
+    public float speed;
+    public DateTime dateTimeStamp;
 }
 
 [System.Serializable]
 public class TrackGeometry
 {
-	public double x;
-	public double y;
-	public double z;
+    public double x;
+    public double y;
+    public double z;
 }
 
+// This class issues a query request to a Feature Layer which it then parses to create GameObjects at accurate locations
+// with correct property values. This is a good starting point if you are looking to parse your own feature layer into Unity.
 public class StreamLayerWebSocketSubscribe : MonoBehaviour
 {
-	public GameObject trackSymbolPrefab;
-	public float symbolScaleFactor = 2000.0f;
-	public float timeToLive = 5.0f; //minutes
+    public GameObject trackSymbolPrefab;
+    public float symbolScaleFactor = 2000.0f;
+    public float timeToLive = 5.0f; //minutes
 
-	public string wsUrl = "ws://geoeventsample1.esri.com:6180/arcgis/ws/services/FAAStream/StreamServer/subscribe";
-	public string nameField;
-	public string headingField;
-	public string speedField;
-	public string timeField;
+    // The height where we spawn the flight before finding the actual height
+    private int FlightSpawnHeight = 10000;
 
-	// In the query request we can denote the Spatial Reference we want the return geometries in.
-	// It is important that we create the GameObjects with the same Spatial Reference
-	private int FeatureSRWKID = 4326;
+    public string wsUrl = "ws://geoeventsample1.esri.com:6180/arcgis/ws/services/FAAStream/StreamServer/subscribe";
+    public string nameField;
+    public string headingField;
+    public string speedField;
+    public string timeField;
 
-	private ClientWebSocket wsClient;
+    // In the query request we can denote the Spatial Reference we want the return geometries in.
+    // It is important that we create the GameObjects with the same Spatial Reference
+    private int SRWKID = 4326;
 
-	private Dictionary<string, List<TrackFeature>> trackData;
+    private ClientWebSocket wsClient;
 
-	// Start is called before the first frame update
-	void Start()
-	{
+    private Dictionary<string, List<TrackFeature>> trackData;
+
+    // This will hold a reference to each feature we created
+    public List<GameObject> flights = new List<GameObject>();
+
+    // This camera reference will be passed to the stadiums to calculate the distance from the camera to each stadium
+    public ArcGISCameraComponent ArcGISCamera;
+
+    public Dropdown flightSelector;
+
+    // Get all the features when the script starts
+    void Start()
+    {
 #if UNITY_EDITOR
-		EditorApplication.playModeStateChanged += EditorApplication_playModeStateChanged;
+        EditorApplication.playModeStateChanged += EditorApplication_playModeStateChanged;
 #endif
-		trackData = new Dictionary<string, List<TrackFeature>>();
-		var result = Connect();
-	}
+        trackData = new Dictionary<string, List<TrackFeature>>();
+        var result = Connect();
 
-	private void LateUpdate()
-	{
-		DisplayTrackData();
-	}
+        flightSelector.onValueChanged.AddListener(delegate
+        {
+            FlightSelected();
+        });
+    }
 
-	private void HandleMessage(byte[] buffer, int count)
-	{
-		string data = Encoding.UTF8.GetString(buffer, 0, count);
-		TryParseFeedAndUpdateTrack(data);
-	}
+    private void LateUpdate()
+    {
+        DisplayTrackData();
+    }
 
-	public async Task Connect()
-	{
-		if (wsClient == null)
-		{
-			wsClient = new ClientWebSocket();
-			await wsClient.ConnectAsync(new Uri(wsUrl), CancellationToken.None);
-			byte[] buffer = new byte[10240];
-			while (wsClient.State == WebSocketState.Open)
-			{
-				var result = await wsClient.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-				if (result.MessageType == WebSocketMessageType.Close)
-				{
-					await wsClient.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
-				}
-				else
-				{
-					HandleMessage(buffer, result.Count);
-				}
-			}
-		}
-	}
+    private void HandleMessage(byte[] buffer, int count)
+    {
+        string data = Encoding.UTF8.GetString(buffer, 0, count);
+        TryParseFeedAndUpdateTrack(data);
+    }
 
-	public bool IsConnected()
-	{
-		if (wsClient != null)
-		{
-			return wsClient.State == WebSocketState.Open;
-		}
+    public async Task Connect()
+    {
+        if (wsClient == null)
+        {
+            wsClient = new ClientWebSocket();
+            await wsClient.ConnectAsync(new Uri(wsUrl), CancellationToken.None);
+            byte[] buffer = new byte[10240];
+            while (wsClient.State == WebSocketState.Open)
+            {
+                var result = await wsClient.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+                if (result.MessageType == WebSocketMessageType.Close)
+                {
+                    await wsClient.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
+                }
+                else
+                {
+                    HandleMessage(buffer, result.Count);
+                }
+            }
+        }
+    }
 
-		return false;
-	}
+    public bool IsConnected()
+    {
+        if (wsClient != null)
+        {
+            return wsClient.State == WebSocketState.Open;
+        }
 
-	public async Task Disconnect()
-	{
-		if (wsClient != null)
-		{
-			if (wsClient.State != WebSocketState.Closed)
-			{
-				await wsClient.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
-			}
-		}
-	}
+        return false;
+    }
 
-	/* Json Data should be in this format
+    public async Task Disconnect()
+    {
+        if (wsClient != null)
+        {
+            if (wsClient.State != WebSocketState.Closed)
+            {
+                await wsClient.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
+            }
+        }
+    }
+
+    /* Json Data should be in this format
 	 *	{
 	 *		"geometry": {
 	 *			"x":-81.55,
@@ -155,198 +200,203 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
 	 *		}
 	 *	}
 	*/
-	private void ParseFeedAndUpdateTrack(string data)
-	{
-		try
-		{
-			var trackFeature = JsonUtility.FromJson<TrackFeature>(data);
-			trackFeature.predictedPoint.x = trackFeature.geometry.x;
-			trackFeature.predictedPoint.y = trackFeature.geometry.y;
-			trackFeature.predictedPoint.z = trackFeature.geometry.z;
 
-			var trackList = trackData.ContainsKey(trackFeature.attributes.name) ? trackData[trackFeature.attributes.name] : new List<TrackFeature>();
-			// Don't exceed 10 observations per track
-			if (trackList.Count > 10)
-			{
-				trackList.RemoveAt(0);
-			}
+    private void TryParseFeedAndUpdateTrack(string data)
+    {
+        //Debug.Log(data);
+        var jObject = JObject.Parse(data);
+        var jAttributes = jObject.SelectToken("attributes");
+        if (jAttributes != null)
+        {
+            var name = jAttributes.SelectToken(nameField).ToString();
+            var geomToken = jObject.SelectToken("geometry");
+            //no point to go on
+            if (geomToken == null)
+            {
+                return;
+            }
+            double x = 0, y = 0, z = 0;
+            float heading = 0, speed = 0;
+            var xToken = geomToken.SelectToken("x");
+            if (xToken == null)
+            {
+                return;
+            }
+            double.TryParse(geomToken.SelectToken("x").ToString(), out x);
 
-			trackList.Add(trackFeature);
-			trackData[name] = trackList;
-		}
-		catch (Exception ex)
-		{
-			Debug.Log(ex.Message);
-		}
-	}
+            var yToken = geomToken.SelectToken("y");
+            if (yToken == null)
+            {
+                return;
+            }
+            double.TryParse(geomToken.SelectToken("y").ToString(), out y);
+            var jt = geomToken.SelectToken("z");
+            if (jt != null)
+            {
+                double.TryParse(jt.ToString(), out z);
+            }
+            var hdToken = jAttributes.SelectToken(headingField);
+            if (hdToken != null)
+            {
+                float.TryParse(hdToken.ToString(), out heading);
+            }
+            var spToken = jAttributes.SelectToken(speedField);
+            if (spToken != null)
+            {
+                float.TryParse(spToken.ToString(), out speed);
+            }
 
-	private void TryParseFeedAndUpdateTrack(string data)
-	{
-		//Debug.Log(data);
-		var jObject = JObject.Parse(data);
-		var jAttributes = jObject.SelectToken("attributes");
-		if (jAttributes != null)
-		{
-			var name = jAttributes.SelectToken(nameField).ToString();
-			var geomToken = jObject.SelectToken("geometry");
-			//no point to go on
-			if (geomToken == null)
-			{
-				return;
-			}
-			double x = 0, y = 0, z = 0;
-			float heading = 0, speed = 0;
-			var xToken = geomToken.SelectToken("x");
-			if (xToken == null)
-			{
-				return;
-			}
-			double.TryParse(geomToken.SelectToken("x").ToString(), out x);
+            long timestampMS = 0;
+            var dtToken = jAttributes.SelectToken(timeField);
+            if (dtToken != null)
+            {
+                long.TryParse(dtToken.ToString(), out timestampMS);
+            }
 
-			var yToken = geomToken.SelectToken("y");
-			if (yToken == null)
-			{
-				return;
-			}
-			double.TryParse(geomToken.SelectToken("y").ToString(), out y);
-			var jt = geomToken.SelectToken("z");
-			if (jt != null)
-			{
-				double.TryParse(jt.ToString(), out z);
-			}
-			var hdToken = jAttributes.SelectToken(headingField);
-			if (hdToken != null)
-			{
-				float.TryParse(hdToken.ToString(), out heading);
-			}
-			var spToken = jAttributes.SelectToken(speedField);
-			if (spToken != null) 
-			{ 
-				float.TryParse(spToken.ToString(), out speed); 
-			}
+            DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeMilliseconds(timestampMS);
+            var dateTimeStamp = dateTimeOffset.DateTime;
 
-			long timestampMS = 0;
-			var dtToken = jAttributes.SelectToken(timeField);
-			if (dtToken != null)
-			{
-				long.TryParse(dtToken.ToString(), out timestampMS);
-			}
+            var trackList = trackData.ContainsKey(name) ? trackData[name] : new List<TrackFeature>();
+            // Don't exceed 10 observations per track
+            if (trackList.Count > 10)
+            {
+                trackList.RemoveAt(0);
+            }
 
-			DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeMilliseconds(timestampMS);
-			var dateTimeStamp = dateTimeOffset.DateTime;
+            TrackFeature trackFeature = TrackFeature.Create(name, x, y, z, heading, speed, dateTimeStamp);
 
-			var trackList = trackData.ContainsKey(name) ? trackData[name] : new List<TrackFeature>();
-			// Don't exceed 10 observations per track
-			if (trackList.Count > 10)
-			{
-				trackList.RemoveAt(0);
-			}
+            trackList.Add(trackFeature);
+            trackData[name] = trackList;
+        }
+        else
+        {
+            Debug.Log("Unsupported data format");
+        }
+    }
 
-			TrackFeature trackFeature = new TrackFeature();
-			trackFeature.geometry = new TrackGeometry();
-			trackFeature.geometry.x = x;
-			trackFeature.geometry.y = y;
-			trackFeature.geometry.z = z;
-			trackFeature.attributes = new TrackProperties();
-			trackFeature.attributes.name = name;
-			trackFeature.attributes.heading = heading;
-			trackFeature.attributes.speed = speed;
-			trackFeature.attributes.dateTimeStamp = dateTimeStamp;
-			trackFeature.predictedPoint = new TrackGeometry();
-			trackFeature.predictedPoint.x = trackFeature.geometry.x;
-			trackFeature.predictedPoint.y = trackFeature.geometry.y;
-			trackFeature.predictedPoint.z = trackFeature.geometry.z;
-
-			trackList.Add(trackFeature);
-			trackData[name] = trackList;
-		}
-		else
-		{
-			Debug.Log("Unsupported data format");
-		}
-	}
-
-	private void DisplayTrackData()
-	{
-		try
-		{
-			foreach (var track in trackData.Keys.ToArray())
-			{
-				var trackList = trackData[track];
-				var trackFeature = trackList[trackList.Count - 1];
-				trackFeature.PredictLocation(Time.deltaTime * 1000.0);
-				GameObject gobjTrack = GameObject.Find(trackFeature.attributes.name);
-				if (gobjTrack != null)
-				{
-					// If elapse time since last update is more than 5 minutes remove the game object to conserve memory
-					TimeSpan timespan = DateTime.Now - trackFeature.attributes.dateTimeStamp.ToLocalTime();
-					if (timespan.TotalMinutes > timeToLive)
+    private void DisplayTrackData()
+    {
+        try
+        {
+            foreach (var track in trackData.Keys.ToArray())
+            {
+                var trackList = trackData[track];
+                var trackFeature = trackList[trackList.Count - 1];
+                trackFeature.PredictLocation(Time.deltaTime * 1000.0);
+                GameObject gobjTrack = GameObject.Find(trackFeature.attributes.name);
+                if (gobjTrack != null)
+                {
+                    // If elapse time since last update is more than 5 minutes remove the game object to conserve memory
+                    TimeSpan timespan = DateTime.Now - trackFeature.attributes.dateTimeStamp.ToLocalTime();
+                    if (timespan.TotalMinutes > timeToLive)
                     {
-						Destroy(gobjTrack);
-						trackData.Remove(track);
-						continue;
+                        Destroy(gobjTrack);
+                        trackData.Remove(track);
+                        continue;
                     }
-					var locationComponent = gobjTrack.GetComponent<ArcGISLocationComponent>();
-					locationComponent.Position = new ArcGISPoint(trackFeature.predictedPoint.x, trackFeature.predictedPoint.y, trackFeature.predictedPoint.z, new ArcGISSpatialReference(FeatureSRWKID));
+                    var locationComponent = gobjTrack.GetComponent<ArcGISLocationComponent>();
+                    locationComponent.Position = new ArcGISPoint(trackFeature.predictedPoint.x, trackFeature.predictedPoint.y, trackFeature.predictedPoint.z, new ArcGISSpatialReference(SRWKID));
 
-					gobjTrack.transform.localScale = Vector3.one * symbolScaleFactor;
+                    //gobjTrack.transform.localScale = Vector3.one * symbolScaleFactor;
+                    HPTransform hpTransform = gobjTrack.GetComponent<HPTransform>();
+                    hpTransform.LocalScale = new Vector3(symbolScaleFactor, symbolScaleFactor, symbolScaleFactor);
 
-					var rotator = locationComponent.Rotation;
-					rotator.Heading = trackFeature.attributes.heading;
-					locationComponent.Rotation = rotator;
-					Transform nameLabelTransform = gobjTrack.transform.GetChild(1);
-					if (nameLabelTransform != null)
-					{
-						GameObject nameLabel = nameLabelTransform.gameObject;
-						NameLabel nameLabelComponent = nameLabel.GetComponent<NameLabel>();
-						nameLabelComponent.slider.maxValue = timeToLive;
-						nameLabelComponent.slider.value = timeToLive - (float)timespan.TotalMinutes;
-					}
-				}
-				else
-				{
-					GameObject clonePrefab = Instantiate(trackSymbolPrefab, this.transform);
-					clonePrefab.name = trackFeature.attributes.name;
-					clonePrefab.SetActive(true);
-					clonePrefab.transform.localScale = new Vector3(symbolScaleFactor, symbolScaleFactor, symbolScaleFactor);
-					var locationComponent = clonePrefab.GetComponent<ArcGISLocationComponent>();
-					locationComponent.enabled = true;
-					locationComponent.Position = new ArcGISPoint(trackFeature.geometry.x, trackFeature.geometry.y, trackFeature.geometry.z, new ArcGISSpatialReference(FeatureSRWKID));
-					var rotator = locationComponent.Rotation;
-					rotator.Pitch = 90.0;
-					rotator.Heading = trackFeature.attributes.heading;
-					locationComponent.Rotation = rotator;
-
-					Transform nameLabelTransform = clonePrefab.transform.GetChild(1);
-					if (nameLabelTransform != null)
+                    var rotator = locationComponent.Rotation;
+                    rotator.Heading = trackFeature.attributes.heading;
+                    locationComponent.Rotation = rotator;
+                    Transform nameLabelTransform = gobjTrack.transform.GetChild(1);
+                    if (nameLabelTransform != null)
                     {
-						GameObject nameLabel = nameLabelTransform.gameObject;
-						NameLabel nameLabelComponent = nameLabel.GetComponent<NameLabel>();
-						nameLabelComponent.nameLabel = clonePrefab.name;
-						nameLabelComponent.slider.maxValue = timeToLive;
-						nameLabelComponent.slider.value = timeToLive;
-					}
-				}
+                        GameObject nameLabel = nameLabelTransform.gameObject;
+                        NameLabel nameLabelComponent = nameLabel.GetComponent<NameLabel>();
+                        nameLabelComponent.slider.maxValue = timeToLive;
+                        nameLabelComponent.slider.value = timeToLive - (float)timespan.TotalMinutes;
+                    }
+                }
+                else
+                {
+                    GameObject clonePrefab = Instantiate(trackSymbolPrefab, this.transform);
+                    clonePrefab.name = trackFeature.attributes.name;
+                    clonePrefab.SetActive(true);
+                    //clonePrefab.transform.localScale = new Vector3(symbolScaleFactor, symbolScaleFactor, symbolScaleFactor);
+                    HPTransform hpTransform = clonePrefab.GetComponent<HPTransform>();
+                    hpTransform.LocalScale = new Vector3(symbolScaleFactor, symbolScaleFactor, symbolScaleFactor);
+                    var locationComponent = clonePrefab.GetComponent<ArcGISLocationComponent>();
+                    locationComponent.enabled = true;
+                    locationComponent.Position = new ArcGISPoint(trackFeature.geometry.x, trackFeature.geometry.y, trackFeature.geometry.z, new ArcGISSpatialReference(SRWKID));
+                    var rotator = locationComponent.Rotation;
+                    rotator.Pitch = 90.0;
+                    rotator.Heading = trackFeature.attributes.heading;
+                    locationComponent.Rotation = rotator;
 
-				// remove trackFeature if it is not updated within a specified time interval
-			}
-		}
-		catch (Exception ex)
-		{
-			Debug.Log("Failed to create game object: " + ex.Message);
-		}
-	}
+                    Transform nameLabelTransform = clonePrefab.transform.GetChild(1);
+                    if (nameLabelTransform != null)
+                    {
+                        GameObject nameLabel = nameLabelTransform.gameObject;
+                        NameLabel nameLabelComponent = nameLabel.GetComponent<NameLabel>();
+                        nameLabelComponent.nameLabel = clonePrefab.name;
+                        nameLabelComponent.slider.maxValue = timeToLive;
+                        nameLabelComponent.slider.value = timeToLive;
+                    }
+                }
+
+                // remove trackFeature if it is not updated within a specified time interval
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.Log("Failed to create game object: " + ex.Message);
+        }
+    }
 
 #if UNITY_EDITOR
-	private async void EditorApplication_playModeStateChanged(PlayModeStateChange playModeState)
-	{
-		if (playModeState == PlayModeStateChange.ExitingPlayMode)
-		{
-			if (wsClient != null)
-			{
-				await Disconnect();
-			}
-		}
-	}
+    private async void EditorApplication_playModeStateChanged(PlayModeStateChange playModeState)
+    {
+        if (playModeState == PlayModeStateChange.ExitingPlayMode)
+        {
+            if (wsClient != null)
+            {
+                await Disconnect();
+            }
+        }
+    }
 #endif
+
+    // Populates the stadium drown down with all the stadium names from the Stadiums list
+    private void PopulateFlightDropdown()
+    {
+        //Populate Stadium name drop down
+        List<string> flightNames = new List<string>();
+        foreach (GameObject Stadium in flights)
+        {
+            flightNames.Add(Stadium.name);
+        }
+        flightNames.Sort();
+        flightSelector.AddOptions(flightNames);
+    }
+
+    // When a new entry is selected in the stadium dropdown move the camera to the new position
+    private void FlightSelected()
+    {
+        var flightName = flightSelector.options[flightSelector.value].text;
+        foreach (GameObject flight in flights)
+        {
+            if(flightName == flight.name)
+            {
+                var flightLocation = flight.GetComponent<ArcGISLocationComponent>();
+                if (flightLocation == null)
+                {
+                    return;
+                }
+                var CameraLocation = ArcGISCamera.GetComponent<ArcGISLocationComponent>();
+                double Longitude = flightLocation.Position.X;
+                double Latitude  = flightLocation.Position.Y;
+
+                ArcGISPoint NewPosition = new ArcGISPoint(Longitude, Latitude, FlightSpawnHeight, flightLocation.Position.SpatialReference);
+
+                CameraLocation.Position = NewPosition;
+                CameraLocation.Rotation = flightLocation.Rotation;
+            }
+        }
+    }
 }
