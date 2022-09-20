@@ -1,8 +1,8 @@
-# Measure
+# Measure distance
 
 Display the measured distance by drawing lines on the map.
 
-![Measure](measure.PNG)
+![measure](measure.PNG | width=1000)
 
 ## How to use the sample
 
