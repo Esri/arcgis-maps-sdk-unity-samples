@@ -14,6 +14,19 @@ Move around an ArcGIS World using Virtual Reality to move and fly through differ
 7. In the Inspector, click add component and search "ArcGIS Camera Component" and add it to the Main Camera Game Object.
 8. Press play and enjoy exploring.
 
+## How to Use
+This sample runs off of the OpenXR framework and supports the following headsets/devices:
+1. Oculus Rift S
+2. Oculus Rift
+3. Oculus Quest
+4. Oculus Quest 2
+5. HTC Vive
+6. HTC Vive Pro
+6. HTC Vive Cosmos
+7. Valve Index
+
+In order to use this sample, connect your headset to your computer and ensure it is detected properly. Upon loading the sample, place the headset on your head. It should automatically use the headset to control the cameras height and rotation as well as position in the world. To move, use the joystick on the right controller, pushing the joystick will move you in that direction. The joystick on the left controller can be used to 'snap turn' 45 degrees, making it so you can turn around quickly.
+
 ## About the data
 
 Building models for San Fransisco are loaded from a [3D object scene layer](https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/SanFrancisco_Bldgs/SceneServer) hosted by Esri.
