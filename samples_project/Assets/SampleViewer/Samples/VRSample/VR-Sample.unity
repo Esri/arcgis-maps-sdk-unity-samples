@@ -203,6 +203,14 @@ PrefabInstance:
       propertyPath: m_AllowMSAA
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7674790537069970964, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: far clip plane
+      value: 100000
+      objectReference: {fileID: 0}
+    - target: {fileID: 7674790537069970964, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: near clip plane
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 7674790538359957209, guid: 71c126e43990139498b8761c71893200, type: 3}
       propertyPath: speed
       value: 50
@@ -381,7 +389,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bbba49acb848c0448694828560b07fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UpdateClippingPlanes: 1
+  UpdateClippingPlanes: 0
   UseCameraViewportProperties: 1
   verticalFov: 0
   horizontalFov: 0
@@ -541,7 +549,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c703502c1493f5b4eb3e95b2efe0271e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  apiKey: AAPK5bfe47d632ba44f486fe0af9797b7c21FR-lQEDhR23OEbC3IZoqZC59_txH2qp8FFVd0Dmrnu60WAxcV1qTZV2f1eiQRn01
+  apiKey: 
   basemap: https://ibasemaps-api.arcgis.com/arcgis/rest/services/World_Imagery/MapServer
   basemapType: 1
   basemapAuthentication:
