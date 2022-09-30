@@ -25,7 +25,9 @@ This sample runs off of the OpenXR framework and supports the following headsets
 6. HTC Vive Cosmos
 7. Valve Index
 
-In order to use this sample, connect your headset to your computer and ensure it is detected properly. Upon loading the sample, place the headset on your head. It should automatically use the headset to control the cameras height and rotation as well as position in the world. To move, use the joystick on the right controller, pushing the joystick will move you in that direction. The joystick on the left controller can be used to 'snap turn' 45 degrees, making it so you can turn around quickly.
+In order to use this sample, connect your headset to your computer and ensure it is detected properly. Upon loading the sample, place the headset on your head. It should automatically use the headset to control the cameras height and rotation as well as position in the world. To move, use the joystick on the left controller, pushing the joystick will move you in that direction. The joystick on the right controller can be used to 'snap turn' 45 degrees, making it so you can turn around quickly. Additionally, pushing the right joystick up or down will allow the player to fly up or down in the world. 
+
+Please ensure that the project is using URP if you are using any of the Oculus Headsets listed above. HDRP may be used for any of the other headsets, but not Oculus. It will cause errors in the project. 
 
 ## About the data
 
