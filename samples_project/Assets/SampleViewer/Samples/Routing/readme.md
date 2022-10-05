@@ -15,10 +15,10 @@ This sample uses Esri's [routing service's REST API](https://developers.arcgis.c
 
 ## How it works
 
-1. The `HTTPClient` is required for using the [routing service's REST API](https://developers.arcgis.com/rest/network/api-reference/overview-of-network-analysis-services.htm). 
-2. Use the [direct request](https://developers.arcgis.com/rest/network/api-reference/route-synchronous-service.htm) to request and to obtain the routing result.
-3. Use [Raycast](https://docs.unity3d.com/ScriptReference/Physics.Raycast.html) to determine the elevation at each breadcrumb's position to account for elevation. (Enable the mesh collider from the **ArcGIS Map** component to use the Raycast.)
-4. Use Unity's [Line Renderer component](https://docs.unity3d.com/Manual/class-LineRenderer.html) to draw the route.
+1. The `HTTPClient` is used to query the [routing service's REST API](https://developers.arcgis.com/rest/network/api-reference/overview-of-network-analysis-services.htm). 
+2. The sample makes a [direct request](https://developers.arcgis.com/rest/network/api-reference/route-synchronous-service.htm) to obtain the routing result.
+3. The [Raycast](https://docs.unity3d.com/ScriptReference/Physics.Raycast.html) is used to determine the elevation at each breadcrumb's position to account for elevation. (Mesh colliders need to be enabled in the **ArcGIS Map** component to use the Raycast.)
+4. Unity's [Line Renderer component](https://docs.unity3d.com/Manual/class-LineRenderer.html) is used to visualize the route segments between pairs of breadcrumbs.
 
 ## Tags
 
