@@ -4,7 +4,7 @@ using Esri.HPFramework;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
+//using UnityEngine.Rendering.Universal;
 
 public class ViewshedObserver : MonoBehaviour
 {
