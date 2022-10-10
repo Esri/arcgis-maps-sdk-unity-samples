@@ -4,11 +4,9 @@
 // You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
 //
 
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Networking;
 using UnityEngine.UI;
 using UnityEditor;
 using Esri.ArcGISMapsSDK.Components;
@@ -22,11 +20,11 @@ using Newtonsoft.Json.Linq;
 using Esri.HPFramework;
 
 [System.Serializable]
-public class TrackFeature
+public class PlaneFeature
 {
-    public TrackGeometry geometry;
-    public TrackProperties attributes;
-    public TrackGeometry predictedPoint;
+    public PlaneGeometry geometry;
+    public PlaneProperties attributes;
+    public PlaneGeometry predictedPoint;
 
     public void PredictLocation(double intervalMilliseconds)
     {
@@ -42,28 +40,28 @@ public class TrackFeature
         predictedPoint.z = currentPoint[2];
     }
 
-    public static TrackFeature Create(string name, double x, double y, double z, float heading, float speed, DateTime dateTimeStamp)
+    public static PlaneFeature Create(string name, double x, double y, double z, float heading, float speed, DateTime dateTimeStamp)
     {
-        TrackFeature trackFeature = new TrackFeature();
-        trackFeature.geometry = new TrackGeometry();
-        trackFeature.geometry.x = x;
-        trackFeature.geometry.y = y;
-        trackFeature.geometry.z = z;
-        trackFeature.attributes = new TrackProperties();
-        trackFeature.attributes.name = name;
-        trackFeature.attributes.heading = heading;
-        trackFeature.attributes.speed = speed;
-        trackFeature.attributes.dateTimeStamp = dateTimeStamp;
-        trackFeature.predictedPoint = new TrackGeometry();
-        trackFeature.predictedPoint.x = trackFeature.geometry.x;
-        trackFeature.predictedPoint.y = trackFeature.geometry.y;
-        trackFeature.predictedPoint.z = trackFeature.geometry.z;
-        return trackFeature;
+        PlaneFeature planeFeature = new PlaneFeature();
+        planeFeature.geometry = new PlaneGeometry();
+        planeFeature.geometry.x = x;
+        planeFeature.geometry.y = y;
+        planeFeature.geometry.z = z;
+        planeFeature.attributes = new PlaneProperties();
+        planeFeature.attributes.name = name;
+        planeFeature.attributes.heading = heading;
+        planeFeature.attributes.speed = speed;
+        planeFeature.attributes.dateTimeStamp = dateTimeStamp;
+        planeFeature.predictedPoint = new PlaneGeometry();
+        planeFeature.predictedPoint.x = planeFeature.geometry.x;
+        planeFeature.predictedPoint.y = planeFeature.geometry.y;
+        planeFeature.predictedPoint.z = planeFeature.geometry.z;
+        return planeFeature;
     }
 }
 
 [System.Serializable]
-public class TrackProperties
+public class PlaneProperties
 {
     public string name;
     public float heading;
@@ -72,7 +70,7 @@ public class TrackProperties
 }
 
 [System.Serializable]
-public class TrackGeometry
+public class PlaneGeometry
 {
     public double x;
     public double y;
@@ -83,7 +81,7 @@ public class TrackGeometry
 // with correct property values. This is a good starting point if you are looking to parse your own feature layer into Unity.
 public class StreamLayerWebSocketSubscribe : MonoBehaviour
 {
-    public GameObject trackSymbolPrefab;
+    public GameObject planeSymbolPrefab;
     public float symbolScaleFactor = 2000.0f;
     public float timeToLive = 5.0f; //minutes
 
@@ -102,12 +100,12 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
 
     private ClientWebSocket wsClient;
 
-    private Dictionary<string, List<TrackFeature>> trackData;
+    private Dictionary<string, List<PlaneFeature>> planeData;
 
     // This will hold a reference to each feature we created
     public List<GameObject> flights = new List<GameObject>();
 
-    // This camera reference will be passed to the stadiums to calculate the distance from the camera to each stadium
+    // This camera reference will be passed to the flights to calculate the distance from the camera to each flight
     public ArcGISCameraComponent ArcGISCamera;
 
     public Dropdown flightSelector;
@@ -118,7 +116,7 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
 #if UNITY_EDITOR
         EditorApplication.playModeStateChanged += EditorApplication_playModeStateChanged;
 #endif
-        trackData = new Dictionary<string, List<TrackFeature>>();
+        planeData = new Dictionary<string, List<PlaneFeature>>();
         var result = Connect();
 
         flightSelector.onValueChanged.AddListener(delegate
@@ -129,13 +127,13 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
 
     private void LateUpdate()
     {
-        DisplayTrackData();
+        DisplayPlaneData();
     }
 
     private void HandleMessage(byte[] buffer, int count)
     {
         string data = Encoding.UTF8.GetString(buffer, 0, count);
-        TryParseFeedAndUpdateTrack(data);
+        TryParseFeedAndUpdatePlane(data);
     }
 
     public async Task Connect()
@@ -201,7 +199,7 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
 	 *	}
 	*/
 
-    private void TryParseFeedAndUpdateTrack(string data)
+    private void TryParseFeedAndUpdatePlane(string data)
     {
         //Debug.Log(data);
         var jObject = JObject.Parse(data);
@@ -210,11 +208,13 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
         {
             var name = jAttributes.SelectToken(nameField).ToString();
             var geomToken = jObject.SelectToken("geometry");
+
             //no point to go on
             if (geomToken == null)
             {
                 return;
             }
+
             double x = 0, y = 0, z = 0;
             float heading = 0, speed = 0;
             var xToken = geomToken.SelectToken("x");
@@ -222,24 +222,27 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
             {
                 return;
             }
-            double.TryParse(geomToken.SelectToken("x").ToString(), out x);
 
+            double.TryParse(geomToken.SelectToken("x").ToString(), out x);
             var yToken = geomToken.SelectToken("y");
             if (yToken == null)
             {
                 return;
             }
+
             double.TryParse(geomToken.SelectToken("y").ToString(), out y);
             var jt = geomToken.SelectToken("z");
             if (jt != null)
             {
                 double.TryParse(jt.ToString(), out z);
             }
+
             var hdToken = jAttributes.SelectToken(headingField);
             if (hdToken != null)
             {
                 float.TryParse(hdToken.ToString(), out heading);
             }
+
             var spToken = jAttributes.SelectToken(speedField);
             if (spToken != null)
             {
@@ -256,17 +259,18 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
             DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeMilliseconds(timestampMS);
             var dateTimeStamp = dateTimeOffset.DateTime;
 
-            var trackList = trackData.ContainsKey(name) ? trackData[name] : new List<TrackFeature>();
-            // Don't exceed 10 observations per track
-            if (trackList.Count > 10)
+            var planeList = planeData.ContainsKey(name) ? planeData[name] : new List<PlaneFeature>();
+
+            // Don't exceed 10 observations per plane
+            if (planeList.Count > 10)
             {
-                trackList.RemoveAt(0);
+                planeList.RemoveAt(0);
             }
 
-            TrackFeature trackFeature = TrackFeature.Create(name, x, y, z, heading, speed, dateTimeStamp);
+            PlaneFeature planeFeature = PlaneFeature.Create(name, x, y, z, heading, speed, dateTimeStamp);
 
-            trackList.Add(trackFeature);
-            trackData[name] = trackList;
+            planeList.Add(planeFeature);
+            planeData[name] = planeList;
         }
         else
         {
@@ -274,37 +278,54 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
         }
     }
 
-    private void DisplayTrackData()
+    // Populates the stadium drown down with all the stadium names from the Stadiums list
+    private void PopulateFlightDropdown()
+    {
+        //Populate Stadium name drop down
+        List<string> flightNames = new List<string>();
+        foreach (GameObject flight in flights)
+        {
+            flightNames.Add(flight.name);
+        }
+        flightNames.Sort();
+        flightSelector.options.Clear();
+        flightSelector.AddOptions(flightNames);
+    }
+
+    private void DisplayPlaneData()
     {
         try
         {
-            foreach (var track in trackData.Keys.ToArray())
+            foreach (var plane in planeData.Keys.ToArray())
             {
-                var trackList = trackData[track];
-                var trackFeature = trackList[trackList.Count - 1];
-                trackFeature.PredictLocation(Time.deltaTime * 1000.0);
-                GameObject gobjTrack = GameObject.Find(trackFeature.attributes.name);
-                if (gobjTrack != null)
+                var planeList = planeData[plane];
+                var planeFeature = planeList[planeList.Count - 1];
+                planeFeature.PredictLocation(Time.deltaTime * 1000.0);
+                GameObject gobjPlane = GameObject.Find(planeFeature.attributes.name);
+
+                if (gobjPlane != null)
                 {
                     // If elapse time since last update is more than 5 minutes remove the game object to conserve memory
-                    TimeSpan timespan = DateTime.Now - trackFeature.attributes.dateTimeStamp.ToLocalTime();
+                    TimeSpan timespan = DateTime.Now - planeFeature.attributes.dateTimeStamp.ToLocalTime();
                     if (timespan.TotalMinutes > timeToLive)
                     {
-                        Destroy(gobjTrack);
-                        trackData.Remove(track);
+                        flights.Remove(gobjPlane);
+
+                        Destroy(gobjPlane);
+                        planeData.Remove(plane);
                         continue;
                     }
-                    var locationComponent = gobjTrack.GetComponent<ArcGISLocationComponent>();
-                    locationComponent.Position = new ArcGISPoint(trackFeature.predictedPoint.x, trackFeature.predictedPoint.y, trackFeature.predictedPoint.z, new ArcGISSpatialReference(SRWKID));
 
-                    //gobjTrack.transform.localScale = Vector3.one * symbolScaleFactor;
-                    HPTransform hpTransform = gobjTrack.GetComponent<HPTransform>();
+                    var locationComponent = gobjPlane.GetComponent<ArcGISLocationComponent>();
+                    locationComponent.Position = new ArcGISPoint(planeFeature.predictedPoint.x, planeFeature.predictedPoint.y, planeFeature.predictedPoint.z, new ArcGISSpatialReference(SRWKID));
+
+                    HPTransform hpTransform = gobjPlane.GetComponent<HPTransform>();
                     hpTransform.LocalScale = new Vector3(symbolScaleFactor, symbolScaleFactor, symbolScaleFactor);
 
                     var rotator = locationComponent.Rotation;
-                    rotator.Heading = trackFeature.attributes.heading;
+                    rotator.Heading = planeFeature.attributes.heading;
                     locationComponent.Rotation = rotator;
-                    Transform nameLabelTransform = gobjTrack.transform.GetChild(1);
+                    Transform nameLabelTransform = gobjPlane.transform.GetChild(1);
                     if (nameLabelTransform != null)
                     {
                         GameObject nameLabel = nameLabelTransform.gameObject;
@@ -315,18 +336,22 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
                 }
                 else
                 {
-                    GameObject clonePrefab = Instantiate(trackSymbolPrefab, this.transform);
-                    clonePrefab.name = trackFeature.attributes.name;
+                    GameObject clonePrefab = Instantiate(planeSymbolPrefab, this.transform);
+                    clonePrefab.name = planeFeature.attributes.name;
+                    var names = new List<string>();
+                    names.Add(planeFeature.attributes.name);
+                    PopulateFlightDropdown();
+                    flights.Add(clonePrefab);
                     clonePrefab.SetActive(true);
-                    //clonePrefab.transform.localScale = new Vector3(symbolScaleFactor, symbolScaleFactor, symbolScaleFactor);
+
                     HPTransform hpTransform = clonePrefab.GetComponent<HPTransform>();
                     hpTransform.LocalScale = new Vector3(symbolScaleFactor, symbolScaleFactor, symbolScaleFactor);
                     var locationComponent = clonePrefab.GetComponent<ArcGISLocationComponent>();
                     locationComponent.enabled = true;
-                    locationComponent.Position = new ArcGISPoint(trackFeature.geometry.x, trackFeature.geometry.y, trackFeature.geometry.z, new ArcGISSpatialReference(SRWKID));
+                    locationComponent.Position = new ArcGISPoint(planeFeature.geometry.x, planeFeature.geometry.y, planeFeature.geometry.z, new ArcGISSpatialReference(SRWKID));
                     var rotator = locationComponent.Rotation;
                     rotator.Pitch = 90.0;
-                    rotator.Heading = trackFeature.attributes.heading;
+                    rotator.Heading = planeFeature.attributes.heading;
                     locationComponent.Rotation = rotator;
 
                     Transform nameLabelTransform = clonePrefab.transform.GetChild(1);
@@ -339,8 +364,6 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
                         nameLabelComponent.slider.value = timeToLive;
                     }
                 }
-
-                // remove trackFeature if it is not updated within a specified time interval
             }
         }
         catch (Exception ex)
@@ -362,26 +385,13 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
     }
 #endif
 
-    // Populates the stadium drown down with all the stadium names from the Stadiums list
-    private void PopulateFlightDropdown()
-    {
-        //Populate Stadium name drop down
-        List<string> flightNames = new List<string>();
-        foreach (GameObject Stadium in flights)
-        {
-            flightNames.Add(Stadium.name);
-        }
-        flightNames.Sort();
-        flightSelector.AddOptions(flightNames);
-    }
-
-    // When a new entry is selected in the stadium dropdown move the camera to the new position
+    // When a new entry is selected in the flight dropdown move the camera to the new position
     private void FlightSelected()
     {
         var flightName = flightSelector.options[flightSelector.value].text;
         foreach (GameObject flight in flights)
         {
-            if(flightName == flight.name)
+            if (flightName == flight.name)
             {
                 var flightLocation = flight.GetComponent<ArcGISLocationComponent>();
                 if (flightLocation == null)
@@ -390,7 +400,7 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
                 }
                 var CameraLocation = ArcGISCamera.GetComponent<ArcGISLocationComponent>();
                 double Longitude = flightLocation.Position.X;
-                double Latitude  = flightLocation.Position.Y;
+                double Latitude = flightLocation.Position.Y;
 
                 ArcGISPoint NewPosition = new ArcGISPoint(Longitude, Latitude, FlightSpawnHeight, flightLocation.Position.SpatialReference);
 
