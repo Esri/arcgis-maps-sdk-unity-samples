@@ -325,11 +325,10 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
                     var rotator = locationComponent.Rotation;
                     rotator.Heading = planeFeature.attributes.heading;
                     locationComponent.Rotation = rotator;
-                    Transform nameLabelTransform = gobjPlane.transform.GetChild(1);
-                    if (nameLabelTransform != null)
+
+                    NameLabel nameLabelComponent = gobjPlane.GetComponentInChildren<NameLabel>();
+                    if (nameLabelComponent != null)
                     {
-                        GameObject nameLabel = nameLabelTransform.gameObject;
-                        NameLabel nameLabelComponent = nameLabel.GetComponent<NameLabel>();
                         nameLabelComponent.slider.maxValue = timeToLive;
                         nameLabelComponent.slider.value = timeToLive - (float)timespan.TotalMinutes;
                     }
@@ -338,8 +337,7 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
                 {
                     GameObject clonePrefab = Instantiate(planeSymbolPrefab, this.transform);
                     clonePrefab.name = planeFeature.attributes.name;
-                    var names = new List<string>();
-                    names.Add(planeFeature.attributes.name);
+
                     PopulateFlightDropdown();
                     flights.Add(clonePrefab);
                     clonePrefab.SetActive(true);
@@ -354,11 +352,9 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
                     rotator.Heading = planeFeature.attributes.heading;
                     locationComponent.Rotation = rotator;
 
-                    Transform nameLabelTransform = clonePrefab.transform.GetChild(1);
-                    if (nameLabelTransform != null)
+                    NameLabel nameLabelComponent = clonePrefab.GetComponentInChildren<NameLabel>();
+                    if (nameLabelComponent != null)
                     {
-                        GameObject nameLabel = nameLabelTransform.gameObject;
-                        NameLabel nameLabelComponent = nameLabel.GetComponent<NameLabel>();
                         nameLabelComponent.nameLabel = clonePrefab.name;
                         nameLabelComponent.slider.maxValue = timeToLive;
                         nameLabelComponent.slider.value = timeToLive;
