@@ -1,43 +1,31 @@
-# Feature layer query
+# Connect to a Stream Layer
 
-Query objects from a feature layer and show it on the map.
+Poll information thru a web socket on a stream layer to update information in real time.
 
-![Feature layer](FeatureLayer.jpg)
+![Stream layer](StreamLayer.jpg)
 
 ## How it works
 
 ### Getting the data
 
-In this sample, the [FeatureService REST API](https://developers.arcgis.com/rest/services-reference/enterprise/layer-feature-service-.htm) is used to perform a query operation. The result of a query operation is a list of features that includes the feature's location as well as some attributes giving more details about the feature. In this sample, the stadium name and team name were used.
-The `FeatureLayerQuery.cs` file makes the request and then parses the result to construct the game objects based on the results. By attaching `ArcGIS Location` component to these new game objects we can locate them in the world. And using the `StadiumInfo.cs` script to hold information specific to the feature including team name, stadium name, and whether the team is in the American or National League in the MLB. The team's league is used to determine how the stadium is rendered in the game.
+In this sample a websocket is used to subscribe to a Stream Server. This Stream Server returns information from flights over the United States including location and flight callsign to update Game Objects in real time. This service `ws://geoeventsample1.esri.com:6180/arcgis/ws/services/FAAStream/StreamServer/subscribe` in the sample is actually mocked information so it is not accurate in real time but using a service with real time information the workflow would be the same. 
 
-### Making the request
+### Making the connection
 
-To make the request we append `/Query` onto the end of the Feature layer we want to get data from. Additional request headers are used to control what content we get back. You can learn all about the [Query REST API here](https://developers.arcgis.com/rest/services-reference/enterprise/query-feature-service-layer-.htm). In this example we use a few of them: `f=geojson` to control the output format of the response; `where=1=1` to get all the features back, in some cases especially datasets with a large amount of features using an intelligent where clause can ensure you only request the data that you need; `outSR=4326` makes it so that the geometries in the response are in the WGS84 spatial reference, make sure you parse the geometry in this spatial reference; and finally `outFields=LEAGUE,TEAM,NAME` this tells the service which attributes to return. The `outFields` are unique from feature layer to feature layer so make sure you know your data and what fields you want to get in the response.
+To make the connection we just use Unity's `ClientWebSocket` class. We open the connection with the desired URL and while the connection remains open we process the result.
 
 ### Parsing the response
 
-After the request succeeds we will parse the text and turn it into meaningful `GameObjects`. Parsing the response can be a bit tedious because there is lots of string parsing to ensure you get the data you need. `CreateGameObjectsFromResponse(string Response)` in `FeatureLayerQuery.cs` shows an example of how this can be accomplished which will differ depending on the request headers you sent. A new `GameObject` is created for each feature and an `ArcGISLocation` component is attached with the values modified to be the feature's location. In this sample, a `StadiumInfo` component is also attached to the new game object to hold information about the stadium and control the color it is rendered.
+Every time the StreamServer has an update for a new plane or an existing one we are showing we need to parse the JSON response. `[System.Serializable]` classes are made to leverage Unity's built in JSON parsing. We grab the location, speed, heading, time the update was sent and the plane name. All of this information is used to display the plane in the correct location as well as inputs for a `DeadReckoning` system that updates each planes location every frame so that the plane has a smooth animation instead of jumping from place to place every time we receive a new signal.
 
-### Adjusting the game object's altitude
-
-Feature layers sometimes only hold the feature's X/Y position but not the Altitude. Because of this, this sample has some added complexity to show you how to place the object on the ground. There are two recommended ways to get the elevation at a given point.
-
-1. Use the [elevation's REST API](https://developers.arcgis.com/rest/services-reference/enterprise/image-service.htm) to query or identify a point and get the elevation value.
-2. Use the game engine's raycast feature from a point above the surface towards the ground to detect the altitude dynamically.
-
-This sample uses option 2. A caveat of using option 2 is that the raycast will only hit the surface if the point we are trying to hit is being loaded. The ArcGIS Maps SDK for game engine's dynamically stream content based on what the camera is seeing. To account for this `StadiumInfo.cs` only casts a ray for a stadium when it is within the `RayCastDistanceThreshold` which defaults to 30 km. After the raycast hits the ground we stop adjusting the object's altitude to avoid putting too much load on the CPU. The way we use raycast in this sample is just one way of accomplishing this task. Feel free to experiment to find a way that works best for your use case.
 
 ### Navigating the scene
 
-These new game objects are then used to populate the drop-down list allowing you to quickly navigate to other stadiums by updating the `ArcGIS Camera` location. When flying around the scene you will see stadiums if you know where to look or floating high above in the sky there are capsules to show you where each stadium is.
-
+These new game objects are then used to populate the drop-down list allowing you to quickly navigate to other stadiums by updating the `ArcGIS Camera` location. When flying around the scene you may encounter a plane especially if you are near a large airport.
 ## About the data
 
-This sample uses the [baseball stadiums feature layer](https://services.arcgis.com/P3ePLMYs2RVChkJx/ArcGIS/rest/services/Major_League_Baseball_Stadiums/FeatureServer/0) from Esri's LivingAtlas [portal item](https://www.arcgis.com/home/item.html?id=f60004d3037e42ad93cb03b9590cafec).
-
-The sample uses the Chengcing Lake Baseball Field [stadium model](https://www.cgtrader.com/free-3d-models/exterior/stadium/chengcing-lake-baseball-field-kaohsiung-taiwan) from tantunny under the Royalty Free License on cgtrader.
+This sample uses the [geoevent stream server plane location stream layer](ws://geoeventsample1.esri.com:6180/arcgis/ws/services/FAAStream/StreamServer/subscribe). This data was recorded in the past and played back in real time. It is not a live update of current air traffic. 
 
 ## Tags
 
-feature, feature layer, feature service, raycast
+steam, stream layer, stream service, websocket, planes
