@@ -83,7 +83,7 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
 {
     public GameObject planeSymbolPrefab;
     public float symbolScaleFactor = 2000.0f;
-    public float timeToLive = 5.0f; //minutes
+    public float timeToLive;
 
     // The height where we spawn the flight before finding the actual height
     private int FlightSpawnHeight = 10000;
@@ -310,7 +310,7 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
                     if (timespan.TotalMinutes > timeToLive)
                     {
                         flights.Remove(gobjPlane);
-
+                        PopulateFlightDropdown();
                         Destroy(gobjPlane);
                         planeData.Remove(plane);
                         continue;

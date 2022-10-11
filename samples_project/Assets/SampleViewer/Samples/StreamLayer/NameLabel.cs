@@ -22,6 +22,6 @@ public class NameLabel : MonoBehaviour
 
 	void Update()
 	{
-		transform.forward = Camera.main.transform.forward;
-	}
+        transform.rotation = Camera.main.transform.rotation;
+    }
 }
