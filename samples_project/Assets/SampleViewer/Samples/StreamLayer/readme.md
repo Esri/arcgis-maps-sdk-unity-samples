@@ -18,10 +18,10 @@ To make the connection we just use Unity's `ClientWebSocket` class. We open the 
 
 Every time the StreamServer has an update for a new plane or an existing one we are showing we need to parse the JSON response. `[System.Serializable]` classes are made to leverage Unity's built in JSON parsing. We grab the location, speed, heading, time the update was sent and the plane name. All of this information is used to display the plane in the correct location as well as inputs for a `DeadReckoning` system that updates each planes location every frame so that the plane has a smooth animation instead of jumping from place to place every time we receive a new signal.
 
+### How to Use
 
-### Navigating the scene
+These new game objects are then used to populate the drop-down list allowing you to quickly navigate to other planes by updating the `ArcGIS Camera` location. When flying around the scene you may encounter a plane especially if you are near a large airport.
 
-These new game objects are then used to populate the drop-down list allowing you to quickly navigate to other stadiums by updating the `ArcGIS Camera` location. When flying around the scene you may encounter a plane especially if you are near a large airport.
 ## About the data
 
 This sample uses the [geoevent stream server plane location stream layer](ws://geoeventsample1.esri.com:6180/arcgis/ws/services/FAAStream/StreamServer/subscribe). This data was recorded in the past and played back in real time. It is not a live update of current air traffic. 
