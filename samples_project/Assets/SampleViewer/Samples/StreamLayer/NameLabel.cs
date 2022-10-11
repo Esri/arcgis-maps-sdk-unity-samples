@@ -10,18 +10,18 @@ using TMPro;
 
 public class NameLabel : MonoBehaviour
 {
-	public string nameLabel;
-	public TMP_Text text;
-	public Slider slider;
+    public string nameLabel;
+    public TMP_Text text;
+    public Slider slider;
 
-	private void Start()
-	{
-		text.text = nameLabel;
-		slider.value = 5;
-	}
+    private void Start()
+    {
+        text.text = nameLabel;
+        slider.value = 5;
+    }
 
-	void Update()
-	{
+    void Update()
+    {
         transform.rotation = Camera.main.transform.rotation;
     }
 }
