@@ -1,4 +1,4 @@
-# Virtual Reality Simulation
+# Simulate Virtual Reality
 
 Move around an ArcGIS World using Virtual Reality to move and fly through different cities
 ![Image of Virtual Reality Simulation](VR.jpg)
