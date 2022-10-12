@@ -3,17 +3,6 @@
 Move around an ArcGIS World using Virtual Reality to move and fly through different cities
 ![Image of Virtual Reality Simulation](VR.jpg)
 
-## How it works
-
-1. Check the box for **Mesh Colliers Enabled** on the `ArcGIS Map View` component if you want the camera to be able interact with buildings and the ground. This will have a negative impact on performance so you may want to disable this on less powerful devices.
-2. Drag and Drop the VR Origin Prefab into the scene.
-3. Drag and drop the XR Interaction Manager Prefab into the scene.
-4. Draga an drop the Locomotion System Prefab into the scene.
-5. Parent the XR Origin prefab to the ArcGISMap game object.
-6. Expand the XR Origin fully and select the Main Camera Game Object.
-7. In the Inspector, click add component and search "ArcGIS Camera Component" and add it to the Main Camera Game Object.
-8. Press play and enjoy exploring.
-
 ## How to Use
 This sample runs off of the OpenXR framework and supports the following headsets/devices:
 1. Oculus Rift S
@@ -29,6 +18,17 @@ This sample runs off of the OpenXR framework and supports the following headsets
 2. To move, use the joystick on the left controller, pushing the joystick will move you in that direction. The joystick on the right controller can be used to 'snap turn' 45 degrees, making it so you can turn around quickly. Additionally, pushing the right joystick up or down will allow the player to fly up or down in the world. 
 
 Please ensure that the project is using URP if you are using any of the Oculus Headsets listed above. HDRP may be used for any of the other headsets, but not Oculus. It will cause errors in the project. 
+
+## How it works
+
+1. Check the box for **Mesh Colliers Enabled** on the `ArcGIS Map View` component if you want the camera to be able interact with buildings and the ground. This will have a negative impact on performance so you may want to disable this on less powerful devices.
+2. Drag and Drop the VR Origin Prefab into the scene.
+3. Drag and drop the XR Interaction Manager Prefab into the scene.
+4. Draga an drop the Locomotion System Prefab into the scene.
+5. Parent the XR Origin prefab to the ArcGISMap game object.
+6. Expand the XR Origin fully and select the Main Camera Game Object.
+7. In the Inspector, click add component and search "ArcGIS Camera Component" and add it to the Main Camera Game Object.
+8. Press play and enjoy exploring.
 
 ## About the data
 
