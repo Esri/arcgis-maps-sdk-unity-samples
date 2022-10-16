@@ -59,22 +59,27 @@ Shader "URPViewshedOverlay"
                 float4 colorBase = tex2D(_CameraOpaqueTexture, UV);
                 
                 float2 viewUV = (viewCoord.xy / viewCoord.w) * 0.5 + 0.5;
-                viewUV.y = 1-viewUV.y;
+                //viewUV.y = 1-viewUV.y;
                 //viewUV += float2(1,1);
                 //viewUV *= 0.5;
 
                 //do not draw viewshed effect if fragment is outside of observer's viewable area
-                if(viewUV.x < 0 || viewUV.x > 1 || viewUV.y < 0 || viewUV.y > 1 || viewCoord.z < 0)
+                if(viewUV.x < 0 || viewUV.x > 1 || viewUV.y < 0 || viewUV.y > 1 || viewCoord.z < 0 || depth < 0.000001)
                     return colorBase;
 
-                float4 observerDepthSample = tex2D(_ViewshedObserverDepthTexture, viewUV);
-                float observerDepth = observerDepthSample.r;// - viewCoord.z;
+                float fragmentDepth = distance(_ViewshedObserverPosition, worldPos);
+                float observerDepth = tex2D(_ViewshedObserverDepthTexture, viewUV);
+                //float observerDepth = observerDepthSample.r;// - viewCoord.z;
 
                 //colorize fragments withing viewshed area (ignore anything beyond reasonable depth threshold)
                 //TODO: update for OpenGL platforms where depth is reversed
-                if((viewCoord.z/viewCoord.w) > observerDepth && depth > 0.000001)
+                if(fragmentDepth < observerDepth)
                 {
                     colorBase *= float4(0.6, 1, 0.6, 1);
+                }
+                else
+                {
+                    colorBase *= float4(1, 0.6, 0.6, 1);
                 }
 
                 return colorBase;

@@ -26,7 +26,7 @@ public class ViewshedObserver : MonoBehaviour
     {
         Shader.SetGlobalVector("_ViewshedObserverPosition", transform.position);//GetComponentInParent<HPTransform>().UniversePosition.ToVector3());
         Shader.SetGlobalMatrix("_ViewshedObserverViewProjMatrix", viewshedObserverCamera.projectionMatrix * viewshedObserverCamera.worldToCameraMatrix);
-        Shader.SetGlobalTexture("_ViewshedObserverDepthTexture", viewshedObserverDepthTexture, RenderTextureSubElement.Depth);
+        Shader.SetGlobalTexture("_ViewshedObserverDepthTexture", viewshedObserverDepthTexture);
     }
 
     private void UpdateDepthTexture()
@@ -72,7 +72,7 @@ public class ViewshedObserver : MonoBehaviour
         {
             width = w,
             height = h,
-            graphicsFormat = UnityEngine.Experimental.Rendering.GraphicsFormat.R8G8B8A8_SRGB,
+            graphicsFormat = UnityEngine.Experimental.Rendering.GraphicsFormat.R32_SFloat,
             depthBufferBits = 32,
             depthStencilFormat = UnityEngine.Experimental.Rendering.GraphicsFormat.D32_SFloat,
             msaaSamples = 1,
