@@ -47,10 +47,10 @@ Shader "URPViewshedOverlay"
 
                 // Sample the depth from the Camera depth texture.
                 #if UNITY_REVERSED_Z
-                    real depth = SampleSceneDepth(UV);
+                    float depth = SampleSceneDepth(UV);
                 #else
                     // Adjust Z to match NDC for OpenGL ([-1, 1])
-                    real depth = lerp(UNITY_NEAR_CLIP_VALUE, 1, SampleSceneDepth(UV));
+                    float depth = lerp(UNITY_NEAR_CLIP_VALUE, 1, SampleSceneDepth(UV));
                 #endif
 
                 // Reconstruct the world space positions.
@@ -59,27 +59,26 @@ Shader "URPViewshedOverlay"
                 float4 colorBase = tex2D(_CameraOpaqueTexture, UV);
                 
                 float2 viewUV = (viewCoord.xy / viewCoord.w) * 0.5 + 0.5;
-                //viewUV.y = 1-viewUV.y;
-                //viewUV += float2(1,1);
-                //viewUV *= 0.5;
+                viewUV.y = 1-viewUV.y;
 
                 //do not draw viewshed effect if fragment is outside of observer's viewable area
                 if(viewUV.x < 0 || viewUV.x > 1 || viewUV.y < 0 || viewUV.y > 1 || viewCoord.z < 0 || depth < 0.000001)
                     return colorBase;
 
                 float fragmentDepth = distance(_ViewshedObserverPosition, worldPos);
-                float observerDepth = tex2D(_ViewshedObserverDepthTexture, viewUV);
+                float observerDepth = tex2D(_ViewshedObserverDepthTexture, viewUV).r;
                 //float observerDepth = observerDepthSample.r;// - viewCoord.z;
 
                 //colorize fragments withing viewshed area (ignore anything beyond reasonable depth threshold)
                 //TODO: update for OpenGL platforms where depth is reversed
-                if(fragmentDepth < observerDepth)
+                const float eps = 0.0001;
+                if(viewCoord.z > observerDepth && abs(viewCoord.z - observerDepth) > eps)
                 {
-                    colorBase *= float4(0.6, 1, 0.6, 1);
+                    colorBase *= float4(1, 0.6, 0.6, 1);
                 }
                 else
                 {
-                    colorBase *= float4(1, 0.6, 0.6, 1);
+                    colorBase *= float4(0.6, 1, 0.6, 1);
                 }
 
                 return colorBase;

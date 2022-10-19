@@ -49,10 +49,10 @@ Shader "DepthToColor"
                     real depth = lerp(UNITY_NEAR_CLIP_VALUE, 1, SampleSceneDepth(UV));
                 #endif
 
-                float3 worldPos = ComputeWorldSpacePosition(UV, depth, UNITY_MATRIX_I_VP);
+                //float3 worldPos = ComputeWorldSpacePosition(UV, depth, UNITY_MATRIX_I_VP);
 
 
-                return distance(_ViewshedObserverPosition, worldPos);
+                return LinearEyeDepth(depth, _ZBufferParams);//distance(_ViewshedObserverPosition, worldPos);
                 // Reconstruct the world space positions.
                 //float3 worldPos = ComputeWorldSpacePosition(UV, depth, UNITY_MATRIX_I_VP);
             }
