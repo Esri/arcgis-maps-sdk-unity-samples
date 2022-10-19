@@ -6,7 +6,7 @@ Query objects from a feature layer and show it on the map.
 
 ## How to use the sample
 
-1. Open **FeatureLayer** scene
+1. Open **FeatureLayer** scene.
 2. Click on the **ArcGISMap** game object in the **Hierarchy** window.
 3. Set your API key in the **Inspector** window.
 4. Click play and select a stadium from the lst.
