@@ -1,6 +1,9 @@
 
 Shader "DepthToColor"
 {
+    // Creates a single channel float texture based on the scene "eye depth" (not normalized) value per fragment
+    // Apply this shader to a material on a plane/quad in front of the target camera
+    // Depth texture must be enabled on the target camera or render pipeline
     Properties
     { }
 
@@ -41,20 +44,15 @@ Shader "DepthToColor"
             {
                 float2 UV = IN.positionHCS.xy / _ScaledScreenParams.xy;
 
-                // Sample the depth from the Camera depth texture.
+                // Sample the depth from the Camera depth texture
                 #if UNITY_REVERSED_Z
-                    real depth = SampleSceneDepth(UV);
+                    float depth = SampleSceneDepth(UV);
                 #else
                     // Adjust Z to match NDC for OpenGL ([-1, 1])
-                    real depth = lerp(UNITY_NEAR_CLIP_VALUE, 1, SampleSceneDepth(UV));
+                    float depth = lerp(UNITY_NEAR_CLIP_VALUE, 1, SampleSceneDepth(UV));
                 #endif
 
-                //float3 worldPos = ComputeWorldSpacePosition(UV, depth, UNITY_MATRIX_I_VP);
-
-
-                return LinearEyeDepth(depth, _ZBufferParams);//distance(_ViewshedObserverPosition, worldPos);
-                // Reconstruct the world space positions.
-                //float3 worldPos = ComputeWorldSpacePosition(UV, depth, UNITY_MATRIX_I_VP);
+                return LinearEyeDepth(depth, _ZBufferParams);
             }
             ENDHLSL
         }

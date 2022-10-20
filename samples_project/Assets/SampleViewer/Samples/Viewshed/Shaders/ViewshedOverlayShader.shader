@@ -1,6 +1,9 @@
 
 Shader "URPViewshedOverlay"
 {
+    // Creates a viewshed effect based on an observer camera's depth buffer and optical properties
+    // Apply this shader to a material on a plane/quad in front of the target camera
+    // Depth and Opaque textures must be enabled on the target camera or render pipeline
     Properties
     { }
 
@@ -28,11 +31,11 @@ Shader "URPViewshedOverlay"
                 float4 positionHCS  : SV_POSITION;
             };
 
+            float _ViewshedDepthThreshold;
             float3 _ViewshedObserverPosition;
             float4x4 _ViewshedObserverViewProjMatrix;
-            sampler2D _CameraOpaqueTexture;
-            //sampler2D _LastCameraDepthTexture; //not working in URP
-            sampler2D _ViewshedObserverDepthTexture;
+            uniform sampler2D _CameraOpaqueTexture;
+            uniform sampler2D _ViewshedObserverDepthTexture;
 
             Varyings vert(Attributes IN)
             {
@@ -45,7 +48,6 @@ Shader "URPViewshedOverlay"
             {
                 float2 UV = IN.positionHCS.xy / _ScaledScreenParams.xy;
 
-                // Sample the depth from the Camera depth texture.
                 #if UNITY_REVERSED_Z
                     float depth = SampleSceneDepth(UV);
                 #else
@@ -53,31 +55,33 @@ Shader "URPViewshedOverlay"
                     float depth = lerp(UNITY_NEAR_CLIP_VALUE, 1, SampleSceneDepth(UV));
                 #endif
 
-                // Reconstruct the world space positions.
+                // Reconstruct the world space position
                 float3 worldPos = ComputeWorldSpacePosition(UV, depth, UNITY_MATRIX_I_VP);
+
+                // Reproject to the observer's view space
                 float4 viewCoord = mul(_ViewshedObserverViewProjMatrix, float4(worldPos.xyz,1));
-                float4 colorBase = tex2D(_CameraOpaqueTexture, UV);
-                
                 float2 viewUV = (viewCoord.xy / viewCoord.w) * 0.5 + 0.5;
                 viewUV.y = 1-viewUV.y;
 
-                //do not draw viewshed effect if fragment is outside of observer's viewable area
-                if(viewUV.x < 0 || viewUV.x > 1 || viewUV.y < 0 || viewUV.y > 1 || viewCoord.z < 0 || depth < 0.000001)
+                // Get the color of the current fragment
+                float4 colorBase = tex2D(_CameraOpaqueTexture, UV);
+
+                // Do not draw viewshed effect if fragment is outside of observer's view frustum (or beyond a set depth threshold)
+                if(viewUV.x < 0 || viewUV.x > 1 || viewUV.y < 0 || viewUV.y > 1 || viewCoord.z < 0 || depth < _ViewshedDepthThreshold)
                     return colorBase;
 
-                float fragmentDepth = distance(_ViewshedObserverPosition, worldPos);
                 float observerDepth = tex2D(_ViewshedObserverDepthTexture, viewUV).r;
-                //float observerDepth = observerDepthSample.r;// - viewCoord.z;
 
-                //colorize fragments withing viewshed area (ignore anything beyond reasonable depth threshold)
-                //TODO: update for OpenGL platforms where depth is reversed
-                const float eps = 0.0001;
+                //colorize fragments withing viewshed area
+                const float eps = 0.001;
                 if(viewCoord.z > observerDepth && abs(viewCoord.z - observerDepth) > eps)
                 {
+                    //red
                     colorBase *= float4(1, 0.6, 0.6, 1);
                 }
                 else
                 {
+                    //green
                     colorBase *= float4(0.6, 1, 0.6, 1);
                 }
 
