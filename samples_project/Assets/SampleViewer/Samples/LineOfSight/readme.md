@@ -20,10 +20,10 @@ Show a line of sight between two objects. Check if the line of sight is obstruct
 5. Have a game object for the viewpoint and another for the sight line under the game object with the **ArcGIS Location** component.
 6. Have a parent game object and nest the moving object's path points in the area.
 7. Have scripts to update the [Transform](https://docs.unity3d.com/ScriptReference/Transform.html) of the moving object according to the path points.
-8. Have a script to use [Raycast](https://docs.unity3d.com/ScriptReference/Physics.Raycast.html)
+8. Have a script to use [Raycast](https://docs.unity3d.com/ScriptReference/Physics.Raycast.html).
     - Use [`Physics.Raycast`](https://docs.unity3d.com/ScriptReference/Physics.Raycast.html) to check any any obstructions between the viewpoint and the moving object.
     - Use the [`RaycastHit.point`](https://docs.unity3d.com/ScriptReference/RaycastHit-point.html) property to determine where the line of sight from the first object collides.
-    - If you have any objects that may interfere with the raycast check, use [`Physics.IgnoreRaycastLayer`](https://docs.unity3d.com/ScriptReference/Physics.IgnoreRaycastLayer.html)`.
+    - If you have any objects that may interfere with the raycast check, use [`Physics.IgnoreRaycastLayer`](https://docs.unity3d.com/ScriptReference/Physics.IgnoreRaycastLayer.html).
 
 ## About the data
 
