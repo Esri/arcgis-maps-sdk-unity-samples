@@ -34,9 +34,9 @@ public static class CallReImport
 #else
                     i.enabled = false;
 #endif
-                }
             }
-                    reImport();
+        }
+            reImport();
         }
         Events.registeredPackages += Handle;
     }
