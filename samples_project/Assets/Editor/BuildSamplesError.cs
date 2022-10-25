@@ -18,9 +18,9 @@ public class BuildSamplesError
         
         throw new BuildFailedException("Cannot build with both render pipeline packages installed. Please remove one.");
 #elif USE_OPENXR_PACKAGE && UNITY_STANDALONE_OSX
-        EditorUtility.DisplayDialog("OpenXR Error:", "\nCannot build for MacOS standalone with OpenXR installed. Please remove the OpenXR package with the Package Manager, and uncheck \"VR-Sample" from the Build Settings scene list", "OK");
+        EditorUtility.DisplayDialog("OpenXR Error:", "\nCannot build for MacOS standalone with OpenXR Plugin installed. Please remove the OpenXR Plugin package with the Package Manager", "OK");
         
-        throw new BuildFailedException("Cannot build with OpenXR package installed. Please remove before building for MacOS standalone.");
+        throw new BuildFailedException("Cannot build with OpenXR Plugin package installed. Please remove before building for MacOS standalone.");
 #else
         BuildPipeline.BuildPlayer(options);
 #endif

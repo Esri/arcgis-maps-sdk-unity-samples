@@ -118,6 +118,16 @@ public class SampleSwitcher : MonoBehaviour
     private void PopulateSampleSceneList()
     {
         SceneDropdown.options.Clear();
+
+#if !(USE_OPENXR_PACKAGE)
+        if (SceneList.Contains("VR-Sample")){ 
+             SceneList.Remove("VR-Sample");
+        }
+#else
+        if (!SceneList.Contains("VR-Sample")){ 
+             SceneList.Add("VR-Sample");
+        }
+#endif
         SceneDropdown.AddOptions(SceneList);
         AddScene();
     }
