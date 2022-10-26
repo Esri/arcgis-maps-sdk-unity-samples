@@ -839,11 +839,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 293314393}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fab57fc3a0391e4885d9ced579e7968, type: 3}
+  m_Script: {fileID: 11500000, guid: 51a7659197fa40d4bb6755e75d1f12a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefix: 'FOV: '
+  prefix: 'FOV:'
   slider: {fileID: 300557177}
+  text: {fileID: 293314395}
 --- !u!1 &300557175
 GameObject:
   m_ObjectHideFlags: 0
@@ -983,6 +984,7 @@ GameObject:
   - component: {fileID: 366725684}
   - component: {fileID: 366725686}
   - component: {fileID: 366725685}
+  - component: {fileID: 366725687}
   m_Layer: 5
   m_Name: RotationValueLabel
   m_TagString: Untagged
@@ -1107,6 +1109,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 366725683}
   m_CullTransparentMesh: 1
+--- !u!114 &366725687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 366725683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51a7659197fa40d4bb6755e75d1f12a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefix: 'Rotation:'
+  slider: {fileID: 1165977544}
+  text: {fileID: 366725685}
 --- !u!1 &381946945
 GameObject:
   m_ObjectHideFlags: 0
@@ -1686,6 +1703,7 @@ GameObject:
   - component: {fileID: 938295258}
   - component: {fileID: 938295260}
   - component: {fileID: 938295259}
+  - component: {fileID: 938295261}
   m_Layer: 5
   m_Name: AltitudeValueLabel
   m_TagString: Untagged
@@ -1810,6 +1828,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 938295257}
   m_CullTransparentMesh: 1
+--- !u!114 &938295261
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 938295257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51a7659197fa40d4bb6755e75d1f12a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefix: 'Height:'
+  slider: {fileID: 38007507}
+  text: {fileID: 938295259}
 --- !u!1 &943982123
 GameObject:
   m_ObjectHideFlags: 0
@@ -2524,6 +2557,7 @@ GameObject:
   - component: {fileID: 1339186458}
   - component: {fileID: 1339186460}
   - component: {fileID: 1339186459}
+  - component: {fileID: 1339186461}
   m_Layer: 5
   m_Name: OpacityValueLabel
   m_TagString: Untagged
@@ -2648,6 +2682,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1339186457}
   m_CullTransparentMesh: 1
+--- !u!114 &1339186461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1339186457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51a7659197fa40d4bb6755e75d1f12a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefix: 'Opacity:'
+  slider: {fileID: 1373061240}
+  text: {fileID: 1339186459}
 --- !u!1 &1353029123
 GameObject:
   m_ObjectHideFlags: 0

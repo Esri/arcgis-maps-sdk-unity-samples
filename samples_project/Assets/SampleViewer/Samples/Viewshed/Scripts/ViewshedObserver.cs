@@ -4,20 +4,23 @@ using Esri.HPFramework;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
-//using UnityEngine.Rendering.Universal;
+using UnityEngine.UI;
 
 public class ViewshedObserver : MonoBehaviour
 {
     [SerializeField] private Camera viewshedObserverCamera;
 
-    private Material viewshedOverlayMaterial;
+    [SerializeField] private Slider cameraFOVSlider;
+    [SerializeField] private Slider altitudeSlider;
+    [SerializeField] private Slider rotationSlider;
+    [SerializeField] private Slider opacitySlider;
 
-    [SerializeField] private RenderTexture viewshedObserverColorTexture;
-    [SerializeField] private RenderTexture viewshedObserverDepthTexture;
+    private RenderTexture viewshedObserverDepthTexture;
 
     void Start()
     {
         SetupObserverCamera();
+        InitializeSliderValues();
     }
 
     void Update()
@@ -26,6 +29,28 @@ public class ViewshedObserver : MonoBehaviour
         Shader.SetGlobalMatrix("_ViewshedObserverViewProjMatrix", viewshedObserverCamera.projectionMatrix * viewshedObserverCamera.worldToCameraMatrix);
         Shader.SetGlobalTexture("_ViewshedObserverDepthTexture", viewshedObserverDepthTexture);
         Shader.SetGlobalFloat("_ViewshedDepthThreshold", 0.000001f); //TODO: adjust with slider based on scene/eye distance
+    }
+
+    private void InitializeSliderValues()
+    {
+        cameraFOVSlider.value = viewshedObserverCamera.fieldOfView;
+        altitudeSlider.value = transform.position.y;
+        rotationSlider.value = transform.rotation.eulerAngles.y;
+        opacitySlider.value = 128;
+
+        cameraFOVSlider.onValueChanged.AddListener(delegate {
+            viewshedObserverCamera.fieldOfView = cameraFOVSlider.value;
+        });
+        altitudeSlider.onValueChanged.AddListener(delegate {
+            transform.position = new Vector3(transform.position.x, altitudeSlider.value, transform.position.z);
+        });
+        rotationSlider.onValueChanged.AddListener(delegate {
+            transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, rotationSlider.value, transform.rotation.eulerAngles.z);
+        });
+        opacitySlider.onValueChanged.AddListener(delegate {
+            //change opacity
+        });
+
     }
 
     private void SetupObserverCamera()
