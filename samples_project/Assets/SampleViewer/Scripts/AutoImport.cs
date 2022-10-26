@@ -25,14 +25,14 @@ public static class CallReImport
 #endif
         EditorBuildSettingsScene[] scenes = EditorBuildSettings.scenes;
 
-        foreach (EditorBuildSettingsScene i in scenes)
+        foreach (EditorBuildSettingsScene scene in scenes)
         {
-            if (i.path.Contains("VR"))
+            if (scene.path.Contains("VR"))
             {
 #if USE_OPENXR_PACKAGE
-                    i.enabled = true;
+                    scene.enabled = true;
 #else
-                    i.enabled = false;
+                    scene.enabled = false;
 #endif
             }
         }
