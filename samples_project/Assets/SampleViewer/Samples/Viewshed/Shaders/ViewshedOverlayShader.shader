@@ -32,10 +32,14 @@ Shader "URPViewshedOverlay"
             };
 
             float _ViewshedDepthThreshold;
+            float _ViewshedOpacity;
             float3 _ViewshedObserverPosition;
             float4x4 _ViewshedObserverViewProjMatrix;
             uniform sampler2D _CameraOpaqueTexture;
             uniform sampler2D _ViewshedObserverDepthTexture;
+
+            static const float4 RED_COLOR = float4(1, 0, 0, 1);
+            static const float4 GREEN_COLOR = float4(0, 1, 0, 1);
 
             Varyings vert(Attributes IN)
             {
@@ -77,12 +81,12 @@ Shader "URPViewshedOverlay"
                 if(viewCoord.z > observerDepth && abs(viewCoord.z - observerDepth) > eps)
                 {
                     //red
-                    colorBase *= float4(1, 0.6, 0.6, 1);
+                    colorBase = lerp(colorBase, RED_COLOR, _ViewshedOpacity);
                 }
                 else
                 {
                     //green
-                    colorBase *= float4(0.6, 1, 0.6, 1);
+                    colorBase = lerp(colorBase, GREEN_COLOR, _ViewshedOpacity);
                 }
 
                 return colorBase;
