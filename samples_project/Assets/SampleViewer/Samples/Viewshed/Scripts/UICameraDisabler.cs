@@ -8,10 +8,7 @@ using Esri.ArcGISMapsSDK.Samples.Components;
 // This prevents unwanted camera movement during UI interactions
 public class UICameraDisabler : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-
     private ArcGISCameraControllerComponent camController;
-
-    // Start is called before the first frame update
     void Start()
     {
         camController = FindObjectOfType<ArcGISCameraControllerComponent>();

@@ -81,6 +81,6 @@ public class ViewshedObserver : MonoBehaviour
             volumeDepth = 1
         };
         viewshedObserverDepthTexture = new RenderTexture(desc);
-        viewshedObserverDepthTexture.filterMode = FilterMode.Point; 
+        viewshedObserverDepthTexture.filterMode = FilterMode.Bilinear; 
     }
 }

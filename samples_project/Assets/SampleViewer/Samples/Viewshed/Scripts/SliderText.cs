@@ -4,14 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+// Simple text field updater that tracks the value of a slider object
 public class SliderText : MonoBehaviour
 {
     public string prefix = "";
-
     public Slider slider;
     public TextMeshProUGUI text;
 
-    // Start is called before the first frame update
     void Start()
     {
         if(slider != null)
