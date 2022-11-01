@@ -15,10 +15,13 @@ public class ViewshedObserver : MonoBehaviour
     [SerializeField] private Slider rotationSlider;
     [SerializeField] private Slider opacitySlider;
 
+    private bool isHDRP;
+
     private RenderTexture viewshedObserverDepthTexture;
 
     void Start()
     {
+        isHDRP = GraphicsSettings.currentRenderPipeline.GetType().ToString().Contains("HighDefinition");
         SetupObserverCamera();
         InitializeSliderValues();
     }
@@ -29,6 +32,13 @@ public class ViewshedObserver : MonoBehaviour
         Shader.SetGlobalMatrix("_ViewshedObserverViewProjMatrix", viewshedObserverCamera.projectionMatrix * viewshedObserverCamera.worldToCameraMatrix);
         Shader.SetGlobalTexture("_ViewshedObserverDepthTexture", viewshedObserverDepthTexture);
         Shader.SetGlobalFloat("_ViewshedDepthThreshold", 0.00001f); //TODO: adjust with slider based on scene/eye distance
+
+        // Generate the scaledScreenParams for HDRP
+        if(isHDRP)
+        {
+            Rect pixelRect = viewshedObserverCamera.pixelRect;
+            Shader.SetGlobalVector("_ViewshedObserverScreenParams", new Vector4(pixelRect.width, pixelRect.height, 1.0f + 1.0f / pixelRect.width, 1.0f + 1.0f / pixelRect.height));            
+        }
     }
 
     private void InitializeSliderValues()
