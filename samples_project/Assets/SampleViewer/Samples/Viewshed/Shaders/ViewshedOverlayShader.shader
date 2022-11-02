@@ -123,11 +123,11 @@ Shader "URPViewshedOverlay"
             float3 _ViewshedObserverPosition;
             float4 _ViewshedMainCameraScreenParams;
             float4x4 _ViewshedObserverViewProjMatrix;
-            uniform sampler2D _CameraOpaqueTexture;
+            //uniform sampler2D _ColorPyramidTexture;
             uniform sampler2D _ViewshedObserverDepthTexture;
 
-            static const float4 RED_COLOR = float4(1, 0, 0, 1);
-            static const float4 GREEN_COLOR = float4(0, 1, 0, 1);
+            static const float3 RED_COLOR = float3(1, 0, 0);
+            static const float3 GREEN_COLOR = float3(0, 1, 0);
 
             Varyings vert(Attributes IN)
             {
@@ -136,12 +136,12 @@ Shader "URPViewshedOverlay"
                 return OUT;
             }
 
-            half4 frag(Varyings IN) : SV_Target
+            float3 frag(Varyings IN) : SV_Target
             {
                 float2 UV = IN.positionHCS.xy / _ViewshedMainCameraScreenParams.xy;
 
                 #if UNITY_REVERSED_Z
-                    float depth = SampleCameraDepth(UV);//SampleSceneDepth(UV);
+                    float depth = SampleCameraDepth(UV);
                 #else
                     // Adjust Z to match NDC for OpenGL ([-1, 1])
                     float depth = lerp(UNITY_NEAR_CLIP_VALUE, 1, SampleCameraDepth(UV));
@@ -156,7 +156,7 @@ Shader "URPViewshedOverlay"
                 viewUV.y = 1-viewUV.y;
 
                 // Get the color of the current fragment
-                float4 colorBase = tex2D(_CameraOpaqueTexture, UV);
+                float3 colorBase = SampleCameraColor(UV);
 
                 // Do not draw viewshed effect if fragment is outside of observer's view frustum (or beyond a set depth threshold)
                 if(viewUV.x < 0 || viewUV.x > 1 || viewUV.y < 0 || viewUV.y > 1 || viewCoord.z < 0 || depth < _ViewshedDepthThreshold)
