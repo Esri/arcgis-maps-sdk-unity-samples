@@ -148,12 +148,12 @@ Shader "URPViewshedOverlay"
                 #endif
 
                 // Reconstruct the world space position
-                float3 worldPos = ComputeWorldSpacePosition(UV, depth, UNITY_MATRIX_I_VP);
+                float3 worldPos = GetAbsolutePositionWS(ComputeWorldSpacePosition(UV, depth, UNITY_MATRIX_I_VP));
 
                 // Reproject to the observer's view space
                 float4 viewCoord = mul(_ViewshedObserverViewProjMatrix, float4(worldPos.xyz,1));
                 float2 viewUV = (viewCoord.xy / viewCoord.w) * 0.5 + 0.5;
-                viewUV.y = 1-viewUV.y;
+                //viewUV.y = 1-viewUV.y;
 
                 // Get the color of the current fragment
                 float3 colorBase = SampleCameraColor(UV);
