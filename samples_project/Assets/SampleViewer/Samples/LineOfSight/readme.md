@@ -13,8 +13,8 @@ Show a line of sight between two objects. Check if the line of sight is obstruct
 
 ## How it works
 
-1. Have an ArcGIS Map with the [mesh collider](https://developers.arcgis.com/unity/maps/mesh-collider/) enabled.
-2. Have a camera with the [**ArcGIS Camera**](https://developers.arcgis.com/unity/maps/camera/#arcgis-camera) component attached for the area.
+1. Have an ArcGIS Map with the [mesh colliders](https://developers.arcgis.com/unity/maps/mesh-collider/) enabled.
+2. Attach an [**ArcGIS Camera**](https://developers.arcgis.com/unity/maps/camera/#arcgis-camera) component to the active camera.
 3. Make a parent game object with the [**ArcGIS Location**](https://developers.arcgis.com/unity/maps/location-component/) component attached for other game object to be nested.
 4. Have a game object that uses the **Transform** component for the target moving object under the game object with the **ArcGIS Location** component.
 5. Have a game object for the viewpoint and another for the sight line under the game object with the **ArcGIS Location** component.
