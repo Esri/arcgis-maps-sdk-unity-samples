@@ -1,8 +1,20 @@
-# Geocoding
+# Find places or search for an address
 
-Find the location for an address or find the address of a selected location using the Geocoding service. 
+Find the place for an address or find the address of a selected location using the Geocoding service. 
 
 ![Geocoding](Geocoding.jpg)
+
+## How to use the sample
+
+https://developers.arcgis.com/documentation/mapping-apis-and-services/search/place-search/#how-place-search-works
+Place name...
+
+1. Open the **Geocoding** scene.
+2. Click on the **ArcGISMap** game object in the **Hierarchy** window.
+3. Set your API key in the **Inspector** window.
+4. Click play.
+5. To find a location for an address or 
+
 
 ## How it works
 
