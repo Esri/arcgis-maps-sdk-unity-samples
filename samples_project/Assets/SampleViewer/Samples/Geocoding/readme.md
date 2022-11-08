@@ -12,8 +12,8 @@ This sample demostrates the capability of the [Geocoding service](https://develo
 2. Click on the **ArcGISMap** game object in the **Hierarchy** window.
 3. Set your API key in the **Inspector** window.
 4. Click play.
-5. To find a place, put aplace name or address in the search bar and press `Enter`. For the information about the type of locations that are supported by the Geocoding service, see the [ArcGIS REST APIs documentation](https://developers.arcgis.com/rest/geocode/api-reference/geocoding-find-address-candidates.htm).
-6. To find an address of a place, drop the marker to your point of interest by clicking in the viewport while holding `Shift`, and you will see the address displayed above the marker.
+5. To find a place, put aplace name or address in the search bar and press Enter. For the information about the type of locations that are supported by the Geocoding service, see the [ArcGIS REST APIs documentation](https://developers.arcgis.com/rest/geocode/api-reference/geocoding-find-address-candidates.htm).
+6. To find an address of a place, drop the marker to your point of interest by clicking in the viewport while holding Shift, and you will see the address displayed above the marker.
 
 **Note:** This sample is only set up to work with mouse and keyboard.
 
