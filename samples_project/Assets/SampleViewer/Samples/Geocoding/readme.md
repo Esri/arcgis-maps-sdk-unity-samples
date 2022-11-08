@@ -6,26 +6,25 @@ Find the place for an address or find the address of a selected location using t
 
 ## How to use the sample
 
-https://developers.arcgis.com/documentation/mapping-apis-and-services/search/place-search/#how-place-search-works
-Place name...
+This sample demostrates the capability of the [Geocoding service](https://developers.arcgis.com/documentation/mapping-apis-and-services/search/geocoding/) inside Unity. You can make two kinds of operations with this sample, find a place and find an address. 
 
 1. Open the **Geocoding** scene.
 2. Click on the **ArcGISMap** game object in the **Hierarchy** window.
 3. Set your API key in the **Inspector** window.
 4. Click play.
-5. To find a location for an address or 
-
-
-## How it works
-
-1. Set your API Key in the ArcGISMap game object using the Inspector window (if you are using the SampleViewer scene you can set the key through the SampleSwitcher game object).
-2. Enter an address in the text field to get the location of the address.
-3. While holding shift, left-click on a location on the map to get the address (or description) of that location.
-4. Raycasts are used to determine the height at the queried location to account for elevation.
-5. This sample uses Esri's [Geocoding service API](https://developers.arcgis.com/rest/geocode/api-reference/overview-world-geocoding-service.htm), which requires an API Key. You can learn more about [API keys](https://developers.arcgis.com/documentation/mapping-apis-and-services/security/api-keys/) and [Accounts](https://developers.arcgis.com/documentation/mapping-apis-and-services/deployment/accounts/) in the _Mapping APIs and location services_ guide. [Configure your API key](https://developers.arcgis.com/documentation/mapping-apis-and-services/security/tutorials/create-and-manage-an-api-key/#set-service-scopes) to support Geocoding capabilities. 
+5. To find a place, put aplace name or address in the search bar and press `Enter`. For the information about the type of locations that are supported by the Geocoding service, see the [ArcGIS REST APIs documentation](https://developers.arcgis.com/rest/geocode/api-reference/geocoding-find-address-candidates.htm).
+6. To find an address of a place, drop the marker to your point of interest by clicking in the viewport while holding `Shift`, and you will see the address displayed above the marker.
 
 **Note:** This sample is only set up to work with mouse and keyboard.
 
+## How it works
+
+1. Have a map with the mesh colliders enabled in the scene and a child game object to attach geocoding operation script under the game object that has the **ArcGIS Map** component attached. 
+3. The HTTPClient is used to query the [Geocoding service](https://developers.arcgis.com/rest/geocode/api-reference/overview-world-geocoding-service.htm).
+4. The `findAddressCandidates` operation is used for finding a place.
+5. The `reverseGeocode` operation is used for finding an address. The marker should have the [**ArcGIS Location**](https://developers.arcgis.com/unity/maps/location-component/) component attached and its values will be used to query the address of the location.
+6. The location values are taken from the **ArcGIS Location Component**
+7. Use the game engine's [raycast](https://docs.unity3d.com/ScriptReference/Physics.Raycast.html) feature to determine the height at the queried location to account for elevation to place the marker.
 
 ## Tags
 geocode, reverse geocode, address, locate, search
