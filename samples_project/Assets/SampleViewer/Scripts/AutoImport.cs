@@ -23,21 +23,23 @@ public static class CallReImport
             RenderPipelineAsset URPasset = AssetDatabase.LoadAssetAtPath<RenderPipelineAsset>("Assets/SampleViewer/Resources/SampleGraphicSettings/SampleURPipeline.asset");
             GraphicsSettings.renderPipelineAsset = URPasset;
 #endif
-        EditorBuildSettingsScene[] scenes = EditorBuildSettings.scenes;
+            EditorBuildSettingsScene[] scenes = EditorBuildSettings.scenes;
 
-        foreach (EditorBuildSettingsScene scene in scenes)
-        {
-            if (scene.path.Contains("VR"))
+            foreach (EditorBuildSettingsScene scene in scenes)
             {
+                if (scene.path.Contains("VR"))
+                {
 #if USE_OPENXR_PACKAGE
                     scene.enabled = true;
 #else
                     scene.enabled = false;
 #endif
+                }
             }
-        }
+
             reImport();
         }
+
         Events.registeredPackages += Handle;
     }
     static void reImport()
