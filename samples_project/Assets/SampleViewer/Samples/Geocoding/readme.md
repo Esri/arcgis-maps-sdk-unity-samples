@@ -23,8 +23,7 @@ This sample demonstrates the capability of the [Geocoding service](https://devel
 3. The HTTPClient is used to query the [Geocoding service](https://developers.arcgis.com/rest/geocode/api-reference/overview-world-geocoding-service.htm).
 4. The `findAddressCandidates` operation is used for finding a place.
 5. The `reverseGeocode` operation is used for finding an address. The marker should have the [**ArcGIS Location**](https://developers.arcgis.com/unity/maps/location-component/) component attached and its values will be used to query the address of the location.
-6. The location values are taken from the **ArcGIS Location Component**
-7. Use the game engine's [raycast](https://docs.unity3d.com/ScriptReference/Physics.Raycast.html) feature to determine the height at the queried location to account for elevation to place the marker.
+6. Use the game engine's [raycast](https://docs.unity3d.com/ScriptReference/Physics.Raycast.html) feature to determine the height at the queried location to account for elevation to place the marker.
 
 ## Tags
 geocode, reverse geocode, address, locate, search
