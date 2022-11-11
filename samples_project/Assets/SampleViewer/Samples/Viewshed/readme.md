@@ -2,6 +2,8 @@
 
 This sample project uses a shader-based approach to demonstrate a viewshed overlay effect showing an observer camera's viewable area. Controls can be used to adjust the observer camera and effect parameters.
 
+![Image of Viewshed](Viewshed.jpg)
+
 ## How it works
 
 1. Using the `DepthToColorShader`, the observer camera's depth buffer is rendered to a `RenderTexture`.
