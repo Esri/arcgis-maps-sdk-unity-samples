@@ -6,6 +6,8 @@ using Esri.ArcGISMapsSDK.Samples.Components;
 
 // Disable the ArcGISCameraController when the pointer is over a UI panel
 // This prevents unwanted camera movement during UI interactions
+
+// Camera controller is disabled when pointer enters UI area, and enabled upon exit
 public class UICameraDisabler : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     private ArcGISCameraControllerComponent camController;

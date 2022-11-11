@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
 
+// Viewshed observer component - used control the viewshed observer's parameters
 public class ViewshedObserver : MonoBehaviour
 {
     [SerializeField] private Camera viewshedObserverCamera;
@@ -31,9 +32,9 @@ public class ViewshedObserver : MonoBehaviour
         Shader.SetGlobalVector("_ViewshedObserverPosition", transform.position);
         Shader.SetGlobalMatrix("_ViewshedObserverViewProjMatrix", viewshedObserverCamera.projectionMatrix * viewshedObserverCamera.worldToCameraMatrix);
         Shader.SetGlobalTexture("_ViewshedObserverDepthTexture", viewshedObserverDepthTexture);
-        Shader.SetGlobalFloat("_ViewshedDepthThreshold", 0.00001f); //TODO: adjust with slider based on scene/eye distance
+        Shader.SetGlobalFloat("_ViewshedDepthThreshold", 0.00001f); 
 
-        // Generate the scaledScreenParams for HDRP
+        // Generate the scaledScreenParams for HDRP (set by Unity by default in URP)
         if(isHDRP)
         {
             Rect pixelRect = viewshedObserverCamera.pixelRect;
@@ -41,6 +42,7 @@ public class ViewshedObserver : MonoBehaviour
         }
     }
 
+    // Initialize the UI sliders to be in sync with the observer
     private void InitializeSliderValues()
     {
         cameraFOVSlider.value = viewshedObserverCamera.fieldOfView;
@@ -63,6 +65,7 @@ public class ViewshedObserver : MonoBehaviour
         Shader.SetGlobalFloat("_ViewshedOpacity", opacitySlider.value);
     }
 
+    // Setup/initialization related to the observer's camera
     private void SetupObserverCamera()
     {
         if(viewshedObserverCamera != null)
@@ -73,6 +76,7 @@ public class ViewshedObserver : MonoBehaviour
         }
     }
 
+    // Create the observer camera's depth texture (needed by main camera shader to render viewshed effect)
     private void CreateViewshedObserverDepthTexture()
     {
         int w = 2048;
