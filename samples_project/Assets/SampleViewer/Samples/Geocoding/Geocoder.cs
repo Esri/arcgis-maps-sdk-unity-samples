@@ -255,6 +255,7 @@ public class Geocoder : MonoBehaviour
         IEnumerable<KeyValuePair<string, string>> payload = new List<KeyValuePair<string, string>>()
         {
             new KeyValuePair<string, string>("location", location),
+            new KeyValuePair<string, string>("langCode", "en"),
             new KeyValuePair<string, string>("f", "json"),
         };
 
