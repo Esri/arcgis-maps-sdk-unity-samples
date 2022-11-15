@@ -1,6 +1,6 @@
 # Find places or search for an address
 
-Find the place for an address or find the address of a selected location using the Geocoding service. 
+Find the location for an address or find the address of a selected location using the Geocoding service. 
 
 ![Geocoding](Geocoding.jpg)
 
@@ -15,7 +15,7 @@ This sample demonstrates the capability of the [Geocoding service](https://devel
 5. To find a place, put a place name or address in the search bar and press Enter. For information about the type of locations that are supported by the Geocoding service, see the [ArcGIS REST APIs documentation](https://developers.arcgis.com/rest/geocode/api-reference/geocoding-find-address-candidates.htm).
 6. To find an address of a place, drop the marker to your point of interest by clicking in the viewport while holding Shift, and you will see the address displayed above the marker.
 
-**Note:** This sample is only set up to work with mouse and keyboard.
+**Note:** This sample is only set up to work with a mouse and keyboard.
 
 ## How it works
 
@@ -26,4 +26,4 @@ This sample demonstrates the capability of the [Geocoding service](https://devel
 6. Place a marker using the game engine's [raycast](https://docs.unity3d.com/ScriptReference/Physics.Raycast.html) feature to account for elevation at the queried position.
 
 ## Tags
-geocode, reverse geocode, address, locate, search
+geocoding, reverse geocoding, address, locate, search
