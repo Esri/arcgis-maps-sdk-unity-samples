@@ -5,7 +5,7 @@ Move around an ArcGIS World using Virtual Reality to move and fly through differ
 
 How to use the sample
 This sample runs off of the OpenXR framework and supports the following headsets/devices:
-1. Oculus Rift S
+- Oculus Rift S
 2. Oculus Rift
 3. Oculus Quest
 4. Oculus Quest 2
