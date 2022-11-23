@@ -21,7 +21,7 @@ Please ensure that the project is using URP if you are using any of the Oculus H
 
 ## How it works
 
-1. Check the box for **Mesh Colliers Enabled** on the `ArcGIS Map View` component if you want the camera to be able interact with buildings and the ground. This will have a negative impact on performance so you may want to disable this on less powerful devices.
+1. Create a map and check the box for **Mesh Colliers Enabled** on the **ArcGIS Map** component if you want the camera to be able to interact with buildings and the ground. This will have a negative impact on performance so you may want to disable this on less powerful devices.
 2. Drag and Drop the VR Origin Prefab into the scene.
 3. Drag and drop the XR Interaction Manager Prefab into the scene.
 4. Draga an drop the Locomotion System Prefab into the scene.
