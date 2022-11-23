@@ -34,7 +34,7 @@ This sample provides 3 prefabs for users to add to any scene making setup easy! 
 2. Drag and Drop the **XR Origin Prefab** into the scene.
 3. Drag and drop the **XR Interaction Manager** Prefab into the scene.
 4. Drag and drop the **Locomotion System** Prefab into the scene.
-5. Parent the XR Origin prefab to the game object that has the ArcGISMap Component on it.
+5. Parent the **XR Origin** Prefab to the game object that has the **ArcGISMap** component on it.
 6. Expand the **XR Origin** game object fully and select the Main Camera Game Object.
 7. In the **Inspector** window, click on **Add Component** and search "ArcGIS Camera" component and add it to the Main Camera game object.
 
