@@ -27,7 +27,7 @@ Please ensure that the project is using URP if you are using any of the Oculus H
 4. Draga an drop the Locomotion System Prefab into the scene.
 5. Parent the XR Origin prefab to the ArcGISMap game object.
 6. Expand the XR Origin fully and select the Main Camera Game Object.
-7. In the Inspector, click add component and search "ArcGIS Camera Component" and add it to the Main Camera Game Object.
+7. In the **Inspector** window, click on **Add Component** and search "ArcGIS Camera" component and add it to the Main Camera game object.
 8. Press play and enjoy exploring.
 
 ## About the data
