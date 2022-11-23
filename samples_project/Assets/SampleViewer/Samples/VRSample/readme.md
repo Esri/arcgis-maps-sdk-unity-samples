@@ -3,7 +3,8 @@
 Move around an ArcGIS World using Virtual Reality to move and fly through different cities
 ![Image of Virtual Reality Simulation](VR.jpg)
 
-How to use the sample
+## How to use the sample
+
 This sample runs off of the OpenXR framework and supports the following headsets/devices:
 1. Meta Rift S
 2. Meta Rift
