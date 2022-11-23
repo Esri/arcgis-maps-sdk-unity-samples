@@ -10,10 +10,10 @@ This sample runs off of the OpenXR framework and supports the following headsets
 - Meta Rift
 - Meta Quest
 - Meta Quest 2
-5. HTC Vive
-6. HTC Vive Pro
-6. HTC Vive Cosmos
-7. Valve Index
+- HTC Vive
+- HTC Vive Pro
+- HTC Vive Cosmos
+- Valve Index
 
 ## Deployment
 For deploying, please refer to this [document](https://developers.arcgis.com/unity/deployment/)
