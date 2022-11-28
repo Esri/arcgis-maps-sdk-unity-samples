@@ -15,7 +15,8 @@ This sample runs off of the OpenXR framework and supports the following headsets
 - HTC Vive Cosmos
 - Valve Index
 
-## Deployment
+### Deployment
+
 For deploying, please refer to this [document](https://developers.arcgis.com/unity/deployment/)
 In order for the sample to run on Meta Headsets the device, must be placed in **Developer Mode**. Please refer to this [document](https://developer.Meta.com/documentation/native/android/mobile-device-setup/) for how to perform such an action. This must be done for running the sample in the Unity Engine, making a build to run on Windows, or making a build directly to the headset (Meta Quest, Meta Quest 2 and Meta Quest Pro)
 
