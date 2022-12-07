@@ -79,10 +79,10 @@ public class ViewshedObserver : MonoBehaviour
     // Create the observer camera's depth texture (needed by main camera shader to render viewshed effect)
     private void CreateViewshedObserverDepthTexture()
     {
-        int w = 2048;
         int h = 2048;
+        int w = (int)(viewshedObserverCamera.aspect * h);
         
-        RenderTextureDescriptor desc = new RenderTextureDescriptor
+	RenderTextureDescriptor desc = new RenderTextureDescriptor
         {
             width = w,
             height = h,

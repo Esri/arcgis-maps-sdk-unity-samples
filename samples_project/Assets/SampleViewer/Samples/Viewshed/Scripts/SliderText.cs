@@ -15,7 +15,7 @@ public class SliderText : MonoBehaviour
     {
         if(slider != null)
         {
-            slider.onValueChanged.AddListener(delegate { UpdateText(); });
+            slider.onValueChanged.AddListener(value => UpdateText());
         }
         UpdateText();
     }
