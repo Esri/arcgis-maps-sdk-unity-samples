@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 #endif
@@ -37,7 +38,7 @@ namespace StarterAssets
         public float JumpHeight = 1.2f;
 
         [Tooltip("The character uses its own gravity value. The engine default is -9.81f")]
-        public float Gravity = -15.0f;
+        public float Gravity = -0f;
 
         [Space(10)]
         [Tooltip("Time required to pass before being able to jump again. Set to 0f to instantly jump again")]
@@ -110,6 +111,10 @@ namespace StarterAssets
 
         private bool _hasAnimator;
 
+        private RaycastHit hitBelow;
+        private RaycastHit hitAbove;
+        private float playerHeight = 1.8f;
+
         private bool IsCurrentDeviceMouse
         {
             get
@@ -132,12 +137,15 @@ namespace StarterAssets
             }
         }
 
+
         private void Start()
         {
+            
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
             
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
+
             _input = GetComponent<StarterAssetsInputs>();
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
             _playerInput = GetComponent<PlayerInput>();
@@ -150,6 +158,26 @@ namespace StarterAssets
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
+
+            StartCoroutine(ColliderGenerated());
+        }
+
+        IEnumerator ColliderGenerated()
+        {
+            yield return new WaitUntil(() => CheckColliderBelow() == true);
+            yield return new WaitForSeconds(2f);
+            Gravity = -15f;
+        }
+
+
+        private bool CheckColliderBelow()
+        {
+            var position = _controller.transform.position;
+            while (!Physics.Raycast(position, Vector3.down, out hitBelow))
+            {
+                return false;
+            }
+            return true;
         }
 
         private void Update()
