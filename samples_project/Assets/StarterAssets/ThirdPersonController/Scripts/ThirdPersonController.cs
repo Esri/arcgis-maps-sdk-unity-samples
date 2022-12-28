@@ -112,8 +112,6 @@ namespace StarterAssets
         private bool _hasAnimator;
 
         private RaycastHit hitBelow;
-        private RaycastHit hitAbove;
-        private float playerHeight = 1.8f;
 
         private bool IsCurrentDeviceMouse
         {
