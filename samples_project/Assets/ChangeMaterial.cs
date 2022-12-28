@@ -10,20 +10,22 @@ public class ChangeMaterial : MonoBehaviour
     {
         var pipeline = GraphicsSettings.defaultRenderPipeline;
         SkinnedMeshRenderer mapMan = GetComponent<SkinnedMeshRenderer>();
-        Material mapManMat=null;
-        if (pipeline.name == "HDRPipeline" || pipeline.name == "SampleHDRPipeline")
+        Material mapManMat = null;
+
+        if (GraphicsSettings.renderPipelineAsset.name.Contains("HDRP"))
         {
             mapManMat = Resources.Load("MapmanForUnity/HDRP_Metallic_Standard/MapmanMaterialHDRP", typeof(Material)) as Material;
         }
-        else if (pipeline.name == "URPipeline" || pipeline.name == "SampleURPipeline")
+        else if (GraphicsSettings.renderPipelineAsset.name.Contains("URP"))
         {
-            mapManMat = Resources.Load("MapmanForUnity/URP_Metallic_Standard/MapmanMaterialURP", typeof(Material)) as Material; 
+            mapManMat = Resources.Load("MapmanForUnity/URP_Metallic_Standard/MapmanMaterialURP", typeof(Material)) as Material;
         }
         else
         {
             Debug.Log("Rendering pipeline must be HDRP or URP.");
         }
-        if(mapManMat)
+
+        if (mapManMat)
         {
             mapMan.material = mapManMat;
         }
@@ -31,12 +33,11 @@ public class ChangeMaterial : MonoBehaviour
         {
             Debug.Log("Material missing.");
         }
-            
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

@@ -138,9 +138,9 @@ namespace StarterAssets
 
         private void Start()
         {
-            
+
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
-            
+
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
 
@@ -166,7 +166,6 @@ namespace StarterAssets
             yield return new WaitForSeconds(2f);
             Gravity = -15f;
         }
-
 
         private bool CheckColliderBelow()
         {
