@@ -31,13 +31,15 @@ public class ViewshedFeatureURP : ScriptableRendererFeature
 
     ViewshedRenderPass m_ScriptablePass;
 
+    public Material ViewshedOverlayMaterial;
+
     /// <inheritdoc/>
     public override void Create()
     {
         m_ScriptablePass = new ViewshedRenderPass();
 
         // Configures where the render pass should be injected.
-        m_ScriptablePass.renderPassEvent = RenderPassEvent.AfterRenderingOpaques;
+        m_ScriptablePass.renderPassEvent = RenderPassEvent.BeforeRenderingSkybox;
     }
 
     // Here you can inject one or multiple render passes in the renderer.
