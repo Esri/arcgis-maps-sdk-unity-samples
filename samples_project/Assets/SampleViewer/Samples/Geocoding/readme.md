@@ -19,7 +19,8 @@ This sample demonstrates the capability of the [Geocoding service](https://devel
 
 ## How it works
 
-1. Have a map with the mesh colliders enabled in the scene and a child game object to attach geocoding script under the game object that has the **ArcGIS Map** component attached. 
+1. Have an ArcGIS Map with the mesh colliders enabled in the scene
+2. Create a child game object under the ArcGIS Map and attach the geocoding script.
 3. The HTTPClient is used to query the [Geocoding service](https://developers.arcgis.com/rest/geocode/api-reference/overview-world-geocoding-service.htm).
 4. The [`findAddressCandidates`](https://developers.arcgis.com/rest/geocode/api-reference/geocoding-find-address-candidates.htm) operation is used for finding a place.
 5. The [`reverseGeocode`](https://developers.arcgis.com/rest/geocode/api-reference/geocoding-reverse-geocode.htm) operation is used for finding an address. The marker should have the [**ArcGIS Location**](https://developers.arcgis.com/unity/maps/location-component/) component attached and its values will be used to query the address of the location.
