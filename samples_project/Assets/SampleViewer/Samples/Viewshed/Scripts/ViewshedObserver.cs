@@ -26,13 +26,12 @@ public class ViewshedObserver : MonoBehaviour
     void Update()
     {
         Shader.SetGlobalMatrix("_ObserverViewProjection", viewshedObserverCamera.projectionMatrix * viewshedObserverCamera.worldToCameraMatrix);
-        Shader.SetGlobalTexture("_ObserverDepthTexture", viewshedObserverDepthTexture);
     }
 
     void CreateObserverDepthTexture()
     {
-        int h = Camera.main.pixelHeight;
-        int w = Camera.main.pixelWidth;
+        int h = 2048;//Camera.main.pixelHeight;
+        int w = 2048;//Camera.main.pixelWidth;
 
         RenderTextureDescriptor desc = new RenderTextureDescriptor
         {
