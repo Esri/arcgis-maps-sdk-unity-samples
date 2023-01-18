@@ -26,6 +26,7 @@ public class ViewshedObserver : MonoBehaviour
     void Update()
     {
         Shader.SetGlobalMatrix("_ObserverViewProjection", viewshedObserverCamera.projectionMatrix * viewshedObserverCamera.worldToCameraMatrix);
+        Shader.SetGlobalFloat("_ViewshedDepthLimit", viewshedObserverCamera.farClipPlane);
     }
 
     void CreateObserverDepthTexture()

@@ -52,6 +52,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _ObserverDepthTexture:
+        m_Texture: {fileID: 8400000, guid: c6713119c7420cc4f9ba6997ac006f70, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -103,6 +107,8 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _Surface: 0
+    - _ViewshedDepthLimit: 0.00001
+    - _ViewshedOpacity: 0.5
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
@@ -110,6 +116,8 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _ViewshedOccludedColor: {r: 1, g: 0, b: 0, a: 1}
+    - _ViewshedVisibleColor: {r: 0, g: 1, b: 0, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &3869722088887863757
 MonoBehaviour:
