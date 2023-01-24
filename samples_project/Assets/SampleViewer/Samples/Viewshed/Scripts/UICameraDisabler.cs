@@ -8,21 +8,34 @@ using Esri.ArcGISMapsSDK.Samples.Components;
 // This prevents unwanted camera movement during UI interactions
 
 // Camera controller is disabled when pointer enters UI area, and enabled upon exit
-public class UICameraDisabler : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class UICameraDisabler : MonoBehaviour
 {
     private ArcGISCameraControllerComponent camController;
+    private int UILayer;
     void Start()
     {
         camController = FindObjectOfType<ArcGISCameraControllerComponent>();
+        UILayer = LayerMask.NameToLayer("UI");
     }
 
-    public void OnPointerEnter(PointerEventData eventData)
+    void Update()
     {
-        camController.enabled = false;
+        camController.enabled = !IsPointerOverUI();
     }
 
-    public void OnPointerExit(PointerEventData eventData)
+    bool IsPointerOverUI()
     {
-        camController.enabled = true;
+        PointerEventData eventData = new PointerEventData(EventSystem.current);
+        eventData.position = Input.mousePosition;
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, results);
+        foreach(RaycastResult result in results)
+        {
+            if(result.gameObject.layer == UILayer)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
