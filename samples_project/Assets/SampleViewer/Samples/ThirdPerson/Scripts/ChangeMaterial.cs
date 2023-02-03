@@ -1,3 +1,9 @@
+// Copyright 2022 Esri.
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+//
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,20 +11,18 @@ using UnityEngine.Rendering;
 
 public class ChangeMaterial : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        var pipeline = GraphicsSettings.defaultRenderPipeline;
         SkinnedMeshRenderer mapMan = GetComponent<SkinnedMeshRenderer>();
         Material mapManMat = null;
 
-        if (GraphicsSettings.renderPipelineAsset.name.Contains("HDRP"))
+        if (GraphicsSettings.defaultRenderPipeline.name.Contains("HDRP"))
         {
-            mapManMat = Resources.Load("MapmanForUnity/HDRP_Metallic_Standard/MapmanMaterialHDRP", typeof(Material)) as Material;
+            mapManMat = Resources.Load<Material>("MapmanForUnity/HDRP_Metallic_Standard/MapmanMaterialHDRP");
         }
         else if (GraphicsSettings.renderPipelineAsset.name.Contains("URP"))
         {
-            mapManMat = Resources.Load("MapmanForUnity/URP_Metallic_Standard/MapmanMaterialURP", typeof(Material)) as Material;
+            mapManMat = Resources.Load<Material>("MapmanForUnity/URP_Metallic_Standard/MapmanMaterialURP");
         }
         else
         {
@@ -33,11 +37,5 @@ public class ChangeMaterial : MonoBehaviour
         {
             Debug.Log("Material missing.");
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 }
