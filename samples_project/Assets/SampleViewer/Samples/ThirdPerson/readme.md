@@ -1,6 +1,6 @@
-# Explore with a Third Person Character
+# Explore with a Third Person Controller
 
-Allows users to explore from the perspective of a Third Person Character.
+Explore from the perspective of a third person camera following a controllable character.
 
 ![Image of Third Person Controller](ThirdPerson.png)
 
@@ -30,4 +30,4 @@ Elevation data is loaded from the [Terrain 3D elevation layer](https://www.arcgi
 
 ## Tags
 
-exploration, third person perspective, third person controller
+3rd person, camera, controller, exploration, follow, platformer, third person perspective, third person controller
