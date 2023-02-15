@@ -28,6 +28,9 @@ public class LightingManager : MonoBehaviour
         {
             var URPLightingObject = Instantiate(URPLighting, transform);
             URPLightingObject.SetActive(true);
+
+            Material skyMat = Resources.Load("Skybox/SkyboxLiteWarm", typeof(Material)) as Material;
+            RenderSettings.skybox = skyMat;
         }
     }
 }
