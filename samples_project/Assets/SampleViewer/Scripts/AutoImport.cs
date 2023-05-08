@@ -47,9 +47,8 @@ public static class CallReImport
         List<string> importPaths = new List<string>();
         importPaths.Add("Assets/SampleViewer/Samples");
         importPaths.Add("Packages/com.esri.arcgis-maps-sdk/SDK/Resources/Shaders/Materials/URP");
-        importPaths.Add("Assets/Samples/ArcGIS Maps SDK for Unity/1.0.0/All Samples/Resources/Materials/URP");
         importPaths.Add("Packages/com.esri.arcgis-maps-sdk/SDK/Resources/Shaders/Materials/HDRP");
-        importPaths.Add("Assets/Samples/ArcGIS Maps SDK for Unity/1.0.0/All Samples/Resources/Materials/HDRP");
+        importPaths.Add("Assets/Samples");
 
         foreach (string path in importPaths)
         {
