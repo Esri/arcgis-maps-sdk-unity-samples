@@ -18,7 +18,7 @@ The camera moves to the plane position and you see the flight number and flight 
 
 ### Getting the data
 
-This sample subscribe to a [stream service](https://enterprise.arcgis.com/en/geoevent/latest/disseminate-and-notify/stream-services.htm) on [ArcGIS GeoEvent Server](https://enterprise.arcgis.com/en/geoevent/latest/get-started/what-is-arcgis-geoevent-server.htm) using a WebSocket to receive data. 
+This sample subscribes to a [stream service](https://enterprise.arcgis.com/en/geoevent/latest/disseminate-and-notify/stream-services.htm) on [ArcGIS GeoEvent Server](https://enterprise.arcgis.com/en/geoevent/latest/get-started/what-is-arcgis-geoevent-server.htm) using a WebSocket to receive data. 
 
 Client applications will need to construct a subscription request which includes both the WebSocket URL. The format of the request is illustrated below; make sure to include `subscribe` in the request:
 
@@ -26,13 +26,13 @@ Client applications will need to construct a subscription request which includes
 wss://geoeventsample1.esri.com:6143/arcgis/ws/services/FAAStream/StreamServer/subscribe
 ```
 
-In this sample, the ArcGIS GeoEvent Server returns information from flights over the United States including location and flight number to update game objects in real time.
+In this sample, the ArcGIS GeoEvent Server returns information from flights over the United States including location and flight number to update game objects in real-time.
 
 The service of this sample uses mocked information so it is not accurate in real-time although the workflow is the same for using a service with real-time information.
 
 ### Making the connection
 
-To make the connection, this sample uses [`ClientWebSocket`](https://learn.microsoft.com/dotnet/api/system.net.websockets.clientwebsocket) class to connect to a WebSocket server as an asynchronous operation. It opens the connection with the WebSocket URL, and processes the result while the connection remains open.
+To make the connection, this sample uses [`ClientWebSocket`](https://learn.microsoft.com/dotnet/api/system.net.websockets.clientwebsocket) class to connect to a WebSocket server as an asynchronous operation. It opens the connection with the WebSocket URL and processes the result while the connection remains open.
 
 ### Parsing the response
 
@@ -44,7 +44,7 @@ These new game objects are then used to populate the drop-down list allowing you
 
 ## About the data
 
-This sample uses the sample [plane location stream service](https://geoeventsample1.esri.com:6443/arcgis/rest/services/FAAStream/StreamServer). This data was recorded in the past and played back in real time. It is not a live update of current air traffic. 
+This sample uses the sample [plane location stream service](https://geoeventsample1.esri.com:6443/arcgis/rest/services/FAAStream/StreamServer). This data was recorded in the past and played back in real-time. It is not a live update of current air traffic. 
 
 To publish your own streams of data, please refer to the [ArcGIS GeoEvent Server](https://enterprise.arcgis.com/en/geoevent/latest/get-started/what-is-arcgis-geoevent-server.htm) documentation.
 
