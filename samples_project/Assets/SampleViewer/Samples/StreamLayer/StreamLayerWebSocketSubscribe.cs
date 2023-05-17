@@ -278,10 +278,10 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
         }
     }
 
-    // Populates the flight drown down with all the flight names from the flights list
+    // Populates the flight drop-down with the flight names from the flights list
     private void PopulateFlightDropdown()
     {
-        //Populate flight name drop down
+        //Populate flight name drop-down
         List<string> flightNames = new List<string>();
         foreach (GameObject flight in flights)
         {
