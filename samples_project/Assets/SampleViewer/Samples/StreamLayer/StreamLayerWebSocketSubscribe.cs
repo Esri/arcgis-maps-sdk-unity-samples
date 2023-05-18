@@ -19,7 +19,7 @@ using System.Threading;
 using Newtonsoft.Json.Linq;
 using Esri.HPFramework;
 
-[System.Serializable]
+[Serializable]
 public class PlaneFeature
 {
     public PlaneGeometry geometry;
@@ -60,7 +60,7 @@ public class PlaneFeature
     }
 }
 
-[System.Serializable]
+[Serializable]
 public class PlaneProperties
 {
     public string name;
@@ -69,7 +69,7 @@ public class PlaneProperties
     public DateTime dateTimeStamp;
 }
 
-[System.Serializable]
+[Serializable]
 public class PlaneGeometry
 {
     public double x;
@@ -88,7 +88,7 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
     // The height where we spawn the flight before finding the actual height
     private int FlightSpawnHeight = 10000;
 
-    public string wsUrl = "ws://geoeventsample1.esri.com:6180/arcgis/ws/services/FAAStream/StreamServer/subscribe";
+    public string wsUrl = "wss://geoeventsample1.esri.com:6143/arcgis/ws/services/FAAStream/StreamServer/subscribe";
     public string nameField;
     public string headingField;
     public string speedField;
@@ -278,10 +278,10 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
         }
     }
 
-    // Populates the stadium drown down with all the stadium names from the Stadiums list
+    // Populates the flight drop-down with the flight names from the flights list
     private void PopulateFlightDropdown()
     {
-        //Populate Stadium name drop down
+        //Populate flight name drop-down
         List<string> flightNames = new List<string>();
         foreach (GameObject flight in flights)
         {
