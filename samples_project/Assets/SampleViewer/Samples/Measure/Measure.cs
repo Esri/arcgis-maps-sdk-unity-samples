@@ -194,30 +194,14 @@ public class Measure : MonoBehaviour
 
     private void UnitChanged()
     {
-        if (UnitDropdown.options[UnitDropdown.value].text == "Meters")
-        {
-            geodeticDistance = currentUnit.ConvertTo(new ArcGISLinearUnit(ArcGISLinearUnitId.Meters), geodeticDistance);
-            currentUnit = new ArcGISLinearUnit(ArcGISLinearUnitId.Meters);
-            unitTxt = " m";
-        }
-        else if (UnitDropdown.options[UnitDropdown.value].text == "Kilometers")
-        {
-            geodeticDistance = currentUnit.ConvertTo(new ArcGISLinearUnit(ArcGISLinearUnitId.Kilometers), geodeticDistance);
-            currentUnit = new ArcGISLinearUnit(ArcGISLinearUnitId.Kilometers);
-            unitTxt = " km";
-        }
-        else if (UnitDropdown.options[UnitDropdown.value].text == "Miles")
-        {
-            geodeticDistance = currentUnit.ConvertTo(new ArcGISLinearUnit(ArcGISLinearUnitId.Miles), geodeticDistance);
-            currentUnit = new ArcGISLinearUnit(ArcGISLinearUnitId.Miles);
-            unitTxt = " mi";
-        }
-        else if (UnitDropdown.options[UnitDropdown.value].text == "Feet")
-        {
-            geodeticDistance = currentUnit.ConvertTo(new ArcGISLinearUnit(ArcGISLinearUnitId.Feet), geodeticDistance);
-            currentUnit = new ArcGISLinearUnit(ArcGISLinearUnitId.Feet);
-            unitTxt = " ft";
-        }
-        GeodeticDistanceText.text = "Distance: " + Math.Round(geodeticDistance, 3).ToString() + unitTxt;
+        var newLinearUnit = new ArcGISLinearUnit(Enum.Parse<ArcGISLinearUnitId>(UnitDropdown.options[UnitDropdown.value].text));
+        geodeticDistance = currentUnit.ConvertTo(newLinearUnit, geodeticDistance);
+        currentUnit = newLinearUnit;
+        UpdateDisplay();
+    }
+
+    private void UpdateDisplay()
+    {
+        GeodeticDistanceText.text = $"Distance: {Math.Round(geodeticDistance, 3)} {currentUnit.LinearUnitId}";
     }
 }
