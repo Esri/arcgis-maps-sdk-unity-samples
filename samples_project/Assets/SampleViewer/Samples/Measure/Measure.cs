@@ -24,7 +24,6 @@ public class Measure : MonoBehaviour
     public Dropdown UnitDropdown;
     public Button ClearButton;
 
-    private string unitTxt;
     private ArcGISMapComponent arcGISMapComponent;
     private List<GameObject> featurePoints = new List<GameObject>();
     private Stack<GameObject> stops = new Stack<GameObject>();
@@ -41,7 +40,6 @@ public class Measure : MonoBehaviour
 
         lineRenderer = Line.GetComponent<LineRenderer>();
         lastRootPosition = arcGISMapComponent.GetComponent<HPRoot>().RootUniversePosition;
-        unitTxt = " m";
         UnitDropdown.onValueChanged.AddListener(delegate
         {
             UnitChanged();
@@ -74,8 +72,8 @@ public class Measure : MonoBehaviour
                     var lastPoint = lastStop.GetComponent<ArcGISLocationComponent>().Position;
 
                     //calculate distance from last point to this point
-                    geodeticDistance += ArcGISGeometryEngine.DistanceGeodetic(lastPoint, thisPoint, new ArcGISLinearUnit(ArcGISLinearUnitId.Meters), new ArcGISAngularUnit(ArcGISAngularUnitId.Degrees), ArcGISGeodeticCurveType.Geodesic).Distance;
-                    GeodeticDistanceText.text = "Distance: " + Math.Round(geodeticDistance, 3).ToString() + unitTxt;
+                    geodeticDistance += ArcGISGeometryEngine.DistanceGeodetic(lastPoint, thisPoint, currentUnit, new ArcGISAngularUnit(ArcGISAngularUnitId.Degrees), ArcGISGeodeticCurveType.Geodesic).Distance;
+                    UpdateDisplay();
 
                     featurePoints.Add(lastStop);
                     //interpolate middle points between last point and this point
@@ -95,7 +93,7 @@ public class Measure : MonoBehaviour
         var startPoint = start.GetComponent<ArcGISLocationComponent>().Position;
         var endPoint = end.GetComponent<ArcGISLocationComponent>().Position;
 
-        double d = ArcGISGeometryEngine.DistanceGeodetic(startPoint, endPoint, new ArcGISLinearUnit(ArcGISLinearUnitId.Meters), new ArcGISAngularUnit(ArcGISAngularUnitId.Degrees), ArcGISGeodeticCurveType.Geodesic).Distance;
+        double d = ArcGISGeometryEngine.DistanceGeodetic(startPoint, endPoint, currentUnit, new ArcGISAngularUnit(ArcGISAngularUnitId.Degrees), ArcGISGeodeticCurveType.Geodesic).Distance;
         float n = Mathf.Floor((float)d / InterpolationInterval);
         double dx = (end.transform.position.x - start.transform.position.x) / n;
         double dz = (end.transform.position.z - start.transform.position.z) / n;
@@ -167,7 +165,7 @@ public class Measure : MonoBehaviour
         featurePoints.Clear();
         stops.Clear();
         geodeticDistance = 0;
-        GeodeticDistanceText.text = "Distance: " + geodeticDistance + unitTxt;
+        UpdateDisplay();
         if (lineRenderer)
             lineRenderer.positionCount = 0;
     }
