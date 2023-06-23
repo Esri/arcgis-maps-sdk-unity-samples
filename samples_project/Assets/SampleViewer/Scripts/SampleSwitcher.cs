@@ -9,6 +9,7 @@ using Esri.HPFramework;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using UnityEngine.EventSystems;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
@@ -16,47 +17,38 @@ using UnityEngine.UI;
 
 public class SampleSwitcher : MonoBehaviour
 {
-    public string APIKey = "";
-    public Dropdown PipelineTypeDropdown;
-    public Dropdown SceneDropdown;
+    public GameObject MenuVideo; 
+    string APIKey;
+    //public Dropdown PipelineTypeDropdown;
+    //public Dropdown SceneDropdown;
     public Button ExitButton;
-    public List<string> SceneList = new List<string>();
-    public List<string> PipelineList = new List<string>();
+    private string PipelineModeText;
+    private string SceneText;
+   // public List<string> SceneList = new List<string>();
+    //public List<string> PipelineList = new List<string>();
     private string PipelineType;
     private string SceneName;
-    private bool EnablePipelineSwitching = true;
+    //private bool EnablePipelineSwitching = true;
+    private int SceneLoadedCount;
+    Animator anim;
 
-    private void Update()
-    {
-        // API Script handles api key differently than the mapcomponent
-        var api = FindObjectOfType<SampleAPIMapCreator>();
-        if (api != null)
-        {
-            if (api.APIKey == "")
-            {
-                api.APIKey = APIKey;
-            }
-            return;
-        }
-        
-        var mapComponent = FindObjectOfType<ArcGISMapComponent>();
-        if (mapComponent != null && mapComponent.APIKey == "")
-        {
-            mapComponent.APIKey = APIKey;
-        }
-    }
+    [SerializeField] private Button HDRPButton;
+    [SerializeField] private Button URPButton;
+    [SerializeField] private Button[] buttons;
 
     private void Start()
     {
+        anim = GameObject.Find("NotificationMenu").GetComponent<Animator>();
+
+        StartCoroutine(SlideNotification());
+
         ExitButton.onClick.AddListener(delegate
         {
             doExitGame();
         });
-        SceneDropdown.onValueChanged.AddListener(delegate
-        {
-            SceneChanged();
-        });
 
+
+        /*
         PipelineTypeDropdown.onValueChanged.AddListener(delegate
         {
             StartCoroutine(PipelineChanged());
@@ -99,8 +91,48 @@ public class SampleSwitcher : MonoBehaviour
         {
             PipelineTypeDropdown.gameObject.SetActive(false);
         }
+        */
+        //PopulateSampleSceneList();
 
-        PopulateSampleSceneList();
+#if (UNITY_ANDROID || UNITY_IOS || UNITY_WSA)
+        SetPipeline("URP");
+#else 
+        SetPipeline("HDRP");
+#endif
+
+    }
+
+    private void Update()
+    {
+        // API Script handles api key differently than the mapcomponent
+        var api = FindObjectOfType<SampleAPIMapCreator>();
+        if (api != null)
+        {
+            if (api.APIKey == "")
+            {
+                api.APIKey = APIKey;
+            }
+            return;
+        }
+        
+        var mapComponent = FindObjectOfType<ArcGISMapComponent>();
+        if (mapComponent != null && mapComponent.APIKey == "")
+        {
+            mapComponent.APIKey = APIKey;
+        }
+
+        Debug.Log("The current API Key is: " + APIKey);
+
+        SceneLoadedCount = SceneManager.sceneCount;
+
+        Debug.Log("We have" + SceneLoadedCount + "scenes running in the background");
+
+    }
+
+    // Read string from the input field for the API key
+    public void ReadStringInput(string s)
+    {
+        APIKey = s;
     }
 
     private void OnEnable()
@@ -111,28 +143,47 @@ public class SampleSwitcher : MonoBehaviour
         }
     }
 
-    private void PopulateSampleSceneList()
+    public void SetPipelineText(string text)
     {
-        SceneDropdown.options.Clear();
+        PipelineModeText = text;
+    }
 
-#if !(USE_OPENXR_PACKAGE)
-        if (SceneList.Contains("VR-Sample")){ 
-             SceneList.Remove("VR-Sample");
-        }
-#else
-        if (!SceneList.Contains("VR-Sample")){ 
-             SceneList.Add("VR-Sample");
-        }
-#endif
-        SceneDropdown.AddOptions(SceneList);
-        AddScene();
+    public void SetSceneText(string text)
+    {
+        SceneText = text;
     }
 
     private void AddScene()
     {
-        SceneName = SceneDropdown.options[SceneDropdown.value].text;
+        SceneName = SceneText;
+
+        Debug.Log("Scene now is:" + SceneName);
         //The scene must also be added to the build settings list of scenes
-        SceneManager.LoadSceneAsync(SceneName, new LoadSceneParameters(LoadSceneMode.Additive));   
+        SceneManager.LoadSceneAsync(SceneName, new LoadSceneParameters(LoadSceneMode.Additive));
+    }
+
+    public void SceneButtonOnClick() {
+        
+        StopVideo();
+
+        // If no async scene is running, then just load an async scene
+        if (SceneLoadedCount == 1)
+        {
+            AddScene();
+        }
+
+        // If there is an async scene running, unload the current scene and load a new async scene
+        if (SceneLoadedCount == 2)
+        {
+            // Change scene
+            var DoneUnLoadingOperation = SceneManager.UnloadSceneAsync(SceneName);
+            DoneUnLoadingOperation.completed += (AsyncOperation Operation) =>
+            {
+                RemoveArcGISMapView();
+
+                AddScene();
+            };
+        }
     }
 
     //The ArcGISMapView object gets instantiated in our scenes and that results in the object living in the SampleViewer scene,
@@ -151,14 +202,11 @@ public class SampleSwitcher : MonoBehaviour
         }
     }
 
-    private void SceneChanged()
+    // Stop the menu background video from player as soon as other scene is loaded
+    private void StopVideo()
     {
-        var DoneUnLoadingOperation = SceneManager.UnloadSceneAsync(SceneName);
-        DoneUnLoadingOperation.completed += (AsyncOperation Operation) =>
-        {
-            RemoveArcGISMapView();
-            AddScene();
-        };
+        MenuVideo.GetComponent<UnityEngine.Video.VideoPlayer>().Stop();
+        MenuVideo.gameObject.SetActive(false);
     }
 
     // pipelineType must be HDRP or URP
@@ -167,6 +215,7 @@ public class SampleSwitcher : MonoBehaviour
         PipelineType = pipelineType;
         RenderPipelineAsset pipeline = Resources.Load<RenderPipelineAsset>("SampleGraphicSettings/Sample" + PipelineType + "ipeline");
         GraphicsSettings.renderPipelineAsset = pipeline;
+        Debug.Log("Pipeline is set to:" + pipeline);
     }
 
     private IEnumerator PipelineChanged()
@@ -179,10 +228,49 @@ public class SampleSwitcher : MonoBehaviour
 
         yield return null;
 
-        SetPipeline(PipelineTypeDropdown.options[PipelineTypeDropdown.value].text);
+        // Set the Pipeline based on what Pipeline button is clicked
+        SetPipeline(PipelineModeText);
 
-        SceneChanged();
+        SceneButtonOnClick();
     }
+
+    public void PipelineButtonOnClick()
+    {
+        StartCoroutine(PipelineChanged());
+    }
+
+    // Delay pop-up notification
+    IEnumerator SlideNotification()
+    {
+        //Wait for 2 secs.
+        yield return new WaitForSeconds(2);
+
+        //Play notification menu animation.
+        anim.Play("NotificationAnim");
+    }
+
+    // Set all buttons interactable
+    public void SetAllButtonsInteractable()
+    {
+        foreach (Button btn in buttons)
+        {
+            btn.interactable = true;
+        }
+    }
+
+    // Keep buttons pressed after selection
+    public void OnButtonClicked(Button clickedBtn)
+    {
+        int btnIndex = System.Array.IndexOf(buttons, clickedBtn);
+
+        if (btnIndex == -1)
+            return;
+
+        SetAllButtonsInteractable();
+
+        clickedBtn.interactable = false;
+    }
+
     //Exits the Sample Viewer App
     private void doExitGame()
     {
@@ -192,4 +280,5 @@ public class SampleSwitcher : MonoBehaviour
         Application.Quit();
 #endif
     }
+
 }
