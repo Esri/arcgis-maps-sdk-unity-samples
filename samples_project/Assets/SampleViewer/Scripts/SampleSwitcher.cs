@@ -7,9 +7,6 @@
 using Esri.ArcGISMapsSDK.Components;
 using Esri.HPFramework;
 using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using UnityEngine.EventSystems;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
@@ -19,26 +16,24 @@ public class SampleSwitcher : MonoBehaviour
 {
     public GameObject MenuVideo; 
     string APIKey;
-    //public Dropdown PipelineTypeDropdown;
-    //public Dropdown SceneDropdown;
     public Button ExitButton;
     private string PipelineModeText;
     private string SceneText;
-   // public List<string> SceneList = new List<string>();
-    //public List<string> PipelineList = new List<string>();
     private string PipelineType;
     private string SceneName;
-    //private bool EnablePipelineSwitching = true;
     private int SceneLoadedCount;
     Animator anim;
 
-    [SerializeField] private Button HDRPButton;
-    [SerializeField] private Button URPButton;
-    [SerializeField] private Button[] buttons;
+    [SerializeField] private Camera cam;
+
+    [SerializeField] private Button[] sceneButtons;
+    [SerializeField] private Button[] pipelineButtons;
 
     private void Start()
     {
         anim = GameObject.Find("NotificationMenu").GetComponent<Animator>();
+
+        cam.enabled = true;
 
         StartCoroutine(SlideNotification());
 
@@ -47,57 +42,12 @@ public class SampleSwitcher : MonoBehaviour
             doExitGame();
         });
 
-
-        /*
-        PipelineTypeDropdown.onValueChanged.AddListener(delegate
-        {
-            StartCoroutine(PipelineChanged());
-        });
-
-	//Populates Pipeline Dropdown
-#if USE_HDRP_PACKAGE
-            PipelineList.Add("HDRP");
-#endif
-
-#if USE_URP_PACKAGE
-            PipelineList.Add("URP");
-#endif
-
-        PipelineTypeDropdown.options.Clear();
-        PipelineTypeDropdown.AddOptions(PipelineList);
-
-        if (PipelineTypeDropdown.options.Count == 0)
-        {
-            Debug.LogError("Either HDRP or URP is required for the ArcGIS Maps SDK to work");
-            return;
-        }
-        else if (PipelineTypeDropdown.options.Count == 1)
-        {
-            SetPipeline(PipelineTypeDropdown.options[PipelineTypeDropdown.value].text);
-            PipelineTypeDropdown.gameObject.SetActive(false);
-        }
-        else
-        {
-
-#if !(UNITY_ANDROID || UNITY_IOS || UNITY_WSA)
-            SetPipeline(PipelineTypeDropdown.options[PipelineTypeDropdown.value].text);
-#else
-            PipelineTypeDropdown.gameObject.SetActive(false);
-            SetPipeline("URP");
-#endif
-        }
-
-        if (!EnablePipelineSwitching)
-        {
-            PipelineTypeDropdown.gameObject.SetActive(false);
-        }
-        */
-        //PopulateSampleSceneList();
-
 #if (UNITY_ANDROID || UNITY_IOS || UNITY_WSA)
         SetPipeline("URP");
+        SetURPColor();
 #else 
         SetPipeline("HDRP");
+        SetHDRPColor();
 #endif
 
     }
@@ -162,9 +112,14 @@ public class SampleSwitcher : MonoBehaviour
         SceneManager.LoadSceneAsync(SceneName, new LoadSceneParameters(LoadSceneMode.Additive));
     }
 
+    // Switch scenes with button click
     public void SceneButtonOnClick() {
         
         StopVideo();
+
+        cam.enabled = false;
+
+        anim.Play("NotificationAnim_Close");
 
         // If no async scene is running, then just load an async scene
         if (SceneLoadedCount == 1)
@@ -233,7 +188,6 @@ public class SampleSwitcher : MonoBehaviour
 
         SceneButtonOnClick();
     }
-
     public void PipelineButtonOnClick()
     {
         StartCoroutine(PipelineChanged());
@@ -249,26 +203,64 @@ public class SampleSwitcher : MonoBehaviour
         anim.Play("NotificationAnim");
     }
 
-    // Set all buttons interactable
-    public void SetAllButtonsInteractable()
+    // Keep scene buttons pressed after selection
+    public void OnSceneButtonClicked(Button clickedBtn)
     {
-        foreach (Button btn in buttons)
-        {
-            btn.interactable = true;
-        }
-    }
-
-    // Keep buttons pressed after selection
-    public void OnButtonClicked(Button clickedBtn)
-    {
-        int btnIndex = System.Array.IndexOf(buttons, clickedBtn);
+        int btnIndex = System.Array.IndexOf(sceneButtons, clickedBtn);
 
         if (btnIndex == -1)
             return;
 
-        SetAllButtonsInteractable();
+        foreach (Button btn in sceneButtons)
+        {
+            btn.interactable = true;
+        }
 
         clickedBtn.interactable = false;
+    }
+
+    // Keep pipeline buttons pressed after selection
+    public void OnPipelineButtonClicked(Button clickedBtn)
+    {
+        int btnIndex = System.Array.IndexOf(pipelineButtons, clickedBtn);
+
+        if (btnIndex == -1)
+            return;
+
+        foreach (Button btn in pipelineButtons)
+        {
+            btn.interactable = true;
+        }
+
+        clickedBtn.interactable = false;
+    }
+
+    public void SetHDRPColor()
+    {
+        var colors = pipelineButtons[0].colors;
+        colors.normalColor = pipelineButtons[0].colors.selectedColor;
+        pipelineButtons[0].colors = colors;
+    }
+
+    public void SetURPColor()
+    {
+        var colors = pipelineButtons[1].colors;
+        colors.normalColor = pipelineButtons[1].colors.selectedColor;
+        pipelineButtons[1].colors = colors;
+    }
+
+    public void UnloadHDRPColor()
+    {
+        var colors = pipelineButtons[0].colors;
+        colors.normalColor = new Color(0.498f, 0.459f, 0.588f, 1.0f);
+        pipelineButtons[0].colors = colors;
+    }
+
+    public void UnloadURPColor()
+    {
+        var colors = pipelineButtons[1].colors;
+        colors.normalColor = new Color(0.498f, 0.459f, 0.588f, 1.0f);
+        pipelineButtons[1].colors = colors;
     }
 
     //Exits the Sample Viewer App
