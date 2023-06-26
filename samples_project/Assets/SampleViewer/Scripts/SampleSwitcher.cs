@@ -180,6 +180,7 @@ public class SampleSwitcher : MonoBehaviour
 
         SceneButtonOnClick();
     }
+
     public void PipelineButtonOnClick()
     {
         StartCoroutine(PipelineChanged());
