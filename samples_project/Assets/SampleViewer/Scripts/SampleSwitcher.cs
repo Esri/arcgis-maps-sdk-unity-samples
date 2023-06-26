@@ -25,7 +25,6 @@ public class SampleSwitcher : MonoBehaviour
     Animator anim;
 
     [SerializeField] private Camera cam;
-
     [SerializeField] private Button[] sceneButtons;
     [SerializeField] private Button[] pipelineButtons;
 
@@ -71,12 +70,7 @@ public class SampleSwitcher : MonoBehaviour
             mapComponent.APIKey = APIKey;
         }
 
-        Debug.Log("The current API Key is: " + APIKey);
-
         SceneLoadedCount = SceneManager.sceneCount;
-
-        Debug.Log("We have" + SceneLoadedCount + "scenes running in the background");
-
     }
 
     // Read string from the input field for the API key
@@ -107,7 +101,6 @@ public class SampleSwitcher : MonoBehaviour
     {
         SceneName = SceneText;
 
-        Debug.Log("Scene now is:" + SceneName);
         //The scene must also be added to the build settings list of scenes
         SceneManager.LoadSceneAsync(SceneName, new LoadSceneParameters(LoadSceneMode.Additive));
     }
@@ -170,7 +163,6 @@ public class SampleSwitcher : MonoBehaviour
         PipelineType = pipelineType;
         RenderPipelineAsset pipeline = Resources.Load<RenderPipelineAsset>("SampleGraphicSettings/Sample" + PipelineType + "ipeline");
         GraphicsSettings.renderPipelineAsset = pipeline;
-        Debug.Log("Pipeline is set to:" + pipeline);
     }
 
     private IEnumerator PipelineChanged()
@@ -235,32 +227,40 @@ public class SampleSwitcher : MonoBehaviour
         clickedBtn.interactable = false;
     }
 
+    // Set HDRP button color
     public void SetHDRPColor()
     {
         var colors = pipelineButtons[0].colors;
         colors.normalColor = pipelineButtons[0].colors.selectedColor;
         pipelineButtons[0].colors = colors;
+        pipelineButtons[0].interactable = false;
     }
 
+    // Set URP button color
     public void SetURPColor()
     {
         var colors = pipelineButtons[1].colors;
         colors.normalColor = pipelineButtons[1].colors.selectedColor;
         pipelineButtons[1].colors = colors;
+        pipelineButtons[1].interactable = false;
     }
 
+    // Unload HDRP button color
     public void UnloadHDRPColor()
     {
         var colors = pipelineButtons[0].colors;
         colors.normalColor = new Color(0.498f, 0.459f, 0.588f, 1.0f);
         pipelineButtons[0].colors = colors;
+        pipelineButtons[0].interactable = true;
     }
 
+    // Unload URP button color
     public void UnloadURPColor()
     {
         var colors = pipelineButtons[1].colors;
         colors.normalColor = new Color(0.498f, 0.459f, 0.588f, 1.0f);
         pipelineButtons[1].colors = colors;
+        pipelineButtons[1].interactable = true;
     }
 
     //Exits the Sample Viewer App
