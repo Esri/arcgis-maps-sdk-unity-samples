@@ -228,7 +228,7 @@ public class SampleSwitcher : MonoBehaviour
             btn.interactable = true;
         }
 
-        clickedBtn.interactable = false;
+        clickedButton.interactable = false;
     }
 
     // Set HDRP button color
