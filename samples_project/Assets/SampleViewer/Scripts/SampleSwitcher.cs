@@ -276,5 +276,4 @@ public class SampleSwitcher : MonoBehaviour
         Application.Quit();
 #endif
     }
-
 }
