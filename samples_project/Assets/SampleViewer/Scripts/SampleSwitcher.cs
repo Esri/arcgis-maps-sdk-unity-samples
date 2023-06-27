@@ -202,6 +202,9 @@ public class SampleSwitcher : MonoBehaviour
         int btnIndex = System.Array.IndexOf(sceneButtons, clickedBtn);
 
         if (btnIndex == -1)
+        {
+            return;
+        }
             return;
 
         foreach (Button btn in sceneButtons)
