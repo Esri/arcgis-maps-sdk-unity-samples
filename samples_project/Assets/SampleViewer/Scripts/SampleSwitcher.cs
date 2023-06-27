@@ -22,7 +22,7 @@ public class SampleSwitcher : MonoBehaviour
     private string PipelineType;
     private string SceneName;
     private int SceneLoadedCount;
-    Animator anim;
+    private Animator anim;
 
     [SerializeField] private Camera cam;
     [SerializeField] private Button[] sceneButtons;
