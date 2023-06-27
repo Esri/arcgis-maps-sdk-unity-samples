@@ -15,7 +15,7 @@ using UnityEngine.UI;
 public class SampleSwitcher : MonoBehaviour
 {
     public GameObject MenuVideo; 
-    string APIKey;
+    private string APIKey;
     public Button ExitButton;
     private string PipelineModeText;
     private string SceneText;
