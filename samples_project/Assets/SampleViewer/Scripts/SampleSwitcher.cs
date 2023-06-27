@@ -22,7 +22,7 @@ public class SampleSwitcher : MonoBehaviour
     private string PipelineType;
     private string SceneName;
     private int SceneLoadedCount;
-    private Animator anim;
+    private Animator animator;
 
     [SerializeField] private Camera cam;
     [SerializeField] private Button[] sceneButtons;
@@ -30,7 +30,7 @@ public class SampleSwitcher : MonoBehaviour
 
     private void Start()
     {
-        anim = GameObject.Find("NotificationMenu").GetComponent<Animator>();
+        animator = GameObject.Find("NotificationMenu").GetComponent<Animator>();
 
         cam.enabled = true;
 
@@ -43,10 +43,10 @@ public class SampleSwitcher : MonoBehaviour
 
 #if (UNITY_ANDROID || UNITY_IOS || UNITY_WSA)
         SetPipeline("URP");
-        SetURPColor();
+        SetPipelineColor(1, pipelineButtons[1].colors.selectedColor, false);
 #else 
         SetPipeline("HDRP");
-        SetHDRPColor();
+        SetPipelineColor(0, pipelineButtons[0].colors.selectedColor, false);
 #endif
 
     }
@@ -112,7 +112,7 @@ public class SampleSwitcher : MonoBehaviour
 
         cam.enabled = false;
 
-        anim.Play("NotificationAnim_Close");
+        animator.Play("NotificationAnim_Close");
 
         // If no async scene is running, then just load an async scene
         if (SceneLoadedCount == 1)
@@ -193,35 +193,36 @@ public class SampleSwitcher : MonoBehaviour
         yield return new WaitForSeconds(2);
 
         //Play notification menu animation.
-        anim.Play("NotificationAnim");
+        animator.Play("NotificationAnim");
     }
 
     // Keep scene buttons pressed after selection
-    public void OnSceneButtonClicked(Button clickedBtn)
+    public void OnSceneButtonClicked(Button clickedButton)
     {
-        int btnIndex = System.Array.IndexOf(sceneButtons, clickedBtn);
+        int btnIndex = System.Array.IndexOf(sceneButtons, clickedButton);
 
         if (btnIndex == -1)
         {
             return;
         }
-            return;
 
         foreach (Button btn in sceneButtons)
         {
             btn.interactable = true;
         }
 
-        clickedBtn.interactable = false;
+        clickedButton.interactable = false;
     }
 
     // Keep pipeline buttons pressed after selection
-    public void OnPipelineButtonClicked(Button clickedBtn)
+    public void OnPipelineButtonClicked(Button clickedButton)
     {
-        int btnIndex = System.Array.IndexOf(pipelineButtons, clickedBtn);
+        int btnIndex = System.Array.IndexOf(pipelineButtons, clickedButton);
 
         if (btnIndex == -1)
+        {
             return;
+        }
 
         foreach (Button btn in pipelineButtons)
         {
@@ -231,22 +232,13 @@ public class SampleSwitcher : MonoBehaviour
         clickedButton.interactable = false;
     }
 
-    // Set HDRP button color
-    public void SetHDRPColor()
+    // Set HDRP/URP button color
+    public void SetPipelineColor(int index, Color color, bool active)
     {
-        var colors = pipelineButtons[0].colors;
-        colors.normalColor = pipelineButtons[0].colors.selectedColor;
-        pipelineButtons[0].colors = colors;
-        pipelineButtons[0].interactable = false;
-    }
-
-    // Set URP button color
-    public void SetURPColor()
-    {
-        var colors = pipelineButtons[1].colors;
-        colors.normalColor = pipelineButtons[1].colors.selectedColor;
-        pipelineButtons[1].colors = colors;
-        pipelineButtons[1].interactable = false;
+        var colors = pipelineButtons[index].colors;
+        colors.normalColor = color;
+        pipelineButtons[index].colors = colors;
+        pipelineButtons[index].interactable = active;
     }
 
     // Unload HDRP button color
