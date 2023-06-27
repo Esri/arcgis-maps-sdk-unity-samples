@@ -187,7 +187,7 @@ public class SampleSwitcher : MonoBehaviour
     }
 
     // Delay pop-up notification
-    IEnumerator SlideNotification()
+    private IEnumerator SlideNotification()
     {
         //Wait for 2 secs.
         yield return new WaitForSeconds(2);
