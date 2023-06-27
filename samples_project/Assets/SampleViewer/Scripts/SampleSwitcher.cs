@@ -121,7 +121,7 @@ public class SampleSwitcher : MonoBehaviour
         }
 
         // If there is an async scene running, unload the current scene and load a new async scene
-        if (SceneLoadedCount == 2)
+        else if (SceneLoadedCount == 2)
         {
             // Change scene
             var DoneUnLoadingOperation = SceneManager.UnloadSceneAsync(SceneName);
