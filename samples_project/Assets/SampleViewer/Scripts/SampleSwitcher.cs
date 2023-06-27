@@ -241,22 +241,26 @@ public class SampleSwitcher : MonoBehaviour
         pipelineButtons[index].interactable = active;
     }
 
+    // Unload HDRP/URP button color
+    public void UnloadPipelineColor(int index, Color color, bool active)
+    {
+        var colors = pipelineButtons[index].colors;
+        colors.normalColor = new Color(0.498f, 0.459f, 0.588f, 1.0f);
+        pipelineButtons[index].colors = colors;
+        pipelineButtons[index].interactable = active;
+
+    }
+
     // Unload HDRP button color
     public void UnloadHDRPColor()
     {
-        var colors = pipelineButtons[0].colors;
-        colors.normalColor = new Color(0.498f, 0.459f, 0.588f, 1.0f);
-        pipelineButtons[0].colors = colors;
-        pipelineButtons[0].interactable = true;
+        UnloadPipelineColor(0, pipelineButtons[0].colors.normalColor, true);
     }
 
     // Unload URP button color
     public void UnloadURPColor()
     {
-        var colors = pipelineButtons[1].colors;
-        colors.normalColor = new Color(0.498f, 0.459f, 0.588f, 1.0f);
-        pipelineButtons[1].colors = colors;
-        pipelineButtons[1].interactable = true;
+        UnloadPipelineColor(1, pipelineButtons[1].colors.normalColor, true);
     }
 
     //Exits the Sample Viewer App
