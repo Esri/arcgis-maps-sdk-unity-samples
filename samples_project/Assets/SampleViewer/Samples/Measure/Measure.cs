@@ -80,6 +80,7 @@ public class Measure : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
+                hit.point = hit.point + new Vector3(0, 200, 0);
                 var lineMarker = Instantiate(LineMarker, hit.point, Quaternion.identity, arcGISMapComponent.transform);
 
                 var thisPoint = HitToGeoPosition(hit);
@@ -124,6 +125,7 @@ public class Measure : MonoBehaviour
         double d = ArcGISGeometryEngine.DistanceGeodetic(startPoint, endPoint, new ArcGISLinearUnit((ArcGISLinearUnitId)9001), new ArcGISAngularUnit(unitDegree), ArcGISGeodeticCurveType.Geodesic).Distance;
         float n = Mathf.Floor((float)d / InterpolationInterval);
         double dx = (end.transform.position.x - start.transform.position.x) / n;
+        double dy = (end.transform.position.y - start.transform.position.y) / n;
         double dz = (end.transform.position.z - start.transform.position.z) / n;
 
         var pre = start.transform.position;
@@ -135,15 +137,18 @@ public class Measure : MonoBehaviour
 
             //calculate transform of next point
             float nextX = pre.x + (float)dx;
+            float nextY = pre.y + (float)dy;
             float nextZ = pre.z + (float)dz;
-            next.transform.position = new Vector3(nextX, 0, nextZ);
+            next.transform.position = new Vector3(nextX, nextY, nextZ);
 
             //set default location component of next point
             next.GetComponent<ArcGISLocationComponent>().enabled = true;
             next.GetComponent<ArcGISLocationComponent>().Rotation = new ArcGISRotation(0, 90, 0);
 
-            //define height
-            SetElevation(next);
+            // Obsolete: would raycast elevation to always be on groud level, now just match to the line.
+            //SetElevation(next);
+            var location = next.GetComponent<ArcGISLocationComponent>();
+            location.Position = arcGISMapComponent.EngineToGeographic(next.transform.position);
 
             featurePoints.Add(next);
 

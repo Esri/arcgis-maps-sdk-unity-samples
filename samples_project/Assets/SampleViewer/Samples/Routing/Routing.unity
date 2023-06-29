@@ -24,7 +24,7 @@ RenderSettings:
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 4
+  m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: 0.5
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 261.85736, g: 324.42407, b: 429.44516, a: 1}
+  m_IndirectSpecularColor: {r: 262.3369, g: 325.0498, b: 430.21924, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -356,6 +356,7 @@ MonoBehaviour:
   horizontalFov: 88.76051
   viewportSizeX: 878
   viewportSizeY: 518
+  qualityScalingFactor: 1
 --- !u!114 &150318286
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1459,7 +1460,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64add1a079a847246adc117d82318f17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RouteMarker: {fileID: 5022259574890728151, guid: 4a39d5da76a48014d93cc6059717dc44, type: 3}
+  RouteMarker: {fileID: 5022259574890728151, guid: 0f3ddd0d9a86c424da5963f6b3d943c8, type: 3}
   RouteBreadcrumb: {fileID: 8817086168170497351, guid: dfabd5a1a53ff0943b4a3b35964b1920, type: 3}
   Route: {fileID: 820472294}
   RouteInfo: {fileID: 1179877446}
@@ -1653,9 +1654,16 @@ MonoBehaviour:
   basemapAuthentication:
     ConfigurationIndex: -1
   elevation: https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer
-  enableExtent: 0
   elevationAuthentication:
     ConfigurationIndex: -1
+  elevationSources:
+  - Name: 
+    Type: 0
+    Source: https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer
+    IsEnabled: 1
+    Authentication:
+      ConfigurationIndex: -1
+  enableExtent: 0
   extent:
     GeographicCenter:
       x: 0
@@ -1681,6 +1689,7 @@ MonoBehaviour:
   RootChanged:
     m_PersistentCalls:
       m_Calls: []
+  version: 1
 --- !u!114 &1808036066
 MonoBehaviour:
   m_ObjectHideFlags: 0
