@@ -73,7 +73,6 @@ public class SampleSwitcher : MonoBehaviour
         SceneLoadedCount = SceneManager.sceneCount;
     }
 
-    // Read string from the input field for the API key
     public void ReadStringInput(string s)
     {
         APIKey = s;
