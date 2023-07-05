@@ -118,8 +118,6 @@ public class SampleSwitcher : MonoBehaviour
         {
             AddScene();
         }
-
-        // If there is an async scene running, unload the current scene and load a new async scene
         else if (SceneLoadedCount == 2)
         {
             // Change scene
