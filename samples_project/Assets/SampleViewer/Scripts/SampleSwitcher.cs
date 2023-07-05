@@ -91,7 +91,7 @@ public class SampleSwitcher : MonoBehaviour
         PipelineModeText = text;
     }
 
-    public void SetSceneText(string text)
+    public void SetNextSceneName(string text)
     {
         SceneText = text;
     }
