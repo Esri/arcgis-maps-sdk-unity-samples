@@ -105,8 +105,8 @@ public class SampleSwitcher : MonoBehaviour
     }
 
     // Switch scenes with button click
-    public void SceneButtonOnClick() {
-        
+    public void SceneButtonOnClick()
+    {   
         StopVideo();
 
         cam.enabled = false;
