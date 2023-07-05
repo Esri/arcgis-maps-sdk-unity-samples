@@ -123,7 +123,7 @@ public class SampleSwitcher : MonoBehaviour
         else if (SceneLoadedCount == 2)
         {
             // Change scene
-            var DoneUnLoadingOperation = SceneManager.UnloadSceneAsync(SceneName);
+            var DoneUnloadingOperation = SceneManager.UnloadSceneAsync(SceneName);
             DoneUnLoadingOperation.completed += (AsyncOperation Operation) =>
             {
                 RemoveArcGISMapView();
