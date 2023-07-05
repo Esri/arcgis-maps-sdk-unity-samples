@@ -73,7 +73,7 @@ public class SampleSwitcher : MonoBehaviour
         SceneLoadedCount = SceneManager.sceneCount;
     }
 
-    public void ReadStringInput(string s)
+    public void ReadStringInput(string apiKey)
     {
         APIKey = s;
     }
