@@ -149,7 +149,6 @@ public class SampleSwitcher : MonoBehaviour
         }
     }
 
-    // Stop the menu background video from player as soon as other scene is loaded
     private void StopVideo()
     {
         MenuVideo.GetComponent<UnityEngine.Video.VideoPlayer>().Stop();
