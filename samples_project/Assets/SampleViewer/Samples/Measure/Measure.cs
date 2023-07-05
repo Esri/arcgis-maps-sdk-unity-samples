@@ -61,7 +61,7 @@ public class Measure : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
-                hit.point = hit.point + new Vector3(0, 200, 0);
+                hit.point += new Vector3(0, 200, 0);
                 var lineMarker = Instantiate(LineMarker, hit.point, Quaternion.identity, arcGISMapComponent.transform);
                 var thisPoint = arcGISMapComponent.EngineToGeographic(hit.point);
 
