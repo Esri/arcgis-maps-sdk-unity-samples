@@ -14,19 +14,18 @@ using UnityEngine.UI;
 
 public class SampleSwitcher : MonoBehaviour
 {
-    public GameObject MenuVideo; 
-    private string APIKey;
+    public GameObject MenuVideo;
     public Button ExitButton;
-    private string PipelineModeText;
-    private string SceneText;
+    public Camera cam;
+    public Button[] sceneButtons;
+    public Button[] pipelineButtons;
+    private string APIKey;
+    private string pipelineModeText;
+    private string nextSceneName;
     private string PipelineType;
-    private string SceneName;
-    private int SceneLoadedCount;
+    private string currentSceneName;
+    private int sceneLoadedCount;
     private Animator animator;
-
-    [SerializeField] private Camera cam;
-    [SerializeField] private Button[] sceneButtons;
-    [SerializeField] private Button[] pipelineButtons;
 
     private void Start()
     {
@@ -48,7 +47,6 @@ public class SampleSwitcher : MonoBehaviour
         SetPipeline("HDRP");
         SetPipelineColor(0, pipelineButtons[0].colors.selectedColor, false);
 #endif
-
     }
 
     private void Update()
@@ -69,13 +67,7 @@ public class SampleSwitcher : MonoBehaviour
         {
             mapComponent.APIKey = APIKey;
         }
-
-        SceneLoadedCount = SceneManager.sceneCount;
-    }
-
-    public void ReadStringInput(string apiKey)
-    {
-        APIKey = s;
+        sceneLoadedCount = SceneManager.sceneCount;
     }
 
     private void OnEnable()
@@ -86,49 +78,12 @@ public class SampleSwitcher : MonoBehaviour
         }
     }
 
-    public void SetPipelineText(string text)
-    {
-        PipelineModeText = text;
-    }
-
-    public void SetNextSceneName(string text)
-    {
-        SceneText = text;
-    }
-
     private void AddScene()
     {
-        SceneName = SceneText;
+        currentSceneName = nextSceneName;
 
         //The scene must also be added to the build settings list of scenes
-        SceneManager.LoadSceneAsync(SceneName, new LoadSceneParameters(LoadSceneMode.Additive));
-    }
-
-    // Switch scenes with button click
-    public void SceneButtonOnClick()
-    {   
-        StopVideo();
-
-        cam.enabled = false;
-
-        animator.Play("NotificationAnim_Close");
-
-        // If no async scene is running, then just load an async scene
-        if (SceneLoadedCount == 1)
-        {
-            AddScene();
-        }
-        else if (SceneLoadedCount == 2)
-        {
-            // Change scene
-            var DoneUnloadingOperation = SceneManager.UnloadSceneAsync(SceneName);
-            DoneUnLoadingOperation.completed += (AsyncOperation Operation) =>
-            {
-                RemoveArcGISMapView();
-
-                AddScene();
-            };
-        }
+        SceneManager.LoadSceneAsync(currentSceneName, new LoadSceneParameters(LoadSceneMode.Additive));
     }
 
     //The ArcGISMapView object gets instantiated in our scenes and that results in the object living in the SampleViewer scene,
@@ -172,14 +127,9 @@ public class SampleSwitcher : MonoBehaviour
         yield return null;
 
         // Set the Pipeline based on what Pipeline button is clicked
-        SetPipeline(PipelineModeText);
+        SetPipeline(pipelineModeText);
 
         SceneButtonOnClick();
-    }
-
-    public void PipelineButtonOnClick()
-    {
-        StartCoroutine(PipelineChanged());
     }
 
     // Delay pop-up notification
@@ -190,6 +140,63 @@ public class SampleSwitcher : MonoBehaviour
 
         //Play notification menu animation.
         animator.Play("NotificationAnim");
+    }
+
+    //Exits the Sample Viewer App
+    private void doExitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
+
+    public void ReadStringInput(string apiKey)
+    {
+        APIKey = apiKey;
+    }
+
+    public void SetPipelineText(string text)
+    {
+        pipelineModeText = text;
+    }
+
+    public void SetNextSceneName(string text)
+    {
+        nextSceneName = text;
+    }
+
+    // Switch scenes with button click
+    public void SceneButtonOnClick()
+    {   
+        StopVideo();
+
+        cam.enabled = false;
+
+        animator.Play("NotificationAnim_Close");
+
+        // If no async scene is running, then just load an async scene
+        if (sceneLoadedCount == 1)
+        {
+            AddScene();
+        }
+        else if (sceneLoadedCount == 2)
+        {
+            // Change scene
+            var DoneUnloadingOperation = SceneManager.UnloadSceneAsync(currentSceneName);
+            DoneUnloadingOperation.completed += (AsyncOperation Operation) =>
+            {
+                RemoveArcGISMapView();
+
+                AddScene();
+            };
+        }
+    }
+
+    public void PipelineButtonOnClick()
+    {
+        StartCoroutine(PipelineChanged());
     }
 
     // Keep scene buttons pressed after selection
@@ -244,7 +251,6 @@ public class SampleSwitcher : MonoBehaviour
         colors.normalColor = new Color(0.498f, 0.459f, 0.588f, 1.0f);
         pipelineButtons[index].colors = colors;
         pipelineButtons[index].interactable = active;
-
     }
 
     // Unload HDRP button color
@@ -257,15 +263,5 @@ public class SampleSwitcher : MonoBehaviour
     public void UnloadURPColor()
     {
         UnloadPipelineColor(1, pipelineButtons[1].colors.normalColor, true);
-    }
-
-    //Exits the Sample Viewer App
-    private void doExitGame()
-    {
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-        Application.Quit();
-#endif
     }
 }
