@@ -26,6 +26,7 @@ public class Measure : MonoBehaviour
     public float InterpolationInterval = 100;
     public Dropdown UnitDropdown;
     public Button ClearButton;
+    [SerializeField] float MarkerHeight = 200f;
 
     private ArcGISMapComponent arcGISMapComponent;
     private List<GameObject> featurePoints = new List<GameObject>();
@@ -61,7 +62,7 @@ public class Measure : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
-                hit.point += new Vector3(0, 200, 0);
+                hit.point += new Vector3(0, MarkerHeight, 0);
                 var lineMarker = Instantiate(LineMarker, hit.point, Quaternion.identity, arcGISMapComponent.transform);
                 var thisPoint = arcGISMapComponent.EngineToGeographic(hit.point);
 
@@ -105,30 +106,28 @@ public class Measure : MonoBehaviour
         double dy = (end.transform.position.y - start.transform.position.y) / n;
         double dz = (end.transform.position.z - start.transform.position.z) / n;
 
-        var pre = start.transform.position;
+        var PreviousInterpolation = start.transform.position;
 
         // Calculate n-1 intepolation points/n-1 segments because the last segment is already created by the end point.
         for (int i = 0; i < n - 1; i++)
         {
-            GameObject next = Instantiate(InterpolationMarker, arcGISMapComponent.transform);
+            GameObject NextInterpolation = Instantiate(InterpolationMarker, arcGISMapComponent.transform);
 
-            // Calculate transform of next point.
-            float nextX = pre.x + (float)dx;
-            float nextY = pre.y + (float)dy;
-            float nextZ = pre.z + (float)dz;
-            next.transform.position = new Vector3(nextX, nextY, nextZ);
+            // Calculate transform of NextInterpolation point.
+            float NextInterpolationX = PreviousInterpolation.x + (float)dx;
+            float NextInterpolationY = PreviousInterpolation.y + (float)dy;
+            float NextInterpolationZ = PreviousInterpolation.z + (float)dz;
+            NextInterpolation.transform.position = new Vector3(NextInterpolationX, NextInterpolationY, NextInterpolationZ);
 
-            // Set default location component of next point.
-            next.GetComponent<ArcGISLocationComponent>().enabled = true;
-            next.GetComponent<ArcGISLocationComponent>().Rotation = new ArcGISRotation(0, 90, 0);
+            // Set default location component of NextInterpolation point.
+            NextInterpolation.GetComponent<ArcGISLocationComponent>().enabled = true;
+            NextInterpolation.GetComponent<ArcGISLocationComponent>().Rotation = new ArcGISRotation(0, 90, 0);
 
-            // Obsolete: would raycast elevation to always be on groud level, now just match to the line.
-            //SetElevation(next);
-            var location = next.GetComponent<ArcGISLocationComponent>();
-            location.Position = arcGISMapComponent.EngineToGeographic(next.transform.position);
+            var location = NextInterpolation.GetComponent<ArcGISLocationComponent>();
+            location.Position = arcGISMapComponent.EngineToGeographic(NextInterpolation.transform.position);
 
-            featurePoints.Add(next);
-            pre = next.transform.position;
+            featurePoints.Add(NextInterpolation);
+            PreviousInterpolation = NextInterpolation.transform.position;
         }
     }
 
