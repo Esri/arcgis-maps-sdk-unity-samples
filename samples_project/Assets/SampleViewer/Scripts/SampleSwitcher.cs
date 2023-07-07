@@ -7,8 +7,6 @@
 using Esri.ArcGISMapsSDK.Components;
 using Esri.HPFramework;
 using System.Collections;
-using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
@@ -16,15 +14,40 @@ using UnityEngine.UI;
 
 public class SampleSwitcher : MonoBehaviour
 {
-    public string APIKey = "";
-    public Dropdown PipelineTypeDropdown;
-    public Dropdown SceneDropdown;
+    public GameObject MenuVideo;
     public Button ExitButton;
-    public List<string> SceneList = new List<string>();
-    public List<string> PipelineList = new List<string>();
+    public Camera cam;
+    public Button[] sceneButtons;
+    public Button[] pipelineButtons;
+    private string APIKey;
+    private string pipelineModeText;
+    private string nextSceneName;
     private string PipelineType;
-    private string SceneName;
-    private bool EnablePipelineSwitching = true;
+    private string currentSceneName;
+    private int sceneLoadedCount;
+    private Animator animator;
+
+    private void Start()
+    {
+        animator = GameObject.Find("NotificationMenu").GetComponent<Animator>();
+
+        cam.enabled = true;
+
+        StartCoroutine(SlideNotification());
+
+        ExitButton.onClick.AddListener(delegate
+        {
+            doExitGame();
+        });
+
+#if (UNITY_ANDROID || UNITY_IOS || UNITY_WSA)
+        SetPipeline("URP");
+        SetPipelineColor(1, pipelineButtons[1].colors.selectedColor, false);
+#else 
+        SetPipeline("HDRP");
+        SetPipelineColor(0, pipelineButtons[0].colors.selectedColor, false);
+#endif
+    }
 
     private void Update()
     {
@@ -44,63 +67,7 @@ public class SampleSwitcher : MonoBehaviour
         {
             mapComponent.APIKey = APIKey;
         }
-    }
-
-    private void Start()
-    {
-        ExitButton.onClick.AddListener(delegate
-        {
-            doExitGame();
-        });
-        SceneDropdown.onValueChanged.AddListener(delegate
-        {
-            SceneChanged();
-        });
-
-        PipelineTypeDropdown.onValueChanged.AddListener(delegate
-        {
-            StartCoroutine(PipelineChanged());
-        });
-
-	//Populates Pipeline Dropdown
-#if USE_HDRP_PACKAGE
-            PipelineList.Add("HDRP");
-#endif
-
-#if USE_URP_PACKAGE
-            PipelineList.Add("URP");
-#endif
-
-        PipelineTypeDropdown.options.Clear();
-        PipelineTypeDropdown.AddOptions(PipelineList);
-
-        if (PipelineTypeDropdown.options.Count == 0)
-        {
-            Debug.LogError("Either HDRP or URP is required for the ArcGIS Maps SDK to work");
-            return;
-        }
-        else if (PipelineTypeDropdown.options.Count == 1)
-        {
-            SetPipeline(PipelineTypeDropdown.options[PipelineTypeDropdown.value].text);
-            PipelineTypeDropdown.gameObject.SetActive(false);
-        }
-        else
-        {
-
-#if !(UNITY_ANDROID || UNITY_IOS || UNITY_WSA)
-            SetPipeline(PipelineTypeDropdown.options[PipelineTypeDropdown.value].text);
-#else
-            PipelineTypeDropdown.gameObject.SetActive(false);
-            SetPipeline("URP");
-#endif
-        }
-
-        if (!EnablePipelineSwitching)
-        {
-            PipelineTypeDropdown.gameObject.SetActive(false);
-        }
-
-        PopulateSampleSceneList();
+        sceneLoadedCount = SceneManager.sceneCount;
     }
 
     private void OnEnable()
@@ -111,28 +78,12 @@ public class SampleSwitcher : MonoBehaviour
         }
     }
 
-    private void PopulateSampleSceneList()
-    {
-        SceneDropdown.options.Clear();
-
-#if !(USE_OPENXR_PACKAGE)
-        if (SceneList.Contains("VR-Sample")){ 
-             SceneList.Remove("VR-Sample");
-        }
-#else
-        if (!SceneList.Contains("VR-Sample")){ 
-             SceneList.Add("VR-Sample");
-        }
-#endif
-        SceneDropdown.AddOptions(SceneList);
-        AddScene();
-    }
-
     private void AddScene()
     {
-        SceneName = SceneDropdown.options[SceneDropdown.value].text;
+        currentSceneName = nextSceneName;
+
         //The scene must also be added to the build settings list of scenes
-        SceneManager.LoadSceneAsync(SceneName, new LoadSceneParameters(LoadSceneMode.Additive));   
+        SceneManager.LoadSceneAsync(currentSceneName, new LoadSceneParameters(LoadSceneMode.Additive));
     }
 
     //The ArcGISMapView object gets instantiated in our scenes and that results in the object living in the SampleViewer scene,
@@ -151,14 +102,10 @@ public class SampleSwitcher : MonoBehaviour
         }
     }
 
-    private void SceneChanged()
+    private void StopVideo()
     {
-        var DoneUnLoadingOperation = SceneManager.UnloadSceneAsync(SceneName);
-        DoneUnLoadingOperation.completed += (AsyncOperation Operation) =>
-        {
-            RemoveArcGISMapView();
-            AddScene();
-        };
+        MenuVideo.GetComponent<UnityEngine.Video.VideoPlayer>().Stop();
+        MenuVideo.gameObject.SetActive(false);
     }
 
     // pipelineType must be HDRP or URP
@@ -179,10 +126,22 @@ public class SampleSwitcher : MonoBehaviour
 
         yield return null;
 
-        SetPipeline(PipelineTypeDropdown.options[PipelineTypeDropdown.value].text);
+        // Set the Pipeline based on what Pipeline button is clicked
+        SetPipeline(pipelineModeText);
 
-        SceneChanged();
+        SceneButtonOnClick();
     }
+
+    // Delay pop-up notification
+    private IEnumerator SlideNotification()
+    {
+        //Wait for 2 secs.
+        yield return new WaitForSeconds(2);
+
+        //Play notification menu animation.
+        animator.Play("NotificationAnim");
+    }
+
     //Exits the Sample Viewer App
     private void doExitGame()
     {
@@ -191,5 +150,118 @@ public class SampleSwitcher : MonoBehaviour
 #else
         Application.Quit();
 #endif
+    }
+
+    public void ReadStringInput(string apiKey)
+    {
+        APIKey = apiKey;
+    }
+
+    public void SetPipelineText(string text)
+    {
+        pipelineModeText = text;
+    }
+
+    public void SetNextSceneName(string text)
+    {
+        nextSceneName = text;
+    }
+
+    // Switch scenes with button click
+    public void SceneButtonOnClick()
+    {   
+        StopVideo();
+
+        cam.enabled = false;
+
+        animator.Play("NotificationAnim_Close");
+
+        // If no async scene is running, then just load an async scene
+        if (sceneLoadedCount == 1)
+        {
+            AddScene();
+        }
+        else if (sceneLoadedCount == 2)
+        {
+            // Change scene
+            var DoneUnloadingOperation = SceneManager.UnloadSceneAsync(currentSceneName);
+            DoneUnloadingOperation.completed += (AsyncOperation Operation) =>
+            {
+                RemoveArcGISMapView();
+
+                AddScene();
+            };
+        }
+    }
+
+    public void PipelineButtonOnClick()
+    {
+        StartCoroutine(PipelineChanged());
+    }
+
+    // Keep scene buttons pressed after selection
+    public void OnSceneButtonClicked(Button clickedButton)
+    {
+        int btnIndex = System.Array.IndexOf(sceneButtons, clickedButton);
+
+        if (btnIndex == -1)
+        {
+            return;
+        }
+
+        foreach (Button btn in sceneButtons)
+        {
+            btn.interactable = true;
+        }
+
+        clickedButton.interactable = false;
+    }
+
+    // Keep pipeline buttons pressed after selection
+    public void OnPipelineButtonClicked(Button clickedButton)
+    {
+        int btnIndex = System.Array.IndexOf(pipelineButtons, clickedButton);
+
+        if (btnIndex == -1)
+        {
+            return;
+        }
+
+        foreach (Button btn in pipelineButtons)
+        {
+            btn.interactable = true;
+        }
+
+        clickedButton.interactable = false;
+    }
+
+    // Set HDRP/URP button color
+    public void SetPipelineColor(int index, Color color, bool active)
+    {
+        var colors = pipelineButtons[index].colors;
+        colors.normalColor = color;
+        pipelineButtons[index].colors = colors;
+        pipelineButtons[index].interactable = active;
+    }
+
+    // Unload HDRP/URP button color
+    public void UnloadPipelineColor(int index, Color color, bool active)
+    {
+        var colors = pipelineButtons[index].colors;
+        colors.normalColor = new Color(0.498f, 0.459f, 0.588f, 1.0f);
+        pipelineButtons[index].colors = colors;
+        pipelineButtons[index].interactable = active;
+    }
+
+    // Unload HDRP button color
+    public void UnloadHDRPColor()
+    {
+        UnloadPipelineColor(0, pipelineButtons[0].colors.normalColor, true);
+    }
+
+    // Unload URP button color
+    public void UnloadURPColor()
+    {
+        UnloadPipelineColor(1, pipelineButtons[1].colors.normalColor, true);
     }
 }
