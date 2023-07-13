@@ -97,37 +97,35 @@ public class Measure : MonoBehaviour
 
     private void Interpolate(GameObject start, GameObject end, List<GameObject> featurePoints)
     {
-        var startPoint = start.GetComponent<ArcGISLocationComponent>().Position;
-        var endPoint = end.GetComponent<ArcGISLocationComponent>().Position;
 
-        double d = ArcGISGeometryEngine.DistanceGeodetic(startPoint, endPoint, currentUnit, new ArcGISAngularUnit(ArcGISAngularUnitId.Degrees), ArcGISGeodeticCurveType.Geodesic).Distance;
-        float n = Mathf.Floor((float)d / InterpolationInterval);
+        float lengthOfLine = Vector3.Distance(start.transform.position, end.transform.position);
+        float n = Mathf.Floor(lengthOfLine / InterpolationInterval) ;
         double dx = (end.transform.position.x - start.transform.position.x) / n;
         double dy = (end.transform.position.y - start.transform.position.y) / n;
         double dz = (end.transform.position.z - start.transform.position.z) / n;
 
-        var PreviousInterpolation = start.transform.position;
+        var previousInterpolation = start.transform.position;
 
         // Calculate n-1 intepolation points/n-1 segments because the last segment is already created by the end point.
         for (int i = 0; i < n - 1; i++)
         {
-            GameObject NextInterpolation = Instantiate(InterpolationMarker, arcGISMapComponent.transform);
+            GameObject nextInterpolation = Instantiate(InterpolationMarker, arcGISMapComponent.transform);
 
-            // Calculate transform of NextInterpolation point.
-            float NextInterpolationX = PreviousInterpolation.x + (float)dx;
-            float NextInterpolationY = PreviousInterpolation.y + (float)dy;
-            float NextInterpolationZ = PreviousInterpolation.z + (float)dz;
-            NextInterpolation.transform.position = new Vector3(NextInterpolationX, NextInterpolationY, NextInterpolationZ);
+            // Calculate transform of nextInterpolation point.
+            float nextInterpolationX = previousInterpolation.x + (float)dx;
+            float nextInterpolationY = previousInterpolation.y + (float)dy;
+            float nextInterpolationZ = previousInterpolation.z + (float)dz;
+            nextInterpolation.transform.position = new Vector3(nextInterpolationX, nextInterpolationY, nextInterpolationZ);
 
-            // Set default location component of NextInterpolation point.
-            NextInterpolation.GetComponent<ArcGISLocationComponent>().enabled = true;
-            NextInterpolation.GetComponent<ArcGISLocationComponent>().Rotation = new ArcGISRotation(0, 90, 0);
+            // Set default location component of nextInterpolation point.
+            nextInterpolation.GetComponent<ArcGISLocationComponent>().enabled = true;
+            nextInterpolation.GetComponent<ArcGISLocationComponent>().Rotation = new ArcGISRotation(0, 90, 0);
 
-            var location = NextInterpolation.GetComponent<ArcGISLocationComponent>();
-            location.Position = arcGISMapComponent.EngineToGeographic(NextInterpolation.transform.position);
+            var location = nextInterpolation.GetComponent<ArcGISLocationComponent>();
+            location.Position = arcGISMapComponent.EngineToGeographic(nextInterpolation.transform.position);
 
-            featurePoints.Add(NextInterpolation);
-            PreviousInterpolation = NextInterpolation.transform.position;
+            featurePoints.Add(nextInterpolation);
+            previousInterpolation = nextInterpolation.transform.position;
         }
     }
 
