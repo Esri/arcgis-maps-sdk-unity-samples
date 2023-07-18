@@ -67,7 +67,16 @@ public class SampleSwitcher : MonoBehaviour
         {
             mapComponent.APIKey = APIKey;
         }
+
         sceneLoadedCount = SceneManager.sceneCount;
+
+        if(currentSceneName == "ThirdPerson")
+        {
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+                Cursor.visible = !Cursor.visible;
+            }
+        }
     }
 
     private void OnEnable()
