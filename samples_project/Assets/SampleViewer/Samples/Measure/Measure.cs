@@ -26,6 +26,7 @@ public class Measure : MonoBehaviour
     public float InterpolationInterval = 100;
     public Dropdown UnitDropdown;
     public Button ClearButton;
+    [SerializeField] float MarkerHeight = 200f;
 
     private ArcGISMapComponent arcGISMapComponent;
     private List<GameObject> featurePoints = new List<GameObject>();
@@ -61,6 +62,7 @@ public class Measure : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
+                hit.point += new Vector3(0, MarkerHeight, 0);
                 var lineMarker = Instantiate(LineMarker, hit.point, Quaternion.identity, arcGISMapComponent.transform);
                 var thisPoint = arcGISMapComponent.EngineToGeographic(hit.point);
 
@@ -95,34 +97,35 @@ public class Measure : MonoBehaviour
 
     private void Interpolate(GameObject start, GameObject end, List<GameObject> featurePoints)
     {
-        var startPoint = start.GetComponent<ArcGISLocationComponent>().Position;
-        var endPoint = end.GetComponent<ArcGISLocationComponent>().Position;
 
-        double d = ArcGISGeometryEngine.DistanceGeodetic(startPoint, endPoint, currentUnit, new ArcGISAngularUnit(ArcGISAngularUnitId.Degrees), ArcGISGeodeticCurveType.Geodesic).Distance;
-        float n = Mathf.Floor((float)d / InterpolationInterval);
+        float lengthOfLine = Vector3.Distance(start.transform.position, end.transform.position);
+        float n = Mathf.Floor(lengthOfLine / InterpolationInterval) ;
         double dx = (end.transform.position.x - start.transform.position.x) / n;
+        double dy = (end.transform.position.y - start.transform.position.y) / n;
         double dz = (end.transform.position.z - start.transform.position.z) / n;
 
-        var pre = start.transform.position;
+        var previousInterpolation = start.transform.position;
 
         // Calculate n-1 intepolation points/n-1 segments because the last segment is already created by the end point.
         for (int i = 0; i < n - 1; i++)
         {
-            GameObject next = Instantiate(InterpolationMarker, arcGISMapComponent.transform);
+            GameObject nextInterpolation = Instantiate(InterpolationMarker, arcGISMapComponent.transform);
 
-            // Calculate transform of next point.
-            float nextX = pre.x + (float)dx;
-            float nextZ = pre.z + (float)dz;
-            next.transform.position = new Vector3(nextX, 0, nextZ);
+            // Calculate transform of nextInterpolation point.
+            float nextInterpolationX = previousInterpolation.x + (float)dx;
+            float nextInterpolationY = previousInterpolation.y + (float)dy;
+            float nextInterpolationZ = previousInterpolation.z + (float)dz;
+            nextInterpolation.transform.position = new Vector3(nextInterpolationX, nextInterpolationY, nextInterpolationZ);
 
-            // Set default location component of next point.
-            next.GetComponent<ArcGISLocationComponent>().enabled = true;
-            next.GetComponent<ArcGISLocationComponent>().Rotation = new ArcGISRotation(0, 90, 0);
+            // Set default location component of nextInterpolation point.
+            nextInterpolation.GetComponent<ArcGISLocationComponent>().enabled = true;
+            nextInterpolation.GetComponent<ArcGISLocationComponent>().Rotation = new ArcGISRotation(0, 90, 0);
 
-            // Define height.
-            SetElevation(next);
-            featurePoints.Add(next);
-            pre = next.transform.position;
+            var location = nextInterpolation.GetComponent<ArcGISLocationComponent>();
+            location.Position = arcGISMapComponent.EngineToGeographic(nextInterpolation.transform.position);
+
+            featurePoints.Add(nextInterpolation);
+            previousInterpolation = nextInterpolation.transform.position;
         }
     }
 
