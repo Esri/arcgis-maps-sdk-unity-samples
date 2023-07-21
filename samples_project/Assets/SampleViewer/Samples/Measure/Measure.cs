@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class Measure : MonoBehaviour
 {
@@ -20,11 +21,11 @@ public class Measure : MonoBehaviour
     private const float LineWidth = 5f;
 
     public GameObject Line;
-    public Text GeodeticDistanceText;
+    public TMP_Text GeodeticDistanceText;
     public GameObject LineMarker;
     public GameObject InterpolationMarker;
     public float InterpolationInterval = 100;
-    public Dropdown UnitDropdown;
+    public Button[] UnitButtons;
     public Button ClearButton;
     [SerializeField] float MarkerHeight = 200f;
 
@@ -34,7 +35,8 @@ public class Measure : MonoBehaviour
     private double3 lastRootPosition;
     private double geodeticDistance = 0;
     private LineRenderer lineRenderer;
-    private ArcGISLinearUnit currentUnit = new ArcGISLinearUnit(ArcGISLinearUnitId.Meters);
+    private ArcGISLinearUnit currentUnit = new ArcGISLinearUnit(ArcGISLinearUnitId.Miles);
+    private string unitText;
 
     private void Start()
     {
@@ -43,14 +45,13 @@ public class Measure : MonoBehaviour
         lineRenderer = Line.GetComponent<LineRenderer>();
         lineRenderer.widthMultiplier = LineWidth;
         lastRootPosition = arcGISMapComponent.GetComponent<HPRoot>().RootUniversePosition;
-        UnitDropdown.onValueChanged.AddListener(delegate
-        {
-            UnitChanged();
-        });
+
         ClearButton.onClick.AddListener(delegate
         {
             ClearLine();
         });
+
+        UnitButtons[0].interactable = false;
     }
 
     private void Update()
@@ -200,7 +201,7 @@ public class Measure : MonoBehaviour
 
     private void UnitChanged()
     {
-        var newLinearUnit = new ArcGISLinearUnit(Enum.Parse<ArcGISLinearUnitId>(UnitDropdown.options[UnitDropdown.value].text));
+        var newLinearUnit = new ArcGISLinearUnit(Enum.Parse<ArcGISLinearUnitId>(unitText));
         geodeticDistance = currentUnit.ConvertTo(newLinearUnit, geodeticDistance);
         currentUnit = newLinearUnit;
         UpdateDisplay();
@@ -208,6 +209,34 @@ public class Measure : MonoBehaviour
 
     private void UpdateDisplay()
     {
-        GeodeticDistanceText.text = $"Distance: {Math.Round(geodeticDistance, 3)} {currentUnit.LinearUnitId}";
+        GeodeticDistanceText.text = $"{Math.Round(geodeticDistance, 3)}";
+    }
+
+    public void SetUnitText(string text)
+    {
+        unitText = text;
+    }
+
+    public void UnitButtonOnClick()
+    {
+        UnitChanged();
+    }
+
+    // Keep unit buttons pressed after selection
+    public void OnUnitButtonClicked(Button clickedButton)
+    {
+        int btnIndex = System.Array.IndexOf(UnitButtons, clickedButton);
+
+        if (btnIndex == -1)
+        {
+            return;
+        }
+
+        foreach (Button btn in UnitButtons)
+        {
+            btn.interactable = true;
+        }
+
+        clickedButton.interactable = false;
     }
 }
