@@ -15,16 +15,18 @@ public class ContinuousMovement : MonoBehaviour
     private CharacterController controller;
     [SerializeField] private float speed;
     [SerializeField] private float upSpeed;
-    private bool useSmoothTurn = true;
-    public bool UseSmoothTurn
+    [SerializeProperty("UseSnapTurn")]
+    public bool useSnapTurn = false;
+
+    public bool UseSnapTurn
     {
         get
         {
-            return useSmoothTurn;
+            return useSnapTurn;
         }
         set
         {
-            useSmoothTurn = value;
+            useSnapTurn = value;
             ToggleSnapTurn();
         }
     }
@@ -73,15 +75,21 @@ public class ContinuousMovement : MonoBehaviour
     }
     void ToggleSnapTurn()
     {
-        if (UseSmoothTurn)
+        if (UseSnapTurn)
         {
-            snapTurnProvider.enabled = false;
-            continuousTurnProvider.enabled = true;
+            if (snapTurnProvider && continuousTurnProvider)
+            {
+                snapTurnProvider.enabled = true;
+                continuousTurnProvider.enabled = false;
+            } 
         }
         else
         {
-            snapTurnProvider.enabled = true;
-            continuousTurnProvider.enabled = false;
+            if (snapTurnProvider && continuousTurnProvider)
+            {
+                snapTurnProvider.enabled = false;
+                continuousTurnProvider.enabled = true;
+            }
         }
     }
 }

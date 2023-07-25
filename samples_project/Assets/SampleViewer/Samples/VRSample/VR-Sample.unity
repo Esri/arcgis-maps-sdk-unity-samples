@@ -277,6 +277,10 @@ PrefabInstance:
       value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 7674790538359957209, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: test
+      value: -1.08
+      objectReference: {fileID: 0}
+    - target: {fileID: 7674790538359957209, guid: 71c126e43990139498b8761c71893200, type: 3}
       propertyPath: speed
       value: 50
       objectReference: {fileID: 0}
@@ -286,6 +290,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7674790538359957209, guid: 71c126e43990139498b8761c71893200, type: 3}
       propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7674790538359957209, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: useSnapTurn
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7674790538359957209, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: useSmoothTurn
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7674790538359957209, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: usetSmoothTurn
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7674790538359957209, guid: 71c126e43990139498b8761c71893200, type: 3}
@@ -623,60 +639,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1728991640 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5821623131796228855, guid: 7c54e74494ab92a47a490a7f58dc81c1, type: 3}
-  m_PrefabInstance: {fileID: 229091429}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1728991642 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5821623131796228853, guid: 7c54e74494ab92a47a490a7f58dc81c1, type: 3}
-  m_PrefabInstance: {fileID: 229091429}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1728991640}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03a5df2202a8b96488c744be3bd0c33e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1728991644
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1728991640}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 919e39492806b334982b6b84c90dd927, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_System: {fileID: 1728991642}
-  m_TurnSpeed: 45
-  m_LeftHandTurnAction:
-    m_UseReference: 0
-    m_Action:
-      m_Name: Left Hand Turn
-      m_Type: 0
-      m_ExpectedControlType: 
-      m_Id: 3016ad45-a946-4e51-972d-77a0a6f4f390
-      m_Processors: 
-      m_Interactions: 
-      m_SingletonActionBindings: []
-      m_Flags: 0
-    m_Reference: {fileID: 0}
-  m_RightHandTurnAction:
-    m_UseReference: 1
-    m_Action:
-      m_Name: Right Hand Turn
-      m_Type: 0
-      m_ExpectedControlType: 
-      m_Id: 6740c8a0-84a7-4bc7-b3d3-b6bf0de90073
-      m_Processors: 
-      m_Interactions: 
-      m_SingletonActionBindings: []
-      m_Flags: 0
-    m_Reference: {fileID: -6493913391331992944, guid: c348712bda248c246b8c49b3db54643f, type: 3}
 --- !u!1001 &7370234522989513129
 PrefabInstance:
   m_ObjectHideFlags: 0
