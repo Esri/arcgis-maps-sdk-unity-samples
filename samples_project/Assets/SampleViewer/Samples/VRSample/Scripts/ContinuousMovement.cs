@@ -15,7 +15,19 @@ public class ContinuousMovement : MonoBehaviour
     private CharacterController controller;
     [SerializeField] private float speed;
     [SerializeField] private float upSpeed;
-    public bool useSmoothTurn = true;
+    private bool useSmoothTurn = true;
+    public bool UseSmoothTurn
+    {
+        get
+        {
+            return useSmoothTurn;
+        }
+        set
+        {
+            useSmoothTurn = value;
+            ToggleSnapTurn();
+        }
+    }
     private ContinuousTurnProviderBase continuousTurnProvider;
     private SnapTurnProviderBase snapTurnProvider;
     private XROrigin rig;
@@ -61,7 +73,7 @@ public class ContinuousMovement : MonoBehaviour
     }
     void ToggleSnapTurn()
     {
-        if (useSmoothTurn)
+        if (UseSmoothTurn)
         {
             snapTurnProvider.enabled = false;
             continuousTurnProvider.enabled = true;
