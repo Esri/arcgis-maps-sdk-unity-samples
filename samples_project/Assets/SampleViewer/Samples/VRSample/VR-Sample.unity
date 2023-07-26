@@ -232,10 +232,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5821623131796228852, guid: 7c54e74494ab92a47a490a7f58dc81c1, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5821623131796228852, guid: 7c54e74494ab92a47a490a7f58dc81c1, type: 3}
       propertyPath: m_EnableTurnAround
       value: 0
       objectReference: {fileID: 0}
@@ -243,10 +239,6 @@ PrefabInstance:
       propertyPath: m_LeftHandSnapTurnAction.m_UseReference
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5821623131796228853, guid: 7c54e74494ab92a47a490a7f58dc81c1, type: 3}
-      propertyPath: m_XROrigin
-      value: 
-      objectReference: {fileID: 1406080824}
     - target: {fileID: 5821623131796228855, guid: 7c54e74494ab92a47a490a7f58dc81c1, type: 3}
       propertyPath: m_Name
       value: Locomotion System
@@ -287,22 +279,6 @@ PrefabInstance:
     - target: {fileID: 7674790538359957209, guid: 71c126e43990139498b8761c71893200, type: 3}
       propertyPath: upSpeed
       value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 7674790538359957209, guid: 71c126e43990139498b8761c71893200, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7674790538359957209, guid: 71c126e43990139498b8761c71893200, type: 3}
-      propertyPath: useSnapTurn
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7674790538359957209, guid: 71c126e43990139498b8761c71893200, type: 3}
-      propertyPath: useSmoothTurn
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7674790538359957209, guid: 71c126e43990139498b8761c71893200, type: 3}
-      propertyPath: usetSmoothTurn
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7674790538359957209, guid: 71c126e43990139498b8761c71893200, type: 3}
       propertyPath: rightInputSource
@@ -363,17 +339,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7674790538359957214, guid: 71c126e43990139498b8761c71893200, type: 3}
   m_PrefabInstance: {fileID: 416216338}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1406080824 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7674790538359957215, guid: 71c126e43990139498b8761c71893200, type: 3}
-  m_PrefabInstance: {fileID: 416216338}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e0cb9aa70a22847b5925ee5f067c10a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1551866152 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7674790537069970952, guid: 71c126e43990139498b8761c71893200, type: 3}
@@ -397,7 +362,6 @@ MonoBehaviour:
   horizontalFov: 0
   viewportSizeX: 0
   viewportSizeY: 0
-  qualityScalingFactor: 1
 --- !u!114 &1551866155
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -428,6 +392,7 @@ MonoBehaviour:
   taaMotionVectorRejection: 0
   taaAntiHistoryRinging: 0
   taaBaseBlendFactor: 0.875
+  taaJitterScale: 1
   physicalParameters:
     m_Iso: 200
     m_ShutterSpeed: 0.005
@@ -558,16 +523,9 @@ MonoBehaviour:
   basemapAuthentication:
     ConfigurationIndex: -1
   elevation: https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer
+  enableExtent: 0
   elevationAuthentication:
     ConfigurationIndex: -1
-  elevationSources:
-  - Name: 
-    Type: 0
-    Source: https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer
-    IsEnabled: 1
-    Authentication:
-      ConfigurationIndex: -1
-  enableExtent: 0
   extent:
     GeographicCenter:
       x: 0
@@ -600,7 +558,6 @@ MonoBehaviour:
   RootChanged:
     m_PersistentCalls:
       m_Calls: []
-  version: 1
 --- !u!114 &1655736735
 MonoBehaviour:
   m_ObjectHideFlags: 0
