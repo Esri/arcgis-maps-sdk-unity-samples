@@ -15,39 +15,15 @@ public class ContinuousMovement : MonoBehaviour
     private CharacterController controller;
     [SerializeField] private float speed;
     [SerializeField] private float upSpeed;
-    [SerializeProperty("UseSnapTurn")]
-    public bool useSnapTurn = false;
-
-    public bool UseSnapTurn
-    {
-        get
-        {
-            return useSnapTurn;
-        }
-        set
-        {
-            useSnapTurn = value;
-            ToggleSnapTurn();
-        }
-    }
-    private ContinuousTurnProviderBase continuousTurnProvider;
-    private SnapTurnProviderBase snapTurnProvider;
     private XROrigin rig;
     public LayerMask groundLayer;
     private float fallSpeed;
     private float heightOffset = 0.2f;
-
-    private void Awake()
-    {
-        continuousTurnProvider = GameObject.Find("Locomotion System").GetComponent<ContinuousTurnProviderBase>();
-        snapTurnProvider = GameObject.Find("Locomotion System").GetComponent<SnapTurnProviderBase>();
-    }
     // Start is called before the first frame update
     void Start()
     {
         controller = GetComponent<CharacterController>();
         rig = GetComponent<XROrigin>();
-        ToggleSnapTurn();
     }
     private void FixedUpdate()
     {
@@ -72,24 +48,5 @@ public class ContinuousMovement : MonoBehaviour
         controller.height = rig.CameraInOriginSpaceHeight + heightOffset;
         Vector3 capsuleCenter = transform.InverseTransformPoint(rig.Camera.transform.position);
         controller.center = new Vector3(capsuleCenter.x, controller.height / 2 + controller.skinWidth, capsuleCenter.z);
-    }
-    void ToggleSnapTurn()
-    {
-        if (UseSnapTurn)
-        {
-            if (snapTurnProvider && continuousTurnProvider)
-            {
-                snapTurnProvider.enabled = true;
-                continuousTurnProvider.enabled = false;
-            } 
-        }
-        else
-        {
-            if (snapTurnProvider && continuousTurnProvider)
-            {
-                snapTurnProvider.enabled = false;
-                continuousTurnProvider.enabled = true;
-            }
-        }
     }
 }

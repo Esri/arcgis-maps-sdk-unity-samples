@@ -232,6 +232,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5821623131796228852, guid: 7c54e74494ab92a47a490a7f58dc81c1, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5821623131796228852, guid: 7c54e74494ab92a47a490a7f58dc81c1, type: 3}
       propertyPath: m_EnableTurnAround
       value: 0
       objectReference: {fileID: 0}
@@ -362,6 +366,7 @@ MonoBehaviour:
   horizontalFov: 0
   viewportSizeX: 0
   viewportSizeY: 0
+  qualityScalingFactor: 1
 --- !u!114 &1551866155
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -392,7 +397,6 @@ MonoBehaviour:
   taaMotionVectorRejection: 0
   taaAntiHistoryRinging: 0
   taaBaseBlendFactor: 0.875
-  taaJitterScale: 1
   physicalParameters:
     m_Iso: 200
     m_ShutterSpeed: 0.005
@@ -523,9 +527,16 @@ MonoBehaviour:
   basemapAuthentication:
     ConfigurationIndex: -1
   elevation: https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer
-  enableExtent: 0
   elevationAuthentication:
     ConfigurationIndex: -1
+  elevationSources:
+  - Name: 
+    Type: 0
+    Source: https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer
+    IsEnabled: 1
+    Authentication:
+      ConfigurationIndex: -1
+  enableExtent: 0
   extent:
     GeographicCenter:
       x: 0
@@ -558,6 +569,7 @@ MonoBehaviour:
   RootChanged:
     m_PersistentCalls:
       m_Calls: []
+  version: 1
 --- !u!114 &1655736735
 MonoBehaviour:
   m_ObjectHideFlags: 0
