@@ -3,6 +3,7 @@ using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 using Unity.XR.CoreUtils;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 using CommonUsages = UnityEngine.XR.CommonUsages;
 
 [RequireComponent(typeof(CharacterController))]
@@ -13,12 +14,18 @@ public class ContinuousMovement : MonoBehaviour
     public InputAction LeftMenuAction;
     public InputAction RightMenuAction;
     public GameObject UICanvas;
-    public bool UseSmoothTurn;
+    public bool UseSnapTurn;
+    public GameObject playerCamera;
+    public XRInteractorLineVisual leftLineVisual;
+    public XRInteractorLineVisual rightLineVisual;
+    public XRRayInteractor leftRayInteractor;
+    public XRRayInteractor rightRayInteractor;
     private Vector2 leftInputAxis;
     private Vector2 rightInputAxis;
     private CharacterController controller;
     [SerializeField] private float speed;
     [SerializeField] private float upSpeed;
+    private Toggle smoothTurnToggle;
     private XROrigin rig;
     private float fallSpeed;
     private float heightOffset = 0.2f;
@@ -30,6 +37,8 @@ public class ContinuousMovement : MonoBehaviour
     {
         smoothTurn = GameObject.Find("Locomotion System").GetComponent<ContinuousTurnProviderBase>();
         snapTurn = GameObject.Find("Locomotion System").GetComponent<SnapTurnProviderBase>();
+        smoothTurnToggle = UICanvas.transform.GetChild(2).GetComponent<Toggle>();
+        smoothTurnToggle.isOn = UseSnapTurn;
         ToggleSmoothTurn();
     }
 
@@ -57,15 +66,12 @@ public class ContinuousMovement : MonoBehaviour
         var up = new Vector3(0, rightInputAxis.y, 0);
         controller.Move(speed * Time.fixedDeltaTime * direction);
         controller.Move(upSpeed * Time.fixedDeltaTime * up);
-        if (LeftMenuAction.triggered)
-        {
-            ToggleCanvas();
-        }
-        if (RightMenuAction.triggered)
-        {
-            ToggleCanvas();
-        }
+    }
 
+    private void LateUpdate()
+    {
+        UICanvas.transform.position = playerCamera.transform.position + playerCamera.transform.forward * 10;
+        UICanvas.transform.rotation = new Quaternion(0.0f, playerCamera.transform.rotation.y, 0.0f, playerCamera.transform.rotation.w);
     }
     // Update is called once per frame
     void Update()
@@ -74,6 +80,14 @@ public class ContinuousMovement : MonoBehaviour
         leftDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out leftInputAxis);
         var rightDevice = InputDevices.GetDeviceAtXRNode(rightInputSource);
         rightDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out rightInputAxis);
+        if (LeftMenuAction.triggered)
+        {
+            ToggleCanvas();
+        }
+        if (RightMenuAction.triggered)
+        {
+            ToggleCanvas();
+        }
     }
     void FollowHeadset()
     {
@@ -84,17 +98,15 @@ public class ContinuousMovement : MonoBehaviour
 
     public void ToggleSmoothTurn()
     {
-        if (!UseSmoothTurn)
+        if (smoothTurnToggle.isOn)
         {
             smoothTurn.enabled = true;
             snapTurn.enabled = false;
-            UseSmoothTurn = true;
         }
         else
         {
             smoothTurn.enabled = false;
             snapTurn.enabled = true;
-            UseSmoothTurn = false;
         }
     }
 
@@ -104,11 +116,19 @@ public class ContinuousMovement : MonoBehaviour
         {
             UICanvas.SetActive(true);
             toggledOn = true;
+            leftLineVisual.enabled = true;
+            leftRayInteractor.enabled = true;
+            rightLineVisual.enabled = true;
+            rightRayInteractor.enabled = true;
         }
         else
         {
             UICanvas.SetActive(false);
             toggledOn = false;
+            leftLineVisual.enabled = false;
+            leftRayInteractor.enabled = false;
+            rightLineVisual.enabled = false;
+            rightRayInteractor.enabled = false;
         }
     }
 }
