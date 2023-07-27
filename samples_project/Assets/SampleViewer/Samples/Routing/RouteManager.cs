@@ -256,7 +256,9 @@ public class RouteManager : MonoBehaviour
     private void ClearRoute()
     {
         foreach (var breadcrumb in breadcrumbs)
+        {
             Destroy(breadcrumb);
+        }
 
         breadcrumbs.Clear();
 
@@ -316,7 +318,9 @@ public class RouteManager : MonoBehaviour
         ClearRoute();
 
         foreach (var routeMaker in routeMarkers)
+        {
             Destroy(routeMaker);
+        }
 
         routeMarkers.Clear();
         stops.Clear();
