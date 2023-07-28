@@ -11,15 +11,12 @@ public class InfoMenuController : MonoBehaviour
     {
         animator = GameObject.Find("InfoMenu").GetComponent<Animator>();
 
-        StartCoroutine(SlideNotification());
+        Invoke("SlideNotification", 2.0f);
     }
 
     // Delay pop-up notification
-    private IEnumerator SlideNotification()
+    private void SlideNotification()
     {
-        //Wait for 2 secs.
-        yield return new WaitForSeconds(2);
-
         //Play notification menu animation.
         animator.Play("NotificationAnim");
     }
