@@ -184,6 +184,11 @@ namespace StarterAssets
             JumpAndGravity();
             GroundedCheck();
             Move();
+
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+                Cursor.visible = !Cursor.visible;
+            }
         }
 
         private void LateUpdate()
