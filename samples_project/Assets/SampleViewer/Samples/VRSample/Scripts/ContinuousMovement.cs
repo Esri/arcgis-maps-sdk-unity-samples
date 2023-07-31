@@ -14,6 +14,7 @@ public class ContinuousMovement : MonoBehaviour
     public InputAction LeftMenuAction;
     public InputAction RightMenuAction;
     public GameObject UICanvas;
+    public GameObject Instructions;
     public bool UseSnapTurn;
     public GameObject playerCamera;
     public XRInteractorLineVisual leftLineVisual;
@@ -30,14 +31,14 @@ public class ContinuousMovement : MonoBehaviour
     private float fallSpeed;
     private float heightOffset = 0.2f;
     private bool toggledOn = true;
-    private ContinuousTurnProviderBase smoothTurn;
-    private SnapTurnProviderBase snapTurn;
+    [SerializeField] private ContinuousTurnProviderBase smoothTurn;
+    [SerializeField] private SnapTurnProviderBase snapTurn;
 
     private void Awake()
     {
         smoothTurn = GameObject.Find("Locomotion System").GetComponent<ContinuousTurnProviderBase>();
         snapTurn = GameObject.Find("Locomotion System").GetComponent<SnapTurnProviderBase>();
-        smoothTurnToggle = UICanvas.transform.GetChild(2).GetComponent<Toggle>();
+        smoothTurnToggle = Instructions.transform.GetChild(2).GetComponent<Toggle>();
         smoothTurnToggle.isOn = UseSnapTurn;
         ToggleSmoothTurn();
     }
@@ -70,7 +71,7 @@ public class ContinuousMovement : MonoBehaviour
 
     private void LateUpdate()
     {
-        UICanvas.transform.position = playerCamera.transform.position + playerCamera.transform.forward * 10;
+        UICanvas.transform.position = playerCamera.transform.position + playerCamera.transform.forward * 15;
         UICanvas.transform.rotation = new Quaternion(0.0f, playerCamera.transform.rotation.y, 0.0f, playerCamera.transform.rotation.w);
     }
     // Update is called once per frame
@@ -114,7 +115,7 @@ public class ContinuousMovement : MonoBehaviour
     {
         if (!toggledOn)
         {
-            UICanvas.SetActive(true);
+            Instructions.SetActive(true);
             toggledOn = true;
             leftLineVisual.enabled = true;
             leftRayInteractor.enabled = true;
@@ -123,7 +124,7 @@ public class ContinuousMovement : MonoBehaviour
         }
         else
         {
-            UICanvas.SetActive(false);
+            Instructions.SetActive(false);
             toggledOn = false;
             leftLineVisual.enabled = false;
             leftRayInteractor.enabled = false;
