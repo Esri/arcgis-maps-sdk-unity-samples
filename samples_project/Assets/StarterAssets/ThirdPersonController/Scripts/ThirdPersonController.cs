@@ -76,6 +76,8 @@ namespace StarterAssets
         [Tooltip("For locking the camera position on all axis")]
         public bool LockCameraPosition = false;
 
+        public InputAction showMouseCursor;
+
         // cinemachine
         private float _cinemachineTargetYaw;
         private float _cinemachineTargetPitch;
@@ -135,7 +137,6 @@ namespace StarterAssets
             }
         }
 
-
         private void Start()
         {
 
@@ -185,15 +186,37 @@ namespace StarterAssets
             GroundedCheck();
             Move();
 
-            if (Input.GetKeyDown(KeyCode.G))
+            if (showMouseCursor.triggered)
             {
-                Cursor.visible = !Cursor.visible;
+                ShowMouseCursor();
+                LockCameraPosition = true;
             }
+
         }
 
         private void LateUpdate()
         {
             CameraRotation();
+        }
+
+        private void ShowMouseCursor()
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+
+        private void HideMouseCursor()
+        {
+            Cursor.visible = false;      
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        private void OnEnable()
+        {
+            showMouseCursor.Enable();
+        }
+        private void OnDisable()
+        {
+            showMouseCursor.Disable();
         }
 
         private void AssignAnimationIDs()
@@ -417,6 +440,12 @@ namespace StarterAssets
             {
                 AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
             }
+        }
+
+        public void onScreenClicked()
+        {
+            HideMouseCursor();
+            LockCameraPosition = false;
         }
     }
 }
