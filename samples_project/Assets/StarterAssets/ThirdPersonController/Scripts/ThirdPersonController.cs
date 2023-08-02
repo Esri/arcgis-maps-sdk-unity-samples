@@ -139,6 +139,7 @@ namespace StarterAssets
 
         private void Start()
         {
+            HideMouseCursor();
 
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
 
