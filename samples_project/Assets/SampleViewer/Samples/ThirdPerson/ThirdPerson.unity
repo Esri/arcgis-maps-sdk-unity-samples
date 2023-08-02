@@ -710,7 +710,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &146117746
 RectTransform:
   m_ObjectHideFlags: 0
@@ -728,8 +728,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000043671578, y: 0.0000038600992}
-  m_SizeDelta: {x: 2560, y: 1440}
+  m_AnchoredPosition: {x: 0.00020599, y: -2.9696}
+  m_SizeDelta: {x: 2560, y: 1434.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &146117747
 MonoBehaviour:
@@ -1899,6 +1899,7 @@ GameObject:
   - component: {fileID: 1541386277}
   - component: {fileID: 1541386276}
   - component: {fileID: 1541386275}
+  - component: {fileID: 1541386278}
   m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
@@ -1990,6 +1991,17 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!210 &1541386278
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1541386273}
+  m_Enabled: 1
+  m_SortingLayerID: -1218197889
+  m_SortingLayer: 0
+  m_SortingOrder: 1
 --- !u!4 &1572018744 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6392c7aea3c8f634e9bd5139bb16d63c, type: 3}
@@ -5248,6 +5260,23 @@ MonoBehaviour:
       m_Processors: 
       m_Groups: 
       m_Action: Show Mouse Cursor
+      m_Flags: 0
+    m_Flags: 0
+  leftClick:
+    m_Name: Left Click
+    m_Type: 1
+    m_ExpectedControlType: Button
+    m_Id: 43062240-8283-4236-babf-9f06c9905deb
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 3b957d4f-8e2f-40cb-8e6c-e44e7d7b4ccc
+      m_Path: <Mouse>/leftButton
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Left Click
       m_Flags: 0
     m_Flags: 0
 --- !u!114 &4509130043358176361

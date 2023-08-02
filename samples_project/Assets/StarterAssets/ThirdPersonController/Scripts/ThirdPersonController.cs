@@ -2,6 +2,7 @@
 using System.Collections;
 #if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 #endif
 
 /* Note: animations are called via the controller for both the character and capsule using animator null checks
@@ -76,7 +77,7 @@ namespace StarterAssets
         [Tooltip("For locking the camera position on all axis")]
         public bool LockCameraPosition = false;
 
-        public InputAction showMouseCursor;
+        public InputAction showMouseCursor, leftClick;
 
         // cinemachine
         private float _cinemachineTargetYaw;
@@ -193,6 +194,22 @@ namespace StarterAssets
                 LockCameraPosition = true;
             }
 
+            if (leftClick.triggered && !MouseOverUI())
+            {
+                onScreenClicked();
+            }
+
+        }
+
+        private void onScreenClicked()
+        {
+            HideMouseCursor();
+            LockCameraPosition = false;
+        }
+
+        private bool MouseOverUI()
+        {
+            return EventSystem.current.IsPointerOverGameObject();
         }
 
         private void LateUpdate()
@@ -211,13 +228,16 @@ namespace StarterAssets
             Cursor.visible = false;      
             Cursor.lockState = CursorLockMode.Locked;
         }
+
         private void OnEnable()
         {
             showMouseCursor.Enable();
+            leftClick.Enable();
         }
         private void OnDisable()
         {
             showMouseCursor.Disable();
+            leftClick.Enable();
         }
 
         private void AssignAnimationIDs()
@@ -441,12 +461,6 @@ namespace StarterAssets
             {
                 AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
             }
-        }
-
-        public void onScreenClicked()
-        {
-            HideMouseCursor();
-            LockCameraPosition = false;
         }
     }
 }
