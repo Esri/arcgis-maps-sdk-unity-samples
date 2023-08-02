@@ -32,12 +32,12 @@ public class LineOfSightCast : MonoBehaviour
             if (HitInfo.transform == TargetTransform)
             {
                 // Set the visible property of the shader graph.
-                LineMaterial.material.SetColor("ShaderColor", Color.green);
+                LineMaterial.material.SetColor("ShaderColor", new Color(0.325f, 0.898f, 0.165f, 1.0f));
             }
             else
             {
                 // Set the visible property of the shader graph.
-                LineMaterial.material.SetColor("ShaderColor", Color.red);
+                LineMaterial.material.SetColor("ShaderColor", new Color(0.867f, 0.251f, 0.251f, 1.0f));
             }
 
             // Rotate the cylinder to the look towards the raycast hit.

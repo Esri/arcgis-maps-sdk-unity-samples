@@ -33,7 +33,9 @@ public class SampleSwitcher : MonoBehaviour
 
         cam.enabled = true;
 
-        StartCoroutine(SlideNotification());
+        Invoke("SlideNotification", 2.0f);
+
+        DisableSceneButtons();
 
         ExitButton.onClick.AddListener(delegate
         {
@@ -67,7 +69,9 @@ public class SampleSwitcher : MonoBehaviour
         {
             mapComponent.APIKey = APIKey;
         }
+
         sceneLoadedCount = SceneManager.sceneCount;
+
     }
 
     private void OnEnable()
@@ -133,13 +137,26 @@ public class SampleSwitcher : MonoBehaviour
     }
 
     // Delay pop-up notification
-    private IEnumerator SlideNotification()
+    private void SlideNotification()
     {
-        //Wait for 2 secs.
-        yield return new WaitForSeconds(2);
-
         //Play notification menu animation.
         animator.Play("NotificationAnim");
+    }
+
+    private void EnableSceneButtons()
+    {
+        foreach (Button btn in sceneButtons)
+        {
+            btn.interactable = true;
+        }
+    }
+
+    private void DisableSceneButtons()
+    {
+        foreach (Button btn in sceneButtons)
+        {
+            btn.interactable = false;
+        }
     }
 
     //Exits the Sample Viewer App
@@ -155,6 +172,15 @@ public class SampleSwitcher : MonoBehaviour
     public void ReadStringInput(string apiKey)
     {
         APIKey = apiKey;
+
+        if (APIKey.Length == 100)
+        {
+            EnableSceneButtons();
+        }
+        else
+        {
+            DisableSceneButtons();
+        }
     }
 
     public void SetPipelineText(string text)
@@ -209,10 +235,7 @@ public class SampleSwitcher : MonoBehaviour
             return;
         }
 
-        foreach (Button btn in sceneButtons)
-        {
-            btn.interactable = true;
-        }
+        EnableSceneButtons();
 
         clickedButton.interactable = false;
     }

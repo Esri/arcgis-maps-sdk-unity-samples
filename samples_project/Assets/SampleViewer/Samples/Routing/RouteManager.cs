@@ -30,17 +30,14 @@ public class RouteManager : MonoBehaviour
 
     private HPRoot hpRoot;
     private ArcGISMapComponent arcGISMapComponent;
-
     private float elevationOffset = 20.0f;
-
     private int StopCount = 2;
     private Queue<GameObject> stops = new Queue<GameObject>();
     private bool routing = false;
     private string routingURL = "https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve";
     private List<GameObject> breadcrumbs = new List<GameObject>();
-
+    private List<GameObject> routeMarkers = new List<GameObject>();
     private LineRenderer lineRenderer;
-
     private HttpClient client = new HttpClient();
 
     double3 lastRootPosition;
@@ -85,6 +82,8 @@ public class RouteManager : MonoBehaviour
                 locationComponent.Rotation = new ArcGISRotation(0, 90, 0);
 
                 stops.Enqueue(routeMarker);
+
+                routeMarkers.Add(routeMarker);
 
                 if (stops.Count > StopCount)
                     Destroy(stops.Dequeue());
@@ -251,18 +250,22 @@ public class RouteManager : MonoBehaviour
         var travel_time = (float)attributes.SelectToken("Total_TravelTime");
         var travel_text = string.Format("{0:0.00}", travel_time);
 
-        tmp.text = $"Time: {travel_text} Minutes";
+        tmp.text = $"{travel_text}";
     }
 
     private void ClearRoute()
     {
         foreach (var breadcrumb in breadcrumbs)
+        {
             Destroy(breadcrumb);
+        }
 
         breadcrumbs.Clear();
 
         if (lineRenderer)
+        {
             lineRenderer.positionCount = 0;
+        }
     }
 
     private void RenderLine() 
@@ -308,6 +311,22 @@ public class RouteManager : MonoBehaviour
             }
             lastRootPosition = rootPosition;
         }
+    }
+
+    public void ClearLineMarkers()
+    {
+        ClearRoute();
+
+        foreach (var routeMaker in routeMarkers)
+        {
+            Destroy(routeMaker);
+        }
+
+        routeMarkers.Clear();
+        stops.Clear();
+
+        var tmp = RouteInfo.GetComponent<TextMeshProUGUI>();
+        tmp.text = $"0";
     }
 
 }
