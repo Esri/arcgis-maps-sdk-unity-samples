@@ -177,7 +177,7 @@ public class Geocoder : MonoBehaviour
                 InfoField.text = array.Count switch
                 {
                     0 => "Query did not return a valid response.",
-                    1 => "Enter an address above to move there or shift+click on a location to see the address / description.",
+                    1 => "Enter an address above to move there or Shift+Click on a location to see the address / description.",
                     _ => "Query returned multiple results. If the shown location is not the intended one, make your input more specific.",
                 };
 
@@ -224,7 +224,7 @@ public class Geocoder : MonoBehaviour
             }
             else
             {
-                InfoField.text = "Enter an address above to move there or shift+click on a location to see the address / description.";
+                InfoField.text = "Enter an address above to move there or Shift+Click on a location to see the address / description.";
                 CreateAddressCard(false);
             }
         }
