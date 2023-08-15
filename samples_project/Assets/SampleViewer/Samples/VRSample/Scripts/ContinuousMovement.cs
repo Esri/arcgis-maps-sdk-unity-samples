@@ -1,47 +1,38 @@
 using UnityEngine;
-using UnityEngine.XR;
-using UnityEngine.XR.Interaction.Toolkit;
-using Unity.XR.CoreUtils;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
+using UnityEngine.XR;
 using CommonUsages = UnityEngine.XR.CommonUsages;
+using Unity.XR.CoreUtils;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(CharacterController))]
 public class ContinuousMovement : MonoBehaviour
 {
-    public XRNode leftInputSource;
-    public XRNode rightInputSource;
-    public InputAction LeftMenuAction;
-    public InputAction RightMenuAction;
-    public GameObject UICanvas;
-    public GameObject Instructions;
-    public bool UseSnapTurn;
-    public GameObject playerCamera;
-    public XRInteractorLineVisual leftLineVisual;
-    public XRInteractorLineVisual rightLineVisual;
-    public XRRayInteractor leftRayInteractor;
-    public XRRayInteractor rightRayInteractor;
-    private Vector2 leftInputAxis;
-    private Vector2 rightInputAxis;
     private CharacterController controller;
-    [SerializeField] private float speed;
-    [SerializeField] private float upSpeed;
-    private Toggle smoothTurnToggle;
-    private XROrigin rig;
     private float fallSpeed;
     private float heightOffset = 0.2f;
-    private bool toggledOn = true;
+    [SerializeField] private GameObject Instructions;
+    [SerializeField] private InputAction LeftMenuAction;
+    private Vector2 leftInputAxis;
+    [SerializeField] private XRNode leftInputSource;
+    [SerializeField] private XRInteractorLineVisual leftLineVisual;
+    [SerializeField] private XRRayInteractor leftRayInteractor;
+    [SerializeField] private GameObject playerCamera;
+    private XROrigin rig;
+    [SerializeField] private InputAction RightMenuAction;
+    private Vector2 rightInputAxis;
+    [SerializeField] private XRNode rightInputSource;
+    [SerializeField] private XRInteractorLineVisual rightLineVisual;
+    [SerializeField] private XRRayInteractor rightRayInteractor;
     [SerializeField] private ContinuousTurnProviderBase smoothTurn;
+    private Toggle smoothTurnToggle;
     [SerializeField] private SnapTurnProviderBase snapTurn;
-
-    private void Awake()
-    {
-        smoothTurn = GameObject.Find("Locomotion System").GetComponent<ContinuousTurnProviderBase>();
-        snapTurn = GameObject.Find("Locomotion System").GetComponent<SnapTurnProviderBase>();
-        smoothTurnToggle = Instructions.transform.GetChild(2).GetComponent<Toggle>();
-        smoothTurnToggle.isOn = UseSnapTurn;
-        ToggleSmoothTurn();
-    }
+    [SerializeField] private float speed;
+    private bool toggledOn = true;
+    [SerializeField] private GameObject UICanvas;
+    [SerializeField] private float upSpeed;
+    [SerializeField] private bool UseSnapTurn;
 
     private void OnEnable()
     {
@@ -54,11 +45,18 @@ public class ContinuousMovement : MonoBehaviour
         LeftMenuAction.Disable();
         RightMenuAction.Disable();
     }
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
         rig = GetComponent<XROrigin>();
+        smoothTurn = GameObject.Find("Locomotion System").GetComponent<ContinuousTurnProviderBase>();
+        snapTurn = GameObject.Find("Locomotion System").GetComponent<SnapTurnProviderBase>();
+        smoothTurnToggle = Instructions.GetComponentInChildren<Toggle>();
+        smoothTurnToggle.isOn = UseSnapTurn;
+        ToggleSmoothTurn();
     }
+
     private void FixedUpdate()
     {
         FollowHeadset();
@@ -72,8 +70,10 @@ public class ContinuousMovement : MonoBehaviour
     private void LateUpdate()
     {
         UICanvas.transform.position = playerCamera.transform.position + playerCamera.transform.forward * 15;
-        UICanvas.transform.rotation = new Quaternion(0.0f, playerCamera.transform.rotation.y, 0.0f, playerCamera.transform.rotation.w);
+        UICanvas.transform.rotation = new Quaternion(0.0f, playerCamera.transform.rotation.y, 0.0f,
+            playerCamera.transform.rotation.w);
     }
+
     // Update is called once per frame
     void Update()
     {
@@ -81,15 +81,18 @@ public class ContinuousMovement : MonoBehaviour
         leftDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out leftInputAxis);
         var rightDevice = InputDevices.GetDeviceAtXRNode(rightInputSource);
         rightDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out rightInputAxis);
+
         if (LeftMenuAction.triggered)
         {
             ToggleCanvas();
         }
+
         if (RightMenuAction.triggered)
         {
             ToggleCanvas();
         }
     }
+
     void FollowHeadset()
     {
         controller.height = rig.CameraInOriginSpaceHeight + heightOffset;
