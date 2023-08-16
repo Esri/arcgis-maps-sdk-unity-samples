@@ -15,7 +15,9 @@ case "${1}" in
   *)
 
     GIT_REPOS=`git remote get-url --all origin`
+    echo $GIT_REPOS
     if [[ $GIT_REPOS != *Esri/arcgis-maps-sdk-dotnet-samples.git ]]; then
+      echo "Exiting code due to wrong repo"
       exit 0
     fi
 
