@@ -74,7 +74,7 @@ public class FeatureLayerQuery : MonoBehaviour
     public Dropdown StadiumSelector;
 
     // Get all the features when the script starts
-    void Start()
+    private void Start()
     {
         StartCoroutine(GetFeatures());
 
@@ -84,7 +84,7 @@ public class FeatureLayerQuery : MonoBehaviour
         });
     }
 
-    void Update()
+    private void Update()
     {
         if (MouseOverUI())
         {
