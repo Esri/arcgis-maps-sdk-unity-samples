@@ -10,7 +10,9 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using Esri.ArcGISMapsSDK.Components;
+using Esri.ArcGISMapsSDK.Samples.Components;
 using Esri.GameEngine.Geometry;
+using UnityEngine.EventSystems;
 
 // The follow System.Serializable classes are used to define the REST API response
 // in order to leverage Unity's JsonUtility.
@@ -80,6 +82,18 @@ public class FeatureLayerQuery : MonoBehaviour
         {
             StadiumSelected();
         });
+    }
+
+    void Update()
+    {
+        if (MouseOverUI())
+        {
+            ArcGISCamera.GetComponent<ArcGISCameraControllerComponent>().enabled = false;
+        }
+        else
+        {
+            ArcGISCamera.GetComponent<ArcGISCameraControllerComponent>().enabled = true;
+        }
     }
 
     // Sends the Request to get features from the service
@@ -222,5 +236,10 @@ public class FeatureLayerQuery : MonoBehaviour
                 CameraLocation.Rotation = StadiumLocation.Rotation;
             }
         }
+    }
+
+    private bool MouseOverUI()
+    {
+        return EventSystem.current.IsPointerOverGameObject();
     }
 }
