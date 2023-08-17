@@ -11,7 +11,7 @@ public class InfoMenuController : MonoBehaviour
     {
         animator = GameObject.Find("InfoMenu").GetComponent<Animator>();
 
-        Invoke("SlideNotification", 2.0f);
+        Invoke("SlideNotification", 1.0f);
     }
 
     // Delay pop-up notification

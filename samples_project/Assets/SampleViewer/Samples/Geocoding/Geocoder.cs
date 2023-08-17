@@ -30,13 +30,13 @@ using UnityEngine.UI;
 
 public class Geocoder : MonoBehaviour
 {
-    public GameObject AddressMarkerTemplate;
-    public float AddressMarkerScale = 1;
-    public GameObject LocationMarkerTemplate;
-    public float LocationMarkerScale = 1;
-    public GameObject AddressCardTemplate;
-    public TextMeshProUGUI InfoField;
-    public Button SearchButton;
+    [SerializeField] private GameObject AddressMarkerTemplate;
+    [SerializeField] private float AddressMarkerScale = 1;
+    [SerializeField] private GameObject LocationMarkerTemplate;
+    [SerializeField] private float LocationMarkerScale = 1;
+    [SerializeField] private GameObject AddressCardTemplate;
+    [SerializeField] private TextMeshProUGUI InfoField;
+    [SerializeField] private Button SearchButton;
 
     private Camera MainCamera;
     private GameObject QueryLocationGO;
