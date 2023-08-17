@@ -13,6 +13,7 @@ using Esri.ArcGISMapsSDK.Components;
 using Esri.ArcGISMapsSDK.Samples.Components;
 using Esri.GameEngine.Geometry;
 using UnityEngine.EventSystems;
+using TMPro;
 
 // The follow System.Serializable classes are used to define the REST API response
 // in order to leverage Unity's JsonUtility.
@@ -71,13 +72,13 @@ public class FeatureLayerQuery : MonoBehaviour
     // This camera reference will be passed to the stadiums to calculate the distance from the camera to each stadium
     public ArcGISCameraComponent ArcGISCamera;
 
-    public Dropdown StadiumSelector;
+    public TMP_Dropdown StadiumSelector;
 
     // Get all the features when the script starts
     private void Start()
     {
         StartCoroutine(GetFeatures());
-
+       
         StadiumSelector.onValueChanged.AddListener(delegate
         {
             StadiumSelected();
