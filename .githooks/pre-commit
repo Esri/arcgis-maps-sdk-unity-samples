@@ -6,6 +6,8 @@ if [[ $RESULT == 0 ]]; then
   exit 1
 fi
 
+echo "Ran precommit hook"
+
 for file in "${BASH_SOURCE[0]}.d"/*; do
     "$file" || exit $?
 done
