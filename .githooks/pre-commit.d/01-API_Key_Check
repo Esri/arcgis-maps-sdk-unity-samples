@@ -14,8 +14,6 @@ case "${1}" in
     ;;
   *)
 
-  echo "Called APIKey Bash"
-
     GIT_REPOS=`git remote get-url --all origin`
     echo $GIT_REPOS
     if [[ $GIT_REPOS != *Esri/arcgis-maps-sdk-unity-samples.git ]]; then
@@ -29,7 +27,9 @@ case "${1}" in
     # Loop through the staged files and and run python script on them
     for file in `git diff-index --cached --name-only HEAD`; do
       RESULT=`python3 "${script_path}"/../pythonScripts/check_api_key.py "${PWD}"/"${file}"`
-      echo "${script_path}"/../pythonScripts/check_api_key.py "${PWD}"/"${file}"
+      echo "Current result: "
+      echo $RESULT
+      echo "${PWD}"/"${file}"
       if [[ $RESULT != 0 ]]; then
         ((api_key_errors+=1))
       fi

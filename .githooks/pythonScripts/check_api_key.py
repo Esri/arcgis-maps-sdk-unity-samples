@@ -49,6 +49,7 @@ def read_file(args):
 
     # Check if file was passed
     if not args.input:
+        print("file has no arguments")
         print(0)
         return
 
@@ -61,12 +62,14 @@ def read_file(args):
     except:
         # This file was most likely deleted.
         # Regardless, IO errors are not API keys and this should pass.
+        print("unable to read file")
         print(0)
         return
 
     # for each line, parse line
     for i in range(len(content)):
         if "AAPK" in content[i]:
+            print(content[i])
             print(i+1) # BLOCK anything with AAPK to be overly cautious
             return
         
@@ -139,5 +142,4 @@ def main_process():
 
 #-------------------------------------------------------------------------------
 if __name__ == '__main__':
-    # main_process()
-    print("I am running the python script!")
+    main_process()
