@@ -26,20 +26,24 @@ using Esri.GameEngine.Geometry;
 using Esri.ArcGISMapsSDK.Components;
 using Esri.ArcGISMapsSDK.Utils.GeoCoord;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Geocoder : MonoBehaviour
 {
-    public GameObject AddressMarkerTemplate;
-    public float AddressMarkerScale = 1;
-    public GameObject LocationMarkerTemplate;
-    public float LocationMarkerScale = 1;
-    public GameObject AddressCardTemplate;
-    public TextMeshProUGUI InfoField;
+    [SerializeField] private GameObject AddressMarkerTemplate;
+    [SerializeField] private float AddressMarkerScale = 1;
+    [SerializeField] private GameObject LocationMarkerTemplate;
+    [SerializeField] private float LocationMarkerScale = 1;
+    [SerializeField] private GameObject AddressCardTemplate;
+    [SerializeField] private TextMeshProUGUI InfoField;
+    [SerializeField] private Button SearchButton;
 
     private Camera MainCamera;
     private GameObject QueryLocationGO;
     private ArcGISMapComponent arcGISMapComponent;
+    private Animator animator;
     private string ResponseAddress = "";
+    private string textInput;
     private bool ShouldPlaceMarker = false;
     private bool WaitingForResponse = false;
     private float Timer = 0;
@@ -51,6 +55,8 @@ public class Geocoder : MonoBehaviour
     {
         arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
         MainCamera = Camera.main;
+        animator = GameObject.Find("InfoMenu").GetComponent<Animator>();
+        SearchButton.onClick.AddListener(delegate { HandleTextInput(textInput); });
     }
 
     void Update()
@@ -117,7 +123,6 @@ public class Geocoder : MonoBehaviour
         }
     }
 
-
     /// <summary>
     /// Perform a geocoding query (address lookup) and parse the response. If the server returned an error, the message is shown to the user.
     /// </summary>
@@ -172,9 +177,14 @@ public class Geocoder : MonoBehaviour
                 InfoField.text = array.Count switch
                 {
                     0 => "Query did not return a valid response.",
-                    1 => "Enter an address above to move there or shift+click on a location to see the address / description.",
+                    1 => "Enter an address above to move there or Shift+Click on a location to see the address / description.",
                     _ => "Query returned multiple results. If the shown location is not the intended one, make your input more specific.",
                 };
+
+                if (array.Count == 0 || array.Count == 50)
+                {
+                    animator.Play("NotificationAnim");
+                }
             }
         }
         WaitingForResponse = false;
@@ -214,7 +224,7 @@ public class Geocoder : MonoBehaviour
             }
             else
             {
-                InfoField.text = "Enter an address above to move there or shift+click on a location to see the address / description.";
+                InfoField.text = "Enter an address above to move there or Shift+Click on a location to see the address / description.";
                 CreateAddressCard(false);
             }
         }
