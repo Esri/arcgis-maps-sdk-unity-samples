@@ -97,13 +97,13 @@ public class RouteManager : MonoBehaviour
                     if (results.Contains("error"))
                     {
                         DisplayError(results);
-                        GameObject.Find("Text_Minutes").SetActive(false);
                     }
                     else
                     {
                         StartCoroutine(DrawRoute(results));
-                        GameObject.Find("Text_Minutes").SetActive(true);
                     }
+
+                    GameObject.Find("Text_Minutes").SetActive(!results.Contains("error"));
 
                     routing = false;
                 }
