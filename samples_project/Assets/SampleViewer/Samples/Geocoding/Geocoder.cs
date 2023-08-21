@@ -47,6 +47,7 @@ public class Geocoder : MonoBehaviour
     private bool ShouldPlaceMarker = false;
     private bool WaitingForResponse = false;
     private float Timer = 0;
+    private float DistanceFromCamera;
     private readonly float MapLoadWaitTime = 1;
     private readonly string AddressQueryURL = "https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates";
     private readonly string LocationQueryURL = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode";
@@ -95,9 +96,12 @@ public class Geocoder : MonoBehaviour
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
                 Vector3 direction = (hit.point - MainCamera.transform.position);
-                float distanceFromCamera = Vector3.Distance(MainCamera.transform.position, hit.point);
-                float scale = distanceFromCamera * LocationMarkerScale / 5000; // Scale the marker based on its distance from camera 
-                SetupQueryLocationGameObject(LocationMarkerTemplate, hit.point, MainCamera.transform.rotation, new Vector3(scale, scale, scale));
+                DistanceFromCamera = Vector3.Distance(MainCamera.transform.position, hit.point);
+                float scale = DistanceFromCamera * LocationMarkerScale / 400000; // Scale the marker based on its distance from camera 
+                Quaternion markerRotationPerpendicular = Quaternion.FromToRotation(Vector3.up, hit.normal);
+                Quaternion markerRotationFacingCamera = MainCamera.transform.rotation;
+                Quaternion markerRotation = markerRotationPerpendicular * markerRotationFacingCamera;
+                SetupQueryLocationGameObject(LocationMarkerTemplate, hit.point, markerRotation, new Vector3(scale, scale, scale));
                 ReverseGeocode(HitToGeoPosition(hit));
             }
         }
@@ -363,8 +367,8 @@ public class Geocoder : MonoBehaviour
         }
         else
         {
-            float localScale = 3.5f / LocationMarkerScale;
-            card.transform.localPosition = new Vector3(0, 300f / LocationMarkerScale, -300f / LocationMarkerScale);
+            float localScale = LocationMarkerScale / 40;
+            card.transform.localPosition = new Vector3(0, 300f / LocationMarkerScale + 400, -300f / LocationMarkerScale);
             card.transform.localScale = new Vector3(localScale, localScale, localScale);
         }
 
