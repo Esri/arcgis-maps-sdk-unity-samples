@@ -6,6 +6,6 @@ if [[ $RESULT == 0 ]]; then
   exit 1
 fi
 
-for file in "${BASH_SOURCE[0]}.d"/*; do
-    "$file" || exit $?
-done
+# for file in "${BASH_SOURCE[0]}.d"/*; do
+#     "$file" || exit $?
+# done

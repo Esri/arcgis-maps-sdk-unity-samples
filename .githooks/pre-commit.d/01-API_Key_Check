@@ -15,7 +15,6 @@ case "${1}" in
   *)
 
     GIT_REPOS=`git remote get-url --all origin`
-    echo $GIT_REPOS
     if [[ $GIT_REPOS != *Esri/arcgis-maps-sdk-unity-samples.git ]]; then
       echo "Exiting code due to wrong repo"
       exit 0
@@ -27,9 +26,9 @@ case "${1}" in
     # Loop through the staged files and and run python script on them
     for file in `git diff-index --cached --name-only HEAD`; do
       RESULT=`python3 "${script_path}"/../pythonScripts/check_api_key.py "${PWD}"/"${file}"`
+      echo "${PWD}"/"${file}"
       echo "Current result: "
       echo $RESULT
-      echo "${PWD}"/"${file}"
       if [[ $RESULT != 0 ]]; then
         ((api_key_errors+=1))
       fi
