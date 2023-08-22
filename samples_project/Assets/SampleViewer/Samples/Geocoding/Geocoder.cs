@@ -26,23 +26,28 @@ using Esri.GameEngine.Geometry;
 using Esri.ArcGISMapsSDK.Components;
 using Esri.ArcGISMapsSDK.Utils.GeoCoord;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Geocoder : MonoBehaviour
 {
-    public GameObject AddressMarkerTemplate;
-    public float AddressMarkerScale = 1;
-    public GameObject LocationMarkerTemplate;
-    public float LocationMarkerScale = 1;
-    public GameObject AddressCardTemplate;
-    public TextMeshProUGUI InfoField;
+    [SerializeField] private GameObject AddressMarkerTemplate;
+    [SerializeField] private float AddressMarkerScale = 1;
+    [SerializeField] private GameObject LocationMarkerTemplate;
+    [SerializeField] private float LocationMarkerScale = 1;
+    [SerializeField] private GameObject AddressCardTemplate;
+    [SerializeField] private TextMeshProUGUI InfoField;
+    [SerializeField] private Button SearchButton;
 
     private Camera MainCamera;
     private GameObject QueryLocationGO;
     private ArcGISMapComponent arcGISMapComponent;
+    private Animator animator;
     private string ResponseAddress = "";
+    private string textInput;
     private bool ShouldPlaceMarker = false;
     private bool WaitingForResponse = false;
     private float Timer = 0;
+    private float DistanceFromCamera;
     private readonly float MapLoadWaitTime = 1;
     private readonly string AddressQueryURL = "https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates";
     private readonly string LocationQueryURL = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode";
@@ -51,6 +56,8 @@ public class Geocoder : MonoBehaviour
     {
         arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
         MainCamera = Camera.main;
+        animator = GameObject.Find("InfoMenu").GetComponent<Animator>();
+        SearchButton.onClick.AddListener(delegate { HandleTextInput(textInput); });
     }
 
     void Update()
@@ -89,9 +96,12 @@ public class Geocoder : MonoBehaviour
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
                 Vector3 direction = (hit.point - MainCamera.transform.position);
-                float distanceFromCamera = Vector3.Distance(MainCamera.transform.position, hit.point);
-                float scale = distanceFromCamera * LocationMarkerScale / 5000; // Scale the marker based on its distance from camera 
-                SetupQueryLocationGameObject(LocationMarkerTemplate, hit.point, MainCamera.transform.rotation, new Vector3(scale, scale, scale));
+                DistanceFromCamera = Vector3.Distance(MainCamera.transform.position, hit.point);
+                float scale = DistanceFromCamera * LocationMarkerScale / 400000; // Scale the marker based on its distance from camera 
+                Quaternion markerRotationPerpendicular = Quaternion.FromToRotation(Vector3.up, hit.normal);
+                Quaternion markerRotationFacingCamera = MainCamera.transform.rotation;
+                Quaternion markerRotation = markerRotationPerpendicular * markerRotationFacingCamera;
+                SetupQueryLocationGameObject(LocationMarkerTemplate, hit.point, markerRotation, new Vector3(scale, scale, scale));
                 ReverseGeocode(HitToGeoPosition(hit));
             }
         }
@@ -116,7 +126,6 @@ public class Geocoder : MonoBehaviour
             eventSystem.SetSelectedGameObject(null);
         }
     }
-
 
     /// <summary>
     /// Perform a geocoding query (address lookup) and parse the response. If the server returned an error, the message is shown to the user.
@@ -172,9 +181,14 @@ public class Geocoder : MonoBehaviour
                 InfoField.text = array.Count switch
                 {
                     0 => "Query did not return a valid response.",
-                    1 => "Enter an address above to move there or shift+click on a location to see the address / description.",
+                    1 => "Enter an address above to move there or Shift+Click on a location to see the address / description.",
                     _ => "Query returned multiple results. If the shown location is not the intended one, make your input more specific.",
                 };
+
+                if (array.Count == 0 || array.Count == 50)
+                {
+                    animator.Play("NotificationAnim");
+                }
             }
         }
         WaitingForResponse = false;
@@ -214,7 +228,7 @@ public class Geocoder : MonoBehaviour
             }
             else
             {
-                InfoField.text = "Enter an address above to move there or shift+click on a location to see the address / description.";
+                InfoField.text = "Enter an address above to move there or Shift+Click on a location to see the address / description.";
                 CreateAddressCard(false);
             }
         }
@@ -353,8 +367,8 @@ public class Geocoder : MonoBehaviour
         }
         else
         {
-            float localScale = 3.5f / LocationMarkerScale;
-            card.transform.localPosition = new Vector3(0, 300f / LocationMarkerScale, -300f / LocationMarkerScale);
+            float localScale = LocationMarkerScale / 40;
+            card.transform.localPosition = new Vector3(0, 300f / LocationMarkerScale + 400, -300f / LocationMarkerScale);
             card.transform.localScale = new Vector3(localScale, localScale, localScale);
         }
 

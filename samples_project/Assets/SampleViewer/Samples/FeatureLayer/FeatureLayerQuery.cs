@@ -10,7 +10,10 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using Esri.ArcGISMapsSDK.Components;
+using Esri.ArcGISMapsSDK.Samples.Components;
 using Esri.GameEngine.Geometry;
+using UnityEngine.EventSystems;
+using TMPro;
 
 // The follow System.Serializable classes are used to define the REST API response
 // in order to leverage Unity's JsonUtility.
@@ -51,35 +54,47 @@ public class Geometry
 public class FeatureLayerQuery : MonoBehaviour
 {
     // The feature layer we are going to query
-    public string FeatureLayerURL = "https://services.arcgis.com/P3ePLMYs2RVChkJx/ArcGIS/rest/services/Major_League_Baseball_Stadiums/FeatureServer/0";
-    
+    [SerializeField] private string FeatureLayerURL = "https://services.arcgis.com/P3ePLMYs2RVChkJx/ArcGIS/rest/services/Major_League_Baseball_Stadiums/FeatureServer/0";
+
     // This prefab will be instatiated for each feature we parse
-    public GameObject StadiumPrefab;
+    [SerializeField] private GameObject StadiumPrefab;
 
     // The height where we spawn the stadium before finding the ground height
     private int StadiumSpawnHeight = 10000;
 
     // This will hold a reference to each feature we created
-    public List<GameObject> Stadiums = new List<GameObject>();
+    [SerializeField] private List<GameObject> Stadiums = new List<GameObject>();
 
     // In the query request we can denote the Spatial Reference we want the return geometries in.
     // It is important that we create the GameObjects with the same Spatial Reference
     private int FeatureSRWKID = 4326;
 
     // This camera reference will be passed to the stadiums to calculate the distance from the camera to each stadium
-    public ArcGISCameraComponent ArcGISCamera;
+    [SerializeField] private ArcGISCameraComponent ArcGISCamera;
 
-    public Dropdown StadiumSelector;
+    [SerializeField] private TMP_Dropdown StadiumSelector;
 
     // Get all the features when the script starts
-    void Start()
+    private void Start()
     {
         StartCoroutine(GetFeatures());
-
+       
         StadiumSelector.onValueChanged.AddListener(delegate
         {
             StadiumSelected();
         });
+    }
+
+    private void Update()
+    {
+        if (MouseOverUI())
+        {
+            ArcGISCamera.GetComponent<ArcGISCameraControllerComponent>().enabled = false;
+        }
+        else
+        {
+            ArcGISCamera.GetComponent<ArcGISCameraControllerComponent>().enabled = true;
+        }
     }
 
     // Sends the Request to get features from the service
@@ -222,5 +237,10 @@ public class FeatureLayerQuery : MonoBehaviour
                 CameraLocation.Rotation = StadiumLocation.Rotation;
             }
         }
+    }
+
+    private bool MouseOverUI()
+    {
+        return EventSystem.current.IsPointerOverGameObject();
     }
 }
