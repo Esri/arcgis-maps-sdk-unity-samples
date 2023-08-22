@@ -9,21 +9,17 @@ that they do not contain an API key.
 
 Notes:
 
-    .NET: Esri.ArcGISRuntime.ArcGISRuntimeEnvironment.ApiKey = "APIKeyString"
+    Unity: apiKey:  APIKeyValue
 
     Block Commit:
         * Anything that contains AAPK
-        * Esri.ArcGISRuntime.ArcGISRuntimeEnvironment.ApiKey = "APIKeyString" - API key is set by string
-        * Esri.ArcGISRuntime.ArcGISRuntimeEnvironment.ApiKey = apiKey - API key is a variable with a value set elsewhere
-            .. apiKey = "APIKeyString"
-        * Esri.ArcGISRuntime.ArcGISRuntimeEnvironment.ApiKey = (1"asdf"df*) - API key is invalid, though may still contain sensitive information
+        * apiKey: APIKeyString - API key is set to any none empty value
+        * apiKey: (1"asdf"df*) - API key is invalid, though may still contain sensitive information
 
     Allow Commit:
-        * Esri.ArcGISRuntime.ArcGISRuntimeEnvironment.ApiKey = "" - empty string
-        * Esri.ArcGISRuntime.ArcGISRuntimeEnvironment.ApiKey = apiKey
-            .. apiKey = "" - empty string
-            .. apiKey is not found
-        * Esri.ArcGISRuntime.ArcGISRuntimeEnvironment.ApiKey not found
+        * apiKey: - empty value
+        * apiKey: "YOUR_API_KEY" - Citra requested snippet
+        * apiKey: not found in any staged files
 '''
 import re
 import argparse
@@ -34,8 +30,8 @@ import argparse
 
 content = []
 
-net_apiKey_argument_regex = r"Esri\.ArcGISRuntime\.ArcGISRuntimeEnvironment\.ApiKey[\s]*\=[\s]*([\sa-zA-Z0-9_\"\']*)"
-# REGEX explanation: Esri.ArcGISRuntime.ArcGISRuntimeEnvironment.ApiKey = {0+ spaces}{0+ alphanumeric characters}{0+ underscores}{0+ quotes}
+unity_apiKey_argument_regex = r"apiKey[\s]*\:[\s]*([\sa-zA-Z0-9_\"\'\-]*)"
+# REGEX explanation: apiKey: {0+ spaces}{0+ alphanumeric characters}{0+ underscores}{0+ quotes}
 
 valid_variable_regex = r"[_a-zA-Z][_a-zA-Z0-9]*[a-zA-Z0-9]"
 # Starts with an alphabetical character or underscore, contains zero or more alphabetical characters or underscores then ends with an alphanumeric character
@@ -70,8 +66,8 @@ def read_file(args):
             print(i+1) # BLOCK anything with AAPK to be overly cautious
             return
         
-        if "Esri.ArcGISRuntime.ArcGISRuntimeEnvironment.ApiKey =" in content[i]:
-            ApiKey_argument = re.search(net_apiKey_argument_regex, content[i]).group(1)
+        if "apiKey:" in content[i]:
+            ApiKey_argument = re.search(unity_apiKey_argument_regex, content[i]).group(1)
             argument_value = check_argument(ApiKey_argument, i)+1
             if argument_value > 0:
                 print(argument_value)
@@ -85,41 +81,18 @@ def read_file(args):
 
 def check_argument(ApiKey_argument: str, i: int) -> int: # returns 0 if ALLOW, else line_num if BLOCK.
     if not ApiKey_argument:
-        return -1 # ALLOW, Esri.ArcGISRuntime.ArcGISRuntimeEnvironment.ApiKey is not set
-
-    elif (ApiKey_argument[0] == '"' and ApiKey_argument[-1] == '"') or ApiKey_argument[0] == "'" and ApiKey_argument[-1] == "'":
-        if len(ApiKey_argument) == 2 or ApiKey_argument[1:-1] == "YOUR_API_KEY":
-            return -1 # ALLOW, API key is an empty string or Citra requested snippet
-        return i # BLOCK, API key is a string
+        return -1 # ALLOW, apikey is not set
+    
+    if ApiKey_argument[1:-1] == "YOUR_API_KEY":
+        return -1 # ALLOW, apikey is Citra requested snippet
 
     if not re.match(valid_variable_regex, ApiKey_argument):
         return i # BLOCK, API key not a valid variable, though may still be sensitive information. For instance "-AAPK{...}"
 
     else:
-        # The API key is set via a variable so we now need to find the value of that variable
-        return find_value(ApiKey_argument)
+        return i # BLOCK, API key is set in editor
     
     # We return i+1 to indicate the line number where the API key is defined, because line numbers are not zero indexed
-
-#-------------------------------------------------------------------------------
-
-def find_value(var) -> int:
-    for i in range(len(content)):
-        if re.search(var+r" *=", content[i]):
-            try:
-                if re.search(r" *= *"+var, content[i]):
-                    continue
-                pattern = r"= *([\"|\']?[\w]*[\"|\']?);?"
-                # captures any quote surrounded string, after a "=" and zero or more spaces
-                ApiKey_argument = re.search(pattern, content[i]).group(1)
-            except:
-                return -1
-
-            return check_argument(ApiKey_argument, i)
-            # We again check this value to see if is null, a string, or another variable
-
-    return -1
-    # The variable was not found or defined (using '=' at least), ALLOW the commit in this case
 
 #-------------------------------------------------------------------------------
 # main process
