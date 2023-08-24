@@ -28,8 +28,11 @@ public class RouteManager : MonoBehaviour
     public GameObject RouteInfo;
     public string apiKey;
 
+    [SerializeField] private TextMeshProUGUI InfoField;
+
     private HPRoot hpRoot;
     private ArcGISMapComponent arcGISMapComponent;
+    private Animator animator;
     private float elevationOffset = 20.0f;
     private int StopCount = 2;
     private Queue<GameObject> stops = new Queue<GameObject>();
@@ -50,6 +53,8 @@ public class RouteManager : MonoBehaviour
         // We need this ArcGISMapComponent for the FromCartesianPosition Method
         // defined on the ArcGISMapComponent.View
         arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
+
+        animator = GameObject.Find("InfoMenu").GetComponent<Animator>();
 
         lineRenderer = Route.GetComponent<LineRenderer>();
 
@@ -97,10 +102,12 @@ public class RouteManager : MonoBehaviour
                     if (results.Contains("error"))
                     {
                         DisplayError(results);
+                        animator.Play("NotificationAnim");
                     }
                     else
                     {
                         StartCoroutine(DrawRoute(results));
+                        DisplayNoteText();
                     }
 
                     routing = false;
@@ -131,8 +138,14 @@ public class RouteManager : MonoBehaviour
         var error = JObject.Parse(error_text).SelectToken("error");
         var message = error.SelectToken("message");
 
-        var tmp = RouteInfo.GetComponent<TextMeshProUGUI>();
+        var tmp = InfoField.GetComponent<TextMeshProUGUI>();
         tmp.text = $"Error: {message}";
+    }
+
+    private void DisplayNoteText()
+    {
+        var tmp = InfoField.GetComponent<TextMeshProUGUI>();
+        tmp.text = $"Hold Left Shift + Left Click on the map to begin routing.";
     }
 
     private async Task<string> FetchRoute(GameObject[] stops)
@@ -327,6 +340,8 @@ public class RouteManager : MonoBehaviour
 
         var tmp = RouteInfo.GetComponent<TextMeshProUGUI>();
         tmp.text = $"0";
+
+        DisplayNoteText();
     }
 
 }
