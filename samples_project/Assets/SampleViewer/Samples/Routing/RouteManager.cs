@@ -74,6 +74,8 @@ public class RouteManager : MonoBehaviour
                 return;
             }
             animator.Play("NotificationAnim_Close");
+            DisplayNoteText("Hold Left Shift + Left Click on the map to begin routing.");
+
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -97,8 +99,6 @@ public class RouteManager : MonoBehaviour
 
                 if (stops.Count == StopCount)
                 {
-                    routing = true;
-
                     string results = await FetchRoute(stops.ToArray());
 
                     if (results.Contains("error"))
@@ -108,6 +108,7 @@ public class RouteManager : MonoBehaviour
                     }
                     else
                     {
+                        routing = true;
                         StartCoroutine(DrawRoute(results));                       
                     }
                 }
