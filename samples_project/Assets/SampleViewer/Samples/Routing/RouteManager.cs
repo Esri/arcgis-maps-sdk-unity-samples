@@ -68,11 +68,12 @@ public class RouteManager : MonoBehaviour
         {
             if (routing)
             {
-                DisplayNoteText("Please Wait for the Routing to Finish.");
+                DisplayNoteText("Please wait for the routing to finish.");
                 animator.Play("NotificationAnim");
+             
                 return;
             }
-
+            animator.Play("NotificationAnim_Close");
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -107,8 +108,7 @@ public class RouteManager : MonoBehaviour
                     }
                     else
                     {
-                        StartCoroutine(DrawRoute(results));
-                        DisplayNoteText("Hold Left Shift + Left Click on the map to begin routing.");
+                        StartCoroutine(DrawRoute(results));                       
                     }
                 }
             }
