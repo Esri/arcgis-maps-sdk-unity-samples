@@ -5,6 +5,7 @@ using CommonUsages = UnityEngine.XR.CommonUsages;
 using Unity.XR.CoreUtils;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.UI;
+using InputDevice = UnityEngine.XR.InputDevice;
 
 [RequireComponent(typeof(CharacterController))]
 public class ContinuousMovement : MonoBehaviour
@@ -13,37 +14,39 @@ public class ContinuousMovement : MonoBehaviour
     private float fallSpeed;
     private float heightOffset = 0.2f;
     [SerializeField] private GameObject Instructions;
-    [SerializeField] private InputAction LeftMenuAction;
+    private InputDevice leftDevice;
     private Vector2 leftInputAxis;
     [SerializeField] private XRNode leftInputSource;
     [SerializeField] private XRInteractorLineVisual leftLineVisual;
+    [SerializeField] private InputAction leftMenuAction;
     [SerializeField] private XRRayInteractor leftRayInteractor;
     [SerializeField] private GameObject playerCamera;
     private XROrigin rig;
-    [SerializeField] private InputAction RightMenuAction;
+    private InputDevice rightDevice;
     private Vector2 rightInputAxis;
     [SerializeField] private XRNode rightInputSource;
     [SerializeField] private XRInteractorLineVisual rightLineVisual;
+    [SerializeField] private InputAction rightMenuAction;
     [SerializeField] private XRRayInteractor rightRayInteractor;
     [SerializeField] private ContinuousTurnProviderBase smoothTurn;
     private Toggle smoothTurnToggle;
     [SerializeField] private SnapTurnProviderBase snapTurn;
     [SerializeField] private float speed;
     private bool toggledOn = true;
-    [SerializeField] private GameObject UICanvas;
+    [SerializeField] private GameObject uiCanvas;
     [SerializeField] private float upSpeed;
-    [SerializeField] private bool UseSnapTurn;
+    [SerializeField] private bool useSnapTurn;
 
     private void OnEnable()
     {
-        LeftMenuAction.Enable();
-        RightMenuAction.Enable();
+        leftMenuAction.Enable();
+        rightMenuAction.Enable();
     }
 
     private void OnDisable()
     {
-        LeftMenuAction.Disable();
-        RightMenuAction.Disable();
+        leftMenuAction.Disable();
+        rightMenuAction.Disable();
     }
 
     void Start()
@@ -53,7 +56,7 @@ public class ContinuousMovement : MonoBehaviour
         smoothTurn = GameObject.Find("Locomotion System").GetComponent<ContinuousTurnProviderBase>();
         snapTurn = GameObject.Find("Locomotion System").GetComponent<SnapTurnProviderBase>();
         smoothTurnToggle = Instructions.GetComponentInChildren<Toggle>();
-        smoothTurnToggle.isOn = UseSnapTurn;
+        smoothTurnToggle.isOn = useSnapTurn;
         ToggleSmoothTurn();
     }
 
@@ -69,25 +72,24 @@ public class ContinuousMovement : MonoBehaviour
 
     private void LateUpdate()
     {
-        UICanvas.transform.position = playerCamera.transform.position + playerCamera.transform.forward * 15;
-        UICanvas.transform.rotation = new Quaternion(0.0f, playerCamera.transform.rotation.y, 0.0f,
+        uiCanvas.transform.position = playerCamera.transform.position + playerCamera.transform.forward * 15;
+        uiCanvas.transform.rotation = new Quaternion(0.0f, playerCamera.transform.rotation.y, 0.0f,
             playerCamera.transform.rotation.w);
     }
-
-    // Update is called once per frame
-    void Update()
+    
+    private void Update()
     {
-        var leftDevice = InputDevices.GetDeviceAtXRNode(leftInputSource);
+        leftDevice = InputDevices.GetDeviceAtXRNode(leftInputSource);
         leftDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out leftInputAxis);
-        var rightDevice = InputDevices.GetDeviceAtXRNode(rightInputSource);
+        rightDevice = InputDevices.GetDeviceAtXRNode(rightInputSource);
         rightDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out rightInputAxis);
 
-        if (LeftMenuAction.triggered)
+        if (leftMenuAction.triggered)
         {
             ToggleCanvas();
         }
 
-        if (RightMenuAction.triggered)
+        if (rightMenuAction.triggered)
         {
             ToggleCanvas();
         }
