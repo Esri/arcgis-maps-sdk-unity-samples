@@ -27,6 +27,16 @@ Here is a Unity project containing a set of samples showing you how to accomplis
 
    ![image](import-samples.png)
 
+   NOTE: There is a known issue with ArcGIS Maps SDK for Unity 1.3. In projects that use the new input system, an assembly definition file in the plugin samples needs to be updated.
+
+   1. Select `\Assets\Samples\ArcGIS Maps SDK for Unity\1.3.0\Sample Content\ArcGISMapsSDK.Samples.asmdef` in the Unity project explorer.
+
+   2. In the inspector tab, add `Unity.InputSystem` to the references.
+
+      ![Inspector screen for assembly definition](asmdefReference.png)
+
+   3. Click out of the inspector window.  When prompted with an "Unapplied import settings" window, click "Apply".
+
 6. Launch Unity and open the `SampleViewer` level (it should open by default).
 
 7. In the heirarchy select the `SampleSwitcher` Game Object and then in the inspector set your API Key. You can learn more about [API keys](https://developers.arcgis.com/documentation/mapping-apis-and-services/security/api-keys/) and [Accounts](https://developers.arcgis.com/documentation/mapping-apis-and-services/deployment/accounts/) in the _Mapping APIs and location services_ guide.
