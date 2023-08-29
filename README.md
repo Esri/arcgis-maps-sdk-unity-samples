@@ -5,6 +5,7 @@
 Here is a Unity project containing a set of samples showing you how to accomplish various things using the combined features of Unity and the ArcGIS Maps SDK for Unity. The `main` branch is configured to work with our most recent release (1.2.0) if you want to use the sample repo with an older release check out the corresponding tag of the sample repo, `git checkout 1.0.0` for the sample repo that worked with our 1.0.0 release.
 
 ## Features
+
 * [Feature service REST API](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/samples_project/Assets/SampleViewer/Samples/FeatureLayer) - See how to query a feature service to create game objects in Unity located at real world positions.
 * [Geocoding](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/samples_project/Assets/SampleViewer/Samples/Geocoding) - Search for an address or click on the surface to get the address of that location.
 * [Line of sight](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/samples_project/Assets/SampleViewer/Samples/LineOfSight) - See how to check line of sight between two object in Unity.
@@ -20,11 +21,11 @@ Here is a Unity project containing a set of samples showing you how to accomplis
 3. Open the project in Unity ignoring the errors when prompted to enter `Safe Mode`.
 4. Use the package manager to import the `.tarball` downloaded in step 2.
 
-![image](package-manager.png)
+   ![image](package-manager.png)
 
 5. Import the samples. These samples include some components necessary for this repo to function including the `ArcGIS Camera Controller` component.
 
-![image](import-samples.png)
+   ![image](import-samples.png)
 
 6. Launch Unity and open the `SampleViewer` level (it should open by default).
 
@@ -51,6 +52,7 @@ Find a bug or want to request a new feature?  Please let us know by submitting a
 Esri welcomes contributions from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing).
 
 ## Licensing
+
 Copyright 2022 Esri
 
 Licensed under the Apache License, Version 2.0 (the "License");
