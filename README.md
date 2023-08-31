@@ -35,7 +35,7 @@ Here is a Unity project containing a set of samples showing you how to accomplis
 
       ![Inspector screen for assembly definition](asmdefReference.png)
 
-   3. Click out of the inspector window.  When prompted with an "Unapplied import settings" window, click "Apply".
+   3. Scroll to the bottom of the inspector tab and click "Apply".
 
 6. Launch Unity and open the `SampleViewer` level (it should open by default).
 
