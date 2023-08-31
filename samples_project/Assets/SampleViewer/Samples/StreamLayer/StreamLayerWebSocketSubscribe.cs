@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
 using Esri.ArcGISMapsSDK.Components;
+using Esri.ArcGISMapsSDK.Samples.Components;
 using Esri.GameEngine.Geometry;
 using System;
 using System.Net.WebSockets;
@@ -18,6 +19,8 @@ using System.Threading.Tasks;
 using System.Threading;
 using Newtonsoft.Json.Linq;
 using Esri.HPFramework;
+using UnityEngine.EventSystems;
+using TMPro;
 
 [Serializable]
 public class PlaneFeature
@@ -106,9 +109,9 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
     public List<GameObject> flights = new List<GameObject>();
 
     // This camera reference will be passed to the flights to calculate the distance from the camera to each flight
-    public ArcGISCameraComponent ArcGISCamera;
+    [SerializeField] private ArcGISCameraComponent ArcGISCamera;
 
-    public Dropdown flightSelector;
+    [SerializeField] private TMP_Dropdown flightSelector;
 
     // Get all the features when the script starts
     void Start()
@@ -125,9 +128,26 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
         });
     }
 
+    private void Update()
+    {
+        if (MouseOverUI())
+        {
+            ArcGISCamera.GetComponent<ArcGISCameraControllerComponent>().enabled = false;
+        }
+        else
+        {
+            ArcGISCamera.GetComponent<ArcGISCameraControllerComponent>().enabled = true;
+        }
+    }
+
     private void LateUpdate()
     {
         DisplayPlaneData();
+    }
+
+    private bool MouseOverUI()
+    {
+        return EventSystem.current.IsPointerOverGameObject();
     }
 
     private void HandleMessage(byte[] buffer, int count)
