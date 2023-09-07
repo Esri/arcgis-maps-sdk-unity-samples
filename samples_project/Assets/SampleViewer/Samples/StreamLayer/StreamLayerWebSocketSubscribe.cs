@@ -87,9 +87,6 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
     public float symbolScaleFactor = 2000.0f;
     public float timeToLive;
 
-    // The height where we spawn the flight before finding the actual height
-    private int FlightSpawnHeight = 10000;
-
     public string wsUrl = "wss://geoeventsample1.esri.com:6143/arcgis/ws/services/FAAStream/StreamServer/subscribe";
     public string nameField;
     public string headingField;
@@ -120,7 +117,7 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
 #endif
         planeData = new Dictionary<string, List<PlaneFeature>>();
         var result = Connect();
-
+        
         flightSelector.onValueChanged.AddListener(delegate
         {
             FlightSelected();
@@ -334,6 +331,7 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
                         {
                             flightSelector.options.Remove(optionToRemove);
                             flightSelector.RefreshShownValue();
+                            Debug.Log("remove" + planeFeature.attributes.name);
                         }
                         else
                         {
