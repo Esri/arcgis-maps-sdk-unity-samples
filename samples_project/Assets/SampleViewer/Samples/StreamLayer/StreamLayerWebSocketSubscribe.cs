@@ -7,7 +7,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEditor;
 using Esri.ArcGISMapsSDK.Components;
 using Esri.ArcGISMapsSDK.Samples.Components;
@@ -327,10 +326,21 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
                 {
                     // If elapse time since last update is more than 5 minutes remove the game object to conserve memory
                     TimeSpan timespan = DateTime.Now - planeFeature.attributes.dateTimeStamp.ToLocalTime();
+                    
                     if (timespan.TotalMinutes > timeToLive)
                     {
+                        TMP_Dropdown.OptionData optionToRemove = flightSelector.options.Find(option => option.text == planeFeature.attributes.name);
+                        if (optionToRemove != null)
+                        {
+                            flightSelector.options.Remove(optionToRemove);
+                            flightSelector.RefreshShownValue();
+                        }
+                        else
+                        {
+                            Debug.LogWarning("Option with name: " + optionToRemove + " not found!");
+                        }
+
                         flights.Remove(gobjPlane);
-                        PopulateFlightDropdown();
                         Destroy(gobjPlane);
                         planeData.Remove(plane);
                         continue;
@@ -355,10 +365,12 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
                 }
                 else
                 {
+                    TMP_Dropdown.OptionData newOption = new TMP_Dropdown.OptionData(planeFeature.attributes.name);
+                    flightSelector.options.Add(newOption);
+                    flightSelector.RefreshShownValue();
+
                     GameObject clonePrefab = Instantiate(planeSymbolPrefab, this.transform);
                     clonePrefab.name = planeFeature.attributes.name;
-
-                    PopulateFlightDropdown();
                     flights.Add(clonePrefab);
                     clonePrefab.SetActive(true);
 
@@ -417,8 +429,8 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
                 var CameraLocation = ArcGISCamera.GetComponent<ArcGISLocationComponent>();
                 double Longitude = flightLocation.Position.X;
                 double Latitude = flightLocation.Position.Y;
-
-                ArcGISPoint NewPosition = new ArcGISPoint(Longitude, Latitude, FlightSpawnHeight, flightLocation.Position.SpatialReference);
+                double height = flightLocation.Position.Z + 1500;
+                ArcGISPoint NewPosition = new ArcGISPoint(Longitude, Latitude, height, flightLocation.Position.SpatialReference);
 
                 CameraLocation.Position = NewPosition;
                 CameraLocation.Rotation = flightLocation.Rotation;
