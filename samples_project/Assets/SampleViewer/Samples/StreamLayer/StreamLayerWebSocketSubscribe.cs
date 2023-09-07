@@ -7,9 +7,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEditor;
 using Esri.ArcGISMapsSDK.Components;
+using Esri.ArcGISMapsSDK.Samples.Components;
 using Esri.GameEngine.Geometry;
 using System;
 using System.Net.WebSockets;
@@ -18,6 +18,8 @@ using System.Threading.Tasks;
 using System.Threading;
 using Newtonsoft.Json.Linq;
 using Esri.HPFramework;
+using UnityEngine.EventSystems;
+using TMPro;
 
 [Serializable]
 public class PlaneFeature
@@ -85,9 +87,6 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
     public float symbolScaleFactor = 2000.0f;
     public float timeToLive;
 
-    // The height where we spawn the flight before finding the actual height
-    private int FlightSpawnHeight = 10000;
-
     public string wsUrl = "wss://geoeventsample1.esri.com:6143/arcgis/ws/services/FAAStream/StreamServer/subscribe";
     public string nameField;
     public string headingField;
@@ -106,9 +105,9 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
     public List<GameObject> flights = new List<GameObject>();
 
     // This camera reference will be passed to the flights to calculate the distance from the camera to each flight
-    public ArcGISCameraComponent ArcGISCamera;
+    [SerializeField] private ArcGISCameraComponent ArcGISCamera;
 
-    public Dropdown flightSelector;
+    [SerializeField] private TMP_Dropdown flightSelector;
 
     // Get all the features when the script starts
     void Start()
@@ -118,16 +117,33 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
 #endif
         planeData = new Dictionary<string, List<PlaneFeature>>();
         var result = Connect();
-
+        
         flightSelector.onValueChanged.AddListener(delegate
         {
             FlightSelected();
         });
     }
 
+    private void Update()
+    {
+        if (MouseOverUI())
+        {
+            ArcGISCamera.GetComponent<ArcGISCameraControllerComponent>().enabled = false;
+        }
+        else
+        {
+            ArcGISCamera.GetComponent<ArcGISCameraControllerComponent>().enabled = true;
+        }
+    }
+
     private void LateUpdate()
     {
         DisplayPlaneData();
+    }
+
+    private bool MouseOverUI()
+    {
+        return EventSystem.current.IsPointerOverGameObject();
     }
 
     private void HandleMessage(byte[] buffer, int count)
@@ -307,10 +323,22 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
                 {
                     // If elapse time since last update is more than 5 minutes remove the game object to conserve memory
                     TimeSpan timespan = DateTime.Now - planeFeature.attributes.dateTimeStamp.ToLocalTime();
+                    
                     if (timespan.TotalMinutes > timeToLive)
                     {
+                        TMP_Dropdown.OptionData optionToRemove = flightSelector.options.Find(option => option.text == planeFeature.attributes.name);
+                        if (optionToRemove != null)
+                        {
+                            flightSelector.options.Remove(optionToRemove);
+                            flightSelector.RefreshShownValue();
+                            Debug.Log("remove" + planeFeature.attributes.name);
+                        }
+                        else
+                        {
+                            Debug.LogWarning("Option with name: " + optionToRemove + " not found!");
+                        }
+
                         flights.Remove(gobjPlane);
-                        PopulateFlightDropdown();
                         Destroy(gobjPlane);
                         planeData.Remove(plane);
                         continue;
@@ -335,10 +363,12 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
                 }
                 else
                 {
+                    TMP_Dropdown.OptionData newOption = new TMP_Dropdown.OptionData(planeFeature.attributes.name);
+                    flightSelector.options.Add(newOption);
+                    flightSelector.RefreshShownValue();
+
                     GameObject clonePrefab = Instantiate(planeSymbolPrefab, this.transform);
                     clonePrefab.name = planeFeature.attributes.name;
-
-                    PopulateFlightDropdown();
                     flights.Add(clonePrefab);
                     clonePrefab.SetActive(true);
 
@@ -397,8 +427,8 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
                 var CameraLocation = ArcGISCamera.GetComponent<ArcGISLocationComponent>();
                 double Longitude = flightLocation.Position.X;
                 double Latitude = flightLocation.Position.Y;
-
-                ArcGISPoint NewPosition = new ArcGISPoint(Longitude, Latitude, FlightSpawnHeight, flightLocation.Position.SpatialReference);
+                double height = flightLocation.Position.Z + 1500;
+                ArcGISPoint NewPosition = new ArcGISPoint(Longitude, Latitude, height, flightLocation.Position.SpatialReference);
 
                 CameraLocation.Position = NewPosition;
                 CameraLocation.Rotation = flightLocation.Rotation;
