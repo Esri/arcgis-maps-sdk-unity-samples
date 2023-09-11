@@ -2,7 +2,7 @@
 
 Show a line of sight between two objects. Check if the line of sight is obstructed by the ArcGIS 3D object scene layer.
 
-![Image of line of sight](LineOfSight.jpg)
+![Image of line of sight](LineOfSight.png)
 
 ## How to use the sample
 

@@ -2,7 +2,7 @@
 
 Subscribe to the stream service's WebSocket and receive information through to update information in real-time.
 
-![Stream layer](StreamLayer.jpg)
+![Stream layer](StreamLayer.png)
 
 ## How to use the sample
 
