@@ -2,7 +2,7 @@
 
 Show a route between two points on a map using Esri's routing service REST API.
 
-![Routing](Routing.png)
+![Routing](routing.png)
 
 ## How to use the sample
 
