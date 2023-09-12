@@ -2,7 +2,7 @@
 
 Find the location for an address or find the address of a selected location using the Geocoding service. 
 
-![Geocoding](Geocoding.jpg)
+![Geocoding](Geocoding.png)
 
 ## How to use the sample
 
