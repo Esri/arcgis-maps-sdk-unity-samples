@@ -2,7 +2,7 @@
 
 Display the measured distance by drawing lines on the map.
 
-![measure](measure.png)
+![measure](Measure.png)
 
 ## How to use the sample
 
