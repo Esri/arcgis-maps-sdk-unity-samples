@@ -151,7 +151,7 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
         string data = Encoding.UTF8.GetString(buffer, 0, count);
         TryParseFeedAndUpdatePlane(data);
     }
-
+   
     public async Task Connect()
     {
         if (wsClient == null)
@@ -159,17 +159,30 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
             wsClient = new ClientWebSocket();
             await wsClient.ConnectAsync(new Uri(wsUrl), CancellationToken.None);
             byte[] buffer = new byte[10240];
+
             while (wsClient.State == WebSocketState.Open)
             {
-                var result = await wsClient.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-                if (result.MessageType == WebSocketMessageType.Close)
+                var completeMessage = new List<byte>();
+                WebSocketReceiveResult result;
+
+                do
                 {
-                    await wsClient.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
-                }
-                else
-                {
-                    HandleMessage(buffer, result.Count);
-                }
+                    result = await wsClient.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+
+                    if (result.MessageType == WebSocketMessageType.Close)
+                    {
+                        await wsClient.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
+                        return;
+                    }
+
+                    for (int i = 0; i < result.Count; i++)
+                    {
+                        completeMessage.Add(buffer[i]);
+                    }
+
+                } while (!result.EndOfMessage);
+
+                HandleMessage(completeMessage.ToArray(), completeMessage.Count);
             }
         }
     }
