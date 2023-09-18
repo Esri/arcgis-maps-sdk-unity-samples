@@ -19,7 +19,7 @@ using TMPro;
 // in order to leverage Unity's JsonUtility.
 // When implementing your own version of this the Baseball Properties would need to 
 // be updated.
-[System.Serializable]
+/*[System.Serializable]
 public class FeatureCollectionData
 {
     public string type;
@@ -47,7 +47,7 @@ public class Geometry
 {
     public string type;
     public double[] coordinates;
-}
+}*/
 
 // This class issues a query request to a Feature Layer which it then parses to create GameObjects at accurate locations
 // with correct property values. This is a good starting point if you are looking to parse your own feature layer into Unity.
@@ -113,7 +113,7 @@ public class FeatureLayerQuery : MonoBehaviour
         }
         else
         {
-            CreateGameObjectsFromResponse(Request.downloadHandler.text);
+            //CreateGameObjectsFromResponse(Request.downloadHandler.text);
             PopulateStadiumDropdown();
         }
     }
@@ -169,7 +169,7 @@ public class FeatureLayerQuery : MonoBehaviour
     // Given a valid response from our query request to the feature layer, this method will parse the response text
     // into geometries and properties which it will use to create new GameObjects and locate them correctly in the world.
     // This logic will differ based on the properties you are trying to parse out of the response.
-    private void CreateGameObjectsFromResponse(string Response)
+    /*private void CreateGameObjectsFromResponse(string Response)
     {
         // Deserialize the JSON response from the query.
         var deserialized = JsonUtility.FromJson<FeatureCollectionData>(Response);
@@ -199,7 +199,7 @@ public class FeatureLayerQuery : MonoBehaviour
             StadiumInfo.ArcGISCamera = ArcGISCamera;
             StadiumInfo.SetSpawnHeight(StadiumSpawnHeight);
         }
-    }
+    }*/
 
     // Populates the stadium drown down with all the stadium names from the Stadiums list
     private void PopulateStadiumDropdown()
