@@ -28,8 +28,11 @@ public class RouteManager : MonoBehaviour
     public GameObject RouteInfo;
     public string apiKey;
 
+    [SerializeField] private TextMeshProUGUI InfoField;
+
     private HPRoot hpRoot;
     private ArcGISMapComponent arcGISMapComponent;
+    private Animator animator;
     private float elevationOffset = 20.0f;
     private int StopCount = 2;
     private Queue<GameObject> stops = new Queue<GameObject>();
@@ -51,6 +54,8 @@ public class RouteManager : MonoBehaviour
         // defined on the ArcGISMapComponent.View
         arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
 
+        animator = GameObject.Find("InfoMenu").GetComponent<Animator>();
+
         lineRenderer = Route.GetComponent<LineRenderer>();
 
         lastRootPosition = arcGISMapComponent.GetComponent<HPRoot>().RootUniversePosition;
@@ -63,9 +68,13 @@ public class RouteManager : MonoBehaviour
         {
             if (routing)
             {
-                Debug.Log("Please Wait for Results or Cancel");
+                DisplayNoteText("Please wait for the routing to finish.");
+                animator.Play("NotificationAnim");
+             
                 return;
             }
+            animator.Play("NotificationAnim_Close");
+            DisplayNoteText("Hold Left Shift + Left Click on the map to begin routing.");
 
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -90,20 +99,18 @@ public class RouteManager : MonoBehaviour
 
                 if (stops.Count == StopCount)
                 {
-                    routing = true;
-
                     string results = await FetchRoute(stops.ToArray());
 
                     if (results.Contains("error"))
                     {
                         DisplayError(results);
+                        animator.Play("NotificationAnim");
                     }
                     else
                     {
-                        StartCoroutine(DrawRoute(results));
+                        routing = true;
+                        StartCoroutine(DrawRoute(results));                       
                     }
-
-                    routing = false;
                 }
             }
         }
@@ -131,8 +138,14 @@ public class RouteManager : MonoBehaviour
         var error = JObject.Parse(error_text).SelectToken("error");
         var message = error.SelectToken("message");
 
-        var tmp = RouteInfo.GetComponent<TextMeshProUGUI>();
+        var tmp = InfoField.GetComponent<TextMeshProUGUI>();
         tmp.text = $"Error: {message}";
+    }
+
+    private void DisplayNoteText(string text)
+    {
+        var tmp = InfoField.GetComponent<TextMeshProUGUI>();
+        tmp.text = text;
     }
 
     private async Task<string> FetchRoute(GameObject[] stops)
@@ -182,6 +195,8 @@ public class RouteManager : MonoBehaviour
 
     IEnumerator DrawRoute(string routeInfo)
     {
+        routing = true;
+
         ClearRoute();
 
         var info = JObject.Parse(routeInfo);
@@ -206,14 +221,18 @@ public class RouteManager : MonoBehaviour
                 yield return null;
             }
         }
+        if(breadcrumbs!=null)
+		{
+            SetBreadcrumbHeight();
 
-        SetBreadcrumbHeight();
+            // need a frame for location component updates to occur
+            yield return null;
+            yield return null;
 
-        // need a frame for location component updates to occur
-        yield return null;
-        yield return null;
+            RenderLine();
+        }
 
-        RenderLine();
+        routing = false;
     }
 
     // Does a raycast to get the elevation for each point.  For routes covering long distances the raycast will only hit elevation that is actively loaded. If you are doing 
@@ -231,13 +250,14 @@ public class RouteManager : MonoBehaviour
     {
         // start the raycast in the air at an arbitrary to ensure it is above the ground
         var raycastHeight = 5000;
+ 
         var position = breadcrumb.transform.position;
         var raycastStart = new Vector3(position.x, position.y + raycastHeight, position.z);
         if (Physics.Raycast(raycastStart, Vector3.down, out RaycastHit hitInfo))
         {
             var location = breadcrumb.GetComponent<ArcGISLocationComponent>();
             location.Position = HitToGeoPosition(hitInfo, elevationOffset);
-        }
+        }      
     }
 
     private void UpdateRouteInfo(JToken features)
@@ -327,6 +347,8 @@ public class RouteManager : MonoBehaviour
 
         var tmp = RouteInfo.GetComponent<TextMeshProUGUI>();
         tmp.text = $"0";
+
+        DisplayNoteText("Hold Left Shift + Left Click on the map to begin routing.");
     }
 
 }
