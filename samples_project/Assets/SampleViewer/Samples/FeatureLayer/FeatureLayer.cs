@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Esri.ArcGISMapsSDK.Components;
+using Esri.ArcGISMapsSDK.Utils.GeoCoord;
 using Esri.GameEngine.Geometry;
 using UnityEngine.Networking;
 using UnityEngine;
@@ -13,7 +14,7 @@ using UnityEngine;
 public struct WebLink
 {
     public string Link;
-    public string RequestHeaders;
+    public string[] RequestHeaders;
 }
 
 [System.Serializable]
@@ -62,7 +63,15 @@ public class FeatureLayer : MonoBehaviour
     
     private void CreateLink()
     {
-        webLink.Link += webLink.RequestHeaders;
+        var requestHeader = "";
+        foreach (var header in webLink.RequestHeaders)
+        {
+            if (!requestHeader.Contains(header))
+            {
+                requestHeader += header;   
+            }
+        }
+        webLink.Link += requestHeader;
     }
     
     private IEnumerator GetFeatures()
@@ -85,12 +94,11 @@ public class FeatureLayer : MonoBehaviour
     
     private void CreateGameObjectsFromResponse(string Response)
     {
-        // Deserialize the JSON response from the query.
-        var jObject = JObject.Parse(Response);
-        var jFeatures = jObject.SelectToken("features").ToArray();
-
-        if (jFeatures != null)
+        if (Response != null)
         {
+            // Deserialize the JSON response from the query.
+            var jObject = JObject.Parse(Response);
+            var jFeatures = jObject.SelectToken("features").ToArray();
             foreach (var feature in jFeatures)
             {
                 Feature currentFeature = new Feature();
@@ -109,17 +117,22 @@ public class FeatureLayer : MonoBehaviour
                     featureInfo.properties.Add(props[1]);
                 }
 
-                foreach (var coordinate in coordinates)
+                if (feature.SelectToken("geometry").SelectToken("type").ToString().ToLower() == "point")
                 {
-                    currentFeature.geometry.coordinates.Add(Convert.ToDouble(coordinate));
-                    featureInfo.coordinates.Add(Convert.ToDouble(coordinate));
+                    foreach (var coordinate in coordinates)
+                    {
+                        currentFeature.geometry.coordinates.Add(Convert.ToDouble(coordinate));
+                        featureInfo.coordinates.Add(Convert.ToDouble(coordinate));
+                    }
                 }
 
                 featureInfo.ArcGISCamera = ArcGISCamera;
                 ArcGISPoint Position = new ArcGISPoint(featureInfo.coordinates[0], featureInfo.coordinates[1],
                     StadiumSpawnHeight, new ArcGISSpatialReference(FeatureSRWKID));
+                ArcGISRotation Rotation = new ArcGISRotation(0.0, 90.0, 0.0);
                 LocationComponent.enabled = true;
                 LocationComponent.Position = Position;
+                LocationComponent.Rotation = Rotation;
                 features.Add(currentFeature);
             }
         }

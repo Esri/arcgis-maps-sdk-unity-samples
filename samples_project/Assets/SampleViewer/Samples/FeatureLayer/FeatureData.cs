@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Esri.ArcGISMapsSDK.Components;
+using Esri.ArcGISMapsSDK.Utils.GeoCoord;
 using Esri.GameEngine.Geometry;
 using UnityEngine;
 using Esri.HPFramework;
@@ -11,7 +12,7 @@ public class FeatureData : MonoBehaviour
     public List<double> coordinates = new List<double>();
     public List<string> properties = new List<string>();
 
-    public Renderer StadiumRender;
+    public Renderer FeatureRender;
 
     public ArcGISCameraComponent ArcGISCamera;
 
@@ -55,17 +56,17 @@ public class FeatureData : MonoBehaviour
             if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hitInfo, (float)SpawnHeight))
             {
                 // Modify the Stadiums altitude based off the raycast hit
-                var StadiumLocationComponent = transform.GetComponent<ArcGISLocationComponent>();
-                double NewHeight = StadiumLocationComponent.Position.Z - hitInfo.distance;
-                double StadiumLongitude = StadiumLocationComponent.Position.X;
-                double StadiumLatitude = StadiumLocationComponent.Position.Y;
-                ArcGISPoint Position = new ArcGISPoint(StadiumLongitude, StadiumLatitude, NewHeight, StadiumLocationComponent.Position.SpatialReference);
-                StadiumLocationComponent.Position = Position;
+                var LocationComponent = transform.GetComponent<ArcGISLocationComponent>();
+                double NewHeight = LocationComponent.Position.Z - hitInfo.distance;
+                double StadiumLongitude = LocationComponent.Position.X;
+                double StadiumLatitude = LocationComponent.Position.Y;
+                ArcGISPoint Position = new ArcGISPoint(StadiumLongitude, StadiumLatitude, NewHeight, LocationComponent.Position.SpatialReference);
+                LocationComponent.Position = Position;
 
                 OnGround = true;
 
                 // The features were not being rendered until they are placed on the ground
-                StadiumRender.transform.parent.gameObject.SetActive(true);
+                FeatureRender.transform.parent.gameObject.SetActive(true);
             }
         }
     }
