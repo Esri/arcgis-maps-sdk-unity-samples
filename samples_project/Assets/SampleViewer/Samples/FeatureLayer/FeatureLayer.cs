@@ -14,7 +14,6 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 
-
 [System.Serializable]
 public struct WebLink
 {
@@ -44,28 +43,28 @@ public class Geometry
 
 public class FeatureLayer : MonoBehaviour
 {
-    public WebLink webLink;
-    [SerializeField] private GameObject FeaturePrefab;
-    [SerializeField] private List<Feature> features = new List<Feature>();
-    [SerializeField] private ArcGISCameraComponent ArcGISCamera;
-
-    public bool GetAllOutfields;
-    public bool GetAllFeatures = true;
-    public int StartValue;
-    public int LastValue = 1;
-    public GameObject outfieldItem;
-    public Toggle outfieldItemToggle;
-    public Transform contentContainer;
+    [SerializeField] private ArcGISCameraComponent arcGISCamera;
+    [SerializeField] private Transform contentContainer;
+    [SerializeField] private GameObject featurePrefab;
+    private int featureSRWKID = 4326;
     [SerializeField] private List<string> outfields = new List<string>();
-    private int StadiumSpawnHeight = 10000;
-    private int FeatureSRWKID = 4326;
-    public List<string> outfieldsToGet = new List<string>();
-    public List<Toggle> listItems = new List<Toggle>();
+    private int stadiumSpawnHeight = 10000;
+    
+    public List<Feature> Features = new List<Feature>();
+    public bool GetAllFeatures = true;
+    public bool GetAllOutfields = true;
+    public int LastValue = 1;
+    public List<GameObject> FeatureItems = new List<GameObject>();
+    public List<Toggle> ListItems = new List<Toggle>();
+    public bool NewLink = true;
+    public GameObject OutfieldItem;
+    public List<string> OutfieldsToGet = new List<string>();
+    public int StartValue;
+    public WebLink WebLink;
 
-    // Start is called before the first frame update
     private void Start()
     {
-        CreateLink(webLink.Link);
+        CreateLink(WebLink.Link);
         StartCoroutine(GetFeatures());
     }
 
@@ -73,25 +72,25 @@ public class FeatureLayer : MonoBehaviour
     {
         if (link != null)
         {
-            var requestHeader = "";
-            foreach (var header in webLink.RequestHeaders)
+            EmptyOutfieldsDropdown();
+            foreach (var header in WebLink.RequestHeaders)
             {
-                if (!requestHeader.Contains(header))
+                if (!link.Contains(header))
                 {
-                    requestHeader += header;   
+                    link += header;   
                 }
             }
-            link += requestHeader;
-            webLink.Link = link;   
+
+            WebLink.Link = link;
         }
     }
-    
-    private IEnumerator GetFeatures()
+
+    public IEnumerator GetFeatures()
     {
         // To learn more about the Feature Layer rest API and all the things that are possible checkout
         // https://developers.arcgis.com/rest/services-reference/enterprise/query-feature-service-layer-.htm
         
-        UnityWebRequest Request = UnityWebRequest.Get(webLink.Link);
+        UnityWebRequest Request = UnityWebRequest.Get(WebLink.Link);
         yield return Request.SendWebRequest();
 
         if (Request.result != UnityWebRequest.Result.Success)
@@ -100,8 +99,17 @@ public class FeatureLayer : MonoBehaviour
         }
         else
         {
-            CreateGameObjectsFromResponse(Request.downloadHandler.text);
-            PopulateStadiumDropdown(Request.downloadHandler.text);
+            if (NewLink)
+            {
+                //CreateGameObjectsFromResponse(Request.downloadHandler.text);
+                PopulateOutfieldsDropdown(Request.downloadHandler.text);
+            }
+            else
+            {
+                CreateGameObjectsFromResponse(Request.downloadHandler.text);
+            }
+
+            NewLink = false;
         }
     }
     
@@ -115,11 +123,12 @@ public class FeatureLayer : MonoBehaviour
                 foreach (var feature in jFeatures)
                 {
                     Feature currentFeature = new Feature();
-                    var featureItem = Instantiate(FeaturePrefab, this.transform);
+                    var featureItem = Instantiate(featurePrefab, this.transform);
+                    featureItem.tag = "FeatureItem";
                     var featureInfo = featureItem.GetComponent<FeatureData>();
                     var LocationComponent = featureItem.GetComponent<ArcGISLocationComponent>();
                     var coordinates = feature.SelectToken("geometry").SelectToken("coordinates").ToArray();
-                    var properties = feature.SelectToken("properties");
+                    var properties = feature.SelectToken("properties").ToArray();
 
                     if (GetAllOutfields)
                     {
@@ -134,14 +143,17 @@ public class FeatureLayer : MonoBehaviour
                     }
                     else
                     {
-                        foreach (var value in outfieldsToGet)
+                        for (var j = 0; j < outfields.Count; j++)
                         {
-                            var key = value;
-                            var props = key.Split(":");
-                            currentFeature.properties.propertyNames.Add(props[0]);
-                            currentFeature.properties.data.Add(props[1]);
-                            featureInfo.properties.Add(props[1]);
-                        }   
+                            if (OutfieldsToGet.Contains(outfields[j]))
+                            {
+                                var key = properties[j].ToString();
+                                var props = key.Split(":");
+                                currentFeature.properties.propertyNames.Add(props[0]);
+                                currentFeature.properties.data.Add(props[1]);
+                                featureInfo.properties.Add(props[1]);
+                            }
+                        }    
                     }
 
                     if (feature.SelectToken("geometry").SelectToken("type").ToString().ToLower() == "point")
@@ -153,14 +165,15 @@ public class FeatureLayer : MonoBehaviour
                         }
                     }
 
-                    featureInfo.ArcGISCamera = ArcGISCamera;
+                    featureInfo.ArcGISCamera = arcGISCamera;
                     ArcGISPoint Position = new ArcGISPoint(featureInfo.coordinates[0], featureInfo.coordinates[1],
-                        StadiumSpawnHeight, new ArcGISSpatialReference(FeatureSRWKID));
+                        stadiumSpawnHeight, new ArcGISSpatialReference(featureSRWKID));
                     ArcGISRotation Rotation = new ArcGISRotation(0.0, 90.0, 0.0);
                     LocationComponent.enabled = true;
                     LocationComponent.Position = Position;
                     LocationComponent.Rotation = Rotation;
-                    features.Add(currentFeature);
+                    Features.Add(currentFeature);
+                    FeatureItems.Add(featureItem);
                 }
             }
             else
@@ -168,11 +181,12 @@ public class FeatureLayer : MonoBehaviour
                 for (int i = StartValue; i <= LastValue; i++)
                 {
                     Feature currentFeature = new Feature();
-                    var featureItem = Instantiate(FeaturePrefab, this.transform);
+                    var featureItem = Instantiate(featurePrefab, this.transform);
+                    featureItem.tag = "FeatureItem";
                     var featureInfo = featureItem.GetComponent<FeatureData>();
                     var LocationComponent = featureItem.GetComponent<ArcGISLocationComponent>();
                     var coordinates = jFeatures[i].SelectToken("geometry").SelectToken("coordinates").ToArray();
-                    var properties = jFeatures[i].SelectToken("properties");
+                    var properties = jFeatures[i].SelectToken("properties").ToArray();
 
                     if (GetAllOutfields)
                     {
@@ -187,14 +201,17 @@ public class FeatureLayer : MonoBehaviour
                     }
                     else
                     {
-                        foreach (var value in outfieldsToGet)
+                        for (var j = 0; j < outfields.Count; j++)
                         {
-                            var key = value;
-                            var props = key.Split(":");
-                            currentFeature.properties.propertyNames.Add(props[0]);
-                            currentFeature.properties.data.Add(props[1]);
-                            featureInfo.properties.Add(props[1]);
-                        }   
+                            if (OutfieldsToGet.Contains(outfields[j]))
+                            {
+                                var key = properties[j].ToString();
+                                var props = key.Split(":");
+                                currentFeature.properties.propertyNames.Add(props[0]);
+                                currentFeature.properties.data.Add(props[1]);
+                                featureInfo.properties.Add(props[1]);
+                            }
+                        }      
                     }
 
                     if (jFeatures[i].SelectToken("geometry").SelectToken("type").ToString().ToLower() == "point")
@@ -206,19 +223,35 @@ public class FeatureLayer : MonoBehaviour
                         }
                     }
 
-                    featureInfo.ArcGISCamera = ArcGISCamera;
+                    featureInfo.ArcGISCamera = arcGISCamera;
                     ArcGISPoint Position = new ArcGISPoint(featureInfo.coordinates[0], featureInfo.coordinates[1],
-                        StadiumSpawnHeight, new ArcGISSpatialReference(FeatureSRWKID));
+                        stadiumSpawnHeight, new ArcGISSpatialReference(featureSRWKID));
                     ArcGISRotation Rotation = new ArcGISRotation(0.0, 90.0, 0.0);
                     LocationComponent.enabled = true;
                     LocationComponent.Position = Position;
                     LocationComponent.Rotation = Rotation;
-                    features.Add(currentFeature);
+                    Features.Add(currentFeature);
+                    FeatureItems.Add(featureItem);
                 }
             }
     }
+
+    public void EmptyOutfieldsDropdown()
+    {
+        if (ListItems != null)
+        {
+            outfields.Clear();
+            var toggles = GameObject.FindGameObjectsWithTag("ToggleItem");
+            foreach (var item in toggles)
+            {
+                Destroy(item);
+            }
+
+            ListItems.Clear();
+        }
+    }
     
-    private void PopulateStadiumDropdown(string Response)
+    public void PopulateOutfieldsDropdown(string Response)
     {
         var jObject = JObject.Parse(Response);
         var jFeatures = jObject.SelectToken("features").ToArray();
@@ -231,8 +264,9 @@ public class FeatureLayer : MonoBehaviour
                 var key = outfield.ToString();
                 var props = key.Split(":");
                 outfields.Add(props[0]);
-                var item = Instantiate(outfieldItem);
-                listItems.Add(item.GetComponent<Toggle>());
+                var item = Instantiate(OutfieldItem);
+                item.tag = "ToggleItem";
+                ListItems.Add(item.GetComponent<Toggle>());
                 // do something with the instantiated item -- for instance
                 item.GetComponentInChildren<TextMeshProUGUI>().text = props[0];
                 //item.GetComponent<Image>().color = i % 2 == 0 ? Color.yellow : Color.cyan;
@@ -244,8 +278,9 @@ public class FeatureLayer : MonoBehaviour
             else
             {
                 outfields.Add("Get All Features");
-                var item = Instantiate(outfieldItem);
-                listItems.Add(item.GetComponent<Toggle>());
+                var item = Instantiate(OutfieldItem);
+                item.tag = "ToggleItem";
+                ListItems.Add(item.GetComponent<Toggle>());
                 item.GetComponentInChildren<TextMeshProUGUI>().text = "Get All Features";
                 item.transform.SetParent(contentContainer);
                 item.transform.localScale = Vector2.one;
@@ -255,7 +290,7 @@ public class FeatureLayer : MonoBehaviour
 
     public void SelectItems()
     {
-        foreach (var toggle in listItems)
+        foreach (var toggle in ListItems)
         {
             var item = toggle.GetComponent<ScrollViewItem>();
             if (GetAllOutfields)

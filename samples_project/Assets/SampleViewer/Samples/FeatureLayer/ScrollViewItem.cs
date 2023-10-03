@@ -37,20 +37,20 @@ public class ScrollViewItem : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (!featureLayer.outfieldsToGet.Contains(data.name))
+        if (!featureLayer.OutfieldsToGet.Contains(data.name))
         {
             if (data.name == "Get All Features" && !featureLayer.GetAllOutfields)
             {
                 featureLayer.GetAllOutfields = true;
-                featureLayer.outfieldsToGet.Clear();
+                featureLayer.OutfieldsToGet.Clear();
             }
             else
             {
                 featureLayer.GetAllOutfields = false;
-                featureLayer.outfieldsToGet.Remove("Get All Features");
+                featureLayer.OutfieldsToGet.Remove("Get All Features");
             }
 
-            featureLayer.outfieldsToGet.Add(data.name);
+            featureLayer.OutfieldsToGet.Add(data.name);
             data.enabled = true;
         }
         else
@@ -60,7 +60,7 @@ public class ScrollViewItem : MonoBehaviour, IPointerClickHandler
                 featureLayer.GetAllOutfields = false;
             }
 
-            featureLayer.outfieldsToGet.Remove(data.name);
+            featureLayer.OutfieldsToGet.Remove(data.name);
             data.enabled = false;
         }
     }
