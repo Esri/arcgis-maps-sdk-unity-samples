@@ -70,9 +70,9 @@ public class FeatureLayer : MonoBehaviour
 
     public void CreateLink(string link)
     {
+        EmptyOutfieldsDropdown();
         if (link != null)
         {
-            EmptyOutfieldsDropdown();
             foreach (var header in WebLink.RequestHeaders)
             {
                 if (!link.ToLower().Contains(header))
@@ -316,10 +316,9 @@ public class FeatureLayer : MonoBehaviour
         if (ListItems != null)
         {
             outfields.Clear();
-            var toggles = GameObject.FindGameObjectsWithTag("ToggleItem");
-            foreach (var item in toggles)
+            foreach (var item in ListItems)
             {
-                Destroy(item);
+                Destroy(item.gameObject);
             }
 
             ListItems.Clear();
@@ -361,23 +360,26 @@ public class FeatureLayer : MonoBehaviour
 
     private void MoveCamera()
     {
-        if (GetAllFeatures)
+        if (FeatureItems.Count != 0)
         {
-            var cameraLocationComponent = arcGISCamera.gameObject.GetComponent<ArcGISLocationComponent>();
-            var position = new ArcGISPoint(FeatureItems[0].GetComponent<ArcGISLocationComponent>().Position.X,
-                FeatureItems[0].GetComponent<ArcGISLocationComponent>().Position.Y, 10000, cameraLocationComponent.Position.SpatialReference);
-            cameraLocationComponent.Position = position;
-            cameraLocationComponent.Rotation = new ArcGISRotation(cameraLocationComponent.Rotation.Heading, 0.0,
-                cameraLocationComponent.Rotation.Roll);
-        }
-        else
-        {
-            var cameraLocationComponent = arcGISCamera.gameObject.GetComponent<ArcGISLocationComponent>();
-            var position = new ArcGISPoint(FeatureItems[StartValue].GetComponent<ArcGISLocationComponent>().Position.X,
-                FeatureItems[StartValue].GetComponent<ArcGISLocationComponent>().Position.Y, 10000, cameraLocationComponent.Position.SpatialReference);
-            cameraLocationComponent.Position = position;
-            cameraLocationComponent.Rotation = new ArcGISRotation(cameraLocationComponent.Rotation.Heading, 0.0,
-                cameraLocationComponent.Rotation.Roll);
+            if (GetAllFeatures)
+            {
+                var cameraLocationComponent = arcGISCamera.gameObject.GetComponent<ArcGISLocationComponent>();
+                var position = new ArcGISPoint(FeatureItems[0].GetComponent<ArcGISLocationComponent>().Position.X,
+                    FeatureItems[0].GetComponent<ArcGISLocationComponent>().Position.Y, 10000, cameraLocationComponent.Position.SpatialReference);
+                cameraLocationComponent.Position = position;
+                cameraLocationComponent.Rotation = new ArcGISRotation(cameraLocationComponent.Rotation.Heading, 0.0,
+                    cameraLocationComponent.Rotation.Roll);
+            }
+            else
+            {
+                var cameraLocationComponent = arcGISCamera.gameObject.GetComponent<ArcGISLocationComponent>();
+                var position = new ArcGISPoint(FeatureItems[StartValue].GetComponent<ArcGISLocationComponent>().Position.X,
+                    FeatureItems[StartValue].GetComponent<ArcGISLocationComponent>().Position.Y, 10000, cameraLocationComponent.Position.SpatialReference);
+                cameraLocationComponent.Position = position;
+                cameraLocationComponent.Rotation = new ArcGISRotation(cameraLocationComponent.Rotation.Heading, 0.0,
+                    cameraLocationComponent.Rotation.Roll);
+            }   
         }
     }
     

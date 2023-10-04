@@ -9,6 +9,9 @@ public class FeatureLayerUIManager : MonoBehaviour
     [SerializeField] private Toggle dropDownButton;
     private FeatureLayer featureLayer;
     [SerializeField] private Toggle getAllToggle;
+    [SerializeField] private Button hideButton;
+    [SerializeField] private Animator infoAnim;
+    [SerializeField] private Toggle infoButton;
     [SerializeField] private TMP_InputField inputField;
     [SerializeField] private TMP_InputField maxInputField;
     [SerializeField] private TMP_InputField minInputField;
@@ -131,6 +134,7 @@ public class FeatureLayerUIManager : MonoBehaviour
             textToDisplay.text = "There was an error processing your request. \n" +
                                  "\n" +
                                  "Please double check your link and try again.";
+            infoAnim.Play("NotificationAnim");
         }
         else if (DisplayText == TextToDisplay.IndexOutOfBoundsError)
         {
@@ -138,6 +142,7 @@ public class FeatureLayerUIManager : MonoBehaviour
             textToDisplay.text = "Index out of bounds. \n" +
                                  "\n" +
                                  "Please lower your max value or select 'Get All Features'.";
+            infoAnim.Play("NotificationAnim");
         }
         else if (DisplayText == TextToDisplay.CoordinatesError)
         {
@@ -145,6 +150,7 @@ public class FeatureLayerUIManager : MonoBehaviour
             textToDisplay.text = "This data type is currently unsupported. \n" +
                                  "\n" +
                                  "We currently only support Point Layer types, we apologize for the inconvenience.";
+            infoAnim.Play("NotificationAnim");
         }
 
         if (featureLayer.jFeatures != null)
