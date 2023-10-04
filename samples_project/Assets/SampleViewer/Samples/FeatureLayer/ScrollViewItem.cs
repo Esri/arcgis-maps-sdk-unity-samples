@@ -16,30 +16,30 @@ public struct Data
 public class ScrollViewItem : MonoBehaviour, IPointerClickHandler
 {
     private FeatureLayer featureLayer;
-    public Data data;
+    public Data Data;
 
     private void Start()
     {
         featureLayer = FindObjectOfType<ArcGISMapComponent>().GetComponentInChildren<FeatureLayer>();
-        data.name = GetComponentInChildren<TextMeshProUGUI>().text;
+        Data.name = GetComponentInChildren<TextMeshProUGUI>().text;
     }
 
     private void Update()
     {
-        if (featureLayer.GetAllOutfields && data.name == "Get All Features")
+        if (featureLayer.GetAllOutfields && Data.name == "Get All Features")
         {
-            data.enabled = true;
+            Data.enabled = true;
         }
 
-        GetComponentInChildren<Toggle>().isOn = data.enabled;
+        GetComponentInChildren<Toggle>().isOn = Data.enabled;
         featureLayer.SelectItems();
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (!featureLayer.OutfieldsToGet.Contains(data.name))
+        if (!featureLayer.OutfieldsToGet.Contains(Data.name))
         {
-            if (data.name == "Get All Features" && !featureLayer.GetAllOutfields)
+            if (Data.name == "Get All Features" && !featureLayer.GetAllOutfields)
             {
                 featureLayer.GetAllOutfields = true;
                 featureLayer.OutfieldsToGet.Clear();
@@ -50,18 +50,18 @@ public class ScrollViewItem : MonoBehaviour, IPointerClickHandler
                 featureLayer.OutfieldsToGet.Remove("Get All Features");
             }
 
-            featureLayer.OutfieldsToGet.Add(data.name);
-            data.enabled = true;
+            featureLayer.OutfieldsToGet.Add(Data.name);
+            Data.enabled = true;
         }
         else
         {
-            if (data.name == "Get All Features" && featureLayer.GetAllOutfields)
+            if (Data.name == "Get All Features" && featureLayer.GetAllOutfields)
             {
                 featureLayer.GetAllOutfields = false;
             }
 
-            featureLayer.OutfieldsToGet.Remove(data.name);
-            data.enabled = false;
+            featureLayer.OutfieldsToGet.Remove(Data.name);
+            Data.enabled = false;
         }
     }
 }

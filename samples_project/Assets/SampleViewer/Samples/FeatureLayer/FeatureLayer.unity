@@ -338,8 +338,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 91838849}
-  m_LocalRotation: {x: 0.1609856, y: 0.52743524, z: -0.102484055, w: 0.82788455}
-  m_LocalPosition: {x: -0.0055016084, y: 297000, z: -0.42612866}
+  m_LocalRotation: {x: 0.1609267, y: 0.527428, z: -0.1025216, w: 0.82789594}
+  m_LocalPosition: {x: 0, y: 297000, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -603,15 +603,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_IsInitialized: 1
   m_LocalPosition:
-    x: -2371019.720687084
-    y: 3904527.251519034
-    z: -4861310.841784997
+    x: -12913060.932019735
+    y: 300000
+    z: 4300621.372044271
   m_LocalRotation:
     value:
-      x: -0.30086097
-      y: 0.59494543
-      z: -0.27000546
-      w: 0.69470835
+      x: 0.16092667
+      y: 0.5274279
+      z: -0.1025216
+      w: 0.827896
   m_LocalScale:
     x: 1
     y: 1
@@ -685,8 +685,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.016886793, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 20, y: 0}
+  m_AnchoredPosition: {x: -3.7720947, y: 0}
+  m_SizeDelta: {x: 7.5442, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &119836414
 MonoBehaviour:
@@ -791,7 +791,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0.17170715, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -2090,6 +2090,7 @@ GameObject:
   - component: {fileID: 879552928}
   - component: {fileID: 879552927}
   - component: {fileID: 879552929}
+  - component: {fileID: 879552930}
   m_Layer: 5
   m_Name: DropDownToggle
   m_TagString: Untagged
@@ -2203,6 +2204,27 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_IsOn: 0
+--- !u!95 &879552930
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 879552924}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6270b10e4f51b2c45a26802b29fdf513, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &916334022
 GameObject:
   m_ObjectHideFlags: 0
@@ -3325,7 +3347,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -20, y: 0}
+  m_SizeDelta: {x: 0.000030518, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1184194292
 MonoBehaviour:
@@ -3410,7 +3432,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -10.346191, y: 0, z: -9.896317, w: 0}
+  m_margin: {x: -0.18717957, y: 0, z: 0.2626953, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -3800,6 +3822,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6017c102d9251c4290fa13648852824, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dropDownAnim: {fileID: 879552930}
   dropDownButton: {fileID: 879552929}
   getAllToggle: {fileID: 533598250}
   inputField: {fileID: 865657007}
@@ -3807,7 +3830,11 @@ MonoBehaviour:
   minInputField: {fileID: 1771965413}
   outfieldsList: {fileID: 1614924095}
   requestButton: {fileID: 1047435889}
+  resetAnim: {fileID: 2053831301}
   resetButton: {fileID: 2053831302}
+  textToDisplay: {fileID: 913370848063410963}
+  titleText: {fileID: 913370847627337850}
+  DisplayText: 0
 --- !u!1 &1771965411
 GameObject:
   m_ObjectHideFlags: 0
@@ -4125,7 +4152,7 @@ MonoBehaviour:
     y: 36
     z: 3000
     SRWkid: 4326
-  mapType: 0
+  mapType: 1
   editorModeEnabled: 1
   dataFetchWithSceneView: 1
   rebaseWithSceneView: 0
@@ -4148,15 +4175,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_LocalPosition:
-    x: -2265688.757531073
-    y: 3729955.0315881697
-    z: -4645350.36338898
+    x: -12913060.932019735
+    y: 3000
+    z: 4300621.372044271
   m_LocalRotation:
     value:
-      x: -0.4423541
-      y: 0.20043294
-      z: 0.10212549
-      w: 0.86817044
+      x: 0
+      y: 0
+      z: 0
+      w: 1
 --- !u!114 &1808036067
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4619,7 +4646,7 @@ Animator:
   m_GameObject: {fileID: 2053831298}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 9fa717f0dd1ccf7469689ea1497a3d65, type: 2}
+  m_Controller: {fileID: 9100000, guid: 2679ec6f66d34c14bad5669d07703be4, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -5052,7 +5079,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -81.1278, y: -315.63}
+  m_AnchoredPosition: {x: -81.127686, y: -315.63}
   m_SizeDelta: {x: 79.7936, y: 79.794}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &720973319062841972
