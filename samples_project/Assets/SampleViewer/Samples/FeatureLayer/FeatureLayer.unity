@@ -324,6 +324,7 @@ GameObject:
   - component: {fileID: 91838852}
   - component: {fileID: 91838851}
   - component: {fileID: 91838859}
+  - component: {fileID: 91838860}
   m_Layer: 0
   m_Name: ArcGISCamera
   m_TagString: MainCamera
@@ -649,6 +650,19 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
+--- !u!135 &91838860
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 91838849}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0
+  m_Center: {x: 0.0000006868931, y: 0.49999627, z: 0.0000007203247}
 --- !u!1 &119836412
 GameObject:
   m_ObjectHideFlags: 0

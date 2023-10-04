@@ -7,13 +7,9 @@ using UnityEngine;
 [RequireComponent(typeof(ArcGISLocationComponent))]
 public class FeatureData : MonoBehaviour
 {
-    private int Counter = 0;
-    private bool OnGround = false;
     private double RayCastDistanceThreshold = 300000; 
     private double SpawnHeight = 10000;
-    private int UpdatesPerRayCast = 200;
 
-    
     public ArcGISCameraComponent ArcGISCamera;
     public List<double> Coordinates = new List<double>();
     public Renderer FeatureRender;
@@ -21,25 +17,8 @@ public class FeatureData : MonoBehaviour
 
     private void Start()
     {
-        // Starting the counter at a random value makes it so we won't do raycast calculation on the same tick
-        Counter = Random.Range(0, UpdatesPerRayCast);
-    }
-
-    private void Update()
-    {
-        DynamicScale();
-        // Check each object every UpdatesPerRayCast updates to see if it was placed on the ground yet
-        if (OnGround)
-        {
-            return;
-        }
-
-        Counter++;
-        if (Counter >= UpdatesPerRayCast)
-        {
-            Counter = 0;
-            SetOnGround();
-        }
+        InvokeRepeating("DynamicScale", 2.0f, 0.5f);
+        InvokeRepeating("SetOnGround", 0.1f, 0.3f);
     }
 
     private void DynamicScale()
@@ -47,7 +26,10 @@ public class FeatureData : MonoBehaviour
         var cameraLocationComponent = ArcGISCamera.GetComponent<ArcGISLocationComponent>();
         var scale = cameraLocationComponent.Position.Z * 25.0 / 20000;
         var featureHP = transform.GetComponent<HPTransform>();
-        featureHP.LocalScale = new Vector3((float)scale, (float)scale, (float)scale);
+        if (scale > 0)
+        {
+            featureHP.LocalScale = new Vector3((float)scale, (float)scale, (float)scale);   
+        }
     }
     
     private void SetOnGround()
@@ -68,9 +50,7 @@ public class FeatureData : MonoBehaviour
                 ArcGISPoint position = new ArcGISPoint(stadiumLongitude, stadiumLatitude, newHeight,
                     locationComponent.Position.SpatialReference);
                 locationComponent.Position = position;
-
-                OnGround = true;
-
+                
                 // The features were not being rendered until they are placed on the ground
                 FeatureRender.transform.parent.gameObject.SetActive(true);
             }

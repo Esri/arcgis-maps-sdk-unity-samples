@@ -365,7 +365,7 @@ public class FeatureLayer : MonoBehaviour
         {
             var cameraLocationComponent = arcGISCamera.gameObject.GetComponent<ArcGISLocationComponent>();
             var position = new ArcGISPoint(FeatureItems[0].GetComponent<ArcGISLocationComponent>().Position.X,
-                FeatureItems[0].GetComponent<ArcGISLocationComponent>().Position.Y, 20000, cameraLocationComponent.Position.SpatialReference);
+                FeatureItems[0].GetComponent<ArcGISLocationComponent>().Position.Y, 10000, cameraLocationComponent.Position.SpatialReference);
             cameraLocationComponent.Position = position;
             cameraLocationComponent.Rotation = new ArcGISRotation(cameraLocationComponent.Rotation.Heading, 0.0,
                 cameraLocationComponent.Rotation.Roll);
@@ -374,7 +374,7 @@ public class FeatureLayer : MonoBehaviour
         {
             var cameraLocationComponent = arcGISCamera.gameObject.GetComponent<ArcGISLocationComponent>();
             var position = new ArcGISPoint(FeatureItems[StartValue].GetComponent<ArcGISLocationComponent>().Position.X,
-                FeatureItems[StartValue].GetComponent<ArcGISLocationComponent>().Position.Y, 20000, cameraLocationComponent.Position.SpatialReference);
+                FeatureItems[StartValue].GetComponent<ArcGISLocationComponent>().Position.Y, 10000, cameraLocationComponent.Position.SpatialReference);
             cameraLocationComponent.Position = position;
             cameraLocationComponent.Rotation = new ArcGISRotation(cameraLocationComponent.Rotation.Heading, 0.0,
                 cameraLocationComponent.Rotation.Roll);
