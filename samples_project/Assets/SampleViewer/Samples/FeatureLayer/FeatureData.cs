@@ -7,25 +7,34 @@ using UnityEngine;
 [RequireComponent(typeof(ArcGISLocationComponent))]
 public class FeatureData : MonoBehaviour
 {
-    private double RayCastDistanceThreshold = 300000; 
+    private HPTransform cameraHP;
+    private ArcGISLocationComponent cameraLocationComponent;
+    private float distance;
+    private HPTransform featureHP;
+    private ArcGISLocationComponent locationComponent;
+    private double RayCastDistanceThreshold = 300000;
+    private double scale;
     private double SpawnHeight = 10000;
-
+    
     public ArcGISCameraComponent ArcGISCamera;
     public List<double> Coordinates = new List<double>();
     public Renderer FeatureRender;
-    public List<string> properties = new List<string>();
+    public List<string> Properties = new List<string>();
 
     private void Start()
     {
+        cameraLocationComponent = ArcGISCamera.GetComponent<ArcGISLocationComponent>();
+        featureHP = transform.GetComponent<HPTransform>();
+        cameraHP = ArcGISCamera.GetComponent<HPTransform>();
+        featureHP = transform.GetComponent<HPTransform>();
         InvokeRepeating("DynamicScale", 2.0f, 0.5f);
         InvokeRepeating("SetOnGround", 0.1f, 0.3f);
     }
 
     private void DynamicScale()
     {
-        var cameraLocationComponent = ArcGISCamera.GetComponent<ArcGISLocationComponent>();
-        var scale = cameraLocationComponent.Position.Z * 25.0 / 20000;
-        var featureHP = transform.GetComponent<HPTransform>();
+        scale = cameraLocationComponent.Position.Z * 25.0 / 20000.0f;
+
         if (scale > 0)
         {
             featureHP.LocalScale = new Vector3((float)scale, (float)scale, (float)scale);   
@@ -34,16 +43,14 @@ public class FeatureData : MonoBehaviour
     
     private void SetOnGround()
     {
-        var cameraHP = ArcGISCamera.GetComponent<HPTransform>();
-        var featureHP = transform.GetComponent<HPTransform>();
-        var distance = (cameraHP.UniversePosition - featureHP.UniversePosition).ToVector3().magnitude;
+        distance = (cameraHP.UniversePosition - featureHP.UniversePosition).ToVector3().magnitude;
 
         if (distance < RayCastDistanceThreshold)
         {
             if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hitInfo, (float)SpawnHeight, 7))
             {
                 // Modify the Stadiums altitude based off the raycast hit
-                var locationComponent = transform.GetComponent<ArcGISLocationComponent>();
+                locationComponent = transform.GetComponent<ArcGISLocationComponent>();
                 double newHeight = locationComponent.Position.Z - hitInfo.distance;
                 double stadiumLongitude = locationComponent.Position.X;
                 double stadiumLatitude = locationComponent.Position.Y;

@@ -1,3 +1,4 @@
+using FeatureLayerData;
 using System;
 using TMPro;
 using UnityEngine;
@@ -34,6 +35,7 @@ public class FeatureLayerUIManager : MonoBehaviour
 
     private void Start()
     {
+        InvokeRepeating("ErrorCheck", 1.0f, 0.5f);
         featureLayer = GetComponent<FeatureLayer>();
         inputField.text = featureLayer.WebLink.Link;
         maxInputField.text = featureLayer.LastValue.ToString();
@@ -119,7 +121,7 @@ public class FeatureLayerUIManager : MonoBehaviour
         });
     }
 
-    private void Update()
+    private void ErrorCheck()
     {
         if (DisplayText == TextToDisplay.Information)
         {

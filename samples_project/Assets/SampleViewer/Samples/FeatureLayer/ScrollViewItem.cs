@@ -1,60 +1,61 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Esri.ArcGISMapsSDK.Components;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public struct Data
+namespace FeatureLayerData
 {
-    public string name;
-    public bool enabled;
-}
-
-public class ScrollViewItem : MonoBehaviour, IPointerClickHandler
-{
-    private FeatureLayer featureLayer;
-    public Data Data;
-
-    private void Start()
+    public struct ScrollItemData
     {
-        featureLayer = FindObjectOfType<ArcGISMapComponent>().GetComponentInChildren<FeatureLayer>();
-        Data.name = GetComponentInChildren<TextMeshProUGUI>().text;
+        public string name;
+        public bool enabled;
     }
 
-    private void Update()
+    public class ScrollViewItem : MonoBehaviour, IPointerClickHandler
     {
-        if (featureLayer.GetAllOutfields && Data.name == "Get All Features")
+        private FeatureLayer featureLayer;
+        public ScrollItemData Data;
+
+        private void Start()
         {
-            Data.enabled = true;
+            featureLayer = FindObjectOfType<ArcGISMapComponent>().GetComponentInChildren<FeatureLayer>();
+            Data.name = GetComponentInChildren<TextMeshProUGUI>().text;
+            InvokeRepeating("CheckDataValues", 0.1f, 0.5f);
         }
 
-        GetComponentInChildren<Toggle>().isOn = Data.enabled;
-        featureLayer.SelectItems();
-    }
-
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        if (!featureLayer.OutfieldsToGet.Contains(Data.name))
+        private void CheckDataValues()
         {
-            if (Data.name == "Get All Features" && !featureLayer.GetAllOutfields)
+            if (featureLayer.GetAllOutfields && Data.name == "Get All Features")
             {
-                featureLayer.GetAllOutfields = true;
-                featureLayer.OutfieldsToGet.Clear();
-            }
-            else
-            {
-                featureLayer.GetAllOutfields = false;
-                featureLayer.OutfieldsToGet.Remove("Get All Features");
+                Data.enabled = true;
             }
 
-            featureLayer.OutfieldsToGet.Add(Data.name);
-            Data.enabled = true;
+            GetComponentInChildren<Toggle>().isOn = Data.enabled;
+            featureLayer.SelectItems();
         }
-        else
+
+        public void OnPointerClick(PointerEventData eventData)
         {
+            if (!featureLayer.OutfieldsToGet.Contains(Data.name))
+            {
+                if (Data.name == "Get All Features" && !featureLayer.GetAllOutfields)
+                {
+                    featureLayer.GetAllOutfields = true;
+                    featureLayer.OutfieldsToGet.Clear();
+                }
+                else
+                {
+                    featureLayer.GetAllOutfields = false;
+                    featureLayer.OutfieldsToGet.Remove("Get All Features");
+                }
+
+                featureLayer.OutfieldsToGet.Add(Data.name);
+                Data.enabled = true;
+                return;
+            }
+
             if (Data.name == "Get All Features" && featureLayer.GetAllOutfields)
             {
                 featureLayer.GetAllOutfields = false;
