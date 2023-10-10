@@ -48,7 +48,7 @@ public class FeatureLayer : MonoBehaviour
     private int featureSRWKID = 4326;
     private ArcGISLocationComponent locationComponent;
     [SerializeField] private List<string> outfields = new List<string>();
-    private int stadiumSpawnHeight = 10000;
+    private float stadiumSpawnHeight = 10000.0f;
     private FeatureLayerUIManager UIManager;
 
     public List<Feature> Features = new List<Feature>();
@@ -122,23 +122,30 @@ public class FeatureLayer : MonoBehaviour
         }
     }
 
-    private void CreateGameObjectsFromResponse(string Response)
+    private void CreateGameObjectsFromResponse(string response)
     {
         // Deserialize the JSON response from the query.
-        var jObject = JObject.Parse(Response);
+        var jObject = JObject.Parse(response);
         jFeatures = jObject.SelectToken("features").ToArray();
 
         if (jFeatures[0].SelectToken("geometry").SelectToken("type").ToString().ToLower() == "point")
         {
             if (GetAllFeatures)
             {
-                CreateAllFeatures();
+                CreateFeatures(0, jFeatures.Length);
             }
             else
             {
-                CreateFeatureRange();
+                if (jFeatures.Length < LastValue)
+                {
+                    CreateFeatures(StartValue, jFeatures.Length);
+                }
+                else
+                {
+                    CreateFeatures(StartValue, LastValue);
+                }
             }
-            
+
             if (UIManager.DisplayText != FeatureLayerUIManager.TextToDisplay.LinkError
                 && UIManager.DisplayText != FeatureLayerUIManager.TextToDisplay.IndexOutOfBoundsError)
             {
@@ -151,18 +158,19 @@ public class FeatureLayer : MonoBehaviour
         }
     }
 
-    private void CreateAllFeatures()
+    private void CreateFeatures(int min, int max)
     {
-        foreach (var feature in jFeatures) 
+        for (int i = min; i < max; i++)
         {
             Feature currentFeature = new Feature();
             var featureItem = Instantiate(featurePrefab, this.transform);
             featureItem.tag = "FeatureItem";
+            //Layer 7 because that is the index of the layer created specifically for feature layers so that they ignore themselves for raycasting.
             featureItem.layer = 7;
             featureInfo = featureItem.GetComponent<FeatureData>();
             locationComponent = featureItem.GetComponent<ArcGISLocationComponent>();
-            var coordinates = feature.SelectToken("geometry").SelectToken("coordinates").ToArray();
-            var properties = feature.SelectToken("properties").ToArray();
+            var coordinates = jFeatures[i].SelectToken("geometry").SelectToken("coordinates").ToArray();
+            var properties = jFeatures[i].SelectToken("properties").ToArray();
 
             if (GetAllOutfields)
             {
@@ -197,131 +205,14 @@ public class FeatureLayer : MonoBehaviour
             }
 
             featureInfo.ArcGISCamera = arcGISCamera;
-            ArcGISPoint Position = new ArcGISPoint(featureInfo.Coordinates[0], featureInfo.Coordinates[1],
+            var position = new ArcGISPoint(featureInfo.Coordinates[0], featureInfo.Coordinates[1],
                 stadiumSpawnHeight, new ArcGISSpatialReference(featureSRWKID));
-            ArcGISRotation Rotation = new ArcGISRotation(0.0, 90.0, 0.0);
+            var rotation = new ArcGISRotation(0.0, 90.0, 0.0);
             locationComponent.enabled = true;
-            locationComponent.Position = Position;
-            locationComponent.Rotation = Rotation;
+            locationComponent.Position = position;
+            locationComponent.Rotation = rotation;
             Features.Add(currentFeature);
             FeatureItems.Add(featureItem);
-        }
-    }
-
-    private void CreateFeatureRange()
-    {
-        if (jFeatures.Length < LastValue)
-        {
-            UIManager.DisplayText = FeatureLayerUIManager.TextToDisplay.IndexOutOfBoundsError;
-            for (int i = StartValue; i < jFeatures.Length; i++)
-            {
-                Feature currentFeature = new Feature();
-                var featureItem = Instantiate(featurePrefab, this.transform);
-                featureItem.tag = "FeatureItem";
-                featureItem.layer = 7;
-                featureInfo = featureItem.GetComponent<FeatureData>();
-                locationComponent = featureItem.GetComponent<ArcGISLocationComponent>();
-                var coordinates = jFeatures[i].SelectToken("geometry").SelectToken("coordinates").ToArray();
-                var properties = jFeatures[i].SelectToken("properties").ToArray();
-
-                if (GetAllOutfields)
-                {
-                    foreach (var value in properties)
-                    {
-                        var key = value.ToString();
-                        var props = key.Split(":");
-                        currentFeature.properties.propertyNames.Add(props[0]);
-                        currentFeature.properties.data.Add(props[1]);
-                        featureInfo.Properties.Add(props[1]);
-                    }
-                }
-                else
-                {
-                    for (var j = 0; j < outfields.Count; j++)
-                    {
-                        if (OutfieldsToGet.Contains(outfields[j]))
-                        {
-                            var key = properties[j].ToString();
-                            var props = key.Split(":");
-                            currentFeature.properties.propertyNames.Add(props[0]);
-                            currentFeature.properties.data.Add(props[1]);
-                            featureInfo.Properties.Add(props[1]);
-                        }
-                    }
-                }
-
-                foreach (var coordinate in coordinates)
-                {
-                    currentFeature.geometry.coordinates.Add(Convert.ToDouble(coordinate));
-                    featureInfo.Coordinates.Add(Convert.ToDouble(coordinate));
-                }
-
-                featureInfo.ArcGISCamera = arcGISCamera;
-                ArcGISPoint Position = new ArcGISPoint(featureInfo.Coordinates[0], featureInfo.Coordinates[1],
-                    stadiumSpawnHeight, new ArcGISSpatialReference(featureSRWKID));
-                ArcGISRotation Rotation = new ArcGISRotation(0.0, 90.0, 0.0);
-                locationComponent.enabled = true;
-                locationComponent.Position = Position;
-                locationComponent.Rotation = Rotation;
-                Features.Add(currentFeature);
-                FeatureItems.Add(featureItem);
-            }
-        }
-        else
-        {
-            for (int i = StartValue; i <= LastValue; i++)
-            {
-                Feature currentFeature = new Feature();
-                var featureItem = Instantiate(featurePrefab, this.transform);
-                featureItem.tag = "FeatureItem";
-                featureItem.layer = 7;
-                featureInfo = featureItem.GetComponent<FeatureData>();
-                locationComponent = featureItem.GetComponent<ArcGISLocationComponent>();
-                var coordinates = jFeatures[i].SelectToken("geometry").SelectToken("coordinates").ToArray();
-                var properties = jFeatures[i].SelectToken("properties").ToArray();
-
-                if (GetAllOutfields)
-                {
-                    foreach (var value in properties)
-                    {
-                        var key = value.ToString();
-                        var props = key.Split(":");
-                        currentFeature.properties.propertyNames.Add(props[0]);
-                        currentFeature.properties.data.Add(props[1]);
-                        featureInfo.Properties.Add(props[1]);
-                    }
-                }
-                else
-                {
-                    for (var j = 0; j < outfields.Count; j++)
-                    {
-                        if (OutfieldsToGet.Contains(outfields[j]))
-                        {
-                            var key = properties[j].ToString();
-                            var props = key.Split(":");
-                            currentFeature.properties.propertyNames.Add(props[0]);
-                            currentFeature.properties.data.Add(props[1]);
-                            featureInfo.Properties.Add(props[1]);
-                        }
-                    }
-                }
-
-                foreach (var coordinate in coordinates)
-                {
-                    currentFeature.geometry.coordinates.Add(Convert.ToDouble(coordinate));
-                    featureInfo.Coordinates.Add(Convert.ToDouble(coordinate));
-                }
-
-                featureInfo.ArcGISCamera = arcGISCamera;
-                ArcGISPoint Position = new ArcGISPoint(featureInfo.Coordinates[0], featureInfo.Coordinates[1],
-                    stadiumSpawnHeight, new ArcGISSpatialReference(featureSRWKID));
-                ArcGISRotation Rotation = new ArcGISRotation(0.0, 90.0, 0.0);
-                locationComponent.enabled = true;
-                locationComponent.Position = Position;
-                locationComponent.Rotation = Rotation;
-                Features.Add(currentFeature);
-                FeatureItems.Add(featureItem);
-            }
         }
     }
 
@@ -339,9 +230,9 @@ public class FeatureLayer : MonoBehaviour
         }
     }
 
-    private void PopulateOutfieldsDropdown(string Response)
+    private void PopulateOutfieldsDropdown(string response)
     {
-        var jObject = JObject.Parse(Response);
+        var jObject = JObject.Parse(response);
         var jFeatures = jObject.SelectToken("features").ToArray();
         var properties = jFeatures[0].SelectToken("properties");
         //Populate Outfields drop down

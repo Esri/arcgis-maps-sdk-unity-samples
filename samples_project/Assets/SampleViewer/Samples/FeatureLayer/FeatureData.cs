@@ -33,7 +33,9 @@ public class FeatureData : MonoBehaviour
 
     private void DynamicScale()
     {
-        scale = cameraLocationComponent.Position.Z * 25.0 / 20000.0f;
+        //Based on trial and error, it was deduced to use the following number so that the scale is a 
+        //nice size based on distance from the camera.
+        scale = cameraLocationComponent.Position.Z * 0.00125f;
 
         if (scale > 0)
         {
