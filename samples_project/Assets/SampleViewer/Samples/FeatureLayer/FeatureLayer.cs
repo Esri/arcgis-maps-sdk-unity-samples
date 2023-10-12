@@ -74,6 +74,7 @@ public class FeatureLayer : MonoBehaviour
     public void CreateLink(string link)
     {
         EmptyOutfieldsDropdown();
+        
         if (link != null)
         {
             foreach (var header in WebLink.RequestHeaders)
@@ -164,7 +165,6 @@ public class FeatureLayer : MonoBehaviour
         {
             Feature currentFeature = new Feature();
             var featureItem = Instantiate(featurePrefab, this.transform);
-            featureItem.tag = "FeatureItem";
             //Layer 7 because that is the index of the layer created specifically for feature layers so that they ignore themselves for raycasting.
             featureItem.layer = 7;
             featureInfo = featureItem.GetComponent<FeatureData>();
@@ -244,7 +244,6 @@ public class FeatureLayer : MonoBehaviour
                 var props = key.Split(":");
                 outfields.Add(props[0]);
                 var item = Instantiate(OutfieldItem);
-                item.tag = "ToggleItem";
                 ListItems.Add(item.GetComponent<Toggle>());
                 item.GetComponentInChildren<TextMeshProUGUI>().text = props[0];
                 item.transform.SetParent(contentContainer);
@@ -254,7 +253,6 @@ public class FeatureLayer : MonoBehaviour
             {
                 outfields.Add("Get All Features");
                 var item = Instantiate(OutfieldItem);
-                item.tag = "ToggleItem";
                 ListItems.Add(item.GetComponent<Toggle>());
                 item.GetComponentInChildren<TextMeshProUGUI>().text = "Get All Features";
                 item.transform.SetParent(contentContainer);
@@ -293,19 +291,14 @@ public class FeatureLayer : MonoBehaviour
         foreach (var toggle in ListItems)
         {
             var item = toggle.GetComponent<ScrollViewItem>();
-            if (GetAllOutfields)
+
+            if (GetAllOutfields && item.Data.enabled && item.Data.name != "Get All Features")
             {
-                if (item.Data.enabled && item.Data.name != "Get All Features")
-                {
-                    item.Data.enabled = false;
-                }
+                item.Data.enabled = false;
             }
-            else
+            else if (!GetAllOutfields && item.Data.enabled && item.Data.name == "Get All Features")
             {
-                if (item.Data.enabled && item.Data.name == "Get All Features")
-                {
-                    item.Data.enabled = false;
-                }
+                item.Data.enabled = false;
             }
         }
     }

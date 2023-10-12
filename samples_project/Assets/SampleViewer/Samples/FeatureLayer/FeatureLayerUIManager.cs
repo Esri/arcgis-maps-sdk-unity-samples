@@ -64,7 +64,7 @@ public class FeatureLayerUIManager : MonoBehaviour
 
         requestButton.onClick.AddListener(delegate
         {
-            var items = GameObject.FindGameObjectsWithTag("FeatureItem");
+            var items = FindObjectsOfType<FeatureData>();
             if (items.Length != 0)
             {
                 foreach (var item in items)
