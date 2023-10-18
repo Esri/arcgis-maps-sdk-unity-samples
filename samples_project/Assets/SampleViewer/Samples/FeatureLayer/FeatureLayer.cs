@@ -7,9 +7,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Esri.ArcGISMapsSDK.Samples.Components;
 using TMPro;
 using UnityEngine.Networking;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [System.Serializable]
@@ -301,5 +303,22 @@ public class FeatureLayer : MonoBehaviour
                 item.Data.enabled = false;
             }
         }
+    }
+    
+    private void Update()
+    {
+        if (MouseOverUI())
+        {
+            arcGISCamera.gameObject.GetComponent<ArcGISCameraControllerComponent>().enabled = false;
+        }
+        else
+        {
+            arcGISCamera.gameObject.GetComponent<ArcGISCameraControllerComponent>().enabled = true;
+        }
+    }
+
+    private bool MouseOverUI()
+    {
+        return EventSystem.current.IsPointerOverGameObject();
     }
 }

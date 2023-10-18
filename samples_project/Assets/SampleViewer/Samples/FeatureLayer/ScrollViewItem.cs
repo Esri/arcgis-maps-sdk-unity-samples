@@ -17,7 +17,6 @@ namespace FeatureLayerData
     {
         private FeatureLayer featureLayer;
         public ScrollItemData Data;
-
         private void Start()
         {
             featureLayer = FindObjectOfType<ArcGISMapComponent>().GetComponentInChildren<FeatureLayer>();
