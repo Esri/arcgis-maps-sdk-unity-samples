@@ -87,6 +87,7 @@ public class FeatureLayerUIManager : MonoBehaviour
             {
                 featureLayer.GetAllOutfields = false;
                 toggle.GetComponent<ScrollViewItem>().Data.enabled = false;
+                featureLayer.OutfieldsToGet.Clear();
             }
         });
 
