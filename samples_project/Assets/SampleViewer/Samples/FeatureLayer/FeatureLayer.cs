@@ -240,7 +240,7 @@ public class FeatureLayer : MonoBehaviour
         //Populate Outfields drop down
         foreach (var outfield in properties)
         {
-            if (outfields.Contains("Get All Features"))
+            if (outfields.Contains("Get All Outfields"))
             {
                 var key = outfield.ToString();
                 var props = key.Split(":");
@@ -253,10 +253,10 @@ public class FeatureLayer : MonoBehaviour
             }
             else
             {
-                outfields.Add("Get All Features");
+                outfields.Add("Get All Outfields");
                 var item = Instantiate(OutfieldItem);
                 ListItems.Add(item.GetComponent<Toggle>());
-                item.GetComponentInChildren<TextMeshProUGUI>().text = "Get All Features";
+                item.GetComponentInChildren<TextMeshProUGUI>().text = "Get All Outfields";
                 item.transform.SetParent(contentContainer);
                 item.transform.localScale = Vector2.one;
             }
@@ -294,11 +294,11 @@ public class FeatureLayer : MonoBehaviour
         {
             var item = toggle.GetComponent<ScrollViewItem>();
 
-            if (GetAllOutfields && item.Data.enabled && item.Data.name != "Get All Features")
+            if (GetAllOutfields && item.Data.enabled && item.Data.name != "Get All Outfields")
             {
                 item.Data.enabled = false;
             }
-            else if (!GetAllOutfields && item.Data.enabled && item.Data.name == "Get All Features")
+            else if (!GetAllOutfields && item.Data.enabled && item.Data.name == "Get All Outfields")
             {
                 item.Data.enabled = false;
             }

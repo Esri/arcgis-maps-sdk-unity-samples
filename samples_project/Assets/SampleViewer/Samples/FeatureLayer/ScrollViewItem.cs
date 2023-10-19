@@ -26,7 +26,7 @@ namespace FeatureLayerData
 
         private void CheckDataValues()
         {
-            if (featureLayer.GetAllOutfields && Data.name == "Get All Features")
+            if (featureLayer.GetAllOutfields && Data.name == "Get All Outfields")
             {
                 Data.enabled = true;
             }
@@ -39,7 +39,7 @@ namespace FeatureLayerData
         {
             if (!featureLayer.OutfieldsToGet.Contains(Data.name))
             {
-                if (Data.name == "Get All Features" && !featureLayer.GetAllOutfields)
+                if (Data.name == "Get All Outfields" && !featureLayer.GetAllOutfields)
                 {
                     featureLayer.GetAllOutfields = true;
                     featureLayer.OutfieldsToGet.Clear();
@@ -47,7 +47,7 @@ namespace FeatureLayerData
                 else
                 {
                     featureLayer.GetAllOutfields = false;
-                    featureLayer.OutfieldsToGet.Remove("Get All Features");
+                    featureLayer.OutfieldsToGet.Remove("Get All Outfields");
                 }
 
                 featureLayer.OutfieldsToGet.Add(Data.name);
@@ -55,7 +55,7 @@ namespace FeatureLayerData
                 return;
             }
 
-            if (Data.name == "Get All Features" && featureLayer.GetAllOutfields)
+            if (Data.name == "Get All Outfields" && featureLayer.GetAllOutfields)
             {
                 featureLayer.GetAllOutfields = false;
             }
