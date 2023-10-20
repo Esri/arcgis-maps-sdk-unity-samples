@@ -65,10 +65,9 @@ public class FeatureLayerUIManager : MonoBehaviour
 
         requestButton.onClick.AddListener(delegate
         {
-            var items = FindObjectsOfType<FeatureData>();
-            if (items.Length != 0)
+            if (featureLayer.FeatureItems.Count != 0)
             {
-                foreach (var item in items)
+                foreach (var item in featureLayer.FeatureItems)
                 {
                     Destroy(item);
                 }

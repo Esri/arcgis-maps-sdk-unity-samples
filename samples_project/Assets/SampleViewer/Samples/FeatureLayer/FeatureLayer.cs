@@ -1,4 +1,5 @@
 using Esri.ArcGISMapsSDK.Components;
+using Esri.ArcGISMapsSDK.Samples.Components;
 using Esri.ArcGISMapsSDK.Utils.GeoCoord;
 using Esri.GameEngine.Geometry;
 using FeatureLayerData;
@@ -7,11 +8,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Esri.ArcGISMapsSDK.Samples.Components;
 using TMPro;
-using UnityEngine.Networking;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 [System.Serializable]
@@ -76,7 +76,7 @@ public class FeatureLayer : MonoBehaviour
     public void CreateLink(string link)
     {
         EmptyOutfieldsDropdown();
-        
+
         if (link != null)
         {
             foreach (var header in WebLink.RequestHeaders)
@@ -120,7 +120,7 @@ public class FeatureLayer : MonoBehaviour
                     UIManager.DisplayText = FeatureLayerUIManager.TextToDisplay.Information;
                 }
             }
-            
+
             NewLink = false;
         }
     }
@@ -160,8 +160,8 @@ public class FeatureLayer : MonoBehaviour
             UIManager.DisplayText = FeatureLayerUIManager.TextToDisplay.CoordinatesError;
         }
     }
-
-    private void CreateFeatures(int min, int max)
+    
+     private void CreateFeatures(int min, int max)
     {
         for (int i = min; i < max; i++)
         {
@@ -182,7 +182,7 @@ public class FeatureLayer : MonoBehaviour
                     var props = key.Split(":");
                     currentFeature.properties.propertyNames.Add(props[0]);
                     currentFeature.properties.data.Add(props[1]);
-                    featureInfo.Properties.Add(props[1]);
+                    featureInfo.Properties.Add(key);
                 }
             }
             else
@@ -195,7 +195,7 @@ public class FeatureLayer : MonoBehaviour
                         var props = key.Split(":");
                         currentFeature.properties.propertyNames.Add(props[0]);
                         currentFeature.properties.data.Add(props[1]);
-                        featureInfo.Properties.Add(props[1]);
+                        featureInfo.Properties.Add(key);
                     }
                 }
             }
@@ -231,63 +231,43 @@ public class FeatureLayer : MonoBehaviour
             ListItems.Clear();
         }
     }
-
+    
     private void PopulateOutfieldsDropdown(string response)
     {
         var jObject = JObject.Parse(response);
         var jFeatures = jObject.SelectToken("features").ToArray();
         var properties = jFeatures[0].SelectToken("properties");
         //Populate Outfields drop down
+
         foreach (var outfield in properties)
         {
-            if (outfields.Contains("Get All Outfields"))
-            {
-                var key = outfield.ToString();
-                var props = key.Split(":");
-                outfields.Add(props[0]);
-                var item = Instantiate(OutfieldItem);
-                ListItems.Add(item.GetComponent<Toggle>());
-                item.GetComponentInChildren<TextMeshProUGUI>().text = props[0];
-                item.transform.SetParent(contentContainer);
-                item.transform.localScale = Vector2.one;
-            }
-            else
-            {
-                outfields.Add("Get All Outfields");
-                var item = Instantiate(OutfieldItem);
-                ListItems.Add(item.GetComponent<Toggle>());
-                item.GetComponentInChildren<TextMeshProUGUI>().text = "Get All Outfields";
-                item.transform.SetParent(contentContainer);
-                item.transform.localScale = Vector2.one;
-            }
+            var getAllOutfields = outfields.Contains("Get All Outfields");
+            var itemText = getAllOutfields ? outfield.ToString().Split(":")[0] : "Get All Outfields";
+            outfields.Add(itemText);
+            var item = Instantiate(OutfieldItem);
+            ListItems.Add(item.GetComponent<Toggle>());
+            item.GetComponentInChildren<TextMeshProUGUI>().text = itemText;
+            item.transform.SetParent(contentContainer);
+            item.transform.localScale = Vector2.one;
         }
     }
 
     private void MoveCamera()
     {
-        if (FeatureItems.Count != 0)
+        if (FeatureItems.Count == 0)
         {
-            if (GetAllFeatures)
-            {
-                var cameraLocationComponent = arcGISCamera.gameObject.GetComponent<ArcGISLocationComponent>();
-                var position = new ArcGISPoint(FeatureItems[0].GetComponent<ArcGISLocationComponent>().Position.X,
-                    FeatureItems[0].GetComponent<ArcGISLocationComponent>().Position.Y, 10000, cameraLocationComponent.Position.SpatialReference);
-                cameraLocationComponent.Position = position;
-                cameraLocationComponent.Rotation = new ArcGISRotation(cameraLocationComponent.Rotation.Heading, 0.0,
-                    cameraLocationComponent.Rotation.Roll);
-            }
-            else
-            {
-                var cameraLocationComponent = arcGISCamera.gameObject.GetComponent<ArcGISLocationComponent>();
-                var position = new ArcGISPoint(FeatureItems[StartValue].GetComponent<ArcGISLocationComponent>().Position.X,
-                    FeatureItems[StartValue].GetComponent<ArcGISLocationComponent>().Position.Y, 10000, cameraLocationComponent.Position.SpatialReference);
-                cameraLocationComponent.Position = position;
-                cameraLocationComponent.Rotation = new ArcGISRotation(cameraLocationComponent.Rotation.Heading, 0.0,
-                    cameraLocationComponent.Rotation.Roll);
-            }   
+            return;
         }
+
+        var index = GetAllFeatures ? 0 : StartValue;
+        var cameraLocationComponent = arcGISCamera.gameObject.GetComponent<ArcGISLocationComponent>();
+        var position = new ArcGISPoint(FeatureItems[index].GetComponent<ArcGISLocationComponent>().Position.X,
+            FeatureItems[index].GetComponent<ArcGISLocationComponent>().Position.Y, 10000, cameraLocationComponent.Position.SpatialReference);
+        cameraLocationComponent.Position = position;
+        cameraLocationComponent.Rotation = new ArcGISRotation(cameraLocationComponent.Rotation.Heading, 0.0,
+            cameraLocationComponent.Rotation.Roll);
     }
-    
+
     public void SelectItems()
     {
         foreach (var toggle in ListItems)
@@ -307,16 +287,9 @@ public class FeatureLayer : MonoBehaviour
     
     private void Update()
     {
-        if (MouseOverUI())
-        {
-            arcGISCamera.gameObject.GetComponent<ArcGISCameraControllerComponent>().enabled = false;
-        }
-        else
-        {
-            arcGISCamera.gameObject.GetComponent<ArcGISCameraControllerComponent>().enabled = true;
-        }
+        arcGISCamera.gameObject.GetComponent<ArcGISCameraControllerComponent>().enabled = !MouseOverUI();
     }
-
+    
     private bool MouseOverUI()
     {
         return EventSystem.current.IsPointerOverGameObject();
