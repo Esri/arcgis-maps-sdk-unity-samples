@@ -11,6 +11,7 @@ using UnityEditor;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 using System;
+using static UnityEngine.XR.Interaction.Toolkit.Inputs.Simulation.XRDeviceSimulator;
 
 // A custom struct to hold data regarding ArcGIS map component positions
 public struct coordinates
@@ -44,10 +45,8 @@ public class LocationSelector : MonoBehaviour
     private GameObject menuManager;
 
     // List of coordinates to set to ArcGIS Map origin, leading to 3D city scene layers collected by Esri
-    private List<coordinates> spawnLocations = new List<coordinates> {new coordinates("San Francisco", -122.4194f, 37.7749f, 0f, 150f, 0f), new coordinates("Philadelphia, Pennsylvaina", -75.17f, 39.955f, 38f, 83f, 12f),
-    new coordinates("Christchurch, New Zealand", 172.64f, -43.534f, -331.45f, 40.8f, 542.1f), new coordinates("Montreal, Canada", -73.5674f, 45.5019f, 0f, 110f, 0f),
-    new coordinates("Fiordland National Park", 167.266693f, -45.440842f, 0f, 1600f, 0f), new coordinates("Mt Everest", 86.925f, 27.9881f, 0f, 8850f, 0f),
-    new coordinates("Grand Canyon", -112.3535f, 36.2679f, 0f, 3000f, 0f)};
+    private List<coordinates> spawnLocations = new List<coordinates> {new coordinates("San Francisco", -122.4194f, 37.7749f, 0f, 150f, 0f), new coordinates("Girona, Spain", 2.8214f, 41.9794f, 38f, 83f, 12f),
+    new coordinates("Christchurch, New Zealand", 172.64f, -43.534f, -331.45f, 40.8f, 542.1f)};
 
     void Start()
     {
@@ -118,32 +117,12 @@ public class LocationSelector : MonoBehaviour
                 GoToSanFran();
                 break;
 
-            case "Philadelphia, Pennsylvaina":
-                GoToPhiladelphiaPennsylvaina();
-                break;
-
             case "Christchurch, New Zealand":
                 GoToChristchurchNewZealand();
-                break;
-
-            case "Montreal, Canada":
-                GoToMontrealCanada();
-                break;
-
-            case "Fiordland National Park":
-                GoToFiordlandNationalPark();
-                break;
-
-            case "Mt Everest":
-                GoToMtEverest();
-                break;
-
-            case "Grand Canyon":
-                GoToGrandCanyon();
-                break;
+                break;       
 
             default:
-                GoToPhiladelphiaPennsylvaina();
+                GoToSpain();
                 break;
         }
     }
@@ -172,9 +151,9 @@ public class LocationSelector : MonoBehaviour
         continuousMovement.SetVerticalSpeed(15f);
     }
 
-    public void GoToPhiladelphiaPennsylvaina()
+    public void GoToSpain()
     {
-        GetLocationByName("Philadelphia, Pennsylvaina");
+        GetLocationByName("Girona, Spain");
 
         // Confirm reference to continuousMovement component before calling method within it
         continuousMovement = continuousMovement ? continuousMovement : XROrigin.GetComponent<ContinuousMovement>();
@@ -190,46 +169,6 @@ public class LocationSelector : MonoBehaviour
         continuousMovement = continuousMovement ? continuousMovement : XROrigin.GetComponent<ContinuousMovement>();
         continuousMovement.SetSpeed(50f);
         continuousMovement.SetVerticalSpeed(15f);
-    }
-
-    public void GoToMontrealCanada()
-    {
-        GetLocationByName("Montreal, Canada");
-
-        // Confirm reference to continuousMovement component before calling method within it
-        continuousMovement = continuousMovement ? continuousMovement : XROrigin.GetComponent<ContinuousMovement>();
-        continuousMovement.SetSpeed(50f);
-        continuousMovement.SetVerticalSpeed(15f);
-    }
-
-    public void GoToFiordlandNationalPark()
-    {
-        GetLocationByName("Fiordland National Park");
-
-        // Confirm reference to continuousMovement component before calling method within it
-        continuousMovement = continuousMovement ? continuousMovement : XROrigin.GetComponent<ContinuousMovement>();
-        continuousMovement.SetSpeed(250f);
-        continuousMovement.SetVerticalSpeed(50f);
-    }
-    
-    public void GoToMtEverest()
-    {
-        GetLocationByName("Mt Everest");
-
-        // Confirm reference to continuousMovement component before calling method within it
-        continuousMovement = continuousMovement ? continuousMovement : XROrigin.GetComponent<ContinuousMovement>();
-        continuousMovement.SetSpeed(250f);
-        continuousMovement.SetVerticalSpeed(75f);
-    }
-
-    public void GoToGrandCanyon()
-    {
-        GetLocationByName("Grand Canyon");
-
-        // Confirm reference to continuousMovement component before calling method within it
-        continuousMovement = continuousMovement ? continuousMovement : XROrigin.GetComponent<ContinuousMovement>();
-        continuousMovement.SetSpeed(250f);
-        continuousMovement.SetVerticalSpeed(75f);
     }
     
     #endregion
