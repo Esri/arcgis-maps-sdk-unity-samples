@@ -572,6 +572,11 @@ MonoBehaviour:
   m_LineWidth: 0.005
   m_OverrideInteractorLineLength: 1
   m_LineLength: 30
+  m_AutoAdjustLineLength: 0
+  m_MinLineLength: 0.5
+  m_UseDistanceToHitAsMaxLineLength: 1
+  m_LineRetractionDelay: 0.5
+  m_LineLengthChangeSpeed: 12
   m_WidthCurve:
     serializedVersion: 2
     m_Curve:
@@ -596,6 +601,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  m_SetLineColorGradient: 1
   m_ValidColorGradient:
     serializedVersion: 2
     key0: {r: 1, g: 1, b: 1, a: 1}
@@ -692,6 +698,10 @@ MonoBehaviour:
   m_StopLineAtFirstRaycastHit: 1
   m_StopLineAtSelection: 0
   m_SnapEndpointIfAvailable: 1
+  m_LineBendRatio: 0.5
+  m_OverrideInteractorLineOrigin: 1
+  m_LineOriginTransform: {fileID: 0}
+  m_LineOriginOffset: 0
 --- !u!120 &595183160
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -909,6 +919,15 @@ MonoBehaviour:
   m_TranslateSpeed: 1
   m_AnchorRotateReferenceFrame: {fileID: 0}
   m_AnchorRotationMode: 0
+  m_UIHoverEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_UIHoverExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_EnableARRaycasting: 0
+  m_OccludeARHitsWith3DObjects: 0
+  m_OccludeARHitsWith2DObjects: 0
 --- !u!114 &595183162
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -954,6 +973,18 @@ MonoBehaviour:
       m_SingletonActionBindings: []
       m_Flags: 0
     m_Reference: {fileID: 8248158260566104461, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  m_IsTrackedAction:
+    m_UseReference: 0
+    m_Action:
+      m_Name: Is Tracked
+      m_Type: 1
+      m_ExpectedControlType: 
+      m_Id: 3b93f34d-ded4-43d1-a32c-b02ba2bd5571
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 1
+    m_Reference: {fileID: 0}
   m_TrackingStateAction:
     m_UseReference: 1
     m_Action:
@@ -1038,6 +1069,18 @@ MonoBehaviour:
       m_SingletonActionBindings: []
       m_Flags: 0
     m_Reference: {fileID: 71106601250685021, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  m_UIScrollAction:
+    m_UseReference: 0
+    m_Action:
+      m_Name: UI Scroll
+      m_Type: 0
+      m_ExpectedControlType: Vector2
+      m_Id: 98e24830-294e-4451-98df-f56c83dbaeb3
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: 0}
   m_HapticDeviceAction:
     m_UseReference: 1
     m_Action:
@@ -1231,7 +1274,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c703502c1493f5b4eb3e95b2efe0271e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  apiKey: 
+  apiKey: 'AAPK9a1e17b1fe01444a80714deaab387e69pww4ccrScOoeFoplxE6dWhe1zt2JEZgrc_0OJtLDc-6-7ZxmuZne5-r4BrogC4us       '
   basemap: https://www.arcgis.com/home/item.html?id=c7d2b5c334364e8fb5b73b0f4d6a779b
   basemapType: 0
   basemapAuthentication:
@@ -1273,58 +1316,9 @@ MonoBehaviour:
     IsVisible: 1
     Authentication:
       ConfigurationIndex: 0
-  - Name: Philadelphia, Pennsylvaina
-    Type: 1
-    Source: C:\Users\Administrator\Desktop\SLPKs\Buildings_Project_v18.slpk
-    Opacity: 1
-    IsVisible: 1
-    Authentication:
-      ConfigurationIndex: 0
-  - Name: Christchurch, New Zealand
-    Type: 1
-    Source: C:\Users\Administrator\Desktop\SLPKs\ccbuildings_wgs84.slpk
-    Opacity: 1
-    IsVisible: 1
-    Authentication:
-      ConfigurationIndex: 0
   - Name: BSL2 Christchurch, New Zealand
     Type: 7
     Source: https://tiles.arcgis.com/tiles/pmcEyn9tLWCoX7Dm/arcgis/rest/services/cclibrary1_wgs84/SceneServer
-    Opacity: 1
-    IsVisible: 1
-    Authentication:
-      ConfigurationIndex: 0
-  - Name: Montreal, Canada
-    Type: 1
-    Source: C:\Users\Administrator\Desktop\SLPKs\Montreal_Buildings_v17_21778.slpk
-    Opacity: 1
-    IsVisible: 1
-    Authentication:
-      ConfigurationIndex: 0
-  - Name: Denver, Colorado1
-    Type: 2
-    Source: C:\Users\apptest\Desktop\SLPKs\Denver_20mm_Sample_SLPK.slpk
-    Opacity: 1
-    IsVisible: 1
-    Authentication:
-      ConfigurationIndex: 0
-  - Name: Denver, Colorado2
-    Type: 2
-    Source: C:\Users\apptest\Desktop\SLPKs\Denver_50mm_Sample_SLPK.slpk
-    Opacity: 1
-    IsVisible: 1
-    Authentication:
-      ConfigurationIndex: 0
-  - Name: Denver, Colorado3
-    Type: 2
-    Source: C:\Users\apptest\Desktop\SLPKs\Denver_SL_Sample_SLPK.slpk
-    Opacity: 1
-    IsVisible: 1
-    Authentication:
-      ConfigurationIndex: 0
-  - Name: NewYork
-    Type: 1
-    Source: C:\Users\dan13436\OneDrive - Esri\Desktop\SLPKS\NYC_Attributed.slpk
     Opacity: 1
     IsVisible: 1
     Authentication:
@@ -1430,6 +1424,7 @@ MonoBehaviour:
   m_RepeatDelay: 0.5
   m_RepeatRate: 0.1
   m_TrackedDeviceDragThresholdMultiplier: 1.4
+  m_TrackedScrollDeltaMultiplier: 5
   m_ActiveInputMode: 0
   m_MaxTrackedDeviceRaycastDistance: 1000
   m_EnableXRInput: 1
@@ -6411,7 +6406,7 @@ PrefabInstance:
     - target: {fileID: 278084794429006837, guid: b54178d1a7f47ed4190913f4f9f09680, type: 3}
       propertyPath: toggleMenuButton.m_Reference
       value: 
-      objectReference: {fileID: 518123399261778091, guid: 3974f2d2d9776b840847bcb98d6e90f6, type: 3}
+      objectReference: {fileID: 345025636724132873, guid: c348712bda248c246b8c49b3db54643f, type: 3}
     - target: {fileID: 278084794429006838, guid: b54178d1a7f47ed4190913f4f9f09680, type: 3}
       propertyPath: m_RootOrder
       value: 5
