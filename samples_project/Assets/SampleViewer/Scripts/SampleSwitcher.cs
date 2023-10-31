@@ -54,7 +54,7 @@ public class SampleSwitcher : MonoBehaviour
     private void Update()
     {
         // API Script handles api key differently than the mapcomponent
-        var api = FindObjectOfType<SampleAPIMapCreator>();
+        var api = FindObjectOfType<APIMapCreator>();
         if (api != null)
         {
             if (api.APIKey == "")
