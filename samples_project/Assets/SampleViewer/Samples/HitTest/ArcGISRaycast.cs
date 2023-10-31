@@ -7,6 +7,7 @@
 using System;
 using Esri.ArcGISMapsSDK.Components;
 using Esri.GameEngine.Geometry;
+using TMPro;
 using UnityEngine.InputSystem;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,7 +19,7 @@ public class ArcGISRaycast : MonoBehaviour
     public ArcGISMapComponent arcGISMapComponent;
     public ArcGISCameraComponent arcGISCamera;
     public Canvas canvas;
-    public Text featureText;
+    public TextMeshProUGUI featureText;
 
     private void Start()
     {
