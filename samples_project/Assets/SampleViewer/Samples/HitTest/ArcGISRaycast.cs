@@ -36,7 +36,7 @@ public class ArcGISRaycast : MonoBehaviour
 	    inputAction.Disable();
     }
 
-    void Update()
+    private void Update()
     {
 	    if (inputAction.triggered)
 	    {
