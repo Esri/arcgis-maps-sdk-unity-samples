@@ -15,6 +15,7 @@ using UnityEngine.UI;
 public class ArcGISRaycast : MonoBehaviour
 {
     [SerializeField] private InputAction inputAction;
+    private const float offSet = 200f;
 	
     public ArcGISMapComponent arcGISMapComponent;
     public ArcGISCameraComponent arcGISCamera;
@@ -58,7 +59,7 @@ public class ArcGISRaycast : MonoBehaviour
 				    featureText.text = featureId.ToString();
 
 				    var geoPosition = arcGISMapComponent.EngineToGeographic(hit.point);
-				    var offsetPosition = new ArcGISPoint(geoPosition.X, geoPosition.Y, geoPosition.Z + 200, geoPosition.SpatialReference);
+				    var offsetPosition = new ArcGISPoint(geoPosition.X, geoPosition.Y, geoPosition.Z + offSet, geoPosition.SpatialReference);
 
 				    var rotation = arcGISCamera.GetComponent<ArcGISLocationComponent>().Rotation;
 				    var location = canvas.GetComponent<ArcGISLocationComponent>();
