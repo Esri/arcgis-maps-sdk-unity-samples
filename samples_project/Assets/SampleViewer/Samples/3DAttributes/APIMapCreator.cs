@@ -6,7 +6,6 @@
 
 // ArcGISMapsSDK
 
-// @@Start(namespaces)
 using Esri.ArcGISMapsSDK.Components;
 using Esri.ArcGISMapsSDK.Samples.Components;
 using Esri.ArcGISMapsSDK.Utils.GeoCoord;
@@ -26,7 +25,6 @@ using UnityEngine;
 // System
 
 using System;
-// @@End(namespaces)
 
 // This sample code demonstrates the essential API calls to set up an ArcGISMap
 // It covers generation and initialization for the necessary ArcGISMapsSDK game objects and components
@@ -37,13 +35,10 @@ using System;
 // NOTE: Hot reloading changes to an editor script doesn't always work. You'll need to restart the scene if you want your code changes to take effect
 // You could write an editor script to reload the scene for you, but that's beyond the scope of this sample script
 // See the Unity Hot Reloading documentation to learn more about hot reloading: https://docs.unity3d.com/Manual/script-Serialization.html
-// @@Start(editormode)
 [ExecuteAlways]
-// @@End(editormode)
 
 public class APIMapCreator : MonoBehaviour
 {
-	// @@Start(SetVar)
 	private ArcGISMapComponent mapComponent;
 	private ArcGISCameraComponent cameraComponent;
 	public string APIKey = "";
@@ -67,11 +62,9 @@ public class APIMapCreator : MonoBehaviour
 		CreateViewStateLoggingComponent();
 		CreateArcGISMap();
 	}
-	// @@End(Initialize)
 
 	// The ArcGISMap component is responsible for setting the origin of the map
 	// All geographically located objects need to be a parent of this object
-	// @@Start(MapComponent)
 	private void CreateArcGISMapComponent()
 	{
 		mapComponent = FindObjectOfType<ArcGISMapComponent>();
@@ -91,10 +84,8 @@ public class APIMapCreator : MonoBehaviour
 		// We only want to subscribe to this event once after the necessary game objects are added to the scene
 		mapComponent.MapTypeChanged += new ArcGISMapComponent.MapTypeChangedEventHandler(CreateArcGISMap);
 	}
-	// @@End(MapComponent)
 
 	// ArcGIS Camera and Location components are added to a Camera game object to enable map rendering, player movement and tile loading
-	// @@Start(CameraComponent)
 	private void CreateArcGISCamera()
 	{
 		cameraComponent = Camera.main.gameObject.GetComponent<ArcGISCameraComponent>();
@@ -128,12 +119,10 @@ public class APIMapCreator : MonoBehaviour
 			cameraLocationComponent.Rotation = new ArcGISRotation(65, 68, 0);
 		}
 	}
-	// @@End(CameraComponent)
 
 	// An ArcGISSkyReposition component adjusts a UnityEngine.Rendering.Volume to account for changes made to the map type
 	// They are only used with the HDRP graphics pipeline, so we've created the USE_HDRP_PACKAGE preprocessor to enables this section when you use HDRP
 	// This code is not necessary if you are using URP or if you choose not to use a Volume in your HDRP scene
-	// @@Start(SkyComponent)
 	private void CreateSkyComponent()
 	{
 #if USE_HDRP_PACKAGE
@@ -161,9 +150,6 @@ public class APIMapCreator : MonoBehaviour
 		}
 #endif
 	}
-	// @@End(SkyComponent)
-
-	// @@Start(ViewState)
 	private void CreateViewStateLoggingComponent()
 	{
 		ArcGISViewStateLoggingComponent viewStateComponent = mapComponent.GetComponent<ArcGISViewStateLoggingComponent>();
@@ -173,11 +159,9 @@ public class APIMapCreator : MonoBehaviour
 			viewStateComponent = mapComponent.gameObject.AddComponent<ArcGISViewStateLoggingComponent>();
 		}
 	}
-	// @@End(ViewState)
 
 	// This function creates the actual ArcGISMap object that will use your data to create a map
 	// This is the only function from this script that will get called again when the map type changes
-	// @@Start(ArcGISMap)
 	public void CreateArcGISMap()
 	{
 		if (SceneManager.GetActiveScene().name != "SampleViewer" && APIKey == "")
@@ -252,5 +236,4 @@ public class APIMapCreator : MonoBehaviour
 		}
 #endif
 	}
-	// @@End(ArcGISMap)
 }

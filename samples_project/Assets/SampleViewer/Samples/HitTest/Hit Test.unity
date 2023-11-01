@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 478.2279, g: 540.4678, b: 641.3926, a: 1}
+  m_IndirectSpecularColor: {r: 473.27637, g: 537.7449, b: 650.1782, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1310,7 +1310,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 702393525}
-  - component: {fileID: 702393526}
   - component: {fileID: 702393527}
   m_Layer: 0
   m_Name: SampleArcGISRaycast
@@ -1334,22 +1333,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &702393526
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 702393523}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2faf3a002b3ff974eb7cbe5d9f819b77, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  arcGISMapComponent: {fileID: 1808036065}
-  arcGISCamera: {fileID: 963194230}
-  canvas: {fileID: 300286568}
-  featureText: {fileID: 0}
 --- !u!114 &702393527
 MonoBehaviour:
   m_ObjectHideFlags: 0

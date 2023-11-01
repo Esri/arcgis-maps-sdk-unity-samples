@@ -47,8 +47,6 @@ public class AttributesComponent : MonoBehaviour
 	[SerializeField] private Toggle construction;
 	[SerializeField] private Toggle none;
 	
-	// We subscribe on awake to a sample event provided by the SampleAPIMapCreator component
-	// See ArcGISMapsSDK/Samples/Scripts/APISample/SampleAPIMapCreator.cs for more info
 	private void Awake()
 	{
 		sampleMapCreator = GetComponent<APIMapCreator>();
