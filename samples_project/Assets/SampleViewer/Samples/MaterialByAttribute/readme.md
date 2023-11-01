@@ -2,7 +2,7 @@
 
 Apply shaders to 3DObject Scene layer based on different attributes.
 
-![Image of 3DAttributes](3DAttributes.png)
+![Image of 3DAttributes](MaterialByAttribute.png)
 
 ## How to use the sample (SampleViewer)
 
