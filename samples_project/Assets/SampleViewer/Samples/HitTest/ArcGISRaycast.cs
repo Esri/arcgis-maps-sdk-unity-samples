@@ -14,7 +14,7 @@ using UnityEngine.UI;
 
 public class ArcGISRaycast : MonoBehaviour
 {
-	[SerializeField] private InputAction inputAction;
+    [SerializeField] private InputAction inputAction;
 	
     public ArcGISMapComponent arcGISMapComponent;
     public ArcGISCameraComponent arcGISCamera;
