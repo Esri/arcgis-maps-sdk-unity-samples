@@ -24,7 +24,7 @@ Get the ID for individual buildings in a scene.
 1. Create an ArcGIS Map.
 2. Attach an [**ArcGIS Camera**](https://developers.arcgis.com/unity/maps/camera/#arcgis-camera) component to the active camera.
 3. Create a new Gameobject and call it **SampleArcGISRaycast**.
-4. Attach the **ArcGISRaycast** script to the **SampleArcGISRaycast** Gameobject.
+4. Attach the **ArcGISRaycast** script to the **SampleArcGISRaycast** GameObject.
 5. Enter your **APIKey** in the **APIMapCreator**.
 5. Hit play. Once the scene is running hold shift and click a building. The building's ID's will show up on a 3D UI Component.
 
