@@ -1,6 +1,6 @@
 # Visualize 3DObject ID's
 
-Get the ID for individual buildings in a scene
+Get the ID for individual buildings in a scene.
 
 ![Image of HitTest](HitTest.png)
 
