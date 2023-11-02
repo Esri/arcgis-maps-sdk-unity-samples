@@ -23,7 +23,7 @@ Apply shaders to 3DObject Scene layer based on different attributes.
 
 1. Create an ArcGIS Map.
 2. Attach an [**ArcGIS Camera**](https://developers.arcgis.com/unity/maps/camera/#arcgis-camera) component to the active camera.
-3. Create a new Gameobject and call it **APIMapCreator**.
+3. Create a new GameObject and call it **APIMapCreator**.
 4. Attach the **APIMapCreator** script and the **AttributesComponent** script to the **APIMapCreator** Gameobject.
 5. Enter your **APIKey** in the **APIMapCreator**.
 5. Select your filter type in the **AttributesComponent** and watch the materials applied to the buildings change.
