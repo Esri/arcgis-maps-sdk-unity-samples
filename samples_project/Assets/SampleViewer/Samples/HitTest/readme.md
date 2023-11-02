@@ -15,7 +15,7 @@ Get the ID for individual buildings in a scene
 ## How to use the sample (HitTest Scene)
 
 1. Open the **HitTest** scene.
-2. Click on the **ArcGISMap** Gameobject and set your API key in the **Inspector** window. 
+2. Click on the **ArcGISMap** GameObject and set your API key in the **Inspector** window. 
 3. Click play.
 4. While holding shift, click a building. The building's ID's will show up on a 3D UI Component.
 
