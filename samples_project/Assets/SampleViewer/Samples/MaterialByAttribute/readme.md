@@ -14,7 +14,7 @@ Apply shaders to 3DObject Scene layer based on different attributes.
 
 ## How to use the sample (3DAttributes Scene)
 
-1. Open the **3DAttributes** scene.
+1. Open the **MaterialByAttribute** scene.
 2. Click on the **Sample3DAttributesMapCreator** GameObject and set your API key in the **Inspector** window. 
 3. Click play.
 4. Using the UI, select a filter type.
