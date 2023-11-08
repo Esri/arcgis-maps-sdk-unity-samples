@@ -4,6 +4,9 @@ Subscribe to the stream service's WebSocket and receive information through to u
 
 ![Stream layer](StreamLayer.png)
 
+## Note:
+The server hosting the data set used in this sample is currently down, resulting in the sample not working. The sample has been removed from the Sample Viewer, however it can still be accessed through **samples_project\Assets\SampleViewer\Samples\StreamLayer\StreamLayer.Unity**. This sample will be replaced in the future.
+
 ## How to use the sample
 
 This sample shows planes on current locations together with the flight number and flight time status bar.
