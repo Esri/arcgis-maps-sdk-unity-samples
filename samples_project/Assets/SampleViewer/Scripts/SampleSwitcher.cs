@@ -11,6 +11,8 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Esri.ArcGISMapsSDK.Utils;
+
 
 public class SampleSwitcher : MonoBehaviour
 {
@@ -35,7 +37,8 @@ public class SampleSwitcher : MonoBehaviour
 
         Invoke("SlideNotification", 2.0f);
 
-        DisableSceneButtons();
+        APIKey = ArcGISProjectSettingsAsset.Instance.APIKey;
+        ReadStringInput(APIKey);
 
         ExitButton.onClick.AddListener(delegate
         {
@@ -53,33 +56,7 @@ public class SampleSwitcher : MonoBehaviour
 
     private void Update()
     {
-        // API Script handles api key differently than the mapcomponent
-        var api = FindObjectOfType<APIMapCreator>();
-        if (api != null)
-        {
-            if (api.APIKey == "")
-            {
-                api.APIKey = APIKey;
-            }
-            return;
-        }
-        
-        var mapComponent = FindObjectOfType<ArcGISMapComponent>();
-        if (mapComponent != null && mapComponent.APIKey == "")
-        {
-            mapComponent.APIKey = APIKey;
-        }
-
         sceneLoadedCount = SceneManager.sceneCount;
-
-    }
-
-    private void OnEnable()
-    {
-        if (APIKey == "")
-        {
-            Debug.LogError("Set an API Key on the SampleSwitcher Game Object for the samples to function.\nThe README.MD of this repo provides more information on API Keys.");
-        }
     }
 
     private void AddScene()
@@ -171,14 +148,18 @@ public class SampleSwitcher : MonoBehaviour
 
     public void ReadStringInput(string apiKey)
     {
-        APIKey = apiKey;
-
+        GameObject apiWarning = GameObject.Find("WarningButton");
+        GameObject toolTip = GameObject.Find("ToolTip");
         if (APIKey.Length == 100)
         {
+            apiWarning.gameObject.SetActive(false);
+            toolTip.gameObject.SetActive(false);
             EnableSceneButtons();
         }
         else
         {
+            apiWarning.gameObject.SetActive(true);
+            toolTip.gameObject.SetActive(false);
             DisableSceneButtons();
         }
     }
