@@ -28,11 +28,12 @@ public class SampleSwitcher : MonoBehaviour
     private string currentSceneName;
     private int sceneLoadedCount;
     private Animator animator;
+    private GameObject warning;
 
     private void Start()
     {
         animator = GameObject.Find("NotificationMenu").GetComponent<Animator>();
-
+        warning = GameObject.Find("Warning");
         cam.enabled = true;
 
         Invoke("SlideNotification", 2.0f);
@@ -148,19 +149,19 @@ public class SampleSwitcher : MonoBehaviour
 
     public void ReadStringInput(string apiKey)
     {
-        GameObject apiWarning = GameObject.Find("WarningButton");
+        
         GameObject toolTip = GameObject.Find("ToolTip");
         if (APIKey.Length == 100)
         {
-            apiWarning.gameObject.SetActive(false);
-            toolTip.gameObject.SetActive(false);
+            warning.gameObject.SetActive(false);
+           // toolTip.gameObject.SetActive(false);
             EnableSceneButtons();
         }
         else
         {
-            apiWarning.gameObject.SetActive(true);
-            toolTip.gameObject.SetActive(false);
             DisableSceneButtons();
+            warning.gameObject.SetActive(true);
+           // toolTip.gameObject.SetActive(true);
         }
     }
 

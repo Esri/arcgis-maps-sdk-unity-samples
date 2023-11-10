@@ -4,24 +4,36 @@ using TMPro;
 
 public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    public TMP_Text tooltipText;
-    private Tooltip tooltip;
+    private Tooltip tooltip; 
 
     private void Start()
     {
+
         GameObject prefab = Resources.Load<GameObject>("Prefabs/TooltipPanel");
+        if (prefab == null)
+        {
+            Debug.LogError("Tooltip prefab could not be loaded. Ensure it is located in 'Resources/Prefabs'.");
+            return;
+        }
+
         GameObject tooltipGO = Instantiate(prefab, transform);
-        Tooltip tooltipInstance = tooltipGO.GetComponent<Tooltip>();
+        tooltip = tooltipGO.GetComponent<Tooltip>();
+
         tooltip.HideTooltip();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        tooltip.ShowTooltip(tooltipText);
+        {
+            tooltip.ShowTooltip();
+        }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        tooltip.HideTooltip();
+        if (tooltip != null)
+        {
+            tooltip.HideTooltip();
+        }
     }
 }

@@ -1,14 +1,10 @@
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 public class Tooltip : MonoBehaviour
 {
-    public TMP_Text tooltipText;
-
-    public void ShowTooltip(TMP_Text text)
+    public void ShowTooltip()
     {
-        tooltipText = text;
         gameObject.SetActive(true);
     }
 
