@@ -21,25 +21,23 @@ public class SampleSwitcher : MonoBehaviour
     public Camera cam;
     public Button[] sceneButtons;
     public Button[] pipelineButtons;
-    private string APIKey;
+    private string projectAPIKey;
     private string pipelineModeText;
     private string nextSceneName;
     private string PipelineType;
     private string currentSceneName;
     private int sceneLoadedCount;
     private Animator animator;
-    private GameObject warning;
 
     private void Start()
     {
         animator = GameObject.Find("NotificationMenu").GetComponent<Animator>();
-        warning = GameObject.Find("Warning");
         cam.enabled = true;
 
         Invoke("SlideNotification", 2.0f);
 
-        APIKey = ArcGISProjectSettingsAsset.Instance.APIKey;
-        ReadStringInput(APIKey);
+        projectAPIKey = ArcGISProjectSettingsAsset.Instance.APIKey;
+        ReadStringInput(projectAPIKey);
 
         ExitButton.onClick.AddListener(delegate
         {
@@ -150,18 +148,16 @@ public class SampleSwitcher : MonoBehaviour
     public void ReadStringInput(string apiKey)
     {
         
-        GameObject toolTip = GameObject.Find("ToolTip");
-        if (APIKey.Length == 100)
+        GameObject warning = GameObject.Find("Warning");
+        if (projectAPIKey.Length == 100 || apiKey.Length == 100)
         {
             warning.gameObject.SetActive(false);
-           // toolTip.gameObject.SetActive(false);
             EnableSceneButtons();
         }
         else
         {
-            DisableSceneButtons();
             warning.gameObject.SetActive(true);
-           // toolTip.gameObject.SetActive(true);
+            DisableSceneButtons();
         }
     }
 

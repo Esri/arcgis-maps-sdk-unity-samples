@@ -8,7 +8,6 @@ public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     private void Start()
     {
-
         GameObject prefab = Resources.Load<GameObject>("Prefabs/TooltipPanel");
         if (prefab == null)
         {
@@ -18,6 +17,7 @@ public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
         GameObject tooltipGO = Instantiate(prefab, transform);
         tooltip = tooltipGO.GetComponent<Tooltip>();
+
 
         tooltip.HideTooltip();
     }
