@@ -1,15 +1,14 @@
 using UnityEngine;
-using TMPro;
 
 public class Tooltip : MonoBehaviour
 {
-    public void ShowTooltip()
-    {
-        gameObject.SetActive(true);
-    }
+	public void ShowTooltip()
+	{
+		gameObject.SetActive(true);
+	}
 
-    public void HideTooltip()
-    {
-        gameObject.SetActive(false);
-    }
+	public void HideTooltip()
+	{
+		gameObject.SetActive(false);
+	}
 }
