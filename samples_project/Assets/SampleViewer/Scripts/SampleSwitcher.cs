@@ -30,9 +30,12 @@ public class SampleSwitcher : MonoBehaviour
 	private int sceneLoadedCount;
 	private Animator animator;
 
+	[SerializeField] private GameObject warning;
+	[SerializeField] private GameObject notificationMenu;
+
 	private void Start()
 	{
-		animator = GameObject.Find("NotificationMenu").GetComponent<Animator>();
+		animator = notificationMenu.GetComponent<Animator>();
 		cam.enabled = true;
 
 		Invoke("SlideNotification", 2.0f);
@@ -164,18 +167,21 @@ public class SampleSwitcher : MonoBehaviour
 
 	public void CheckAPIKey(string value)
 	{
-		GameObject warning = GameObject.Find("Warning");
 		apiKey = value;
-		if (value.Length == 100)
+		if(warning != null)
 		{
-			warning.gameObject.SetActive(false);
-			EnableSceneButtons();
+			if (value.Length == 100)
+			{
+				warning.gameObject.SetActive(false);
+				EnableSceneButtons();
+			}
+			else
+			{
+				warning.gameObject.SetActive(true);
+				DisableSceneButtons();
+			}
 		}
-		else
-		{
-			warning.gameObject.SetActive(true);
-			DisableSceneButtons();
-		}
+		
 	}
 
 	public void SetPipelineText(string text)
