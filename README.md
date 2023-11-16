@@ -9,7 +9,7 @@ This repository is made up of two seperate Unity projects. If you would like to 
 
 ### Requirements for Sample Project
 * Computer running Windows or macOS
-* The Unity project was created with 2021.3.24 LTS but works with any version of 2021.3 LTS and works with 2022.3 LTS
+* The Unity project was created with 2021.3.24 LTS but is compatible with any version of 2021.3 LTS and also works with 2022.3 LTS
 * ArcGISMaps SDK for Unity
 
 ### Requirements for XR Sample Project
