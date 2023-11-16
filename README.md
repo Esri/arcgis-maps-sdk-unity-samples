@@ -5,7 +5,7 @@
 Here is a Unity project containing a set of samples showing you how to accomplish various things using the combined features of Unity and the ArcGIS Maps SDK for Unity. The `main` branch is configured to work with our most recent release (1.3.0) if you want to use the sample repo with an older release check out the corresponding tag of the sample repo, `git checkout 1.0.0` for the sample repo that worked with our 1.0.0 release.
 
 ### Note
-This repository is made up of two seperate Unity projects. If you would like to see the samples made for regular use such as Feature Layer and Routing, please use and setup the **sample_project**. If you are interested in XR Samples such as, Virtual Reality Sample and a XR version of our Table Top Sample (coming soon), please use and setup the **sample_xr**. Both projects may be used and setup simultaneously, but they do not have the same samples. 
+This repository is made up of two seperate Unity projects. If you would like to see the samples made for regular use such as Feature Layer and Routing, please use and set up the **sample_project**. If you are interested in XR Samples such as, the Virtual Reality Sample and the XR version of our Table Top Sample (coming soon), please use and set up the **sample_xr**. Both projects may be used and set up simultaneously, but they do not contain the same samples. 
 
 ### Requirements for Sample Project
 * Computer Running Windows or MacOS
