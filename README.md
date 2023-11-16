@@ -8,7 +8,7 @@ Here is a Unity project containing a set of samples showing you how to accomplis
 This repository is made up of two seperate Unity projects. If you would like to see the samples made for regular use such as Feature Layer and Routing, please use and set up the **sample_project**. If you are interested in XR Samples such as, the Virtual Reality Sample and the XR version of our Table Top Sample (coming soon), please use and set up the **sample_xr**. Both projects may be used and set up simultaneously, but they do not contain the same samples. 
 
 ### Requirements for Sample Project
-* Computer Running Windows or MacOS
+* Computer running Windows or macOS
 * The Unity project was created with 2021.3.24 LTS but works with any version of 2021.3 LTS and works with 2022.3 LTS
 * ArcGISMaps SDK for Unity
 
