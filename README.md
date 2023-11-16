@@ -4,6 +4,20 @@
 
 Here is a Unity project containing a set of samples showing you how to accomplish various things using the combined features of Unity and the ArcGIS Maps SDK for Unity. The `main` branch is configured to work with our most recent release (1.3.0) if you want to use the sample repo with an older release check out the corresponding tag of the sample repo, `git checkout 1.0.0` for the sample repo that worked with our 1.0.0 release.
 
+### Note
+This repository is made up of two seperate Unity projects. If you would like to see the samples made for regular use such as Feature Layer and Routing, please use and set up the **sample_project**. If you are interested in XR Samples such as, the Virtual Reality Sample and the XR version of our Table Top Sample (coming soon), please use and set up the **sample_xr**. Both projects may be used and set up simultaneously, but they do not contain the same samples. 
+
+### Requirements for Sample Project
+* Computer running Windows or macOS
+* The Unity project was created with 2021.3.24 LTS but is compatible with any version of 2021.3 LTS and also works with 2022.3 LTS
+* ArcGISMaps SDK for Unity
+
+### Requirements for XR Sample Project
+* Computer running Windows (OpenXR is not supported on macOS)
+* The Unity project was created with 2021.3.24 LTS but is compatible with any version of 2021.3 LTS and also works with 2022.3 LTS
+* ArcGISMaps SDK for Unity
+* A VR Headset and the necessary software to through Desktop Mode
+
 ## Features
 
 * [Feature service REST API](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/samples_project/Assets/SampleViewer/Samples/FeatureLayer) - See how to query a feature service to create game objects in Unity located at real world positions.
@@ -15,6 +29,8 @@ Here is a Unity project containing a set of samples showing you how to accomplis
 * [Routing](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/samples_project/Assets/SampleViewer/Samples/Routing) - See how to query Esri's routing service to get the shortest path between two points and visualize that route in Unity.
 * [Stream Layer](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/samples_project/Assets/SampleViewer/Samples/StreamLayer) - See how to use web sockets to connect to an Esri real time service to update game objects locations in real time.
 * [Third Person Controller](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/samples_project/Assets/SampleViewer/Samples/ThirdPerson) - Explore from the perspective of a third person camera following a controllable character.
+
+## Features in XR Sample Project
 * [VRSample](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/samples_xr/Assets/SampleViewer/Samples/VRSample) - See how to configure the camera to visualize content on a VR device and move the camera with VR locomotion.
 
 ## Instructions
