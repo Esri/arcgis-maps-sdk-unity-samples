@@ -18,7 +18,7 @@ Query objects from a feature layer and show it on the map.
 2. Input your API key under the **API Key Drop down**.
 3. Click the **Sample Drop Down** and select **Feature Layer**.
 
-## How to Use
+## How to use
 
 1. Already available is a Feature Layer of park trees. Upon running the scene, these feature items will be spawned in at their default latitude and longitude, and with all of the properties associated with that feature item. 
 2. Clicking on any of these objects under the **FeatureLayer** Gameobject in Unity to see its latitude, longitude, and any properties received by the query.
