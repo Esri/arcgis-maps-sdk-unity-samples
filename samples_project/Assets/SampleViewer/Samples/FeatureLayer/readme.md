@@ -4,7 +4,7 @@ Query objects from a feature layer and show it on the map.
 
 ![Feature layer](FeatureLayer.png)
 
-## How to Setup (Feature Layer Level)
+## How to set up (Feature Layer Level)
 
 1. Open the **FeatureLayer** Scene.
 2. Click on the **ArcGISMap** Gameobject in the hierarchy window.
