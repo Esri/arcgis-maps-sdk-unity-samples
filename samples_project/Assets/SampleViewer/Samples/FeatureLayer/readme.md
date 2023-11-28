@@ -12,7 +12,7 @@ Query objects from a feature layer and show it on the map.
 4. Click play.
 
 
-## How to Setup (Sample Viewer)
+## How to set up (Sample Viewer)
 
 1. Click Play in Unity Editor.
 2. Input your API key under the **API Key Drop down**.
