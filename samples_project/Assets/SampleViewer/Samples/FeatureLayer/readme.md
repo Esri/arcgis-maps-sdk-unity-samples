@@ -22,7 +22,7 @@ Query objects from a feature layer and show it on the map.
 
 1. Already available is a Feature Layer of park trees. Upon running the scene, these feature items will be spawned in at their default latitude and longitude, and with all of the properties associated with that feature item. 
 2. Clicking on any of these objects under the **FeatureLayer** Gameobject in Unity to see its latitude, longitude, and any properties received by the query.
-3. Under the outfields drop down, by default it will be set to "Get All Outfields". Clicking on any of the other outfields will deselect "Get All Outfields" and will only get the outfield selected. Multi-select is supported. Outfields are the properties associated with the individual features. **Note** you need to reprocess the feature layer query after changes outfields to get.
+3. Under the outfields dropdown, by default it will be set to "Get All Outfields". Selecting any of the other outfields will deselect "Get All Outfields". Multi-select is supported. Outfields are the properties associated with the individual features. **Note**: after modifying the outfields selections, it is necessary to reprocess the feature layer query for the changes to take effect.
 
 ## How it works
 
