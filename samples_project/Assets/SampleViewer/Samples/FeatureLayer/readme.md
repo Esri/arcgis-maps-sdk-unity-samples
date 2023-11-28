@@ -28,7 +28,7 @@ Query objects from a feature layer and show it on the map.
 
 ### Important note
 
-This sample allows users to use their own feature layer data sets to visualize using the Unity Engine. At this time, we only support `Point Layer data types`. We plan to add support for the other types in the future. We appologize for any inconvience this may cause you.
+This sample allows users to use their own feature layer data sets to visualize in Unity. At this time, we only support `Point Layer data types`.
 
 ### Getting the data
 
