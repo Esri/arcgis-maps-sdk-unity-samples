@@ -20,6 +20,7 @@ using Newtonsoft.Json.Linq;
 using Esri.HPFramework;
 using UnityEngine.EventSystems;
 using TMPro;
+using UnityEngine.UI;
 
 [Serializable]
 public class PlaneFeature
@@ -109,6 +110,9 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
 
     [SerializeField] private TMP_Dropdown flightSelector;
 
+    [SerializeField] private TextMeshProUGUI connectionStatus;
+    [SerializeField] private Image connectionIndicator;
+
     // Get all the features when the script starts
     void Start()
     {
@@ -126,6 +130,17 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
 
     private void Update()
     {
+        if (IsConnected())
+        {
+            connectionStatus.text = "Connection Status: Connected";
+            connectionIndicator.color = Color.green;
+        }
+        else
+        {
+            connectionStatus.text = "Connection Status: Not Connected";
+            connectionIndicator.color = Color.red;
+        }
+
         if (MouseOverUI())
         {
             ArcGISCamera.GetComponent<ArcGISCameraControllerComponent>().enabled = false;
