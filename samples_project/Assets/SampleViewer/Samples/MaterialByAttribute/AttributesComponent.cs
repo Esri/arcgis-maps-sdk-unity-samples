@@ -161,7 +161,7 @@ public class AttributesComponent : MonoBehaviour
 		// We want to set the material we will use to visualize this layer
 		// In Unity, open this material in the Shader Graph to view its implementation
 		// In general, you can use this function in other scripts to change the material that is used to render the buildings
-		layer.MaterialReference = new Material(Resources.Load<Material>("Materials/" + DetectRenderPipeline() + "/ConstructionYearRenderer"));
+		layer.MaterialReference = new Material(Resources.Load<Material>("Materials" + "/ConstructionYearRenderer"));
 	}
 
 	// This function is an example of how to use attributes WITH the attribute processor
@@ -208,7 +208,7 @@ public class AttributesComponent : MonoBehaviour
 
 		// In Unity, open this material in the Shader Graph to view its implementation
 		// In general, you can use this function in other scripts to change the material that is used to render the buildings
-		layer.MaterialReference = new Material(Resources.Load<Material>("Materials/" + DetectRenderPipeline() + "/BuildingNameRenderer"));
+		layer.MaterialReference = new Material(Resources.Load<Material>("Materials/" + "BuildingNameRenderer"));
 	}
 
 	// This function checks if the building contains a name we are interested in visualizing
