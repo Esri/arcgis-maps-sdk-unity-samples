@@ -9,11 +9,21 @@ public class VRMenuManager : MonoBehaviour
 {
     [SerializeField] private Transform VRhead;
     [Min(0)] [SerializeField] private float spawnDistance = 2f;
-    [SerializeField] private InputActionProperty toggleMenuButton;
+    [SerializeField] private InputAction toggleMenuButton;
 
-    private bool currentlyTeleporting = false;
+    [SerializeField] private bool currentlyTeleporting = false;
     private GameObject esriLogo;
     private GameObject esriMenu;
+
+    private void OnEnable()
+    {
+        toggleMenuButton.Enable();
+    }
+
+    private void OnDisable()
+    {
+        toggleMenuButton.Disable();
+    }
 
     private void Start()
     {
@@ -29,7 +39,7 @@ public class VRMenuManager : MonoBehaviour
     {
         if (esriMenu)
         {
-            if (toggleMenuButton.action.WasPressedThisFrame() && !currentlyTeleporting)
+            if (toggleMenuButton.triggered)
             {
                 esriMenu.SetActive(!esriMenu.activeSelf);
 
