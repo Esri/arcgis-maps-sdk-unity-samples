@@ -35,13 +35,13 @@ public class LocationCycle : MonoBehaviour
     [SerializeField] private Sprite NYC;
     [SerializeField] private Sprite sanFran;
 
-    private ArcGISBuildingSceneLayer esriLayer;
-    private ArcGISIntegratedMeshLayer gironaLayer;
-    private ArcGIS3DObjectSceneLayer newYorkBuildings;
     private ArcGISBuildingSceneLayer christChurchLayer;
     private ArcGIS3DObjectSceneLayer christChurchSurroundingsLayer;
-    private ArcGIS3DObjectSceneLayer sfBuildings;
+    private ArcGISBuildingSceneLayer esriLayer;
     private ArcGIS3DObjectSceneLayer esriSurroundings;
+    private ArcGISIntegratedMeshLayer gironaLayer;
+    private ArcGIS3DObjectSceneLayer newYorkBuildings;
+    private ArcGIS3DObjectSceneLayer sfBuildings;
 
     private void Awake()
     {
@@ -52,15 +52,6 @@ public class LocationCycle : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        newYorkBuildings = new ArcGIS3DObjectSceneLayer(
-            "https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_NewYork_17/SceneServer",
-            "NewYork", 1.0f, false, "");
-        sfBuildings = new ArcGIS3DObjectSceneLayer(
-            "https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/SanFrancisco_Bldgs/SceneServer",
-            "SanFran", 1.0f, false, "");
-        gironaLayer = new ArcGISIntegratedMeshLayer(
-            "https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/Girona_Spain/SceneServer",
-            "Girona", 1.0f, false, "");
         christChurchLayer = new ArcGISBuildingSceneLayer(
             "https://tiles.arcgis.com/tiles/pmcEyn9tLWCoX7Dm/arcgis/rest/services/cclibrary1_wgs84/SceneServer",
             "ChristChurch", 1.0f, false, "");
@@ -71,6 +62,15 @@ public class LocationCycle : MonoBehaviour
             "Esri Building E", 1.0f, false, "");
         esriSurroundings = new ArcGIS3DObjectSceneLayer("https://services.arcgis.com/hAJQfubNy25iblZJ/arcgis/rest/services/HQ_Campus_WSL1/SceneServer",
             "EsriBuildings", 1.0f, false, "");
+        gironaLayer = new ArcGISIntegratedMeshLayer(
+            "https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/Girona_Spain/SceneServer",
+            "Girona", 1.0f, false, "");
+        newYorkBuildings = new ArcGIS3DObjectSceneLayer(
+            "https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_NewYork_17/SceneServer",
+            "NewYork", 1.0f, false, "");
+        sfBuildings = new ArcGIS3DObjectSceneLayer(
+            "https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/SanFrancisco_Bldgs/SceneServer",
+            "SanFran", 1.0f, false, "");
         esriLayer.DoneLoading += ToggleLayers;
 
         if (christChurch != null)
@@ -107,6 +107,7 @@ public class LocationCycle : MonoBehaviour
         {
             arcGISMapComponent.Map.Layers.Add(christChurchSurroundingsLayer);
         }
+
         SetLocation();
     }
 
@@ -139,42 +140,10 @@ public class LocationCycle : MonoBehaviour
         esriSurroundings.IsVisible = false;
     }
 
-    public void SetRedlands()
-    {
-        tableTopController.Center = new ArcGISPoint(-13046568.699492734, 4036484.647920266, 0.0f, ArcGISSpatialReference.WebMercator());
-        tableTopController.ElevationOffset = -390.0f;
-        nextLocation = Locations.Girona;
-        previousLocation = Locations.ChristChurch;
-        locationImage.sprite = redlands;
-        christChurchLayer.IsVisible = false;
-        christChurchSurroundingsLayer.IsVisible = false;
-        esriLayer.IsVisible = true;
-        esriSurroundings.IsVisible = true;
-        gironaLayer.IsVisible = false;
-        newYorkBuildings.IsVisible = false;
-        sfBuildings.IsVisible = false;
-    }
-
-    public void SetGirona()
-    {
-        tableTopController.Center = new ArcGISPoint(314076.81132414174, 5157894.163259039, 0.0f, ArcGISSpatialReference.WebMercator());
-        tableTopController.ElevationOffset = -75.0f;
-        previousLocation = Locations.Esri;
-        nextLocation = Locations.MountEverest;
-        locationImage.sprite = girona;
-        christChurchLayer.IsVisible = false;
-        esriLayer.IsVisible = false;
-        gironaLayer.IsVisible = true;
-        newYorkBuildings.IsVisible = false;
-        sfBuildings.IsVisible = false;
-        christChurchSurroundingsLayer.IsVisible = false;
-        esriSurroundings.IsVisible = false;
-    }
-
     public void SetEverest()
     {
         tableTopController.Center = new ArcGISPoint(9676446.737205295, 3247473.554732518, 0.0f, ArcGISSpatialReference.WebMercator());
-        tableTopController.Width = 5000.0f;
+        tableTopController.Width = 10000.0f;
         tableTopController.ElevationOffset = -5000.0f;
         previousLocation = Locations.Girona;
         nextLocation = Locations.NewYorkCity;
@@ -182,6 +151,23 @@ public class LocationCycle : MonoBehaviour
         christChurchLayer.IsVisible = false;
         esriLayer.IsVisible = false;
         gironaLayer.IsVisible = false;
+        newYorkBuildings.IsVisible = false;
+        sfBuildings.IsVisible = false;
+        christChurchSurroundingsLayer.IsVisible = false;
+        esriSurroundings.IsVisible = false;
+    }
+
+    public void SetGirona()
+    {
+        tableTopController.Center = new ArcGISPoint(314076.81132414174, 5157894.163259039, 0.0f, ArcGISSpatialReference.WebMercator());
+        tableTopController.Width = 1000.0f;
+        tableTopController.ElevationOffset = -75.0f;
+        previousLocation = Locations.Esri;
+        nextLocation = Locations.MountEverest;
+        locationImage.sprite = girona;
+        christChurchLayer.IsVisible = false;
+        esriLayer.IsVisible = false;
+        gironaLayer.IsVisible = true;
         newYorkBuildings.IsVisible = false;
         sfBuildings.IsVisible = false;
         christChurchSurroundingsLayer.IsVisible = false;
@@ -202,6 +188,22 @@ public class LocationCycle : MonoBehaviour
         sfBuildings.IsVisible = false;
         christChurchSurroundingsLayer.IsVisible = false;
         esriSurroundings.IsVisible = false;
+    }
+
+    public void SetRedlands()
+    {
+        tableTopController.Center = new ArcGISPoint(-13046568.699492734, 4036484.647920266, 0.0f, ArcGISSpatialReference.WebMercator());
+        tableTopController.ElevationOffset = -390.0f;
+        nextLocation = Locations.Girona;
+        previousLocation = Locations.ChristChurch;
+        locationImage.sprite = redlands;
+        christChurchLayer.IsVisible = false;
+        christChurchSurroundingsLayer.IsVisible = false;
+        esriLayer.IsVisible = true;
+        esriSurroundings.IsVisible = true;
+        gironaLayer.IsVisible = false;
+        newYorkBuildings.IsVisible = false;
+        sfBuildings.IsVisible = false;
     }
 
     public void SetSanFran()

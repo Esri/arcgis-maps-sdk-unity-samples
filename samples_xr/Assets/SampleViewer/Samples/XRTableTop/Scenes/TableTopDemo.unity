@@ -1553,6 +1553,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 359942200}
     - target: {fileID: 8064298685075845067, guid: 576c69a86fe44b7499293b5708031289, type: 3}
+      propertyPath: activateLeft.m_Reference
+      value: 
+      objectReference: {fileID: -5982496924579745919, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+    - target: {fileID: 8064298685075845067, guid: 576c69a86fe44b7499293b5708031289, type: 3}
       propertyPath: leftActivate.m_Reference
       value: 
       objectReference: {fileID: -6131295136447488360, guid: c348712bda248c246b8c49b3db54643f, type: 3}
@@ -1565,8 +1569,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 187161793506945269, guid: c348712bda248c246b8c49b3db54643f, type: 3}
     - target: {fileID: 8064298685075845067, guid: 576c69a86fe44b7499293b5708031289, type: 3}
+      propertyPath: activiateRight.m_Reference
+      value: 
+      objectReference: {fileID: 83097790271614945, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+    - target: {fileID: 8064298685075845067, guid: 576c69a86fe44b7499293b5708031289, type: 3}
+      propertyPath: activateLeft.m_UseReference
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064298685075845067, guid: 576c69a86fe44b7499293b5708031289, type: 3}
       propertyPath: leftActivate.m_UseReference
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064298685075845067, guid: 576c69a86fe44b7499293b5708031289, type: 3}
+      propertyPath: activateLeft.m_Action.m_Name
+      value: Activate Left
       objectReference: {fileID: 0}
     - target: {fileID: 8064298685075845067, guid: 576c69a86fe44b7499293b5708031289, type: 3}
       propertyPath: leftActivate.m_Action.m_Name
@@ -1577,8 +1593,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8064298685075845067, guid: 576c69a86fe44b7499293b5708031289, type: 3}
+      propertyPath: activiateRight.m_UseReference
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064298685075845067, guid: 576c69a86fe44b7499293b5708031289, type: 3}
       propertyPath: rightActivate.m_Action.m_Name
       value: Right Activate
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064298685075845067, guid: 576c69a86fe44b7499293b5708031289, type: 3}
+      propertyPath: activiateRight.m_Action.m_Name
+      value: Activiate Right
       objectReference: {fileID: 0}
     - target: {fileID: 8774807364357841167, guid: 576c69a86fe44b7499293b5708031289, type: 3}
       propertyPath: m_ValidColorGradient.ctime1
