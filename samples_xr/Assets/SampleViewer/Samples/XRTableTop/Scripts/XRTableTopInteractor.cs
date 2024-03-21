@@ -21,7 +21,11 @@ public class XRTableTopInteractor : MonoBehaviour
     [SerializeField] private float radiusScalar = 50f;
     [SerializeField] private ArcGISTabletopControllerComponent tableTop;
     [SerializeField] private GameObject tableTopWrapper;
-    private bool paused;
+
+    [Header("Material")]
+    [SerializeField] private Color color;
+    [SerializeField] private Material mat;
+    [SerializeField] private bool useTexture;
 
     [Header("Right Hand")]
     [SerializeField] private InputAction pinchR;
@@ -36,6 +40,15 @@ public class XRTableTopInteractor : MonoBehaviour
     private void Awake()
     {
         camera = GetComponentInChildren<Camera>();
+        mat.SetColor("_Color", color);
+        if (useTexture)
+        {
+            mat.SetInt("_UseTexture", 1);
+        }
+        else
+        {
+            mat.SetInt("_UseTexture", 0);
+        }
     }
 
     private void Start()
@@ -60,12 +73,18 @@ public class XRTableTopInteractor : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        tableTop.Width = Mathf.Clamp((float)tableTop.Width, 1000.0f, 4500000.0f);
+        //tableTop.Width = Mathf.Clamp((float)tableTop.Width, 1000.0f, 4500000.0f);
         InputDevice rightDevice = InputDevices.GetDeviceAtXRNode(rightInputSource);
         rightDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out rightInputAxis);
         rightDevice.TryGetFeatureValue(CommonUsages.triggerButton, out triggerPressedR);
         rightControllerInteractor.TryGetCurrent3DRaycastHit(out rightControllerHit);
         rightHandInteractor.TryGetCurrent3DRaycastHit(out rightHandHit);
+
+        if (rightInputAxis.y != 0.0f)
+        {
+            var zoom = Mathf.Sign(rightInputAxis.y);
+            ZoomMap(zoom);
+        }
 
         if (rightControllerHit.collider)
         {
@@ -86,12 +105,6 @@ public class XRTableTopInteractor : MonoBehaviour
 
     private void MoveCenter()
     {
-        if (rightInputAxis.y != 0.0f)
-        {
-            var zoom = Mathf.Sign(rightInputAxis.y);
-            ZoomMap(zoom);
-        }
-
         if (triggerPressedR && !isDragging)
         {
             StartPointDragController();

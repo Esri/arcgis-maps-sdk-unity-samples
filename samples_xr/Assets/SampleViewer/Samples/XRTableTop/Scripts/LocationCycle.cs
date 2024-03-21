@@ -39,7 +39,9 @@ public class LocationCycle : MonoBehaviour
     private ArcGISIntegratedMeshLayer gironaLayer;
     private ArcGIS3DObjectSceneLayer newYorkBuildings;
     private ArcGISBuildingSceneLayer christChurchLayer;
+    private ArcGIS3DObjectSceneLayer christChurchSurroundingsLayer;
     private ArcGIS3DObjectSceneLayer sfBuildings;
+    private ArcGIS3DObjectSceneLayer esriSurroundings;
 
     private void Awake()
     {
@@ -62,9 +64,13 @@ public class LocationCycle : MonoBehaviour
         christChurchLayer = new ArcGISBuildingSceneLayer(
             "https://tiles.arcgis.com/tiles/pmcEyn9tLWCoX7Dm/arcgis/rest/services/cclibrary1_wgs84/SceneServer",
             "ChristChurch", 1.0f, false, "");
+        christChurchSurroundingsLayer = new ArcGIS3DObjectSceneLayer("https://tiles.arcgis.com/tiles/pmcEyn9tLWCoX7Dm/arcgis/rest/services/ccbuildings_wgs84/SceneServer",
+            "CCBuildings", 1.0f, false, "");
         esriLayer = new ArcGISBuildingSceneLayer(
             "https://tiles.arcgis.com/tiles/V6ZHFr6zdgNZuVG0/arcgis/rest/services/Bldg_E_Color_UC2020_demo/SceneServer",
             "Esri Building E", 1.0f, false, "");
+        esriSurroundings = new ArcGIS3DObjectSceneLayer("https://services.arcgis.com/hAJQfubNy25iblZJ/arcgis/rest/services/HQ_Campus_WSL1/SceneServer",
+            "EsriBuildings", 1.0f, false, "");
         esriLayer.DoneLoading += ToggleLayers;
 
         if (christChurch != null)
@@ -92,6 +98,15 @@ public class LocationCycle : MonoBehaviour
             arcGISMapComponent.Map.Layers.Add(sfBuildings);
         }
 
+        if(esriSurroundings != null)
+        {
+            arcGISMapComponent.Map.Layers.Add(esriSurroundings);
+        }
+
+        if (christChurchSurroundingsLayer != null)
+        {
+            arcGISMapComponent.Map.Layers.Add(christChurchSurroundingsLayer);
+        }
         SetLocation();
     }
 
@@ -116,10 +131,12 @@ public class LocationCycle : MonoBehaviour
         previousLocation = Locations.SanFransisco;
         locationImage.sprite = christChurch;
         christChurchLayer.IsVisible = true;
+        christChurchSurroundingsLayer.IsVisible = true;
         esriLayer.IsVisible = false;
         gironaLayer.IsVisible = false;
         newYorkBuildings.IsVisible = false;
         sfBuildings.IsVisible = false;
+        esriSurroundings.IsVisible = false;
     }
 
     public void SetRedlands()
@@ -130,7 +147,9 @@ public class LocationCycle : MonoBehaviour
         previousLocation = Locations.ChristChurch;
         locationImage.sprite = redlands;
         christChurchLayer.IsVisible = false;
+        christChurchSurroundingsLayer.IsVisible = false;
         esriLayer.IsVisible = true;
+        esriSurroundings.IsVisible = true;
         gironaLayer.IsVisible = false;
         newYorkBuildings.IsVisible = false;
         sfBuildings.IsVisible = false;
@@ -148,12 +167,14 @@ public class LocationCycle : MonoBehaviour
         gironaLayer.IsVisible = true;
         newYorkBuildings.IsVisible = false;
         sfBuildings.IsVisible = false;
+        christChurchSurroundingsLayer.IsVisible = false;
+        esriSurroundings.IsVisible = false;
     }
 
     public void SetEverest()
     {
         tableTopController.Center = new ArcGISPoint(9676446.737205295, 3247473.554732518, 0.0f, ArcGISSpatialReference.WebMercator());
-        tableTopController.ElevationOffset = -3000.0f;
+        tableTopController.ElevationOffset = -5000.0f;
         previousLocation = Locations.Girona;
         nextLocation = Locations.NewYorkCity;
         locationImage.sprite = mtEverest;
@@ -162,6 +183,8 @@ public class LocationCycle : MonoBehaviour
         gironaLayer.IsVisible = false;
         newYorkBuildings.IsVisible = false;
         sfBuildings.IsVisible = false;
+        christChurchSurroundingsLayer.IsVisible = false;
+        esriSurroundings.IsVisible = false;
     }
 
     public void SetNYC()
@@ -176,6 +199,8 @@ public class LocationCycle : MonoBehaviour
         gironaLayer.IsVisible = false;
         newYorkBuildings.IsVisible = true;
         sfBuildings.IsVisible = false;
+        christChurchSurroundingsLayer.IsVisible = false;
+        esriSurroundings.IsVisible = false;
     }
 
     public void SetSanFran()
@@ -190,6 +215,8 @@ public class LocationCycle : MonoBehaviour
         gironaLayer.IsVisible = false;
         newYorkBuildings.IsVisible = false;
         sfBuildings.IsVisible = true;
+        christChurchSurroundingsLayer.IsVisible = false;
+        esriSurroundings.IsVisible = false;
     }
 
     public void SetLocation()
