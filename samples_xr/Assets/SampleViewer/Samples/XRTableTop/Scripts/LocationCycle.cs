@@ -142,7 +142,7 @@ public class LocationCycle : MonoBehaviour
     public void SetRedlands()
     {
         tableTopController.Center = new ArcGISPoint(-13046568.699492734, 4036484.647920266, 0.0f, ArcGISSpatialReference.WebMercator());
-        tableTopController.ElevationOffset = 0.0f;
+        tableTopController.ElevationOffset = -390.0f;
         nextLocation = Locations.Girona;
         previousLocation = Locations.ChristChurch;
         locationImage.sprite = redlands;
@@ -158,7 +158,7 @@ public class LocationCycle : MonoBehaviour
     public void SetGirona()
     {
         tableTopController.Center = new ArcGISPoint(314076.81132414174, 5157894.163259039, 0.0f, ArcGISSpatialReference.WebMercator());
-        tableTopController.ElevationOffset = 0.0f;
+        tableTopController.ElevationOffset = -75.0f;
         previousLocation = Locations.Esri;
         nextLocation = Locations.MountEverest;
         locationImage.sprite = girona;
@@ -174,6 +174,7 @@ public class LocationCycle : MonoBehaviour
     public void SetEverest()
     {
         tableTopController.Center = new ArcGISPoint(9676446.737205295, 3247473.554732518, 0.0f, ArcGISSpatialReference.WebMercator());
+        tableTopController.Width = 5000.0f;
         tableTopController.ElevationOffset = -5000.0f;
         previousLocation = Locations.Girona;
         nextLocation = Locations.NewYorkCity;

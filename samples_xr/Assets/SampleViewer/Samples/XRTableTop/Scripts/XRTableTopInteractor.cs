@@ -11,13 +11,15 @@ using InputDevice = UnityEngine.XR.InputDevice;
 
 public class XRTableTopInteractor : MonoBehaviour
 {
-    public Animation anim;
+    [SerializeField] private Animation anim;
     [SerializeField] private ArcGISMapComponent arcGISMapComponent;
     [SerializeField] private Camera camera;
     private Vector3 dragStartPoint = Vector3.zero;
     private double4x4 dragStartWorldMatrix;
+    private bool handTrackingEnabled = false;
     [SerializeField] private HPRoot hpRoot;
     private bool isDragging = false;
+    private bool rightHanded;
     [SerializeField] private float radiusScalar = 50f;
     [SerializeField] private ArcGISTabletopControllerComponent tableTop;
     [SerializeField] private GameObject tableTopWrapper;
@@ -27,15 +29,21 @@ public class XRTableTopInteractor : MonoBehaviour
     [SerializeField] private Material mat;
     [SerializeField] private bool useTexture;
 
-    [Header("Right Hand")]
-    [SerializeField] private InputAction pinchR;
+    [Header("Hand Input")]
+    [SerializeField] private XRNode leftInputSource;
+    [SerializeField] private InputActionProperty leftActivate;
+    [SerializeField] private XRRayInteractor leftControllerInteractor;
+    [SerializeField] private XRRayInteractor leftHandInteractor;
+    private Vector2 leftInputAxis;
+    private RaycastHit leftHandHit;
+    private RaycastHit leftControllerHit;
     [SerializeField] private XRNode rightInputSource;
+    [SerializeField] private InputActionProperty rightActivate;
     [SerializeField] private XRRayInteractor rightControllerInteractor;
     [SerializeField] private XRRayInteractor rightHandInteractor;
     private Vector2 rightInputAxis;
     private RaycastHit rightHandHit;
     private RaycastHit rightControllerHit;
-    private bool triggerPressedR;
 
     private void Awake()
     {
@@ -57,143 +65,190 @@ public class XRTableTopInteractor : MonoBehaviour
         camera.clearFlags = CameraClearFlags.Skybox;
 #elif UNITY_STANDALONE_WIN
         camera.clearFlags = CameraClearFlags.Skybox;
+#else
+        camera.clearFlags = CameraClearFlags.Color;
 #endif
-    }
-
-    private void OnEnable()
-    {
-        pinchR.Enable();;
-    }
-
-    private void OnDisable()
-    {
-        pinchR.Disable();
     }
 
     // Update is called once per frame
     private void Update()
     {
-        //tableTop.Width = Mathf.Clamp((float)tableTop.Width, 1000.0f, 4500000.0f);
+        tableTop.Width = Mathf.Clamp((float)tableTop.Width, 0.0f, 4500000.0f);
+        InputDevice leftDevice = InputDevices.GetDeviceAtXRNode(leftInputSource);
+        leftDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out leftInputAxis);
+        leftControllerInteractor.TryGetCurrent3DRaycastHit(out leftControllerHit);
+        leftHandInteractor.TryGetCurrent3DRaycastHit(out leftHandHit);
         InputDevice rightDevice = InputDevices.GetDeviceAtXRNode(rightInputSource);
         rightDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out rightInputAxis);
-        rightDevice.TryGetFeatureValue(CommonUsages.triggerButton, out triggerPressedR);
         rightControllerInteractor.TryGetCurrent3DRaycastHit(out rightControllerHit);
         rightHandInteractor.TryGetCurrent3DRaycastHit(out rightHandHit);
 
-        if (rightInputAxis.y != 0.0f)
+        if (leftActivate.action.triggered)
+        {
+            rightHanded = false;
+        }
+        else if (rightActivate.action.triggered)
+        {
+            rightHanded = true;
+        }
+
+        if (Mathf.Abs(rightInputAxis.y) > 0.25f)
         {
             var zoom = Mathf.Sign(rightInputAxis.y);
             ZoomMap(zoom);
         }
-
-        if (rightControllerHit.collider)
+        else if (Mathf.Abs(leftInputAxis.y) > 0.25f)
         {
-            if (rightControllerHit.collider.name.Contains("ArcGIS"))
-            {
-                MoveCenter();
-            }
+            var zoom = Mathf.Sign(leftInputAxis.y);
+            ZoomMap(zoom);
         }
 
-        if (rightHandHit.collider)
+        if (isDragging)
         {
-            if (rightHandHit.collider.name.Contains("ArcGIS"))
+            if (!handTrackingEnabled)
             {
-                PinchRight();
+                UpdatePointDragController();
+            }
+            else
+            {
+                UpdatePointDragHand();
             }
         }
     }
 
-    private void MoveCenter()
+    public void StartDragPoint()
     {
-        if (triggerPressedR && !isDragging)
+        if (!handTrackingEnabled)
         {
             StartPointDragController();
         }
-        else if (triggerPressedR && isDragging)
-        {
-            UpdatePointDragController();
-        }
-        else if (!triggerPressedR && isDragging)
-        {
-            EndPointDrag();
-        }
-    }
-
-    private void PinchRight()
-    {
-        if (pinchR.IsPressed() && !isDragging)
+        else
         {
             StartPointDragHand();
         }
-        else if (pinchR.IsPressed() && isDragging)
-        {
-            UpdatePointDragHand();
-        }
-        else if (!pinchR.IsPressed() && isDragging)
-        {
-            EndPointDrag();
-        }
     }
 
-    private void StartPointDragController()
+    public void StartPointDragController()
     {
-        Vector3 dragCurrentPoint;
-        var dragStartRay = new Ray(rightControllerInteractor.rayOriginTransform.position, rightControllerInteractor.rayEndPoint - rightControllerInteractor.rayOriginTransform.position);
-        tableTop.Raycast(dragStartRay, out dragCurrentPoint);
-        isDragging = true;
-        dragStartPoint = dragCurrentPoint;
-        // Save the matrix to go from Local space to Universe space
-        // As the origin location will be changing during drag, we keep the transform we had when the action started
-        dragStartWorldMatrix = math.mul(math.inverse(hpRoot.WorldMatrix), tableTop.transform.localToWorldMatrix.ToDouble4x4());
+        if (rightHanded)
+        {
+            Vector3 dragCurrentPoint;
+            var dragStartRay = new Ray(rightControllerInteractor.rayOriginTransform.position, rightControllerInteractor.rayEndPoint - rightControllerInteractor.rayOriginTransform.position);
+            tableTop.Raycast(dragStartRay, out dragCurrentPoint);
+            isDragging = true;
+            dragStartPoint = dragCurrentPoint;
+            // Save the matrix to go from Local space to Universe space
+            // As the origin location will be changing during drag, we keep the transform we had when the action started
+            dragStartWorldMatrix = math.mul(math.inverse(hpRoot.WorldMatrix), tableTop.transform.localToWorldMatrix.ToDouble4x4());
+        }
+        else
+        {
+            Vector3 dragCurrentPoint;
+            var dragStartRay = new Ray(leftControllerInteractor.rayOriginTransform.position, leftControllerInteractor.rayEndPoint - leftControllerInteractor.rayOriginTransform.position);
+            tableTop.Raycast(dragStartRay, out dragCurrentPoint);
+            isDragging = true;
+            dragStartPoint = dragCurrentPoint;
+            // Save the matrix to go from Local space to Universe space
+            // As the origin location will be changing during drag, we keep the transform we had when the action started
+            dragStartWorldMatrix = math.mul(math.inverse(hpRoot.WorldMatrix), tableTop.transform.localToWorldMatrix.ToDouble4x4());
+
+        }
     }
 
     private void UpdatePointDragController()
     {
         if (isDragging)
         {
-            var updateRay = new Ray(rightControllerInteractor.rayOriginTransform.position, rightControllerInteractor.rayEndPoint - rightControllerInteractor.rayOriginTransform.position);
+            if (rightHanded)
+            {
+                var updateRay = new Ray(rightControllerInteractor.rayOriginTransform.position, rightControllerInteractor.rayEndPoint - rightControllerInteractor.rayOriginTransform.position);
 
-            Vector3 dragCurrentPoint;
-            tableTop.Raycast(updateRay, out dragCurrentPoint);
+                Vector3 dragCurrentPoint;
+                tableTop.Raycast(updateRay, out dragCurrentPoint);
 
-            var diff = dragStartPoint - dragCurrentPoint;
-            var newExtentCenterCartesian = dragStartWorldMatrix.HomogeneousTransformPoint(diff.ToDouble3());
-            var newExtentCenterGeographic = arcGISMapComponent.View.WorldToGeographic(new double3(newExtentCenterCartesian.x, newExtentCenterCartesian.y, newExtentCenterCartesian.z));
+                var diff = dragStartPoint - dragCurrentPoint;
+                var newExtentCenterCartesian = dragStartWorldMatrix.HomogeneousTransformPoint(diff.ToDouble3());
+                var newExtentCenterGeographic = arcGISMapComponent.View.WorldToGeographic(new double3(newExtentCenterCartesian.x, newExtentCenterCartesian.y, newExtentCenterCartesian.z));
 
-            tableTop.Center = newExtentCenterGeographic;
+                tableTop.Center = newExtentCenterGeographic;
+            }
+            else
+            {
+                var updateRay = new Ray(leftControllerInteractor.rayOriginTransform.position, leftControllerInteractor.rayEndPoint - leftControllerInteractor.rayOriginTransform.position);
+
+                Vector3 dragCurrentPoint;
+                tableTop.Raycast(updateRay, out dragCurrentPoint);
+
+                var diff = dragStartPoint - dragCurrentPoint;
+                var newExtentCenterCartesian = dragStartWorldMatrix.HomogeneousTransformPoint(diff.ToDouble3());
+                var newExtentCenterGeographic = arcGISMapComponent.View.WorldToGeographic(new double3(newExtentCenterCartesian.x, newExtentCenterCartesian.y, newExtentCenterCartesian.z));
+
+                tableTop.Center = newExtentCenterGeographic;
+            }
         }
     }
 
     private void StartPointDragHand()
     {
-        Vector3 dragCurrentPoint;
-        var dragStartRay = new Ray(rightHandInteractor.rayOriginTransform.position, rightHandInteractor.rayEndPoint - rightHandInteractor.rayOriginTransform.position);
-        tableTop.Raycast(dragStartRay, out dragCurrentPoint);
-        isDragging = true;
-        dragStartPoint = dragCurrentPoint;
-        // Save the matrix to go from Local space to Universe space
-        // As the origin location will be changing during drag, we keep the transform we had when the action started
-        dragStartWorldMatrix = math.mul(math.inverse(hpRoot.WorldMatrix), tableTop.transform.localToWorldMatrix.ToDouble4x4());
+        if (rightHanded)
+        {
+            Vector3 dragCurrentPoint;
+            var dragStartRay = new Ray(rightHandInteractor.rayOriginTransform.position, rightHandInteractor.rayEndPoint - rightHandInteractor.rayOriginTransform.position);
+            tableTop.Raycast(dragStartRay, out dragCurrentPoint);
+            isDragging = true;
+            dragStartPoint = dragCurrentPoint;
+            // Save the matrix to go from Local space to Universe space
+            // As the origin location will be changing during drag, we keep the transform we had when the action started
+            dragStartWorldMatrix = math.mul(math.inverse(hpRoot.WorldMatrix), tableTop.transform.localToWorldMatrix.ToDouble4x4());
+
+        }
+        else
+        {
+            Vector3 dragCurrentPoint;
+            var dragStartRay = new Ray(leftHandInteractor.rayOriginTransform.position, leftHandInteractor.rayEndPoint - leftHandInteractor.rayOriginTransform.position);
+            tableTop.Raycast(dragStartRay, out dragCurrentPoint);
+            isDragging = true;
+            dragStartPoint = dragCurrentPoint;
+            // Save the matrix to go from Local space to Universe space
+            // As the origin location will be changing during drag, we keep the transform we had when the action started
+            dragStartWorldMatrix = math.mul(math.inverse(hpRoot.WorldMatrix), tableTop.transform.localToWorldMatrix.ToDouble4x4());
+        }
     }
 
     private void UpdatePointDragHand()
     {
         if (isDragging)
         {
-            var updateRay = new Ray(rightHandInteractor.rayOriginTransform.position, rightHandInteractor.rayEndPoint - rightHandInteractor.rayOriginTransform.position);
+            if (rightHanded)
+            {
+                var updateRay = new Ray(rightHandInteractor.rayOriginTransform.position, rightHandInteractor.rayEndPoint - rightHandInteractor.rayOriginTransform.position);
 
-            Vector3 dragCurrentPoint;
-            tableTop.Raycast(updateRay, out dragCurrentPoint);
+                Vector3 dragCurrentPoint;
+                tableTop.Raycast(updateRay, out dragCurrentPoint);
 
-            var diff = dragStartPoint - dragCurrentPoint;
-            var newExtentCenterCartesian = dragStartWorldMatrix.HomogeneousTransformPoint(diff.ToDouble3());
-            var newExtentCenterGeographic = arcGISMapComponent.View.WorldToGeographic(new double3(newExtentCenterCartesian.x, newExtentCenterCartesian.y, newExtentCenterCartesian.z));
+                var diff = dragStartPoint - dragCurrentPoint;
+                var newExtentCenterCartesian = dragStartWorldMatrix.HomogeneousTransformPoint(diff.ToDouble3());
+                var newExtentCenterGeographic = arcGISMapComponent.View.WorldToGeographic(new double3(newExtentCenterCartesian.x, newExtentCenterCartesian.y, newExtentCenterCartesian.z));
 
-            tableTop.Center = newExtentCenterGeographic;
+                tableTop.Center = newExtentCenterGeographic;
+            }
+            else 
+            {
+                var updateRay = new Ray(leftHandInteractor.rayOriginTransform.position, leftHandInteractor.rayEndPoint - leftHandInteractor.rayOriginTransform.position);
+
+                Vector3 dragCurrentPoint;
+                tableTop.Raycast(updateRay, out dragCurrentPoint);
+
+                var diff = dragStartPoint - dragCurrentPoint;
+                var newExtentCenterCartesian = dragStartWorldMatrix.HomogeneousTransformPoint(diff.ToDouble3());
+                var newExtentCenterGeographic = arcGISMapComponent.View.WorldToGeographic(new double3(newExtentCenterCartesian.x, newExtentCenterCartesian.y, newExtentCenterCartesian.z));
+
+                tableTop.Center = newExtentCenterGeographic;
+            }
         }
     }
 
-    private void EndPointDrag()
+    public void EndPointDrag()
     {
         isDragging = false;
     }
@@ -230,24 +285,20 @@ public class XRTableTopInteractor : MonoBehaviour
         }
     }
 
-    public void RotateMapLeft()
-    {
-        if (!isDragging)
-        {
-            tableTopWrapper.transform.Rotate(Vector3.up * Time.deltaTime * 45, Space.Self);
-        }
-    }
-
-    public void RotateMapRight()
-    {
-        if (!isDragging)
-        {
-            tableTopWrapper.transform.Rotate(Vector3.up * Time.deltaTime * -45, Space.Self);
-        }
-    }
-
     public void PlayAnimation()
     {
         anim.Play();
+    }
+
+    public void Toggle()
+    {
+        if (handTrackingEnabled)
+        {
+            handTrackingEnabled = false;
+        }
+        else
+        {
+            handTrackingEnabled = true;
+        }
     }
 }
