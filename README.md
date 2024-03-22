@@ -49,18 +49,6 @@ This repository is made up of two seperate Unity projects. If you would like to 
 
 5. Import the samples. These samples include some components necessary for this repo to function including the `ArcGIS Camera Controller` component.
 
-   ![image](import-samples.png)
-
-   NOTE: There is a known issue with ArcGIS Maps SDK for Unity 1.3. In projects that use the new input system, an assembly definition file in the plugin samples needs to be updated.
-
-   1. Select `\Assets\Samples\ArcGIS Maps SDK for Unity\1.4.0\Sample Content\ArcGISMapsSDK.Samples.asmdef` in the Unity project explorer.
-
-   2. In the inspector tab, add `Unity.InputSystem` to the references.
-
-      ![Inspector screen for assembly definition](asmdefReference.png)
-
-   3. Scroll to the bottom of the inspector tab and click "Apply".
-
 6. Launch Unity and open the `SampleViewer` level (it should open by default).
 
 7. In the heirarchy select the `SampleSwitcher` Game Object and then in the inspector set your API Key. You can learn more about [API keys](https://developers.arcgis.com/documentation/mapping-apis-and-services/security/api-keys/) and [Accounts](https://developers.arcgis.com/documentation/mapping-apis-and-services/deployment/accounts/) in the _Mapping APIs and location services_ guide.
