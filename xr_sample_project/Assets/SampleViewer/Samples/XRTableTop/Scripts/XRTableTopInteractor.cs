@@ -19,7 +19,7 @@ public class XRTableTopInteractor : MonoBehaviour
     private bool handTrackingEnabled = false;
     [SerializeField] private HPRoot hpRoot;
     private bool isDragging = false;
-    private bool rightHanded;
+    private bool rightHanded = true;
     [SerializeField] private float radiusScalar = 50f;
     [SerializeField] private ArcGISTabletopControllerComponent tableTop;
     [SerializeField] private GameObject tableTopWrapper;
@@ -30,8 +30,6 @@ public class XRTableTopInteractor : MonoBehaviour
     [SerializeField] private bool useTexture;
 
     [Header("Hand Input")]
-    [SerializeField] private InputActionProperty activateLeft;
-    [SerializeField] private InputActionProperty activiateRight;
     [SerializeField] private XRNode leftInputSource;
     [SerializeField] private XRRayInteractor leftControllerInteractor;
     [SerializeField] private XRRayInteractor leftHandInteractor;
@@ -44,6 +42,8 @@ public class XRTableTopInteractor : MonoBehaviour
     private Vector2 rightInputAxis;
     private RaycastHit rightHandHit;
     private RaycastHit rightControllerHit;
+    [SerializeField] private InputActionProperty selectLeft;
+    [SerializeField] private InputActionProperty selectRight;
 
     private void Awake()
     {
@@ -159,11 +159,11 @@ public class XRTableTopInteractor : MonoBehaviour
         rightControllerInteractor.TryGetCurrent3DRaycastHit(out rightControllerHit);
         rightHandInteractor.TryGetCurrent3DRaycastHit(out rightHandHit);
 
-        if (activateLeft.action.triggered)
+        if (selectLeft.action.triggered)
         {
             rightHanded = false;
         }
-        else if (activiateRight.action.triggered)
+        else if (selectRight.action.triggered)
         {
             rightHanded = true;
         }
