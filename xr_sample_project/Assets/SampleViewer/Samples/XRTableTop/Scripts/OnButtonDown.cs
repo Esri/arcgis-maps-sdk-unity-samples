@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class OnButtonDown : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public class OnButtonDown : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
 {
     [SerializeField] private bool isLocationButton;
     [SerializeField] private bool isWristButton;
@@ -22,6 +22,11 @@ public class OnButtonDown : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     }
 
     void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
+    {
+        pressed = false;
+    }
+
+    void IPointerExitHandler.OnPointerExit(PointerEventData eventData) 
     {
         pressed = false;
     }

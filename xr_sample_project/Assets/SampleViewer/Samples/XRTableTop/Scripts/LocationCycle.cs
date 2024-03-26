@@ -126,6 +126,7 @@ public class LocationCycle : MonoBehaviour
 
     public void SetChristChurch()
     {
+        tableTopController.Width = 2000.0f;
         tableTopController.Center = new ArcGISPoint(19217150.487337273, -5393301.4510809937, 0.0f, ArcGISSpatialReference.WebMercator());
         tableTopController.ElevationOffset = 0.0f;
         nextLocation = Locations.Esri;
@@ -142,6 +143,7 @@ public class LocationCycle : MonoBehaviour
 
     public void SetEverest()
     {
+        tableTopController.Width = 10000.0f;
         tableTopController.Center = new ArcGISPoint(9676446.737205295, 3247473.554732518, 0.0f, ArcGISSpatialReference.WebMercator());
         tableTopController.Width = 10000.0f;
         tableTopController.ElevationOffset = -5000.0f;
@@ -159,6 +161,7 @@ public class LocationCycle : MonoBehaviour
 
     public void SetGirona()
     {
+        tableTopController.Width = 2000.0f;
         tableTopController.Center = new ArcGISPoint(314076.81132414174, 5157894.163259039, 0.0f, ArcGISSpatialReference.WebMercator());
         tableTopController.Width = 1000.0f;
         tableTopController.ElevationOffset = -75.0f;
@@ -176,6 +179,7 @@ public class LocationCycle : MonoBehaviour
 
     public void SetNYC()
     {
+        tableTopController.Width = 2500.0f;
         tableTopController.Center = new ArcGISPoint(-8238310.235646995, 4970071.5791424215, 0.0f, ArcGISSpatialReference.WebMercator());
         tableTopController.ElevationOffset = 0.0f;
         previousLocation = Locations.MountEverest;
@@ -192,6 +196,7 @@ public class LocationCycle : MonoBehaviour
 
     public void SetRedlands()
     {
+        tableTopController.Width = 2000.0f;
         tableTopController.Center = new ArcGISPoint(-13046568.699492734, 4036484.647920266, 0.0f, ArcGISSpatialReference.WebMercator());
         tableTopController.ElevationOffset = -390.0f;
         nextLocation = Locations.Girona;
@@ -208,6 +213,7 @@ public class LocationCycle : MonoBehaviour
 
     public void SetSanFran()
     {
+        tableTopController.Width = 2500.0f;
         tableTopController.Center = new ArcGISPoint(-13627665.271218061, 4547675.354340553, 0.0f, ArcGISSpatialReference.WebMercator());
         tableTopController.ElevationOffset = 0.0f;
         previousLocation = Locations.NewYorkCity;
