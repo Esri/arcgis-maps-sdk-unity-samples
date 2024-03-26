@@ -3,8 +3,6 @@ using UnityEngine.EventSystems;
 
 public class OnButtonDown : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
 {
-    [SerializeField] private bool isLocationButton;
-    [SerializeField] private bool isWristButton;
     bool pressed;
 
     public enum type
@@ -33,18 +31,15 @@ public class OnButtonDown : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
     private void Update()
     {
-        if (!isLocationButton && !isWristButton)
+        if (pressed)
         {
-            if (pressed)
+            if (Type == type.ZoomIn)
             {
-                if (Type == type.ZoomIn)
-                {
-                    tableTopInteractor.ZoomInMap();
-                }
-                else if (Type == type.ZoomOut)
-                {
-                    tableTopInteractor.ZoomOutMap();
-                }
+                tableTopInteractor.ZoomInMap();
+            }
+            else if (Type == type.ZoomOut)
+            {
+                tableTopInteractor.ZoomOutMap();
             }
         }
     }
