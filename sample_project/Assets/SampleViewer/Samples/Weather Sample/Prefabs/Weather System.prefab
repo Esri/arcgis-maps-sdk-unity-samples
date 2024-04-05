@@ -1,0 +1,103 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8501797053043930002
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8539365871731536623}
+  - component: {fileID: 6437877013777133139}
+  - component: {fileID: 1787541617570686941}
+  - component: {fileID: 490517882564655574}
+  m_Layer: 0
+  m_Name: Weather System
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8539365871731536623
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8501797053043930002}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.000000039598394, y: -0.000000015373807, z: -0.000000013274883, w: 1}
+  m_LocalPosition: {x: 217.15216, y: 274.2177, z: 1603.2811}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6437877013777133139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8501797053043930002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea4c056ecab070c43bf3f5e9fb15b826, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsInitialized: 1
+  m_LocalPosition:
+    x: 1333976.326211971
+    y: 4139694.370951448
+    z: -4653179.52982097
+  m_LocalRotation:
+    value:
+      x: -0.41291767
+      y: -0.12644997
+      z: -0.05800975
+      w: 0.9000802
+  m_LocalScale:
+    x: 1
+    y: 1
+    z: 1
+--- !u!114 &1787541617570686941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8501797053043930002}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e295d62bf65a7247bc772a43507fd4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  position:
+    x: -74.00342968670806
+    y: 40.727237015075644
+    z: 274.42335083345813
+    SRWkid: 4326
+  rotation:
+    Heading: 0.0016759075268638895
+    Pitch: 90.01444467822974
+    Roll: 0.0019470813494836896
+--- !u!114 &490517882564655574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8501797053043930002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d4151bfee54d9f4f825878d0dfd1461, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentWeather: 
+  skyCondition: 
+  tempurature: 0
+  longitude: 0
+  latitude: 0
+  ArcGISCamera: {fileID: 0}
+  ArcGISMap: {fileID: 0}
