@@ -350,7 +350,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2004476860}
         m_TargetAssemblyTypeName: XRTableTopInteractor, Sample Viewer
-        m_MethodName: StartDragPoint
+        m_MethodName: StartPointDrag
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -738,52 +738,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1317222860
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1317222862}
-  - component: {fileID: 1317222861}
-  m_Layer: 0
-  m_Name: XR Interaction Manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1317222861
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1317222860}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83e4e6cca11330d4088d729ab4fc9d9f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_StartingHoverFilters: []
-  m_StartingSelectFilters: []
---- !u!4 &1317222862
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1317222860}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.09559305, y: 1.2124423, z: 0.28476435}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1335709229 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3670060913335757757, guid: 15dfd711bd1ebb141a6b36d7ac8e60ff, type: 3}
@@ -1769,6 +1723,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 3247473.554732518
       objectReference: {fileID: 0}
+    - target: {fileID: 2305294545174140682, guid: 15dfd711bd1ebb141a6b36d7ac8e60ff, type: 3}
+      propertyPath: tableTopInteractor
+      value: 
+      objectReference: {fileID: 2004476860}
     - target: {fileID: 3670060913335757757, guid: 15dfd711bd1ebb141a6b36d7ac8e60ff, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.13007675
@@ -1809,6 +1767,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3770477278322671219, guid: 15dfd711bd1ebb141a6b36d7ac8e60ff, type: 3}
+      propertyPath: tableTopInteractor
+      value: 
+      objectReference: {fileID: 2004476860}
     - target: {fileID: 5585774533476229762, guid: 15dfd711bd1ebb141a6b36d7ac8e60ff, type: 3}
       propertyPath: center.x
       value: 9676446.737205295
@@ -1863,7 +1825,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8955234895062221828, guid: 15dfd711bd1ebb141a6b36d7ac8e60ff, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 25799.998
+      value: 22799.998
       objectReference: {fileID: 0}
     - target: {fileID: 8955234895062221828, guid: 15dfd711bd1ebb141a6b36d7ac8e60ff, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1881,7 +1843,9 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 2004476852}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2305294545174140682, guid: 15dfd711bd1ebb141a6b36d7ac8e60ff, type: 3}
+    - {fileID: 3770477278322671219, guid: 15dfd711bd1ebb141a6b36d7ac8e60ff, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 3540521069174274879, guid: 15dfd711bd1ebb141a6b36d7ac8e60ff, type: 3}
@@ -1987,7 +1951,6 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1517268253}
-  - {fileID: 1317222862}
   - {fileID: 1770318613}
   - {fileID: 7234926872043801403}
   - {fileID: 9037174583257964330}

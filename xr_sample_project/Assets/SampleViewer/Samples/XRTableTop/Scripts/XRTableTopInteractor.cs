@@ -80,70 +80,20 @@ public class XRTableTopInteractor : MonoBehaviour
 #endif
     }
 
-    public void StartDragPoint()
+    public void StartPointDrag()
     {
-        if (!handTrackingEnabled)
-        {
-            StartPointDragController();
-        }
-        else
-        {
-            StartPointDragHand();
-        }
-    }
+        var controllerInteractor = rightHanded ? rightControllerInteractor : leftControllerInteractor;
+        var handInteractor = rightHanded ? rightHandInteractor : leftHandInteractor;
+        var interactor = handTrackingEnabled ? handInteractor : controllerInteractor;
 
-    public void StartPointDragController()
-    {
-        if (rightHanded)
-        {
-            Vector3 dragCurrentPoint;
-            var dragStartRay = new Ray(rightControllerInteractor.rayOriginTransform.position, rightControllerInteractor.rayEndPoint - rightControllerInteractor.rayOriginTransform.position);
-            tableTop.Raycast(dragStartRay, out dragCurrentPoint);
-            isDragging = true;
-            dragStartPoint = dragCurrentPoint;
-            // Save the matrix to go from Local space to Universe space
-            // As the origin location will be changing during drag, we keep the transform we had when the action started
-            dragStartWorldMatrix = math.mul(math.inverse(hpRoot.WorldMatrix), tableTop.transform.localToWorldMatrix.ToDouble4x4());
-        }
-        else
-        {
-            Vector3 dragCurrentPoint;
-            var dragStartRay = new Ray(leftControllerInteractor.rayOriginTransform.position, leftControllerInteractor.rayEndPoint - leftControllerInteractor.rayOriginTransform.position);
-            tableTop.Raycast(dragStartRay, out dragCurrentPoint);
-            isDragging = true;
-            dragStartPoint = dragCurrentPoint;
-            // Save the matrix to go from Local space to Universe space
-            // As the origin location will be changing during drag, we keep the transform we had when the action started
-            dragStartWorldMatrix = math.mul(math.inverse(hpRoot.WorldMatrix), tableTop.transform.localToWorldMatrix.ToDouble4x4());
-
-        }
-    }
-
-    private void StartPointDragHand()
-    {
-        if (rightHanded)
-        {
-            Vector3 dragCurrentPoint;
-            var dragStartRay = new Ray(rightHandInteractor.rayOriginTransform.position, rightHandInteractor.rayEndPoint - rightHandInteractor.rayOriginTransform.position);
-            tableTop.Raycast(dragStartRay, out dragCurrentPoint);
-            isDragging = true;
-            dragStartPoint = dragCurrentPoint;
-            // Save the matrix to go from Local space to Universe space
-            // As the origin location will be changing during drag, we keep the transform we had when the action started
-            dragStartWorldMatrix = math.mul(math.inverse(hpRoot.WorldMatrix), tableTop.transform.localToWorldMatrix.ToDouble4x4());
-
-        }
-        else
-        {
-            Vector3 dragCurrentPoint;
-            var dragStartRay = new Ray(leftHandInteractor.rayOriginTransform.position, leftHandInteractor.rayEndPoint - leftHandInteractor.rayOriginTransform.position);
-            tableTop.Raycast(dragStartRay, out dragCurrentPoint);
-            isDragging = true;
-            dragStartPoint = dragCurrentPoint;
-            // Save the matrix to go from Local space to Universe space
-            // As the origin location will be changing during drag, we keep the transform we had when the action started
-            dragStartWorldMatrix = math.mul(math.inverse(hpRoot.WorldMatrix), tableTop.transform.localToWorldMatrix.ToDouble4x4());
-        }
+        Vector3 dragCurrentPoint;
+        var dragStartRay = new Ray(interactor.rayOriginTransform.position, interactor.rayEndPoint - interactor.rayOriginTransform.position);
+        tableTop.Raycast(dragStartRay, out dragCurrentPoint);
+        isDragging = true;
+        dragStartPoint = dragCurrentPoint;
+        // Save the matrix to go from Local space to Universe space
+        // As the origin location will be changing during drag, we keep the transform we had when the action started
+        dragStartWorldMatrix = math.mul(math.inverse(hpRoot.WorldMatrix), tableTop.transform.localToWorldMatrix.ToDouble4x4());
     }
 
     // Update is called once per frame
@@ -158,6 +108,10 @@ public class XRTableTopInteractor : MonoBehaviour
         rightDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out rightInputAxis);
         rightControllerInteractor.TryGetCurrent3DRaycastHit(out rightControllerHit);
         rightHandInteractor.TryGetCurrent3DRaycastHit(out rightHandHit);
+
+        var controllerInteractor = rightHanded ? rightControllerInteractor : leftControllerInteractor;
+        var handInteractor = rightHanded ? rightHandInteractor : leftHandInteractor;
+        var rayInteractor = handTrackingEnabled ? handInteractor : controllerInteractor;
 
         if (selectLeft.action.triggered)
         {
@@ -181,96 +135,33 @@ public class XRTableTopInteractor : MonoBehaviour
 
         if (isDragging)
         {
-            if (!handTrackingEnabled)
-            {
-                UpdatePointDragController();
-            }
-            else
-            {
-                UpdatePointDragHand();
-            }
+            UpdatePointDrag(rayInteractor);
         }
     }
 
-    private void UpdatePointDragController()
+    private void UpdatePointDrag(XRRayInteractor interactor)
     {
         if (isDragging)
         {
-            if (rightHanded)
-            {
-                var updateRay = new Ray(rightControllerInteractor.rayOriginTransform.position, rightControllerInteractor.rayEndPoint - rightControllerInteractor.rayOriginTransform.position);
+            var updateRay = new Ray(interactor.rayOriginTransform.position, interactor.rayEndPoint - interactor.rayOriginTransform.position);
 
-                Vector3 dragCurrentPoint;
-                tableTop.Raycast(updateRay, out dragCurrentPoint);
+            Vector3 dragCurrentPoint;
+            tableTop.Raycast(updateRay, out dragCurrentPoint);
 
-                var diff = dragStartPoint - dragCurrentPoint;
-                var newExtentCenterCartesian = dragStartWorldMatrix.HomogeneousTransformPoint(diff.ToDouble3());
-                var newExtentCenterGeographic = arcGISMapComponent.View.WorldToGeographic(new double3(newExtentCenterCartesian.x, newExtentCenterCartesian.y, newExtentCenterCartesian.z));
+            var diff = dragStartPoint - dragCurrentPoint;
+            var newExtentCenterCartesian = dragStartWorldMatrix.HomogeneousTransformPoint(diff.ToDouble3());
+            var newExtentCenterGeographic = arcGISMapComponent.View.WorldToGeographic(new double3(newExtentCenterCartesian.x, newExtentCenterCartesian.y, newExtentCenterCartesian.z));
 
-                tableTop.Center = newExtentCenterGeographic;
-            }
-            else
-            {
-                var updateRay = new Ray(leftControllerInteractor.rayOriginTransform.position, leftControllerInteractor.rayEndPoint - leftControllerInteractor.rayOriginTransform.position);
-
-                Vector3 dragCurrentPoint;
-                tableTop.Raycast(updateRay, out dragCurrentPoint);
-
-                var diff = dragStartPoint - dragCurrentPoint;
-                var newExtentCenterCartesian = dragStartWorldMatrix.HomogeneousTransformPoint(diff.ToDouble3());
-                var newExtentCenterGeographic = arcGISMapComponent.View.WorldToGeographic(new double3(newExtentCenterCartesian.x, newExtentCenterCartesian.y, newExtentCenterCartesian.z));
-
-                tableTop.Center = newExtentCenterGeographic;
-            }
-        }
-    }
-
-    private void UpdatePointDragHand()
-    {
-        if (isDragging)
-        {
-            if (rightHanded)
-            {
-                var updateRay = new Ray(rightHandInteractor.rayOriginTransform.position, rightHandInteractor.rayEndPoint - rightHandInteractor.rayOriginTransform.position);
-
-                Vector3 dragCurrentPoint;
-                tableTop.Raycast(updateRay, out dragCurrentPoint);
-
-                var diff = dragStartPoint - dragCurrentPoint;
-                var newExtentCenterCartesian = dragStartWorldMatrix.HomogeneousTransformPoint(diff.ToDouble3());
-                var newExtentCenterGeographic = arcGISMapComponent.View.WorldToGeographic(new double3(newExtentCenterCartesian.x, newExtentCenterCartesian.y, newExtentCenterCartesian.z));
-
-                tableTop.Center = newExtentCenterGeographic;
-            }
-            else 
-            {
-                var updateRay = new Ray(leftHandInteractor.rayOriginTransform.position, leftHandInteractor.rayEndPoint - leftHandInteractor.rayOriginTransform.position);
-
-                Vector3 dragCurrentPoint;
-                tableTop.Raycast(updateRay, out dragCurrentPoint);
-
-                var diff = dragStartPoint - dragCurrentPoint;
-                var newExtentCenterCartesian = dragStartWorldMatrix.HomogeneousTransformPoint(diff.ToDouble3());
-                var newExtentCenterGeographic = arcGISMapComponent.View.WorldToGeographic(new double3(newExtentCenterCartesian.x, newExtentCenterCartesian.y, newExtentCenterCartesian.z));
-
-                tableTop.Center = newExtentCenterGeographic;
-            }
+            tableTop.Center = newExtentCenterGeographic;
         }
     }
 
     public void Toggle()
     {
-        if (handTrackingEnabled)
-        {
-            handTrackingEnabled = false;
-        }
-        else
-        {
-            handTrackingEnabled = true;
-        }
+        handTrackingEnabled = !handTrackingEnabled;
     }
 
-    private void ZoomMap(float zoom)
+    public void ZoomMap(float zoom)
     {
         if (zoom == 0)
         {
@@ -280,25 +171,5 @@ public class XRTableTopInteractor : MonoBehaviour
         var speed = tableTop.Width / radiusScalar;
         // More zoom means smaller extent
         tableTop.Width -= zoom * speed;
-    }
-
-    public void ZoomInMap()
-    {
-        if (!isDragging)
-        {
-            var Speed = tableTop.Width / radiusScalar;
-            // More zoom means smaller extent
-            tableTop.Width += -1.0 * Speed;
-        }
-    }
-
-    public void ZoomOutMap()
-    {
-        if (!isDragging)
-        {
-            var Speed = tableTop.Width / radiusScalar;
-            // More zoom means smaller extent
-            tableTop.Width -= -1.0 * Speed;
-        }
     }
 }

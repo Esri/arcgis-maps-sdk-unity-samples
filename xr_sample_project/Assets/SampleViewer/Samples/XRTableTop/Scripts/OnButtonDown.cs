@@ -35,11 +35,11 @@ public class OnButtonDown : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         {
             if (Type == type.ZoomIn)
             {
-                tableTopInteractor.ZoomInMap();
+                tableTopInteractor.ZoomMap(1.0f);
             }
             else if (Type == type.ZoomOut)
             {
-                tableTopInteractor.ZoomOutMap();
+                tableTopInteractor.ZoomMap(-1.0f);
             }
         }
     }
