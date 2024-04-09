@@ -1,11 +1,11 @@
-# Explore the World In Table Top VR
+# Explore the World In Table Top XR
 
 Move around in an ArcGIS World using Virtual Reality to move and fly through different cities
 ![Image of XR Table Top](XRTableTop.png)
 
 ## How to use the sample
 
-There are two ways to use this headset, Desktop VR and Android VR. This sample utilizes the OpenXR framework and supports the following headsets/devices for **Desktop VR**:
+There are two ways to use this headset, Desktop and Android XR. This sample utilizes the OpenXR framework and supports the following headsets/devices for **Desktop XR**:
 - Meta Rift
 - Meta Rift S
 - Meta Quest
@@ -17,7 +17,7 @@ There are two ways to use this headset, Desktop VR and Android VR. This sample u
 - HTC Vive Cosmos
 - Valve Index
 
-This sample utilizes the OpenXR framework and supports the following headsets/devices for **Android VR**:
+This sample utilizes the OpenXR framework and supports the following headsets/devices for **Android XR**:
 - Meta Quest
 - Meta Quest 2
 - Meta Quest Pro
@@ -52,7 +52,7 @@ Please ensure that the project is using URP if you are using any of the Meta Hea
 ## How it works
 
 This sample provides three Prefabs for users to add to any scene making setup easy! 
-- XR Origin: This Prefab holds all the components for tracking the VR headset and controllers, as well as the camera that renders components in the scene. 
+- XR Origin: This Prefab holds all the components for tracking the headset and controllers, as well as the camera that renders components in the scene. 
 - XR Interaction Manager: This Prefab receives the input from the headset and controllers and allows the user to move their hands using the controllers as well as to control the rotation by moving their head with the headset on. Without this Prefab in the scene, the sample **will not work**. 
 - Locomotion System: This Prefab controls the movement in the sample, such as walking and flying around. 
 
