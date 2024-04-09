@@ -24,28 +24,30 @@ This sample utilizes the OpenXR framework and supports the following headsets/de
 - Meta Quest 3
 - HTC Vive XR Elite
 
-**For Desktop Use**
-1. Ensure your headset is properly connected to your computer. For Meta Headsets, make sure the Meta Desktop App is open and your headset says **connected** in the **devices** section. For Steam VR headsets, ensure Steam is open and Steam VR is running. 
-2. Place the headset on your head. The sample should automatically use the headset to control the camera's position and rotation in the world. 
-3. To move, use the joystick on the left controller, pushing the joystick (on a Quest controller) or moving on the touchpad (on a Vive controller) will move you in that direction. Move up and down by pushing the right joystick (on a Quest controller) forward and backward, or moving forward and backward on the touchpad (on a Vive controller).The right controller can also be used to 'snap turn' 45 degrees, making it so you can turn around quickly. Select the snap turn option, push the joystick left and right (on a Quest controller) or swipe left and right (on a Vive controllers) to snap turn. 
-4. Use the menu button on controllers to open/close the menu, pull the left or right trigger to interact with the menu. 
-
-**Note: AR Foundation is installed and is used to allow Passthrough on the Meta Quest Devices. If you would like to have Passthrough on other devices, please refer to the developer section for that headset**
-**For Android Use**
-1. Ensure your headset is in developer mode and that unknown sources are allowed on your device.
-2. Ensure your headset is connected properly to your computer.
-3. Navigate to File > Build Settings with in Unity.
-4. Ensure that your Build Target is set to Android, if it is not please change it by selecting, switch platform after clicking on 'Android'. If you do not have the option to change it, close Unity and install the Android Build Support to your Unity Editor through Unity Hub.
-5. Inside of build settings, select your headset under 'Run Device'.
-6. Click 'Build and Run'.
-7. Once finished, you may put your headset on and enjoy the sample.
-
 ### Deployment
 
 For deploying, please refer to this [document](https://developers.arcgis.com/unity/deployment/)
 In order for the sample to run on Meta Headsets, the device must be placed in **Developer Mode**. Please refer to this [document](https://developer.Meta.com/documentation/native/android/mobile-device-setup/) for how to perform such an action. This must be done for running the sample in the Unity Engine, making a build to run on Windows, or making a build directly to the headset (Meta Quest, Meta Quest 2, and Meta Quest Pro)
 
 Please ensure that the project is using URP if you are using any of the Meta Headsets listed above. HDRP may be used for any of the other headsets, but not Meta. It will cause errors in the project. 
+
+**Note: AR Foundation is installed and used to allow Passthrough on the Meta Quest Devices. If you would like to have Passthrough on other devices, please refer to the developer section for that headset**
+**For Android Use**
+1. Ensure your headset is in developer mode and that unknown sources are allowed on your device.
+2. Ensure your headset is connected properly to your computer.
+3. Navigate to File > Build Settings within Unity.
+4. Ensure that your Build Target is set to Android, if it is not please change it by selecting, switch platform after clicking on 'Android'. If you do not have the option to change it, close Unity and install the Android Build Support to your Unity Editor through Unity Hub.
+5. Inside of the build settings, select your headset under 'Run Device'.
+6. Click 'Build and Run'.
+7. Once finished, you may put your headset on and enjoy the sample.
+
+**Using the Application**
+1. Ensure your headset is properly connected to your computer. For Meta Headsets, make sure the Meta Desktop App is open and your headset says **connected** in the **devices** section. For Steam VR headsets, ensure Steam is open and Steam VR is running. 
+2. Place the headset on your head. The sample should automatically use the headset to control the camera's position and rotation in the world. 
+3. Using the right joystick you can zoom in or out of the map in order to get a different perspective.
+4. Pressing the grab buttons on either controller and aiming at the 'Table Handle' will allow you to move the entire application around in virtual space.
+5. Pressing the index trigger and aiming at the map, will allow you to pan the map in order to get a different perspective.
+6. Interacting with the menu for cycling locations, or the zoom-in and zoom-out buttons next to the table handle can be done by aiming at the respective button and pressing the index trigger button.
 
 ## How it works
 
