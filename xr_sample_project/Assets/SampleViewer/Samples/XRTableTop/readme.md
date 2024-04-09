@@ -51,18 +51,12 @@ Please ensure that the project is using URP if you are using any of the Meta Hea
 
 ## How it works
 
-This sample provides three Prefabs for users to add to any scene making setup easy! 
-- XR Origin: This Prefab holds all the components for tracking the headset and controllers, as well as the camera that renders components in the scene. 
-- XR Interaction Manager: This Prefab receives the input from the headset and controllers and allows the user to move their hands using the controllers as well as to control the rotation by moving their head with the headset on. Without this Prefab in the scene, the sample **will not work**. 
-- Locomotion System: This Prefab controls the movement in the sample, such as walking and flying around. 
+This sample is built off the Tabletop Map Sample provided with the plugin. Once the plugin is installed, select samples and click import.
 
-1. Create a map and check the box for **Mesh Colliers Enabled** on the **ArcGIS Map** component if you want the camera to be able to interact with buildings and the ground. This will have a negative impact on performance so you may want to disable this on less powerful devices.
-2. Drag and Drop the **XR Origin** Prefab into the scene.
-3. Drag and drop the **XR Interaction Manager** Prefab into the scene.
-4. Drag and drop the **Locomotion System** Prefab into the scene.
-5. Parent the **XR Origin** Prefab to the game object that has the **ArcGISMap** component on it.
-6. Expand the **XR Origin** game object fully and select the Main Camera game object.
-7. In the **Inspector** window, click on **Add Component** and search "ArcGIS Camera" component and add it to the Main Camera game object.
+1. Navigate to Assets > SampleViewer > Samples > XRTableTop and drag the Map Prefab into the scene.
+2. Drag and Drop the **XR Interaction Hands** Prefab into the scene.
+3. Drag the Table Handle Prefab into the scene.
+4. In the Hierarchy window, click on the Table Handle Prefab and expand it. Set the Map transform as the follow transform within the Table Handle.
 
 ## Tags
 
