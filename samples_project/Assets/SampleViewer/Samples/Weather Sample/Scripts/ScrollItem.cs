@@ -48,6 +48,7 @@ public class ScrollItem : MonoBehaviour, IPointerClickHandler
             weatherQuery.LocationText.text = "Lat: " + latitude + ", Long: " + longitude;
             weatherQuery.TempText.text = weatherData.ConvertTemp(tempurature, weatherQuery.TempuratureToggle.isOn).ToString();
             weatherData.SetSky();
+            weatherData.SetWeather();
         }
         else
         {
@@ -66,6 +67,7 @@ public class ScrollItem : MonoBehaviour, IPointerClickHandler
             weatherQuery.LocationText.text = "Lat: " + latitude + ", Long: " + longitude;
             weatherQuery.TempText.text = weatherData.ConvertTemp(tempurature, weatherQuery.TempuratureToggle.isOn).ToString();
             weatherData.SetSky();
+            weatherData.SetWeather();
         }
 
         SetWeatherIcon();
