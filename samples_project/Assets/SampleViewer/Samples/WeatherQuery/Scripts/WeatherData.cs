@@ -1,7 +1,5 @@
 using Esri.ArcGISMapsSDK.Components;
 using Esri.GameEngine.Geometry;
-using System.Collections;
-using System.Diagnostics.Tracing;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
@@ -20,11 +18,11 @@ public class WeatherData : MonoBehaviour
     [SerializeField] private ArcGISMapComponent ArcGISMap;
     private ArcGISLocationComponent cameraLocationComponent;
     [SerializeField] private Light directionalLight;
-    private ArcGISLocationComponent locationComponent;
+    [SerializeField] private Animation lightningAnim;
     private AudioSource lightningAudio;
     [SerializeField] private AudioClip[] lightningClips;
-    [SerializeField] private Animation lightningAnim;
     private float lightningTimer;
+    private ArcGISLocationComponent locationComponent;
     private bool thunderAndLightning;
     [SerializeField] private Volume volume;
     [SerializeField] private VolumeProfile volumeProfile;
@@ -48,16 +46,6 @@ public class WeatherData : MonoBehaviour
         weatherQuery = FindObjectOfType<WeatherQuery>();
         lightningAnim = directionalLight.GetComponent<Animation>();
         lightningAudio = lightning.GetComponent<AudioSource>();
-    }
-
-    private void Start()
-    {
-        MoveCamera();
-
-        weatherQuery.TempuratureToggle.onValueChanged.AddListener(delegate (bool value)
-        {
-            weatherQuery.TempText.text = ConvertTemp(tempurature, value).ToString() + "°";
-        });
     }
 
     public float ConvertTemp(float Temp, bool IsOn)
@@ -99,6 +87,20 @@ public class WeatherData : MonoBehaviour
     {
         ArcGISMap.OriginPosition = new ArcGISPoint(longitude, latitude, 0, ArcGISSpatialReference.WGS84());
         cameraLocationComponent.Position = new ArcGISPoint(longitude, latitude, 3000.0f, ArcGISSpatialReference.WGS84());
+    }
+
+    public void MoveLightning()
+    {
+        var randomForward = Camera.main.transform.forward * Random.Range(10.0f, 50.0f);
+        var randomUp = lightning.transform.up;
+        var randomRight = Camera.main.transform.right * Random.Range(-10.0f, 10.0f);
+        lightning.transform.localPosition = randomRight + randomUp + randomForward;
+        var vfx = lightning.GetComponent<VisualEffect>();
+        var eventAttribute = vfx.CreateVFXEventAttribute();
+        vfx.SendEvent("Lightning", eventAttribute);
+        lightningAnim.Play();
+        lightningTimer = Random.Range(2.0f, 30.0f);
+        lightningAudio.PlayOneShot(lightningClips[Random.Range(0, lightningClips.Length)]);
     }
 
     public void SetSky()
@@ -155,6 +157,16 @@ public class WeatherData : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        MoveCamera();
+
+        weatherQuery.TempuratureToggle.onValueChanged.AddListener(delegate (bool value)
+        {
+            weatherQuery.TempText.text = ConvertTemp(tempurature, value).ToString() + "°";
+        });
+    }
+
     private void Update()
     {
         if (thunderAndLightning)
@@ -168,19 +180,5 @@ public class WeatherData : MonoBehaviour
                 MoveLightning();
             }
         }
-    }
-
-    public void MoveLightning()
-    {
-        var randomForward = Camera.main.transform.forward * Random.Range(10.0f, 50.0f);
-        var randomUp = lightning.transform.up;
-        var randomRight = Camera.main.transform.right * Random.Range(-10.0f, 10.0f);
-        lightning.transform.localPosition = randomRight + randomUp + randomForward;
-        var vfx = lightning.GetComponent<VisualEffect>();
-        var eventAttribute = vfx.CreateVFXEventAttribute();
-        vfx.SendEvent("Lightning", eventAttribute);
-        lightningAnim.Play();
-        lightningTimer = Random.Range(2.0f, 30.0f);
-        lightningAudio.PlayOneShot(lightningClips[Random.Range(0, lightningClips.Length)]);
     }
 }

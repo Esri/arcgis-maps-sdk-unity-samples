@@ -61,7 +61,7 @@ public class WeatherQuery : MonoBehaviour
     [SerializeField] private TextMeshProUGUI tempTypeText;
     private string webLink = "https://services9.arcgis.com/RHVPKKiFTONKtxq3/ArcGIS/rest/services/NOAA_METAR_current_wind_speed_direction_v1/FeatureServer/0//query?where=COUNTRY+LIKE+%27%25United+States+of+America%27+AND+WEATHER+NOT+IN(%27No+significant+weather+present+at+this+time.%27%2C+%27Automated+observation+with+no+human+augmentation%3B+there+may+or+may+not+be+significant+weather+present+at+this+time.%27)&outFields=*&f=pgeojson&orderByFields=STATION_NAME";
 
-    public List<Toggle> ListItems = new List<Toggle>();
+    [HideInInspector] public List<Toggle> ListItems = new List<Toggle>();
     public TextMeshProUGUI LocationText;
     public Sprite Cloudy;
     public Sprite Rain;
@@ -71,43 +71,6 @@ public class WeatherQuery : MonoBehaviour
     public Toggle TempuratureToggle;
     public TextMeshProUGUI TempText;
     public Image WeatherIcon;
-
-    private void Start()
-    {
-        StartCoroutine(GetFeatures());
-
-        dropDownButton.onValueChanged.AddListener(delegate (bool value)
-        {
-            outfieldsList.SetActive(value);
-            if (!value)
-            {
-                dropDownAnim.Play("ReverseDropDownArrow");
-            }
-            else
-            {
-                dropDownAnim.Play("DropDownArrow");
-            }
-        });
-
-    }
-
-    private IEnumerator GetFeatures()
-    {
-        // To learn more about the Feature Layer rest API and all the things that are possible checkout
-        // https://developers.arcgis.com/rest/services-reference/enterprise/query-feature-service-layer-.html
-
-        UnityWebRequest Request = UnityWebRequest.Get(webLink);
-        yield return Request.SendWebRequest();
-
-        if (Request.result != UnityWebRequest.Result.Success)
-        {
-            Debug.Log(Request.error);
-        }
-        else
-        {
-            CreateGameObjectsFromResponse(Request.downloadHandler.text);
-        }
-    }
 
     private void CreateGameObjectsFromResponse(string Response)
     {
@@ -131,36 +94,27 @@ public class WeatherQuery : MonoBehaviour
         PopulateDropDown();
     }
 
-    public IEnumerator SendCityQuery(double x, double y)
+    private IEnumerator GetFeatures()
     {
-        string APIToken;
-        string query;
-        ArcGISMapComponent mapComponent = GameObject.FindObjectOfType<ArcGISMapComponent>();
+        // To learn more about the Feature Layer rest API and all the things that are possible checkout
+        // https://developers.arcgis.com/rest/services-reference/enterprise/query-feature-service-layer-.html
 
-        if (mapComponent.APIKey != "")
-        {
-            APIToken = mapComponent.APIKey;
-        }
-        else
-        {
-            APIToken = ArcGISProjectSettingsAsset.Instance.APIKey;
-        }
-
-        string url = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode";
-        string coordinates = x.ToString() + "," + y.ToString();
-        query = url + "/?f=json&token=" + APIToken + "&location=" + coordinates;
-        UnityWebRequest Request = UnityWebRequest.Get(query);
+        UnityWebRequest Request = UnityWebRequest.Get(webLink);
         yield return Request.SendWebRequest();
 
         if (Request.result != UnityWebRequest.Result.Success)
         {
             Debug.Log(Request.error);
         }
-        else 
+        else
         {
-            var deserialized = JsonUtility.FromJson<CityData>(Request.downloadHandler.text);
-            cityText.text = deserialized.address.City + ", "+ deserialized.address.Region;
+            CreateGameObjectsFromResponse(Request.downloadHandler.text);
         }
+    }
+
+    private bool MouseOverUI()
+    {
+        return EventSystem.current.IsPointerOverGameObject();
     }
 
     private void PopulateDropDown()
@@ -215,14 +169,36 @@ public class WeatherQuery : MonoBehaviour
         ScrollItem.isEnabled = true;
     }
 
-    private void Update()
+    public IEnumerator SendCityQuery(double x, double y)
     {
-        arcGISCamera.gameObject.GetComponent<ArcGISCameraControllerComponent>().enabled = !MouseOverUI();
-    }
+        string APIToken;
+        string query;
+        ArcGISMapComponent mapComponent = GameObject.FindObjectOfType<ArcGISMapComponent>();
 
-    private bool MouseOverUI()
-    {
-        return EventSystem.current.IsPointerOverGameObject();
+        if (mapComponent.APIKey != "")
+        {
+            APIToken = mapComponent.APIKey;
+        }
+        else
+        {
+            APIToken = ArcGISProjectSettingsAsset.Instance.APIKey;
+        }
+
+        string url = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode";
+        string coordinates = x.ToString() + "," + y.ToString();
+        query = url + "/?f=json&token=" + APIToken + "&location=" + coordinates;
+        UnityWebRequest Request = UnityWebRequest.Get(query);
+        yield return Request.SendWebRequest();
+
+        if (Request.result != UnityWebRequest.Result.Success)
+        {
+            Debug.Log(Request.error);
+        }
+        else
+        {
+            var deserialized = JsonUtility.FromJson<CityData>(Request.downloadHandler.text);
+            cityText.text = deserialized.address.City + ", " + deserialized.address.Region;
+        }
     }
 
     public void SetTempType()
@@ -235,5 +211,29 @@ public class WeatherQuery : MonoBehaviour
         {
             tempTypeText.text = "F";
         }
+    }
+
+    private void Start()
+    {
+        StartCoroutine(GetFeatures());
+
+        dropDownButton.onValueChanged.AddListener(delegate (bool value)
+        {
+            outfieldsList.SetActive(value);
+            if (!value)
+            {
+                dropDownAnim.Play("ReverseDropDownArrow");
+            }
+            else
+            {
+                dropDownAnim.Play("DropDownArrow");
+            }
+        });
+
+    }
+
+    private void Update()
+    {
+        arcGISCamera.gameObject.GetComponent<ArcGISCameraControllerComponent>().enabled = !MouseOverUI();
     }
 }

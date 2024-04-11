@@ -1,11 +1,8 @@
 using Esri.ArcGISMapsSDK.Components;
 using Esri.GameEngine.Geometry;
-using FeatureLayerData;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using static Codice.Client.Common.WebApi.WebApiEndpoints;
-using static Codice.CM.Triggers.TriggerRunner;
 
 public class ScrollItem : MonoBehaviour, IPointerClickHandler
 {
@@ -14,19 +11,12 @@ public class ScrollItem : MonoBehaviour, IPointerClickHandler
     public int tempurature;
     public double longitude;
     public double latitude;
-
     public Image weatherImage;
 
+    [HideInInspector] public bool isEnabled;
     private ArcGISMapComponent mapComponent;
-    public bool isEnabled;
     [SerializeField] private GameObject weather;
     private WeatherQuery weatherQuery;
-
-    private void Start()
-    {
-        weatherQuery = FindObjectOfType<WeatherQuery>();
-        mapComponent = FindObjectOfType<ArcGISMapComponent>();
-    }
 
     private void CheckDataValues()
     {
@@ -104,5 +94,11 @@ public class ScrollItem : MonoBehaviour, IPointerClickHandler
         {
             weatherQuery.WeatherIcon.sprite = weatherQuery.Sunny;
         }
+    }
+
+    private void Start()
+    {
+        weatherQuery = FindObjectOfType<WeatherQuery>();
+        mapComponent = FindObjectOfType<ArcGISMapComponent>();
     }
 }
