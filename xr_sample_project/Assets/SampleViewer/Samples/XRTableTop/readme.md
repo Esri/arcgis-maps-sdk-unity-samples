@@ -5,7 +5,7 @@ Move around in an ArcGIS World using Virtual Reality to move and fly through dif
 
 ## How to use the sample
 
-There are two ways to use this headset, Desktop and Android XR. This sample utilizes the OpenXR framework and supports the following headsets/devices for **Desktop XR**:
+There are two ways to use this headset, Tethered (Desktop) and Standalone (Android). This sample utilizes the OpenXR framework and supports the following headsets/devices for **Desktop XR**:
 - Meta Rift
 - Meta Rift S
 - Meta Quest
@@ -27,7 +27,7 @@ This sample utilizes the OpenXR framework and supports the following headsets/de
 ### Deployment
 
 For deploying, please refer to this [document](https://developers.arcgis.com/unity/deployment/)
-In order for the sample to run on Meta Headsets, the device must be placed in **Developer Mode**. Please refer to this [document](https://developer.Meta.com/documentation/native/android/mobile-device-setup/) for how to perform such an action. This must be done for running the sample in the Unity Engine, making a build to run on Windows, or making a build directly to the headset (Meta Quest, Meta Quest 2, and Meta Quest Pro)
+In order for the sample to run on Meta Headsets, the device must be placed in **Developer Mode**. Please refer to this [document](https://developer.oculus.com/documentation/native/android/mobile-intro/) for how to perform such an action. This must be done for running the sample in the Unity Engine, making a build to run on Windows, or making a build directly to the headset (Meta Quest, Meta Quest 2, and Meta Quest Pro)
 
 Please ensure that the project is using URP if you are using any of the Meta Headsets listed above. HDRP may be used for any of the other headsets, but not Meta. It will cause errors in the project. 
 
