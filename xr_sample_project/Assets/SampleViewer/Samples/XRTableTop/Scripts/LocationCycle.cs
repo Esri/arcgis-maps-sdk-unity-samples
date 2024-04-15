@@ -85,15 +85,15 @@ public class LocationCycle : MonoBehaviour
         sfBuildings = new ArcGIS3DObjectSceneLayer(
             "https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/SanFrancisco_Bldgs/SceneServer",
             "SanFran", 1.0f, false, "");
-        bsl_EsriLayer.DoneLoading += ToggleLayers;
 
-        if (christChurch != null)
+        if (bsl_ChristChurchLayer != null)
         {
             arcGISMapComponent.Map.Layers.Add(bsl_ChristChurchLayer);
         }
 
         if (bsl_EsriLayer != null)
         {
+            bsl_EsriLayer.DoneLoading += ToggleLayers;
             arcGISMapComponent.Map.Layers.Add(bsl_EsriLayer);
         }
 
@@ -147,7 +147,13 @@ public class LocationCycle : MonoBehaviour
         previousLocation = Locations.SanFransisco;
         locationImage.sprite = christChurch;
         DisableLocations();
-        bsl_ChristChurchLayer.IsVisible = true;
+
+        if (bsl_ChristChurchLayer)
+        {
+            bsl_ChristChurchLayer.IsVisible = true;
+        }
+
+        christChurchSurroundingsLayer.IsVisible = true;
     }
 
     public void SetEverest()
@@ -194,7 +200,12 @@ public class LocationCycle : MonoBehaviour
         previousLocation = Locations.ChristChurch;
         locationImage.sprite = redlands;
         DisableLocations();
-        bsl_EsriLayer.IsVisible = true;
+
+        if (bsl_EsriLayer)
+        {
+            bsl_EsriLayer.IsVisible = true;
+        }
+
         esriSurroundings.IsVisible = true;
     }
 
@@ -240,8 +251,16 @@ public class LocationCycle : MonoBehaviour
 
     private void DisableLocations()
     {
-        bsl_ChristChurchLayer.IsVisible = false;
-        bsl_EsriLayer.IsVisible = false;
+        if (bsl_ChristChurchLayer)
+        {
+            bsl_ChristChurchLayer.IsVisible = false;
+        }
+
+        if (bsl_EsriLayer)
+        {
+            bsl_EsriLayer.IsVisible = false;
+        }
+
         gironaLayer.IsVisible = false;
         newYorkBuildings.IsVisible = false;
         sfBuildings.IsVisible = false;
