@@ -1,3 +1,9 @@
+// Copyright 2022 Esri.
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+//
+
 using Esri.ArcGISMapsSDK.Components;
 using Esri.ArcGISMapsSDK.Samples.Components;
 using Esri.GameEngine.Geometry;
@@ -33,9 +39,9 @@ public class LocationCycle : MonoBehaviour
     [SerializeField] private Sprite NYC;
     [SerializeField] private Sprite sanFran;
 
-    private ArcGISBuildingSceneLayer christChurchLayer;
+    private ArcGISBuildingSceneLayer bsl_ChristChurchLayer;
+    private ArcGISBuildingSceneLayer bsl_EsriLayer;
     private ArcGIS3DObjectSceneLayer christChurchSurroundingsLayer;
-    private ArcGISBuildingSceneLayer esriLayer;
     private ArcGIS3DObjectSceneLayer esriSurroundings;
     private ArcGISIntegratedMeshLayer gironaLayer;
     private ArcGIS3DObjectSceneLayer newYorkBuildings;
@@ -50,14 +56,24 @@ public class LocationCycle : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        christChurchLayer = new ArcGISBuildingSceneLayer(
+#if UNITY_EDITOR
+        bsl_ChristChurchLayer = new ArcGISBuildingSceneLayer(
             "https://tiles.arcgis.com/tiles/pmcEyn9tLWCoX7Dm/arcgis/rest/services/cclibrary1_wgs84/SceneServer",
             "ChristChurch", 1.0f, false, "");
-        christChurchSurroundingsLayer = new ArcGIS3DObjectSceneLayer("https://tiles.arcgis.com/tiles/pmcEyn9tLWCoX7Dm/arcgis/rest/services/ccbuildings_wgs84/SceneServer",
-            "CCBuildings", 1.0f, false, "");
-        esriLayer = new ArcGISBuildingSceneLayer(
+        bsl_EsriLayer = new ArcGISBuildingSceneLayer(
             "https://tiles.arcgis.com/tiles/V6ZHFr6zdgNZuVG0/arcgis/rest/services/Bldg_E_Color_UC2020_demo/SceneServer",
             "Esri Building E", 1.0f, false, "");
+#elif UNITY_STANDALONE_WIN
+        bsl_ChristChurchLayer = new ArcGISBuildingSceneLayer(
+            "https://tiles.arcgis.com/tiles/pmcEyn9tLWCoX7Dm/arcgis/rest/services/cclibrary1_wgs84/SceneServer",
+            "ChristChurch", 1.0f, false, "");
+        bsl_EsriLayer = new ArcGISBuildingSceneLayer(
+            "https://tiles.arcgis.com/tiles/V6ZHFr6zdgNZuVG0/arcgis/rest/services/Bldg_E_Color_UC2020_demo/SceneServer",
+            "Esri Building E", 1.0f, false, "");
+#else
+#endif
+        christChurchSurroundingsLayer = new ArcGIS3DObjectSceneLayer("https://tiles.arcgis.com/tiles/pmcEyn9tLWCoX7Dm/arcgis/rest/services/ccbuildings_wgs84/SceneServer",
+            "CCBuildings", 1.0f, false, "");
         esriSurroundings = new ArcGIS3DObjectSceneLayer("https://services.arcgis.com/hAJQfubNy25iblZJ/arcgis/rest/services/HQ_Campus_WSL1/SceneServer",
             "EsriBuildings", 1.0f, false, "");
         gironaLayer = new ArcGISIntegratedMeshLayer(
@@ -69,16 +85,16 @@ public class LocationCycle : MonoBehaviour
         sfBuildings = new ArcGIS3DObjectSceneLayer(
             "https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/SanFrancisco_Bldgs/SceneServer",
             "SanFran", 1.0f, false, "");
-        esriLayer.DoneLoading += ToggleLayers;
+        bsl_EsriLayer.DoneLoading += ToggleLayers;
 
         if (christChurch != null)
         {
-            arcGISMapComponent.Map.Layers.Add(christChurchLayer);
+            arcGISMapComponent.Map.Layers.Add(bsl_ChristChurchLayer);
         }
 
-        if (esriLayer != null)
+        if (bsl_EsriLayer != null)
         {
-            arcGISMapComponent.Map.Layers.Add(esriLayer);
+            arcGISMapComponent.Map.Layers.Add(bsl_EsriLayer);
         }
 
         if (gironaLayer != null)
@@ -111,12 +127,12 @@ public class LocationCycle : MonoBehaviour
 
     private void ToggleLayers(Exception loadError)
     {
-        var size = esriLayer.Sublayers.GetSize();
+        var size = bsl_EsriLayer.Sublayers.GetSize();
 
         for (ulong i = 0; i < size; i++)
         {
 
-            var sublayer = esriLayer.Sublayers.At(i);
+            var sublayer = bsl_EsriLayer.Sublayers.At(i);
 
             sublayer.IsVisible = true;
         }
@@ -131,7 +147,7 @@ public class LocationCycle : MonoBehaviour
         previousLocation = Locations.SanFransisco;
         locationImage.sprite = christChurch;
         DisableLocations();
-        christChurchLayer.IsVisible = true;
+        bsl_ChristChurchLayer.IsVisible = true;
     }
 
     public void SetEverest()
@@ -178,7 +194,7 @@ public class LocationCycle : MonoBehaviour
         previousLocation = Locations.ChristChurch;
         locationImage.sprite = redlands;
         DisableLocations();
-        esriLayer.IsVisible = true;
+        bsl_EsriLayer.IsVisible = true;
         esriSurroundings.IsVisible = true;
     }
 
@@ -224,8 +240,8 @@ public class LocationCycle : MonoBehaviour
 
     private void DisableLocations()
     {
-        christChurchLayer.IsVisible = false;
-        esriLayer.IsVisible = false;
+        bsl_ChristChurchLayer.IsVisible = false;
+        bsl_EsriLayer.IsVisible = false;
         gironaLayer.IsVisible = false;
         newYorkBuildings.IsVisible = false;
         sfBuildings.IsVisible = false;
