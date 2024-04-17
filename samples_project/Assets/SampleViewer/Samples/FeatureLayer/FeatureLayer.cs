@@ -22,7 +22,7 @@ public struct WebLink
 }
 
 [System.Serializable]
-public class Feature
+public class FeatureQuery
 {
     public Geometry geometry = new Geometry();
     public Properties properties = new Properties();
@@ -53,7 +53,7 @@ public class FeatureLayer : MonoBehaviour
     private float stadiumSpawnHeight = 10000.0f;
     private FeatureLayerUIManager UIManager;
 
-    public List<Feature> Features = new List<Feature>();
+    public List<FeatureQuery> Features = new List<FeatureQuery>();
     public bool GetAllFeatures = true;
     public bool GetAllOutfields = true;
     public JToken[] jFeatures;
@@ -165,7 +165,7 @@ public class FeatureLayer : MonoBehaviour
     {
         for (int i = min; i < max; i++)
         {
-            Feature currentFeature = new Feature();
+            FeatureQuery currentFeature = new FeatureQuery();
             var featureItem = Instantiate(featurePrefab, this.transform);
             //Layer 7 because that is the index of the layer created specifically for feature layers so that they ignore themselves for raycasting.
             featureItem.layer = 7;
