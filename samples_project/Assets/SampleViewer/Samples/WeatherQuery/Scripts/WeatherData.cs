@@ -48,21 +48,9 @@ public class WeatherData : MonoBehaviour
         lightningAudio = lightning.GetComponent<AudioSource>();
     }
 
-    public float ConvertTemp(float Temp, bool IsOn)
+    public float ConvertTemp(float Temp, bool IsCelcius)
     {
-        float currentTemp;
-        if (IsOn)
-        {
-            // To Celcius
-            currentTemp = Mathf.Round((Temp - 32) * 0.55555555555f);
-        }
-        else
-        {
-            // To Fahrenheit
-            currentTemp = Temp;
-        }
-
-        return currentTemp;
+        return IsCelcius ? Mathf.Round((Temp - 32) * 0.55555555555f) : Temp;
     }
 
     private void DisableWeather()
