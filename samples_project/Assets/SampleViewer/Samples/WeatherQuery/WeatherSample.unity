@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 3839.0806, g: 3468.2603, b: 4612.7505, a: 1}
+  m_IndirectSpecularColor: {r: 3810.8364, g: 3452.438, b: 4656.0396, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -448,15 +448,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'This sample uses the baseball stadiums feature layer from Esri''s Living
-    Atlas portal item.
-
-
-    Select a stadium from the drop-down list above to find
-    it on the map.
-
-
-'
+  m_text: "This sample is built off the Feature Layer Sample. \n\nThis sample queries
+    a Feature Layer of current weather Data and shows the associated weather."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e59fb78ae467b9446bad6955a0dd0766, type: 2}
   m_sharedMaterial: {fileID: 8862657535182535335, guid: e59fb78ae467b9446bad6955a0dd0766, type: 2}
@@ -642,7 +635,7 @@ Transform:
   m_GameObject: {fileID: 195093959}
   serializedVersion: 2
   m_LocalRotation: {x: 0.114229746, y: -0.0000000015946787, z: 0.000000022226812, w: 0.9934544}
-  m_LocalPosition: {x: 0.0000008288771, y: 1500.2566, z: -2388.9094}
+  m_LocalPosition: {x: 0.0000008298084, y: 1500.2566, z: -1810.9874}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -892,7 +885,7 @@ MonoBehaviour:
   m_LocalPosition:
     x: -8238310.235646175
     y: 1500.2566193412556
-    z: 4967682.669705094
+    z: 4530317.177376839
   m_LocalRotation:
     value:
       x: 0.11422974
@@ -2758,9 +2751,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_LocalPosition:
-    x: -8238310.235647004
+    x: -8238310.235647005
     y: 0
-    z: 4970071.579142429
+    z: 4532128.1647683885
   m_LocalRotation:
     value:
       x: 0
@@ -3603,15 +3596,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   arcGISCamera: {fileID: 195093963}
-  cityText: {fileID: 1036621060}
   contentContainer: {fileID: 188451733}
   dropDownAnim: {fileID: 1165048483}
   dropDownButton: {fileID: 680829839}
   listItem: {fileID: 7980792275183304507, guid: 054dceae44ecec6429c0c06ae4bb85c5, type: 3}
   outfieldsList: {fileID: 2070810846}
   tempTypeText: {fileID: 127703932}
+  cityText: {fileID: 1036621060}
   ListItems: []
   LocationText: {fileID: 1336732355}
+  notFound: 0
   Cloudy: {fileID: 21300000, guid: b42b78e4846ea2a45af68d35fc95d602, type: 3}
   Rain: {fileID: 21300000, guid: ba9e9d17c11b17d48af7cd743d78f6e8, type: 3}
   Snow: {fileID: 21300000, guid: 546447df1de5f7a4c8af45a76fa4da88, type: 3}
@@ -3729,7 +3723,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Select/unselect outfield(s)
+  m_text: Select a city
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e59fb78ae467b9446bad6955a0dd0766, type: 2}
   m_sharedMaterial: {fileID: 8862657535182535335, guid: e59fb78ae467b9446bad6955a0dd0766, type: 2}

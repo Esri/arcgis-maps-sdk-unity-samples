@@ -51,7 +51,6 @@ public class WeatherProperties
 public class WeatherQuery : MonoBehaviour
 {
     [SerializeField] private ArcGISCameraComponent arcGISCamera;
-    [SerializeField] private TextMeshProUGUI cityText;
     [SerializeField] private Transform contentContainer;
     [SerializeField] private Animator dropDownAnim;
     [SerializeField] private Toggle dropDownButton;
@@ -61,8 +60,10 @@ public class WeatherQuery : MonoBehaviour
     [SerializeField] private TextMeshProUGUI tempTypeText;
     private string webLink = "https://services9.arcgis.com/RHVPKKiFTONKtxq3/ArcGIS/rest/services/NOAA_METAR_current_wind_speed_direction_v1/FeatureServer/0//query?where=COUNTRY+LIKE+%27%25United+States+of+America%27+AND+WEATHER+NOT+IN(%27No+significant+weather+present+at+this+time.%27%2C+%27Automated+observation+with+no+human+augmentation%3B+there+may+or+may+not+be+significant+weather+present+at+this+time.%27)&outFields=*&f=pgeojson&orderByFields=STATION_NAME";
 
+    public TextMeshProUGUI cityText;
     [HideInInspector] public List<Toggle> ListItems = new List<Toggle>();
     public TextMeshProUGUI LocationText;
+    public bool notFound;
     public Sprite Cloudy;
     public Sprite Rain;
     public Sprite Snow;
@@ -127,6 +128,7 @@ public class WeatherQuery : MonoBehaviour
             var scrollItem = item.GetComponent<ScrollItem>();
             scrollItem.currentWeather = feature.properties.WEATHER;
             scrollItem.skyCondition = feature.properties.SKY_CONDTN;
+            scrollItem.stationName = name.ToString() + feature.properties.COUNTRY;
             scrollItem.tempurature = feature.properties.TEMP;
             scrollItem.longitude = Mathf.Round((float)feature.geometry.coordinates[0] * 100) / 100;
             scrollItem.latitude = Mathf.Round((float)feature.geometry.coordinates[1] * 100) / 100;
@@ -197,7 +199,16 @@ public class WeatherQuery : MonoBehaviour
         else
         {
             var deserialized = JsonUtility.FromJson<CityData>(Request.downloadHandler.text);
-            cityText.text = deserialized.address.City + ", " + deserialized.address.Region;
+
+            if (deserialized.address.City != "")
+            { 
+                cityText.text = deserialized.address.City + ", " + deserialized.address.Region; 
+                notFound = false;
+            }
+            else
+            {
+                notFound = true;
+            }
         }
     }
 

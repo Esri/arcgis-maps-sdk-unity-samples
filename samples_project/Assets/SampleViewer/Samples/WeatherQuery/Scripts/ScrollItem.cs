@@ -8,6 +8,7 @@ public class ScrollItem : MonoBehaviour, IPointerClickHandler
 {
     public string currentWeather;
     public string skyCondition;
+    public string stationName;
     public int tempurature;
     public double longitude;
     public double latitude;
@@ -31,6 +32,11 @@ public class ScrollItem : MonoBehaviour, IPointerClickHandler
         var weatherDataGameObject = FindObjectOfType<WeatherData>();
         if (!weatherDataGameObject)
         {
+            if (weatherQuery.notFound)
+            {
+                weatherQuery.cityText.text = stationName;
+            }
+
             var weatherSystem = Instantiate(weather);
             weatherSystem.transform.SetParent(mapComponent.transform);
             var weatherData = weatherSystem.GetComponent<WeatherData>();
