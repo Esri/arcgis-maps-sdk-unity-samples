@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 3810.8364, g: 3452.438, b: 4656.0396, a: 1}
+  m_IndirectSpecularColor: {r: 3813.7563, g: 3454.3071, b: 4653.0786, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2700,34 +2700,12 @@ MonoBehaviour:
       x: 0
       y: 0
     UseOriginAsCenter: 0
-  layers:
-  - Name: NYC Buildings
-    Type: 1
-    Source: https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_NewYork_17/SceneServer
-    Opacity: 1
-    IsVisible: 1
-    Authentication:
-      ConfigurationIndex: 0
-    BuildingSceneLayerFilter:
-      ActiveBuildingAttributeFilterIndex: 0
-      BuildingAttributeFilters: []
-      IsBuildingAttributeFilterEnabled: 0
-      IsBuildingDisciplinesCategoriesFilterEnabled: 0
-      EnabledCategories: 
-      EnabledDisciplines: 
-    MeshModifications:
-      IsEnabled: 0
-      MeshModifications: []
-    SpatialFeatureFilter:
-      IsEnabled: 0
-      Polygons: []
-      Type: 0
+  layers: []
   originPosition:
     x: -74.006
     y: 40.7128
     z: 0
     SRWkid: 4326
-  osm3DBuildingsEnabled: 0
   mapType: 1
   editorModeEnabled: 1
   dataFetchWithSceneView: 1
