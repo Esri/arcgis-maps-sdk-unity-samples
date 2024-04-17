@@ -100,7 +100,7 @@ public class WeatherData : MonoBehaviour
                 vClouds.cloudPreset = VolumetricClouds.CloudPresets.Overcast;
                 directionalLight.color = new Color(0.1803922f, 0.1803922f, 0.1803922f, 1.0f);
             }
-            else if (skyCondition.ToLower().Contains("Cloud"))
+            else if (skyCondition.ToLower().Contains("cloud"))
             {
                 vClouds.cloudPreset = VolumetricClouds.CloudPresets.Cloudy;
                 directionalLight.color = new Color(1, 1, 1, 1);
