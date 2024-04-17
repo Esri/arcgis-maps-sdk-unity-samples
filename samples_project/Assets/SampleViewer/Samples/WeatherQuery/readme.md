@@ -33,6 +33,11 @@ Note: You can use `Unity Console` to print log messages in the **Console** windo
 
 Data for Current Weather in the United States is fetched from a [Feature Layer](https://services9.arcgis.com/RHVPKKiFTONKtxq3/ArcGIS/rest/services/NOAA_METAR_current_wind_speed_direction_v1/FeatureServer/0) hosted by Esri.
 Elevation data is loaded from the [Terrain 3D elevation layer](https://www.arcgis.com/home/item.html?id=7029fb60158543ad845c7e1527af11e4) hosted by Esri.
+[Rain Sound effect](https://pixabay.com/sound-effects/soft-rain-ambient-111154/)
+[Snow Sound Effect](https://pixabay.com/sound-effects/wind-artic-cold-6195/)
+[Thunder 1 Sound Effect](https://pixabay.com/sound-effects/thunder-25689/)
+[Thunder 2 Sound Effect](https://pixabay.com/sound-effects/thunder-big-30291/)
+[Thunder 3 Sound Effect](https://pixabay.com/sound-effects/thunder-124463/)
 
 ## Tags
 
