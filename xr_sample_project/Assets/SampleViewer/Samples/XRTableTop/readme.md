@@ -1,4 +1,4 @@
-# Explore the World In Table Top XR
+# Explore the world in tabletop XR
 
 Move around in an ArcGIS World using Virtual Reality to move and fly through different cities
 ![Image of XR Table Top](XRTableTop.png)

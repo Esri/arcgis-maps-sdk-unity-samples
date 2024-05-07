@@ -1,4 +1,4 @@
-# Explore the World in Virtual Reality
+# Explore the world in virtual reality
 
 Move around in an ArcGIS World using Virtual Reality to move and fly through different cities
 ![Image of Virtual Reality Simulation](VR.jpg)
@@ -17,8 +17,8 @@ This sample utilizes the OpenXR framework and supports the following headsets/de
 
 1. Ensure your headset is properly connected to your computer. For Meta Headsets, make sure the Meta Desktop App is open and your headset says **connected** in the **devices** section. For Steam VR headsets, ensure Steam is open and Steam VR is running. 
 2. Place the headset on your head. The sample should automatically use the headset to control the camera's position and rotation in the world. 
-3. To move, use the joystick on the left controller, pushing the joystick (on a Quest controller) or moving on the touchpad (on a Vive controller) will move you in that direction. Move up and down by pushing the right joystick (on a Quest controller) forward and backward, or moving forward and backward on the touchpad (on a Vive controller).The right controller can also be used to 'snap turn' 45 degrees, making it so you can turn around quickly. Select the snap turn option, push the joystick left and right (on a Quest controller) or swipe left and right (on a Vive controllers) to snap turn. 
-4. Use the menu button on controllers to open/close the menu, pull the left or right trigger to interact with the menu. 
+3. To move, use the joystick on the left controller, pushing the joystick (on a Quest controller) or moving on the touchpad (on a Vive controller) will move you in that direction. Move up and down by pushing the right joystick (on a Quest controller) forward and backward, or moving forward and backward on the touchpad (on a Vive controller). The right controller can also be used to 'snap turn' 45 degrees, making it so you can turn around quickly. Select the snap turn option, push the joystick left and right (on a Quest controller) or swipe left and right (on a Vive controller) to snap turn. 
+4. Use the menu button on controllers to open/close the menu, and pull the left or right trigger to interact with the menu. 
 
 ### Deployment
 
@@ -40,7 +40,7 @@ This sample provides three Prefabs for users to add to any scene making setup ea
 4. Drag and drop the **Locomotion System** Prefab into the scene.
 5. Parent the **XR Origin** Prefab to the game object that has the **ArcGISMap** component on it.
 6. Expand the **XR Origin** game object fully and select the Main Camera game object.
-7. In the **Inspector** window, click on **Add Component** and search "ArcGIS Camera" component and add it to the Main Camera game object.
+7. In the **Inspector** window, click on **Add Component**, search "ArcGIS Camera" component, and add it to the Main Camera game object.
 
 ## Tags
 
