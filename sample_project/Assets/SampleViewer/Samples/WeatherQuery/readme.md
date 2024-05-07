@@ -19,7 +19,7 @@ Query Weather Data from the Weather Stations feature layer provided in order to 
 
 ## How it works
 
-1. Create a new C# script and make a HTTP request to [query a feature layer](https://developers.arcgis.com/rest/services-reference/enterprise/query-feature-service-.htm). 
+1. Create a new C# script and make an HTTP request to [query a feature layer](https://developers.arcgis.com/rest/services-reference/enterprise/query-feature-service-.htm). 
 2. Create a new C# script
    - Create the function to place the data returned from the Weather Query.
    - Create a function to spawn the weather data class according to the data received in the query.
