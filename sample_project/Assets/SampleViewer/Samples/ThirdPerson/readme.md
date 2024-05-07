@@ -1,6 +1,6 @@
-# Explore with a Third Person Controller
+# Explore with a third-person controller
 
-Explore from the perspective of a third person camera following a controllable character.
+Explore from the perspective of a third-person camera following a controllable character.
 
 ![Image of Third Person Controller](ThirdPerson.png)
 
@@ -13,13 +13,13 @@ Explore from the perspective of a third person camera following a controllable c
 
 ## How it works
 
-This samples makes use of Unity's [Starter Assets - Third Person Character Controller](https://assetstore.unity.com/packages/essentials/starter-assets-third-person-character-controller-196526).
+This sample makes use of Unity's [Starter Assets - Third Person Character Controller](https://assetstore.unity.com/packages/essentials/starter-assets-third-person-character-controller-196526).
 
 1. Set up the **ArcGIS Map** for the exploration area.
-2. Create a Third Person Character with its control and attach to **ArcGIS Map**. 
+2. Create a Third Person Character with its control and attach it to **ArcGIS Map****. 
 3. Add the Third Person Character to the level.
    - Mesh colliders need to be enabled in the **ArcGIS Map**.
-   - If you want to place the character on a specific location, attach the [**ArcGIS Location Component**](https://developers.arcgis.com/unreal-engine/maps/location-component/) to specify it.
+   - If you want to place the character in a specific location, attach the [**ArcGIS Location Component**](https://developers.arcgis.com/unreal-engine/maps/location-component/) to specify it.
    - The Third Person Character provided in this sample detects the terrain mesh collider before it lands on the ground. 
 
 ## About the data
