@@ -1,12 +1,9 @@
 using Esri.ArcGISMapsSDK.Components;
 using Esri.ArcGISMapsSDK.Samples.Components;
 using Esri.ArcGISMapsSDK.Utils;
-using Esri.GameEngine.MapView;
-using FeatureLayerData;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditorInternal.VersionControl;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Networking;
