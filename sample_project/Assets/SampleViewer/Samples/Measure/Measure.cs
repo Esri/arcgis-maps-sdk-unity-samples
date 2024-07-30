@@ -37,8 +37,10 @@ public class Measure : MonoBehaviour
     private LineRenderer lineRenderer;
     private ArcGISLinearUnit currentUnit = new ArcGISLinearUnit(ArcGISLinearUnitId.Miles);
     private string unitText;
+	private bool isPolygonMode = false;
+    private ArcGISAreaUnit areaUnit =new ArcGISAreaUnit(ArcGISAreaUnitId.SquareMeters);
 
-    private void Start()
+	private void Start()
     {
         arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
 
@@ -56,7 +58,11 @@ public class Measure : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKey(KeyCode.LeftShift) && Input.GetMouseButtonDown(0))
+		if (Input.GetKeyDown(KeyCode.P))
+		{
+			isPolygonMode = !isPolygonMode;
+		}
+		if (Input.GetKey(KeyCode.LeftShift) && Input.GetMouseButtonDown(0))
         {
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -92,11 +98,44 @@ public class Measure : MonoBehaviour
                 stops.Push(lineMarker);
                 RenderLine(ref featurePoints);
                 RebaseLine();
-            }
+
+				if (isPolygonMode)
+				{
+				//	if (polygonPoints.Count > 2)
+					//{
+                        CreateandCalculatePolygon();
+					//}
+				}
+			}
         }
     }
+	private void CreateandCalculatePolygon()
+	{
+		var spatialReference = new ArcGISSpatialReference(3857); 
+		var polygonBuilder = new ArcGISPolygonBuilder(spatialReference);
 
-    private void Interpolate(GameObject start, GameObject end, List<GameObject> featurePoints)
+		// Use a temporary list to store the points in the correct order
+		var stopsList = new List<GameObject>(stops);
+
+		foreach (var stop in stopsList)
+		{
+			var location = stop.GetComponent<ArcGISLocationComponent>().Position;
+			polygonBuilder.AddPoint(location);
+		}
+
+		// Close the polygon by adding the first point at the end
+		var firstStop = stopsList[stopsList.Count - 1].GetComponent<ArcGISLocationComponent>().Position;
+		polygonBuilder.AddPoint(firstStop);
+
+		var polygon = polygonBuilder.ToGeometry();
+
+		// Calculate the area
+		var area = ArcGISGeometryEngine.AreaGeodetic(polygon, areaUnit, ArcGISGeodeticCurveType.Geodesic);
+		Debug.Log($"Polygon Area: {area} square meters");
+	}
+
+
+	private void Interpolate(GameObject start, GameObject end, List<GameObject> featurePoints)
     {
 
         float lengthOfLine = Vector3.Distance(start.transform.position, end.transform.position);
@@ -157,6 +196,11 @@ public class Measure : MonoBehaviour
             }
             allPoints.Add(stop.transform.position);
         }
+
+        if(isPolygonMode)
+        {
+			allPoints.Add(allPoints[0]);
+		}
 
         lineRenderer.positionCount = allPoints.Count;
         lineRenderer.SetPositions(allPoints.ToArray());
