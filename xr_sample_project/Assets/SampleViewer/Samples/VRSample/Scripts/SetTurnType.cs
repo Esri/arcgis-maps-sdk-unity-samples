@@ -9,6 +9,9 @@ public class SetTurnType : MonoBehaviour
     [SerializeField] private ActionBasedContinuousTurnProvider continuousTurn;
     [SerializeField] private ActionBasedSnapTurnProvider snapTurn;
 
+    public delegate void ChangedTurnType(bool type);
+    public event ChangedTurnType OnTypeChanged;
+
     public void SetTurnTypeFromIndex(int index)
     {
         if (index == 0)
@@ -21,5 +24,21 @@ public class SetTurnType : MonoBehaviour
             snapTurn.enabled = true;
             continuousTurn.enabled = false;
         }
+    }
+
+    public void ToggleSmoothTurn(bool isSmooth)
+    {
+        SetTurnTypeFromIndex(isSmooth ? 0 : 1);
+        OnTypeChanged(isSmooth);
+    }
+
+    public void SetSmoothTurnSpeed(float speed)
+    {
+        continuousTurn.turnSpeed = speed;
+    }
+
+    public void SetSnapTurnSpeed(float snapSpeed)
+    {
+        snapTurn.turnAmount = snapSpeed;
     }
 }

@@ -18,6 +18,7 @@ public class ContinuousMovement : MonoBehaviour
     private CharacterController controller;
     private Vector2 leftInputAxis;
     private Vector2 rightInputAxis;
+    [SerializeField] private ActionBasedController rightController;
 
     [Header("----------Movement Variables----------")]
     [Min(0)] [SerializeField] private float speed;
@@ -31,6 +32,7 @@ public class ContinuousMovement : MonoBehaviour
 
     [Header("-------------Other-------------")]
     [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private bool moveInLookDirection = true;
 
     private float heightOffset = 0.2f;
     private GameObject menu;
@@ -49,9 +51,20 @@ public class ContinuousMovement : MonoBehaviour
 
         FollowHeadset();
 
+        Vector3 direction;
+
+        if (moveInLookDirection)
+        {
+            Quaternion headYaw = Quaternion.Euler(0, rig.Camera.transform.eulerAngles.y, 0);
+            direction = headYaw * new Vector3(leftInputAxis.x, 0, leftInputAxis.y);
+        }
+        else
+        {
+            Quaternion controllerYaw = Quaternion.Euler(0, rightController.transform.eulerAngles.y, 0);
+            direction = controllerYaw * new Vector3(leftInputAxis.x, 0, leftInputAxis.y);
+        }
+
         // Calcuate move vectors based on input actions
-        Quaternion headYaw = Quaternion.Euler(0, rig.Camera.transform.eulerAngles.y, 0);
-        Vector3 direction = headYaw * new Vector3(leftInputAxis.x, 0, leftInputAxis.y);
         Vector3 up = new Vector3(0, rightInputAxis.y, 0);
 
         // Calculate speed based on trigger hold
@@ -115,5 +128,10 @@ public class ContinuousMovement : MonoBehaviour
     public void SetVerticalSpeed(float newSpeed)
     {
         upSpeed = newSpeed;
+    }
+
+    public void SetMoveInLookDirection(bool state)
+    {
+        moveInLookDirection = state;
     }
 }

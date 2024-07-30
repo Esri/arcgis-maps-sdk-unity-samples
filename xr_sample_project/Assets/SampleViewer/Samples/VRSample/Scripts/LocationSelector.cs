@@ -12,6 +12,8 @@ using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 using System;
 using static UnityEngine.XR.Interaction.Toolkit.Inputs.Simulation.XRDeviceSimulator;
+using UnityEngine.UI;
+using System.Threading;
 
 // A custom struct to hold data regarding ArcGIS map component positions
 public struct coordinates
@@ -44,9 +46,14 @@ public class LocationSelector : MonoBehaviour
     private GameObject menu;
     private GameObject menuManager;
 
+    [SerializeField] private Button backButton;
+    [SerializeField] private Button forwardButton;
+    [SerializeField] private CanvasGroup[] slots;
+
     // List of coordinates to set to ArcGIS Map origin, leading to 3D city scene layers collected by Esri
     private List<coordinates> spawnLocations = new List<coordinates> {new coordinates("San Francisco", -122.4194f, 37.7749f, 0f, 150f, 0f), new coordinates("Girona, Spain", 2.8214f, 41.983f, 38f, 200f, 150f),
-    new coordinates("Christchurch, New Zealand", 172.64f, -43.534f, -331.45f, 40.8f, 542.1f)};
+    new coordinates("Christchurch, New Zealand", 172.64f, -43.534f, -331.45f, 40.8f, 542.1f), new coordinates("New York", -74.006f, 40.7128f, -331.45f, 200f, 250.0f), new coordinates("Redlands", -117.196453f, 34.060143f, 1000.05f, 500f, 250.0f), 
+        new coordinates("Grand Canyon", -112.0962f, 36.1018f, 1500.0f, 1300f, 250.0f)};
 
     void Start()
     {
@@ -56,8 +63,6 @@ public class LocationSelector : MonoBehaviour
         continuousMovement = XROrigin.GetComponent<ContinuousMovement>();
         menu = GameObject.FindWithTag("VRCanvas");
         menuManager = FindObjectOfType<VRMenuManager>().gameObject;
-
-        menu.SetActive(false);
 
         // Get a random set of coordinates from the list to spawn user in unique location
         GoToRandomLocation();
@@ -84,10 +89,6 @@ public class LocationSelector : MonoBehaviour
     IEnumerator LoadIntoNewAreaWithFade(coordinates Location)
     {
         // Confirm menu is deactivated, and set bool to not allow the player to reactivate it
-        if (menu.activeSelf)
-        {
-            menu.SetActive(false);
-        }
         menuManager.GetComponent<VRMenuManager>().SetCurrentlyTeleporting(true);
 
         // Set bool to deactivate grab rays while teleporting
@@ -105,6 +106,12 @@ public class LocationSelector : MonoBehaviour
         // Reset previously changed booleans
         menuManager.GetComponent<VRMenuManager>().SetCurrentlyTeleporting(false);
         XROrigin.GetComponent<ActivateGrabRay>().currentlyTransporting = false;
+
+        if (!menu.activeSelf)
+        {
+            menu.SetActive(true);
+        }
+        menuManager.GetComponent<VRMenuManager>().RealignMenu();
     }
 
     public void GoToRandomLocation()
@@ -119,7 +126,19 @@ public class LocationSelector : MonoBehaviour
 
             case "Christchurch, New Zealand":
                 GoToChristchurchNewZealand();
-                break;       
+                break;
+
+            case "New York":
+                GoToNewYork();
+                break;
+
+            case "Redlands":
+                GoToRedlands();
+                break;
+
+            case "Grand Canyon":
+                GoToGrandCanyon();
+                break;
 
             default:
                 GoToSpain();
@@ -137,6 +156,31 @@ public class LocationSelector : MonoBehaviour
                 return;
             }
         }
+    }
+
+    void ToggleSlot(CanvasGroup slot, bool state)
+    {
+        slot.alpha = state ? 1 : 0;
+        slot.interactable = state;
+        slot.blocksRaycasts = state;
+    }
+
+    public void ForthSlot()
+    {
+        backButton.interactable = true;
+        forwardButton.interactable = false;
+
+        ToggleSlot(slots[0], false);
+        ToggleSlot(slots[1], true);
+    }
+
+    public void BackSlot()
+    {
+        backButton.interactable = false;
+        forwardButton.interactable = true;
+
+        ToggleSlot(slots[0], true);
+        ToggleSlot(slots[1], false);
     }
 
     #region Public Teleportation Functions
@@ -170,6 +214,36 @@ public class LocationSelector : MonoBehaviour
         continuousMovement.SetSpeed(50f);
         continuousMovement.SetVerticalSpeed(15f);
     }
-    
+
+    public void GoToNewYork()
+    {
+        GetLocationByName("New York");
+
+        // Confirm reference to continuousMovement component before calling method within it
+        continuousMovement = continuousMovement ? continuousMovement : XROrigin.GetComponent<ContinuousMovement>();
+        continuousMovement.SetSpeed(50f);
+        continuousMovement.SetVerticalSpeed(15f);
+    }
+
+    public void GoToRedlands()
+    {
+        GetLocationByName("Redlands");
+
+        // Confirm reference to continuousMovement component before calling method within it
+        continuousMovement = continuousMovement ? continuousMovement : XROrigin.GetComponent<ContinuousMovement>();
+        continuousMovement.SetSpeed(50f);
+        continuousMovement.SetVerticalSpeed(15f);
+    }
+
+    public void GoToGrandCanyon()
+    {
+        GetLocationByName("Grand Canyon");
+
+        // Confirm reference to continuousMovement component before calling method within it
+        continuousMovement = continuousMovement ? continuousMovement : XROrigin.GetComponent<ContinuousMovement>();
+        continuousMovement.SetSpeed(50f);
+        continuousMovement.SetVerticalSpeed(15f);
+    }
+
     #endregion
 }

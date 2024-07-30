@@ -199,6 +199,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2213c36610e3b1c4bbf886810ed9db12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &178264904 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7674790536495219090, guid: 71c126e43990139498b8761c71893200, type: 3}
+  m_PrefabInstance: {fileID: 416216338}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caff514de9b15ad48ab85dcff5508221, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &229091429
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -448,13 +459,103 @@ PrefabInstance:
       propertyPath: m_UIPressAction.m_Reference
       value: 
       objectReference: {fileID: 826953841317565137, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+    - target: {fileID: 126193660161158480, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 64.387
+      objectReference: {fileID: 0}
+    - target: {fileID: 126193660161158480, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -32.187
+      objectReference: {fileID: 0}
+    - target: {fileID: 126193661657715745, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 60.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 126193661657715745, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -30.2
+      objectReference: {fileID: 0}
     - target: {fileID: 1360766667333876055, guid: 71c126e43990139498b8761c71893200, type: 3}
       propertyPath: m_text
-      value: Hold Trigger to Speed Up
+      value: "Aim at the Map and press \r\nTRIGGER to Geocode"
       objectReference: {fileID: 0}
+    - target: {fileID: 1360766667333876055, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: m_fontSize
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 1360766667333876055, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 1360766667333876055, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 1360766667333876055, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 1360766668907528230, guid: 71c126e43990139498b8761c71893200, type: 3}
       propertyPath: m_text
-      value: Primary Button to Open Menu
+      value: 'Use the PRIMARY BUTTON
+
+        to toggle the main menu'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1360766668907528230, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: m_fontSize
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 1360766668907528230, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 1360766668907528230, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 1360766668907528230, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 3910670435412316878, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 29.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3910670435412316878, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 14.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3910670437127023551, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 33.384
+      objectReference: {fileID: 0}
+    - target: {fileID: 3910670437127023551, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 16.692
+      objectReference: {fileID: 0}
+    - target: {fileID: 4780413983531213314, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: m_text
+      value: 'Thumbstick Button: Show/Hide menu'
+      objectReference: {fileID: 0}
+    - target: {fileID: 4780413983531213314, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: m_fontSize
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 4780413983531213314, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 4780413983964027763, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: m_text
+      value: 'Thumbstick Button: Show/Hide menu'
+      objectReference: {fileID: 0}
+    - target: {fileID: 4780413983964027763, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: m_fontSize
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 4780413983964027763, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 7674790536495219090, guid: 71c126e43990139498b8761c71893200, type: 3}
       propertyPath: m_UIPressAction.m_Reference
@@ -544,6 +645,10 @@ PrefabInstance:
       propertyPath: speed
       value: 50
       objectReference: {fileID: 0}
+    - target: {fileID: 7674790538359957209, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: rightController
+      value: 
+      objectReference: {fileID: 178264904}
     - target: {fileID: 7674790538359957209, guid: 71c126e43990139498b8761c71893200, type: 3}
       propertyPath: groundLayer.m_Bits
       value: 0
@@ -1296,6 +1401,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7674790538359957212, guid: 71c126e43990139498b8761c71893200, type: 3}
   m_PrefabInstance: {fileID: 416216338}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &675574215 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1776833334209699436, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+  m_PrefabInstance: {fileID: 6455011808731382214}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 482749c8018bca147b40dd53a98bbd82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &681320081 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3017294104001733366, guid: 7c54e74494ab92a47a490a7f58dc81c1, type: 3}
@@ -1356,6 +1472,28 @@ MonoBehaviour:
       m_SingletonActionBindings: []
       m_Flags: 0
     m_Reference: {fileID: -4289430672226363583, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+--- !u!114 &1406080830 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7674790538359957209, guid: 71c126e43990139498b8761c71893200, type: 3}
+  m_PrefabInstance: {fileID: 416216338}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 650803850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c4a55a68bed43942af8dab8c07018a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1406080834 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7674790538359957215, guid: 71c126e43990139498b8761c71893200, type: 3}
+  m_PrefabInstance: {fileID: 416216338}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 650803850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0cb9aa70a22847b5925ee5f067c10a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1629020558
 GameObject:
   m_ObjectHideFlags: 1
@@ -1404,6 +1542,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1655126174 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6635771444361323431, guid: c7fe8e20114dacc4b9f3df6a32251ebe, type: 3}
+  m_PrefabInstance: {fileID: 6255145926972738896}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1655736733
 GameObject:
   m_ObjectHideFlags: 0
@@ -1452,7 +1595,7 @@ MonoBehaviour:
       ConfigurationIndex: -1
   mapElevation:
     ElevationSources:
-    - Name: 
+    - Name: Terrain3D
       Type: 0
       Source: https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer
       IsEnabled: 1
@@ -1588,6 +1731,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1406080821}
+  - {fileID: 1655126174}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1655736737
@@ -1602,6 +1746,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efba25b03c2f1b546a077deb5926b972, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backButton: {fileID: 0}
+  forwardButton: {fileID: 0}
+  slots: []
 --- !u!1 &1876771625
 GameObject:
   m_ObjectHideFlags: 0
@@ -1694,6 +1841,67 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7674790537654777642, guid: 71c126e43990139498b8761c71893200, type: 3}
   m_PrefabInstance: {fileID: 416216338}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &6255145926972738896
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1655736736}
+    m_Modifications:
+    - target: {fileID: 646340996184574195, guid: c7fe8e20114dacc4b9f3df6a32251ebe, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1406080834}
+    - target: {fileID: 6635771444361323431, guid: c7fe8e20114dacc4b9f3df6a32251ebe, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6635771444361323431, guid: c7fe8e20114dacc4b9f3df6a32251ebe, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1235
+      objectReference: {fileID: 0}
+    - target: {fileID: 6635771444361323431, guid: c7fe8e20114dacc4b9f3df6a32251ebe, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6635771444361323431, guid: c7fe8e20114dacc4b9f3df6a32251ebe, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6635771444361323431, guid: c7fe8e20114dacc4b9f3df6a32251ebe, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6635771444361323431, guid: c7fe8e20114dacc4b9f3df6a32251ebe, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6635771444361323431, guid: c7fe8e20114dacc4b9f3df6a32251ebe, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6635771444361323431, guid: c7fe8e20114dacc4b9f3df6a32251ebe, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6635771444361323431, guid: c7fe8e20114dacc4b9f3df6a32251ebe, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6635771444361323431, guid: c7fe8e20114dacc4b9f3df6a32251ebe, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6749278985941405971, guid: c7fe8e20114dacc4b9f3df6a32251ebe, type: 3}
+      propertyPath: m_Name
+      value: WeatherSystem
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c7fe8e20114dacc4b9f3df6a32251ebe, type: 3}
 --- !u!1001 &6455011808731382214
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1702,9 +1910,101 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 15888093919409141, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 386871951271410043, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: m_IsOn
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 386871951271410043, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 675574215}
+    - target: {fileID: 386871951271410043, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetWeatherTypeFromIndex
+      objectReference: {fileID: 0}
+    - target: {fileID: 898418390562199073, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: m_Alpha
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1473359988647781501, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1473359988647781501, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1473359988647781501, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1406080830}
+    - target: {fileID: 1473359988647781501, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1473359988647781501, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetMoveInLookDirection
+      objectReference: {fileID: 0}
+    - target: {fileID: 1473359988647781501, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ContinuousMovement, VRSample
+      objectReference: {fileID: 0}
+    - target: {fileID: 1473359988647781501, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 1776833334209699436, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2099542323816363192, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2859573956325220617, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3434591090685291224, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4453252185341695232, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: m_IsOn
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4453252185341695232, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 675574215}
+    - target: {fileID: 4453252185341695232, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetWeatherTypeFromIndex
+      objectReference: {fileID: 0}
+    - target: {fileID: 4473193714864938387, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5916596815978499347, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: m_IsOn
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5916596815978499347, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 675574215}
+    - target: {fileID: 5916596815978499347, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetWeatherTypeFromIndex
+      objectReference: {fileID: 0}
+    - target: {fileID: 6379121215213979319, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: m_Interactable
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6455011808052903704, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -1862,8 +2162,55 @@ PrefabInstance:
       propertyPath: toggleMenuButton.m_SingletonActionBindings.Array.data[0].m_Action
       value: Toggle Menu Button
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 1776833334209699436, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+    - target: {fileID: 6571263845776945505, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 675574215}
+    - target: {fileID: 6571263845776945505, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetWeatherTypeFromIndex
+      objectReference: {fileID: 0}
+    - target: {fileID: 7071890012609981683, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: m_Interactable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7401064209401922103, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7799961601964827800, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8361840664085881412, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8628391116080839449, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8756211862149802987, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8851782251877026553, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8952993423792173969, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: m_IsOn
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8952993423792173969, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 675574215}
+    - target: {fileID: 8952993423792173969, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetWeatherTypeFromIndex
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 5984898171483594475, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
     - {fileID: 558381711172218501, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}

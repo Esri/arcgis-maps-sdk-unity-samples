@@ -52,6 +52,11 @@ public class VRMenuManager : MonoBehaviour
 
     }
 
+    public void RealignMenu()
+    {
+        esriMenu.transform.position = VRhead.position + new Vector3(VRhead.forward.x, 0, VRhead.forward.z).normalized * spawnDistance;
+    }
+
     private void InsertLogo()
     {
         if (esriLogo)
