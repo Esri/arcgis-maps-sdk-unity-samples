@@ -458,7 +458,7 @@ PrefabInstance:
     - target: {fileID: 1912893873, guid: 71c126e43990139498b8761c71893200, type: 3}
       propertyPath: m_UIPressAction.m_Reference
       value: 
-      objectReference: {fileID: 826953841317565137, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+      objectReference: {fileID: 3279264004350380116, guid: c348712bda248c246b8c49b3db54643f, type: 3}
     - target: {fileID: 126193660161158480, guid: 71c126e43990139498b8761c71893200, type: 3}
       propertyPath: m_SizeDelta.y
       value: 64.387
@@ -556,6 +556,66 @@ PrefabInstance:
     - target: {fileID: 4780413983964027763, guid: 71c126e43990139498b8761c71893200, type: 3}
       propertyPath: m_fontSizeBase
       value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 6015672611295028342, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: toggleMenuButton.m_SingletonActionBindings.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6015672611295028342, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: toggleMenuButton.m_SingletonActionBindings.Array.data[0].m_Id
+      value: 4c0e9cc6-9460-48a8-93e2-c14924ecd385
+      objectReference: {fileID: 0}
+    - target: {fileID: 6015672611295028342, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: toggleMenuButton.m_SingletonActionBindings.Array.data[0].m_Path
+      value: <XRController>{RightHand}/{Primary2DAxisClick}
+      objectReference: {fileID: 0}
+    - target: {fileID: 6015672611295028342, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: toggleMenuButton.m_SingletonActionBindings.Array.data[0].m_Action
+      value: Toggle Menu Button
+      objectReference: {fileID: 0}
+    - target: {fileID: 6015672613010218247, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: toggleMenuButton.m_Name
+      value: Toggle Menu Button
+      objectReference: {fileID: 0}
+    - target: {fileID: 6015672613010218247, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: toggleMenuButton.m_SingletonActionBindings.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6015672613010218247, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: toggleMenuButton.m_SingletonActionBindings.Array.data[0].m_Id
+      value: 32a6158a-b031-45b5-87ce-cb6105f85546
+      objectReference: {fileID: 0}
+    - target: {fileID: 6015672613010218247, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: toggleMenuButton.m_SingletonActionBindings.Array.data[1].m_Id
+      value: 8f5fa359-ca47-481f-9a5c-dffaec3c1b7f
+      objectReference: {fileID: 0}
+    - target: {fileID: 6015672613010218247, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: toggleMenuButton.m_SingletonActionBindings.Array.data[2].m_Id
+      value: 8f5fa359-ca47-481f-9a5c-dffaec3c1b7f
+      objectReference: {fileID: 0}
+    - target: {fileID: 6015672613010218247, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: toggleMenuButton.m_SingletonActionBindings.Array.data[0].m_Path
+      value: <XRController>{LeftHand}/{Primary2DAxisClick}
+      objectReference: {fileID: 0}
+    - target: {fileID: 6015672613010218247, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: toggleMenuButton.m_SingletonActionBindings.Array.data[1].m_Path
+      value: <XRController>{LeftHand}/{ThumbrestTouch}
+      objectReference: {fileID: 0}
+    - target: {fileID: 6015672613010218247, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: toggleMenuButton.m_SingletonActionBindings.Array.data[2].m_Path
+      value: <XRController>{LeftHand}/{ThumbrestTouch}
+      objectReference: {fileID: 0}
+    - target: {fileID: 6015672613010218247, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: toggleMenuButton.m_SingletonActionBindings.Array.data[0].m_Action
+      value: Toggle Menu Button
+      objectReference: {fileID: 0}
+    - target: {fileID: 6015672613010218247, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: toggleMenuButton.m_SingletonActionBindings.Array.data[1].m_Action
+      value: Toggle Menu Button
+      objectReference: {fileID: 0}
+    - target: {fileID: 6015672613010218247, guid: 71c126e43990139498b8761c71893200, type: 3}
+      propertyPath: toggleMenuButton.m_SingletonActionBindings.Array.data[2].m_Action
+      value: Toggle Menu Button
       objectReference: {fileID: 0}
     - target: {fileID: 7674790536495219090, guid: 71c126e43990139498b8761c71893200, type: 3}
       propertyPath: m_UIPressAction.m_Reference
@@ -1617,9 +1677,51 @@ MonoBehaviour:
       y: 0
     UseOriginAsCenter: 0
   layers:
+  - Name: Esri Building E
+    Type: 7
+    Source: https://tiles.arcgis.com/tiles/V6ZHFr6zdgNZuVG0/arcgis/rest/services/Bldg_E_Color_UC2020_demo/SceneServer
+    Opacity: 1
+    IsVisible: 1
+    Authentication:
+      ConfigurationIndex: 0
+    BuildingSceneLayerFilter:
+      ActiveBuildingAttributeFilterIndex: -1
+      BuildingAttributeFilters: []
+      IsBuildingAttributeFilterEnabled: 0
+      IsBuildingDisciplinesCategoriesFilterEnabled: 0
+      EnabledCategories: 
+      EnabledDisciplines: 
+    MeshModifications:
+      IsEnabled: 1
+      MeshModifications: []
+    SpatialFeatureFilter:
+      IsEnabled: 0
+      Polygons: []
+      Type: 0
   - Name: San Fran
     Type: 1
     Source: https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/SanFrancisco_Bldgs/SceneServer
+    Opacity: 1
+    IsVisible: 1
+    Authentication:
+      ConfigurationIndex: 0
+    BuildingSceneLayerFilter:
+      ActiveBuildingAttributeFilterIndex: -1
+      BuildingAttributeFilters: []
+      IsBuildingAttributeFilterEnabled: 0
+      IsBuildingDisciplinesCategoriesFilterEnabled: 0
+      EnabledCategories: 
+      EnabledDisciplines: 
+    MeshModifications:
+      IsEnabled: 1
+      MeshModifications: []
+    SpatialFeatureFilter:
+      IsEnabled: 0
+      Polygons: []
+      Type: 0
+  - Name: New York
+    Type: 1
+    Source: https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_NewYork_17/SceneServer
     Opacity: 1
     IsVisible: 1
     Authentication:
@@ -2178,6 +2280,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7507205705372452972, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: m_Value
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 7799961601964827800, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2191,11 +2297,23 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8756211862149802987, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8756211862149802987, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8851782251877026553, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8851782251877026553, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8851782251877026553, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8952993423792173969, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
