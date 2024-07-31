@@ -31,14 +31,17 @@ public class Measure : MonoBehaviour
 
     private ArcGISMapComponent arcGISMapComponent;
     private List<GameObject> featurePoints = new List<GameObject>();
-    private Stack<GameObject> stops = new Stack<GameObject>();
+	private List<GameObject> lastToStartInterpolationPoints = new List<GameObject>();
+	private Stack<GameObject> stops = new Stack<GameObject>();
     private double3 lastRootPosition;
     private double geodeticDistance = 0;
     private LineRenderer lineRenderer;
     private ArcGISLinearUnit currentUnit = new ArcGISLinearUnit(ArcGISLinearUnitId.Miles);
     private string unitText;
+	private bool isPolylineMode = true;
 	private bool isPolygonMode = false;
-    private ArcGISAreaUnit areaUnit =new ArcGISAreaUnit(ArcGISAreaUnitId.SquareMeters);
+	private bool isEnvelopeMode = false;
+	private ArcGISAreaUnit areaUnit =new ArcGISAreaUnit(ArcGISAreaUnitId.SquareMeters);
 
 	private void Start()
     {
@@ -64,7 +67,16 @@ public class Measure : MonoBehaviour
 		}
 		if (Input.GetKey(KeyCode.LeftShift) && Input.GetMouseButtonDown(0))
         {
-            RaycastHit hit;
+			if (isPolygonMode)
+            {
+				foreach (var point in lastToStartInterpolationPoints)
+				{
+					Destroy(point);
+					continue;
+				}
+				lastToStartInterpolationPoints.Clear();
+			}
+			RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             if (Physics.Raycast(ray, out hit))
@@ -96,49 +108,42 @@ public class Measure : MonoBehaviour
 
                 // Add this point to stops and also to feature points where stop is user-drawed, and feature points is a collection of user-drawed and interpolated.
                 stops.Push(lineMarker);
-                RenderLine(ref featurePoints);
-                RebaseLine();
+                
 
 				if (isPolygonMode)
 				{
-				//	if (polygonPoints.Count > 2)
+					//	if (polygonPoints.Count > 2)
 					//{
-                        CreateandCalculatePolygon();
+                    Interpolate(lineMarker,featurePoints[0], lastToStartInterpolationPoints);
+                    CreateandCalculatePolygon();           
 					//}
 				}
+
+				RenderLine(ref featurePoints);
+				RebaseLine();
 			}
         }
     }
 	private void CreateandCalculatePolygon()
 	{
-		var spatialReference = new ArcGISSpatialReference(3857); 
+		var spatialReference = new ArcGISSpatialReference(3857);
 		var polygonBuilder = new ArcGISPolygonBuilder(spatialReference);
 
-		// Use a temporary list to store the points in the correct order
-		var stopsList = new List<GameObject>(stops);
-
-		foreach (var stop in stopsList)
+		foreach (var stop in stops)
 		{
 			var location = stop.GetComponent<ArcGISLocationComponent>().Position;
 			polygonBuilder.AddPoint(location);
 		}
 
-		// Close the polygon by adding the first point at the end
-		var firstStop = stopsList[stopsList.Count - 1].GetComponent<ArcGISLocationComponent>().Position;
-		polygonBuilder.AddPoint(firstStop);
-
 		var polygon = polygonBuilder.ToGeometry();
 
-		// Calculate the area
 		var area = ArcGISGeometryEngine.AreaGeodetic(polygon, areaUnit, ArcGISGeodeticCurveType.Geodesic);
 		Debug.Log($"Polygon Area: {area} square meters");
 	}
-
-
 	private void Interpolate(GameObject start, GameObject end, List<GameObject> featurePoints)
     {
 
-        float lengthOfLine = Vector3.Distance(start.transform.position, end.transform.position);
+		float lengthOfLine = Vector3.Distance(start.transform.position, end.transform.position);
         float n = Mathf.Floor(lengthOfLine / InterpolationInterval) ;
         double dx = (end.transform.position.x - start.transform.position.x) / n;
         double dy = (end.transform.position.y - start.transform.position.y) / n;
@@ -169,8 +174,8 @@ public class Measure : MonoBehaviour
         }
     }
 
-    // Set height for point transform and location component.
-    private void SetElevation(GameObject stop)
+	// Set height for point transform and location component.
+	private void SetElevation(GameObject stop)
     {
         // Start the raycast in the air at an arbitrary to ensure it is above the ground.
         var position = stop.transform.position;
@@ -187,24 +192,34 @@ public class Measure : MonoBehaviour
     {
         var allPoints = new List<Vector3>();
 
-        foreach (var stop in featurePoints)
-        {
-            if (stop.transform.position.Equals(Vector3.zero))
-            {
-                Destroy(stop);
-                continue;
-            }
-            allPoints.Add(stop.transform.position);
-        }
+		foreach (var point in featurePoints)
+		{
+			if (point.transform.position.Equals(Vector3.zero))
+			{
+				Destroy(point);
+				continue;
+			}
+			allPoints.Add(point.transform.position);
+		}
 
-        if(isPolygonMode)
+		if (isPolygonMode)
         {
+            //add the first point to line renderer so that polygon can be closed
 			allPoints.Add(allPoints[0]);
+            foreach (var point in lastToStartInterpolationPoints)
+            {
+                if (point.transform.position.Equals(Vector3.zero))
+                {
+                    Destroy(point);
+                    continue;
+                }
+                allPoints.Add(point.transform.position);
+            }
 		}
 
         lineRenderer.positionCount = allPoints.Count;
         lineRenderer.SetPositions(allPoints.ToArray());
-    }
+	}
 
     public void ClearLine()
     {
@@ -242,8 +257,21 @@ public class Measure : MonoBehaviour
             lastRootPosition = rootPosition;
         }
     }
+	public void SetPolylineMode()
+	{
+		isPolylineMode = true;
+	}
 
-    private void UnitChanged()
+	public void SetPolygonMode()
+	{
+		isPolygonMode = true;
+	}
+	public void SetEnvelopeMode()
+	{
+		isEnvelopeMode = true;
+	}
+
+	private void UnitChanged()
     {
         var newLinearUnit = new ArcGISLinearUnit(Enum.Parse<ArcGISLinearUnitId>(unitText));
         geodeticDistance = currentUnit.ConvertTo(newLinearUnit, geodeticDistance);
