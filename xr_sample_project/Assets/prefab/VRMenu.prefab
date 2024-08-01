@@ -5215,12 +5215,12 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7834512530214340862}
         m_TargetAssemblyTypeName: LocationSelector, VRSample
-        m_MethodName: ForthSlot
-        m_Mode: 1
+        m_MethodName: TraverseSlots
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -8237,42 +8237,30 @@ MonoBehaviour:
   - {fileID: 7725970521055433073}
   - {fileID: 319091341396846651}
   spawnLocations:
-  - name: San Francisco
-    longitude: -122.4062
+  - altitude: 0
     latitude: 37.787083
-    playerSpawnX: 0
-    playerSpawnY: 250
-    playerSpawnZ: 0
-  - name: Girona, Spain
-    longitude: 2.8214
+    longitude: -122.4062
+    name: San Francisco
+  - altitude: 0
     latitude: 41.9794
-    playerSpawnX: 0
-    playerSpawnY: 250
-    playerSpawnZ: 0
-  - name: Christchurch, New Zealand
-    longitude: 172.6306
+    longitude: 2.8214
+    name: Girona, Spain
+  - altitude: 0
     latitude: -43.532
-    playerSpawnX: 0
-    playerSpawnY: 250
-    playerSpawnZ: 0
-  - name: New York
-    longitude: -74.006
+    longitude: 172.6306
+    name: Christchurch, New Zealand
+  - altitude: 0
     latitude: 40.7128
-    playerSpawnX: -331.45
-    playerSpawnY: 200
-    playerSpawnZ: 250
-  - name: Redlands
-    longitude: -117.19645
+    longitude: -74.006
+    name: New York
+  - altitude: 0
     latitude: 34.060143
-    playerSpawnX: 1000.05
-    playerSpawnY: 500
-    playerSpawnZ: 250
-  - name: Grand Canyon
-    longitude: -112.0962
+    longitude: -117.19645
+    name: Redlands
+  - altitude: 0
     latitude: 36.1018
-    playerSpawnX: 1500
-    playerSpawnY: 1300
-    playerSpawnZ: 250
+    longitude: -112.0962
+    name: Grand Canyon
 --- !u!1 &6455011808618633540
 GameObject:
   m_ObjectHideFlags: 0
@@ -10342,12 +10330,12 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7834512530214340862}
         m_TargetAssemblyTypeName: LocationSelector, VRSample
-        m_MethodName: BackSlot
-        m_Mode: 1
+        m_MethodName: TraverseSlots
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: -1
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0

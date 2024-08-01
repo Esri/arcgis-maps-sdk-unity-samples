@@ -41,6 +41,8 @@ public class LocationSelector : MonoBehaviour
     [SerializeField] private Button forwardButton;
     private GameObject menu;
     private GameObject menuManager;
+
+    private int slotIndex = 0;
     [SerializeField] private CanvasGroup[] slots;
 
     // List of coordinates to set to ArcGIS Map origin, leading to 3D city scene layers collected by Esri
@@ -48,24 +50,6 @@ public class LocationSelector : MonoBehaviour
     [SerializeField] private List<coordinates> spawnLocations;
 
     private GameObject XROrigin;
-
-    public void BackSlot()
-    {
-        backButton.interactable = false;
-        forwardButton.interactable = true;
-
-        ToggleSlot(slots[0], true);
-        ToggleSlot(slots[1], false);
-    }
-
-    public void ForthSlot()
-    {
-        backButton.interactable = true;
-        forwardButton.interactable = false;
-
-        ToggleSlot(slots[0], false);
-        ToggleSlot(slots[1], true);
-    }
 
     public void GoToLocation(int placeIndex)
     {
@@ -80,6 +64,21 @@ public class LocationSelector : MonoBehaviour
     public void GoToRandomLocation()
     {
         GoToLocation(UnityEngine.Random.Range(0, spawnLocations.Count));
+    }
+
+    public void TraverseSlots(int indexMove)
+    {
+        if (slotIndex + indexMove < 0 || slotIndex + indexMove >= slots.Length)
+        {
+            return;
+        }
+        ToggleSlot(slots[slotIndex], false);
+
+        slotIndex += indexMove;
+        ToggleSlot(slots[slotIndex], true);
+
+        backButton.interactable = slotIndex > 0;
+        forwardButton.interactable = slotIndex < slots.Length - 2;
     }
 
     private void GetLocation(int index)
