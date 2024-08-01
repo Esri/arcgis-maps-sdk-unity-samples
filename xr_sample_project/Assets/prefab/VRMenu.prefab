@@ -1113,12 +1113,12 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7834512530214340862}
         m_TargetAssemblyTypeName: LocationSelector, VRSample
-        m_MethodName: GoToGrandCanyon
-        m_Mode: 1
+        m_MethodName: GoToLocation
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 5
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -2536,9 +2536,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc74d6e90334ee942a2effc3f0541c73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sliderText: {fileID: 254640603044365870}
-  slider: {fileID: 6735383344495398768}
   continuousMovementValue: 3
+  slider: {fileID: 6735383344495398768}
+  sliderText: {fileID: 254640603044365870}
   turnTypeScript: {fileID: 6455011808456682472}
 --- !u!1 &2539884604923755310
 GameObject:
@@ -6351,12 +6351,12 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7834512530214340862}
         m_TargetAssemblyTypeName: LocationSelector, VRSample
-        m_MethodName: GoToNewYork
-        m_Mode: 1
+        m_MethodName: GoToLocation
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 3
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -7705,8 +7705,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7834512530214340862}
         m_TargetAssemblyTypeName: LocationSelector, VRSample
-        m_MethodName: GoToSanFran
-        m_Mode: 1
+        m_MethodName: GoToLocation
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -8204,8 +8204,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 409e19f36b70f1f46b0c2e5e4cf3c527, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menu: {fileID: 2047562510686169352}
   instructions: {fileID: 1099684546110518244}
+  menu: {fileID: 2047562510686169352}
 --- !u!114 &8212849917610883786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8236,6 +8236,43 @@ MonoBehaviour:
   slots:
   - {fileID: 7725970521055433073}
   - {fileID: 319091341396846651}
+  spawnLocations:
+  - name: San Francisco
+    longitude: -122.4062
+    latitude: 37.787083
+    playerSpawnX: 0
+    playerSpawnY: 250
+    playerSpawnZ: 0
+  - name: Girona, Spain
+    longitude: 2.8214
+    latitude: 41.9794
+    playerSpawnX: 0
+    playerSpawnY: 250
+    playerSpawnZ: 0
+  - name: Christchurch, New Zealand
+    longitude: 172.6306
+    latitude: -43.532
+    playerSpawnX: 0
+    playerSpawnY: 250
+    playerSpawnZ: 0
+  - name: New York
+    longitude: -74.006
+    latitude: 40.7128
+    playerSpawnX: -331.45
+    playerSpawnY: 200
+    playerSpawnZ: 250
+  - name: Redlands
+    longitude: -117.19645
+    latitude: 34.060143
+    playerSpawnX: 1000.05
+    playerSpawnY: 500
+    playerSpawnZ: 250
+  - name: Grand Canyon
+    longitude: -112.0962
+    latitude: 36.1018
+    playerSpawnX: 1500
+    playerSpawnY: 1300
+    playerSpawnZ: 250
 --- !u!1 &6455011808618633540
 GameObject:
   m_ObjectHideFlags: 0
@@ -8608,12 +8645,12 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7834512530214340862}
         m_TargetAssemblyTypeName: LocationSelector, VRSample
-        m_MethodName: GoToChristchurchNewZealand
-        m_Mode: 1
+        m_MethodName: GoToLocation
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 2
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -8743,12 +8780,12 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7834512530214340862}
         m_TargetAssemblyTypeName: LocationSelector, VRSample
-        m_MethodName: GoToSpain
-        m_Mode: 1
+        m_MethodName: GoToLocation
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -9389,7 +9426,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1da5cd76770d484488dddcad2e726859, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  VRhead: {fileID: 0}
+  currentlyTeleporting: 0
   spawnDistance: 1.5
   toggleMenuButton:
     m_Name: Toggle Menu Button
@@ -9400,7 +9437,7 @@ MonoBehaviour:
     m_Interactions: 
     m_SingletonActionBindings: []
     m_Flags: 0
-  currentlyTeleporting: 0
+  VRhead: {fileID: 0}
 --- !u!1 &6513597783379240793
 GameObject:
   m_ObjectHideFlags: 0
@@ -10883,12 +10920,12 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7834512530214340862}
         m_TargetAssemblyTypeName: LocationSelector, VRSample
-        m_MethodName: GoToRedlands
-        m_Mode: 1
+        m_MethodName: GoToLocation
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 4
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -12128,9 +12165,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc74d6e90334ee942a2effc3f0541c73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sliderText: {fileID: 959599694032566223}
-  slider: {fileID: 1367373496592944206}
   continuousMovementValue: 2
+  slider: {fileID: 1367373496592944206}
+  sliderText: {fileID: 959599694032566223}
   turnTypeScript: {fileID: 6455011808456682472}
 --- !u!1 &8746757030032662745
 GameObject:
@@ -12271,9 +12308,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc74d6e90334ee942a2effc3f0541c73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sliderText: {fileID: 8619877699444856214}
-  slider: {fileID: 7507205705372452972}
   continuousMovementValue: 0
+  slider: {fileID: 7507205705372452972}
+  sliderText: {fileID: 8619877699444856214}
   turnTypeScript: {fileID: 0}
 --- !u!1 &8967574800901473484
 GameObject:
@@ -12556,9 +12593,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc74d6e90334ee942a2effc3f0541c73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sliderText: {fileID: 764125255540320593}
-  slider: {fileID: 3043282144428106724}
   continuousMovementValue: 1
+  slider: {fileID: 3043282144428106724}
+  sliderText: {fileID: 764125255540320593}
   turnTypeScript: {fileID: 0}
 --- !u!1 &9095907886317020711
 GameObject:
