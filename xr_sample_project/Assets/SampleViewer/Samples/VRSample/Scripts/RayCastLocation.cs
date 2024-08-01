@@ -1,7 +1,12 @@
+// Copyright 2022 Esri.
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+//
+
 using Esri.ArcGISMapsSDK.Components;
 using Esri.ArcGISMapsSDK.Utils.GeoCoord;
 using Esri.GameEngine.Geometry;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,54 +20,28 @@ using UnityEngine.InputSystem;
 
 public class RayCastLocation : MonoBehaviour
 {
+    private readonly string LocationQueryURL = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode";
+
     [Header("------------Prefabs------------")]
     [SerializeField] private GameObject addressCardTemplate;
-    [SerializeField] private GameObject locationMarkerTemplate;
-    [SerializeField] private GameObject predictionRay;
+
+    private ArcGISMapComponent arcGISMapComponent;
 
     [Header("------------Variables------------")]
     [SerializeField] private float locationMarkerScale = 1;
-    //[SerializeField] private float maxRayDistance = 35;
-    [SerializeField] private InputActionProperty raycastInput;
-    //[SerializeField] private LayerMask raycastLayer;
 
+    [SerializeField] private GameObject locationMarkerTemplate;
     private Camera mainCamera;
-    private Transform raycastHand;
+    [SerializeField] private GameObject predictionRay;
     private GameObject queryLocationGO;
 
-    private ArcGISMapComponent arcGISMapComponent;
+    //[SerializeField] private LayerMask raycastLayer;
+    private Transform raycastHand;
+
+    //[SerializeField] private float maxRayDistance = 35;
+    [SerializeField] private InputActionProperty raycastInput;
+
     private string responseAddress = "";
-    private readonly string LocationQueryURL = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode";
-
-    void Start()
-    {
-        arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
-        mainCamera = Camera.main;
-        raycastHand = this.transform;
-    }
-
-    private void Update()
-    {
-        // Set Ray to only be visible when you are able to raycast
-        predictionRay.SetActive(Physics.Raycast(raycastHand.position, raycastHand.forward, out RaycastHit hit));
-
-        if (raycastInput.action.WasPressedThisFrame())
-        {
-            GetAddress();
-        }
-    }
-
-    private async void GetAddress()
-    {
-        if (Physics.Raycast(raycastHand.position, raycastHand.forward, out RaycastHit hit))
-        {
-            Vector3 direction = (hit.point - mainCamera.transform.position);
-            float distanceFromCamera = Vector3.Distance(mainCamera.transform.position, hit.point);
-            float scale = distanceFromCamera * locationMarkerScale / 5000; // Scale the marker based on its distance from camera
-            SetupQueryLocationGameObject(locationMarkerTemplate, hit.point, mainCamera.transform.rotation, new Vector3(scale, scale, scale));
-            await ReverseGeocode(HitToGeoPosition(hit));
-        }
-    }
 
     /// <summary>
     /// Return GeoPosition for an engine location hit by a raycast.
@@ -108,6 +87,38 @@ public class RayCastLocation : MonoBehaviour
             {
                 CreateAddressCard();
             }
+        }
+    }
+
+    /// <summary>
+    /// Create a visual cue for showing the address/description returned for the query.
+    /// </summary>
+    /// <param name="isAddressQuery"></param>
+    private void CreateAddressCard()
+    {
+        GameObject card = Instantiate(addressCardTemplate, queryLocationGO.transform);
+        TextMeshProUGUI t = card.GetComponentInChildren<TextMeshProUGUI>();
+
+        // Based on the type of the query set the location, rotation and scale of the text relative to the query location game object
+        float localScale = 3.5f / locationMarkerScale;
+        card.transform.localPosition = new Vector3(0, 300f / locationMarkerScale, -300f / locationMarkerScale);
+        card.transform.localScale = new Vector3(localScale, localScale, localScale);
+
+        if (t != null)
+        {
+            t.text = responseAddress;
+        }
+    }
+
+    private async void GetAddress()
+    {
+        if (Physics.Raycast(raycastHand.position, raycastHand.forward, out RaycastHit hit))
+        {
+            Vector3 direction = (hit.point - mainCamera.transform.position);
+            float distanceFromCamera = Vector3.Distance(mainCamera.transform.position, hit.point);
+            float scale = distanceFromCamera * locationMarkerScale / 5000; // Scale the marker based on its distance from camera
+            SetupQueryLocationGameObject(locationMarkerTemplate, hit.point, mainCamera.transform.rotation, new Vector3(scale, scale, scale));
+            await ReverseGeocode(HitToGeoPosition(hit));
         }
     }
 
@@ -161,24 +172,21 @@ public class RayCastLocation : MonoBehaviour
         MarkerLocComp.enabled = true;
     }
 
-    /// <summary>
-    /// Create a visual cue for showing the address/description returned for the query. 
-    /// </summary>
-    /// <param name="isAddressQuery"></param>
-    void CreateAddressCard()
+    private void Start()
     {
-        GameObject card = Instantiate(addressCardTemplate, queryLocationGO.transform);
-        TextMeshProUGUI t = card.GetComponentInChildren<TextMeshProUGUI>();
-
-        // Based on the type of the query set the location, rotation and scale of the text relative to the query location game object  
-        float localScale = 3.5f / locationMarkerScale;
-        card.transform.localPosition = new Vector3(0, 300f / locationMarkerScale, -300f / locationMarkerScale);
-        card.transform.localScale = new Vector3(localScale, localScale, localScale);
-
-        if (t != null)
-        {
-            t.text = responseAddress;
-        }
+        arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
+        mainCamera = Camera.main;
+        raycastHand = this.transform;
     }
 
+    private void Update()
+    {
+        // Set Ray to only be visible when you are able to raycast
+        predictionRay.SetActive(Physics.Raycast(raycastHand.position, raycastHand.forward, out RaycastHit hit));
+
+        if (raycastInput.action.WasPressedThisFrame())
+        {
+            GetAddress();
+        }
+    }
 }

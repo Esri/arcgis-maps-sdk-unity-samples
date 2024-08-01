@@ -1,36 +1,28 @@
+// Copyright 2022 Esri.
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+//
+
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FadeScreen : MonoBehaviour
 {
-    
     [Header("---------Dyanmic Variables---------")]
     [SerializeField] private Color fadeColor;
-    [Min(0)] [SerializeField] private float fadeDuration = 2;
+
+    [Min(0)][SerializeField] private float fadeDuration = 2;
 
     private Renderer rendererComponent;
 
     // Make Object into a Singleton
     public static FadeScreen Instance { get; private set; }
-    private void Awake()
-    {
-        // If there is an instance, and it's not me, delete myself.
 
-        if (Instance != null && Instance != this)
-        {
-            Destroy(this);
-        }
-        else
-        {
-            Instance = this;
-        }
-    }
-
-    private void Start()
+    // Nest coroutine so user can normally call Fade function outside of this script
+    public void Fade(float alphaIn, float alphaOut)
     {
-        rendererComponent = GetComponent<Renderer>();
-        FadeOut();
+        StartCoroutine(FadeRoutine(alphaIn, alphaOut));
     }
 
     public void FadeIn()
@@ -45,10 +37,24 @@ public class FadeScreen : MonoBehaviour
         Fade(0, 1);
     }
 
-    // Nest coroutine so user can normally call Fade function outside of this script
-    public void Fade(float alphaIn, float alphaOut)
+    // Helper function to retrieve private variable
+    public float GetFadeDuration()
     {
-        StartCoroutine(FadeRoutine(alphaIn, alphaOut));
+        return fadeDuration;
+    }
+
+    private void Awake()
+    {
+        // If there is an instance, and it's not me, delete myself.
+
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
     }
 
     private IEnumerator FadeRoutine(float alphaIn, float alphaOut)
@@ -61,7 +67,7 @@ public class FadeScreen : MonoBehaviour
         {
             newColor = fadeColor;
             newColor.a = Mathf.Lerp(alphaIn, alphaOut, timer / fadeDuration);
-            if(rendererComponent)
+            if (rendererComponent)
             {
                 rendererComponent.material.SetColor("_UnlitColor", newColor);
             }
@@ -78,9 +84,9 @@ public class FadeScreen : MonoBehaviour
         }
     }
 
-    // Helper function to retrieve private variable
-    public float GetFadeDuration()
+    private void Start()
     {
-        return fadeDuration;
+        rendererComponent = GetComponent<Renderer>();
+        FadeOut();
     }
 }

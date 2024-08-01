@@ -1,35 +1,92 @@
+// Copyright 2022 Esri.
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+//
+
 using System.Collections;
-using System.Collections.Generic;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.VFX;
 
 public class WeatherSystem : MonoBehaviour
 {
-    [Header("General Settings")]
-    [SerializeField] Renderer cloudRenderer;
-    [SerializeField] XROrigin player;
-    [SerializeField] Vector3 playerOffset;
     private Material cloudMaterial;
 
+    [Header("General Settings")]
+    [SerializeField] private Renderer cloudRenderer;
+
+    [SerializeField] private VisualEffect lightningEffect;
+    [SerializeField] private XROrigin player;
+    [SerializeField] private Vector3 playerOffset;
+    [SerializeField] private AudioSource rainAudio;
+
     [Header("Rainy Settings")]
-    [SerializeField] ParticleSystem rainSystem;
-    [SerializeField] AudioSource rainAudio;
+    [SerializeField] private ParticleSystem rainSystem;
+    [SerializeField] private AudioSource snowAudio;
 
     [Header("Snowy Settings")]
-    [SerializeField] ParticleSystem snowSystem;
-    [SerializeField] AudioSource snowAudio;
+    [SerializeField] private ParticleSystem snowSystem;
+    [SerializeField] private AudioSource[] thunderAudio;
 
     [Header("Thunder Settings")]
-    [SerializeField] ParticleSystem thunderRainParticles;
-    [SerializeField] VisualEffect lightningEffect;
-    Coroutine thunderStormRoutine;
-    [SerializeField] AudioSource[] thunderAudio;
-
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private ParticleSystem thunderRainParticles;
+    private Coroutine thunderStormRoutine;
+    public void SetToCloudy()
     {
-        cloudMaterial = cloudRenderer.material;
+        rainSystem.Stop();
+        snowSystem.Stop();
+        snowAudio.Stop();
+
+        EndStorm();
+
+        if (rainAudio.isPlaying) rainAudio.Stop();
+
+        cloudMaterial.SetFloat("_Cloud_size", 1000);
+        cloudMaterial.SetFloat("_Cloud_density", 1f);
+        cloudMaterial.SetFloat("_Cloud_alpha", 1);
+        cloudMaterial.SetVector("_Cloud_speed", new Vector2(0.0003f, 0));
+        cloudMaterial.SetVector("_Cloud_height", new Vector3(0, 100, 0));
+        cloudMaterial.SetColor("_Color", new Color32(255, 255, 255, 255));
+        cloudMaterial.SetColor("_Color_1", new Color32(204, 231, 255, 255));
+    }
+
+    public void SetToRainy()
+    {
+        rainSystem.Play();
+        snowSystem.Stop();
+        snowAudio.Stop();
+
+        EndStorm();
+
+        if (!rainAudio.isPlaying) rainAudio.Play();
+
+        cloudMaterial.SetFloat("_Cloud_size", 5000);
+        cloudMaterial.SetFloat("_Cloud_density", 1f);
+        cloudMaterial.SetFloat("_Cloud_alpha", 10);
+        cloudMaterial.SetVector("_Cloud_speed", new Vector2(0.00003f, 0));
+        cloudMaterial.SetVector("_Cloud_height", new Vector3(0, 100, 0));
+        cloudMaterial.SetColor("_Color", new Color32(65, 65, 65, 255));
+        cloudMaterial.SetColor("_Color_1", new Color32(161, 161, 161, 255));
+    }
+
+    public void SetToSnowy()
+    {
+        rainSystem.Stop();
+        snowSystem.Play();
+        snowAudio.Play();
+
+        EndStorm();
+
+        if (rainAudio.isPlaying) rainAudio.Stop();
+
+        cloudMaterial.SetFloat("_Cloud_size", 5000);
+        cloudMaterial.SetFloat("_Cloud_density", 1f);
+        cloudMaterial.SetFloat("_Cloud_alpha", 20);
+        cloudMaterial.SetVector("_Cloud_speed", new Vector2(0.000003f, 0));
+        cloudMaterial.SetVector("_Cloud_height", new Vector3(0, 100, 0));
+        cloudMaterial.SetColor("_Color", new Color32(224, 224, 224, 255));
+        cloudMaterial.SetColor("_Color_1", new Color32(190, 190, 190, 255));
     }
 
     public void SetToSunny()
@@ -51,60 +108,6 @@ public class WeatherSystem : MonoBehaviour
         cloudMaterial.SetColor("_Color_1", new Color32(0, 124, 233, 255));
     }
 
-    public void SetToCloudy()
-    {
-        rainSystem.Stop();
-        snowSystem.Stop();
-        snowAudio.Stop();
-
-        EndStorm();
-
-        if (rainAudio.isPlaying) rainAudio.Stop();
-
-        cloudMaterial.SetFloat("_Cloud_size", 1000);
-        cloudMaterial.SetFloat("_Cloud_density", 1f);
-        cloudMaterial.SetFloat("_Cloud_alpha", 1);
-        cloudMaterial.SetVector("_Cloud_speed", new Vector2(0.0003f, 0));
-        cloudMaterial.SetVector("_Cloud_height", new Vector3(0, 100, 0));
-        cloudMaterial.SetColor("_Color", new Color32(255, 255, 255, 255));
-        cloudMaterial.SetColor("_Color_1", new Color32(204, 231, 255, 255));
-    }
-    public void SetToRainy()
-    {
-        rainSystem.Play();
-        snowSystem.Stop();
-        snowAudio.Stop();
-
-        EndStorm();
-
-        if(!rainAudio.isPlaying) rainAudio.Play(); 
-
-        cloudMaterial.SetFloat("_Cloud_size", 5000);
-        cloudMaterial.SetFloat("_Cloud_density", 1f);
-        cloudMaterial.SetFloat("_Cloud_alpha", 10);
-        cloudMaterial.SetVector("_Cloud_speed", new Vector2(0.00003f, 0));
-        cloudMaterial.SetVector("_Cloud_height", new Vector3(0, 100, 0));
-        cloudMaterial.SetColor("_Color", new Color32(65, 65, 65, 255));
-        cloudMaterial.SetColor("_Color_1", new Color32(161, 161, 161, 255));
-    }
-    public void SetToSnowy()
-    {
-        rainSystem.Stop();
-        snowSystem.Play();
-        snowAudio.Play();
-
-        EndStorm();
-
-        if (rainAudio.isPlaying) rainAudio.Stop();
-
-        cloudMaterial.SetFloat("_Cloud_size", 5000);
-        cloudMaterial.SetFloat("_Cloud_density", 1f);
-        cloudMaterial.SetFloat("_Cloud_alpha", 20);
-        cloudMaterial.SetVector("_Cloud_speed", new Vector2(0.000003f, 0));
-        cloudMaterial.SetVector("_Cloud_height", new Vector3(0, 100, 0));
-        cloudMaterial.SetColor("_Color", new Color32(224, 224, 224, 255));
-        cloudMaterial.SetColor("_Color_1", new Color32(190, 190, 190, 255));
-    }
     public void SetToThunder()
     {
         rainSystem.Stop();
@@ -112,7 +115,6 @@ public class WeatherSystem : MonoBehaviour
         snowAudio.Stop();
 
         BeginStorm();
-
 
         cloudMaterial.SetFloat("_Cloud_size", 9000);
         cloudMaterial.SetFloat("_Cloud_density", 1f);
@@ -123,7 +125,7 @@ public class WeatherSystem : MonoBehaviour
         cloudMaterial.SetColor("_Color_1", new Color32(12, 12, 12, 255));
     }
 
-    void BeginStorm()
+    private void BeginStorm()
     {
         thunderRainParticles.Play();
         if (!rainAudio.isPlaying) rainAudio.Play();
@@ -133,7 +135,7 @@ public class WeatherSystem : MonoBehaviour
         }
     }
 
-    void EndStorm()
+    private void EndStorm()
     {
         thunderRainParticles.Stop();
         if (thunderStormRoutine != null)
@@ -144,9 +146,14 @@ public class WeatherSystem : MonoBehaviour
         lightningEffect.Stop();
     }
 
-    IEnumerator ThunderStorm()
+    // Start is called before the first frame update
+    private void Start()
     {
-        while(true)
+        cloudMaterial = cloudRenderer.material;
+    }
+    private IEnumerator ThunderStorm()
+    {
+        while (true)
         {
             yield return new WaitForSeconds(Random.Range(5f, 10f));
 
@@ -170,7 +177,7 @@ public class WeatherSystem : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         transform.position = player.transform.position + playerOffset;
     }

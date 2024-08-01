@@ -1,28 +1,52 @@
-using System.Collections;
-using System.Collections.Generic;
+// Copyright 2022 Esri.
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+//
+
 using UnityEngine;
 
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 public class VRMenuManager : MonoBehaviour
 {
-    [SerializeField] private Transform VRhead;
-    [Min(0)] [SerializeField] private float spawnDistance = 2f;
-    [SerializeField] private InputAction toggleMenuButton;
-
     [SerializeField] private bool currentlyTeleporting = false;
     private GameObject esriLogo;
     private GameObject esriMenu;
+    [Min(0)][SerializeField] private float spawnDistance = 2f;
+    [SerializeField] private InputAction toggleMenuButton;
+    [SerializeField] private Transform VRhead;
 
-    private void OnEnable()
+    public void RealignMenu()
     {
-        toggleMenuButton.Enable();
+        esriMenu.transform.position = VRhead.position + new Vector3(VRhead.forward.x, 0, VRhead.forward.z).normalized * spawnDistance;
+    }
+
+    public void SetCurrentlyTeleporting(bool isCurrentlyTeleporting)
+    {
+        currentlyTeleporting = isCurrentlyTeleporting;
+    }
+
+    private void InsertLogo()
+    {
+        if (esriLogo)
+        {
+            esriLogo.SetActive(true);
+            esriLogo.transform.position = VRhead.position + new Vector3(VRhead.forward.x, 0, VRhead.forward.z).normalized * 300;
+            esriLogo.transform.position += new Vector3(0, 100, 0);
+            esriLogo.transform.LookAt(new Vector3(VRhead.position.x, esriLogo.transform.position.y, VRhead.position.z));
+            esriLogo.transform.forward *= -1;
+        }
     }
 
     private void OnDisable()
     {
         toggleMenuButton.Disable();
+    }
+
+    private void OnEnable()
+    {
+        toggleMenuButton.Enable();
     }
 
     private void Start()
@@ -49,28 +73,5 @@ public class VRMenuManager : MonoBehaviour
             esriMenu.transform.LookAt(new Vector3(VRhead.position.x, esriMenu.transform.position.y, VRhead.position.z));
             esriMenu.transform.forward *= -1;
         }
-
-    }
-
-    public void RealignMenu()
-    {
-        esriMenu.transform.position = VRhead.position + new Vector3(VRhead.forward.x, 0, VRhead.forward.z).normalized * spawnDistance;
-    }
-
-    private void InsertLogo()
-    {
-        if (esriLogo)
-        {
-            esriLogo.SetActive(true);
-            esriLogo.transform.position = VRhead.position + new Vector3(VRhead.forward.x, 0, VRhead.forward.z).normalized * 300;
-            esriLogo.transform.position += new Vector3(0, 100, 0);
-            esriLogo.transform.LookAt(new Vector3(VRhead.position.x, esriLogo.transform.position.y, VRhead.position.z));
-            esriLogo.transform.forward *= -1;
-        }
-    }
-
-    public void SetCurrentlyTeleporting(bool isCurrentlyTeleporting)
-    {
-        currentlyTeleporting = isCurrentlyTeleporting;
     }
 }

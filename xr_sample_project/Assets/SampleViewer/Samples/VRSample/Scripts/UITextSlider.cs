@@ -1,31 +1,64 @@
-using System.Collections;
-using System.Collections.Generic;
+// Copyright 2022 Esri.
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+//
+
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+
 public class UITextSlider : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI sliderText;
-    [SerializeField] private Slider slider;
+    private CanvasGroup canvasGroup;
     [SerializeField] private int continuousMovementValue = -1;
-
+    [SerializeField] private Slider slider;
+    [SerializeField] private TextMeshProUGUI sliderText;
     [SerializeField] private SetTurnType turnTypeScript;
-    CanvasGroup canvasGroup;
-    // Start is called before the first frame update
-    void Start()
+
+    private void ChangeSliderValue(float value)
     {
-        slider.onValueChanged.AddListener(ChangeSliderValue);
+        sliderText.text = value.ToString();
+        if (continuousMovementValue >= 0)
+        {
+            ContinuousMovement continuousMovement = FindAnyObjectByType<ContinuousMovement>();
+            SetTurnType turnTypeScript = FindAnyObjectByType<SetTurnType>();
 
-        canvasGroup = GetComponent<CanvasGroup>();
+            if (continuousMovement != null)
+            {
+                switch (continuousMovementValue)
+                {
+                    case 0:
+                        continuousMovement.SetSpeed(value);
+                        break;
 
-        sliderText.text = slider.value.ToString();
+                    case 1:
+                        continuousMovement.SetVerticalSpeed(value);
+                        break;
+
+                    case 2:
+                        turnTypeScript.SetSmoothTurnSpeed(value);
+                        break;
+
+                    case 3:
+                        turnTypeScript.SetSnapTurnSpeed(value);
+                        break;
+                }
+            }
+        }
     }
 
-    private void OnEnable()
+    private void EnableSlider(bool state)
     {
-        if (continuousMovementValue > 1)
+        if (continuousMovementValue == 2)
         {
-            turnTypeScript.OnTypeChanged += EnableSlider;
+            canvasGroup.interactable = state;
+            canvasGroup.alpha = state ? 1 : 0.5f;
+        }
+        else
+        {
+            canvasGroup.interactable = !state;
+            canvasGroup.alpha = !state ? 1 : 0.5f;
         }
     }
 
@@ -37,53 +70,26 @@ public class UITextSlider : MonoBehaviour
         }
     }
 
-    void ChangeSliderValue(float value)
+    private void OnEnable()
     {
-        sliderText.text = value.ToString();
-        if(continuousMovementValue >= 0)
+        if (continuousMovementValue > 1)
         {
-            ContinuousMovement continuousMovement = FindAnyObjectByType<ContinuousMovement>();
-            SetTurnType turnTypeScript = FindAnyObjectByType<SetTurnType>();
-            
-            if(continuousMovement != null )
-            {
-                switch (continuousMovementValue)
-                {
-                    case 0:
-                        continuousMovement.SetSpeed(value);
-                        break;
-                    case 1:
-                        continuousMovement.SetVerticalSpeed(value);
-                        break;
-                    case 2:
-                        turnTypeScript.SetSmoothTurnSpeed(value);
-                        break;
-                    case 3:
-                        turnTypeScript.SetSnapTurnSpeed(value);
-                        break;
-                }
-            }
+            turnTypeScript.OnTypeChanged += EnableSlider;
         }
     }
 
-    void EnableSlider(bool state)
+    // Start is called before the first frame update
+    private void Start()
     {
-        if(continuousMovementValue == 2)
-        {
-            canvasGroup.interactable = state;
-            canvasGroup.alpha = state ? 1 : 0.5f;
-        }
-        else
-        {
-            canvasGroup.interactable = !state;
-            canvasGroup.alpha = !state ? 1 : 0.5f;
-        }
+        slider.onValueChanged.AddListener(ChangeSliderValue);
 
+        canvasGroup = GetComponent<CanvasGroup>();
+
+        sliderText.text = slider.value.ToString();
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
     }
 }

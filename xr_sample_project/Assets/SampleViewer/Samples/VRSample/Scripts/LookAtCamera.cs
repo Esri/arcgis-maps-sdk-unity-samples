@@ -1,5 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
+// Copyright 2022 Esri.
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+//
+
 using UnityEngine;
 
 public class LookAtCamera : MonoBehaviour
@@ -7,7 +11,7 @@ public class LookAtCamera : MonoBehaviour
     [Header("----------Camera Transform----------")]
     [SerializeField] private Transform target;
 
-    void Update()
+    private void Update()
     {
         transform.LookAt(target, Vector3.up);
     }
