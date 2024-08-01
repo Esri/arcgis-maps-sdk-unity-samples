@@ -12,15 +12,10 @@ public class TimeBar : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI timeText;
 
-    // Start is called before the first frame update
-    private void Start()
-    {
-    }
-
     // Update is called once per frame
     private void Update()
     {
-        if (timeText != null)
+        if (timeText)
         {
             timeText.text = DateTime.Now.ToString("M/d/yyyy h:mm");
         }

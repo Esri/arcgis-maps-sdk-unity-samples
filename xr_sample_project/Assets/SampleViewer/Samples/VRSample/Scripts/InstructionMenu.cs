@@ -29,14 +29,4 @@ public class InstructionMenu : MonoBehaviour
         instructions.gameObject.SetActive(false);
         menu.gameObject.SetActive(true);
     }
-
-    // Start is called before the first frame update
-    private void Start()
-    {
-    }
-
-    // Update is called once per frame
-    private void Update()
-    {
-    }
 }

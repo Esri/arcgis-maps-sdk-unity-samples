@@ -28,23 +28,15 @@ public class SetTurnType : MonoBehaviour
         snapTurn.turnAmount = snapSpeed;
     }
 
-    public void SetTurnTypeFromIndex(int index)
-    {
-        if (index == 0)
-        {
-            snapTurn.enabled = false;
-            continuousTurn.enabled = true;
-        }
-        else if (index == 1)
-        {
-            snapTurn.enabled = true;
-            continuousTurn.enabled = false;
-        }
-    }
-
     public void ToggleSmoothTurn(bool isSmooth)
     {
-        SetTurnTypeFromIndex(isSmooth ? 0 : 1);
+        SetTurnTypeFromIndex(isSmooth);
         OnTypeChanged(isSmooth);
+    }
+
+    private void SetTurnTypeFromIndex(bool isSmooth)
+    {
+        snapTurn.enabled = !isSmooth;
+        continuousTurn.enabled = isSmooth;
     }
 }

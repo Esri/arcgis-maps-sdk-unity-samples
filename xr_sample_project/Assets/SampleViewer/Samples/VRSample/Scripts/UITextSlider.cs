@@ -4,8 +4,8 @@
 // You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
 //
 
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class UITextSlider : MonoBehaviour
@@ -24,26 +24,23 @@ public class UITextSlider : MonoBehaviour
             ContinuousMovement continuousMovement = FindAnyObjectByType<ContinuousMovement>();
             SetTurnType turnTypeScript = FindAnyObjectByType<SetTurnType>();
 
-            if (continuousMovement != null)
+            switch (continuousMovementValue)
             {
-                switch (continuousMovementValue)
-                {
-                    case 0:
-                        continuousMovement.SetSpeed(value);
-                        break;
+                case 0:
+                    continuousMovement?.SetSpeed(value);
+                    break;
 
-                    case 1:
-                        continuousMovement.SetVerticalSpeed(value);
-                        break;
+                case 1:
+                    continuousMovement?.SetVerticalSpeed(value);
+                    break;
 
-                    case 2:
-                        turnTypeScript.SetSmoothTurnSpeed(value);
-                        break;
+                case 2:
+                    turnTypeScript?.SetSmoothTurnSpeed(value);
+                    break;
 
-                    case 3:
-                        turnTypeScript.SetSnapTurnSpeed(value);
-                        break;
-                }
+                case 3:
+                    turnTypeScript?.SetSnapTurnSpeed(value);
+                    break;
             }
         }
     }
@@ -86,10 +83,5 @@ public class UITextSlider : MonoBehaviour
         canvasGroup = GetComponent<CanvasGroup>();
 
         sliderText.text = slider.value.ToString();
-    }
-
-    // Update is called once per frame
-    private void Update()
-    {
     }
 }

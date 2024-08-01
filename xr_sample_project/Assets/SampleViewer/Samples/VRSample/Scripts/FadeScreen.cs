@@ -27,13 +27,13 @@ public class FadeScreen : MonoBehaviour
 
     public void FadeIn()
     {
-        // Fade from 100% oppacity to 0%
+        // Fade from 100% opacity to 0%
         Fade(1, 0);
     }
 
     public void FadeOut()
     {
-        // Fade from 0% oppacity to 100%
+        // Fade from 0% opacity to 100%
         Fade(0, 1);
     }
 
@@ -67,10 +67,7 @@ public class FadeScreen : MonoBehaviour
         {
             newColor = fadeColor;
             newColor.a = Mathf.Lerp(alphaIn, alphaOut, timer / fadeDuration);
-            if (rendererComponent)
-            {
-                rendererComponent.material.SetColor("_UnlitColor", newColor);
-            }
+            rendererComponent?.material.SetColor("_UnlitColor", newColor);
             timer += Time.fixedDeltaTime;
             yield return null;
         }

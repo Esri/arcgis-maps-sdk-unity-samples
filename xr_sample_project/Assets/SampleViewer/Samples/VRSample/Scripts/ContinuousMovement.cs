@@ -66,18 +66,9 @@ public class ContinuousMovement : MonoBehaviour
     {
         FollowHeadset();
 
-        Vector3 direction;
-
-        if (moveInLookDirection)
-        {
-            Quaternion headYaw = Quaternion.Euler(0, rig.Camera.transform.eulerAngles.y, 0);
-            direction = headYaw * new Vector3(leftInputAxis.x, 0, leftInputAxis.y);
-        }
-        else
-        {
-            Quaternion controllerYaw = Quaternion.Euler(0, rightController.transform.eulerAngles.y, 0);
-            direction = controllerYaw * new Vector3(leftInputAxis.x, 0, leftInputAxis.y);
-        }
+        var yawYValue = moveInLookDirection ? rig.Camera.transform.eulerAngles.y : rightController.transform.eulerAngles.y;
+        var yaw = Quaternion.Euler(0, yawYValue, 0);
+        var direction = yaw * new Vector3(leftInputAxis.x, 0, leftInputAxis.y);
 
         // Calcuate move vectors based on input actions
         Vector3 up = new Vector3(0, rightInputAxis.y, 0);

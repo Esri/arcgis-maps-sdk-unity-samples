@@ -13,35 +13,26 @@ public class Tooltip : MonoBehaviour
     [SerializeField] private InputAction toggleMenuButton;
     [SerializeField] private CanvasGroup tooltipUI;
 
-    private void EnableTooltip(bool state)
+    private void EnableTooltip(InputAction.CallbackContext context)
     {
-        tooltipUI.alpha = state ? 1 : 0;
-        tooltipUI.interactable = state;
-        tooltipUI.blocksRaycasts = state;
-        activeState = state;
+        activeState = !activeState;
+
+        tooltipUI.alpha = activeState ? 1 : 0;
+        tooltipUI.interactable = activeState;
+        tooltipUI.blocksRaycasts = activeState;
     }
 
     private void OnDisable()
     {
+        toggleMenuButton.performed -= EnableTooltip;
+
         toggleMenuButton.Disable();
     }
 
     private void OnEnable()
     {
         toggleMenuButton.Enable();
-    }
 
-    // Start is called before the first frame update
-    private void Start()
-    {
-    }
-
-    // Update is called once per frame
-    private void Update()
-    {
-        if (toggleMenuButton.triggered)
-        {
-            EnableTooltip(!activeState);
-        }
+        toggleMenuButton.performed += EnableTooltip;
     }
 }

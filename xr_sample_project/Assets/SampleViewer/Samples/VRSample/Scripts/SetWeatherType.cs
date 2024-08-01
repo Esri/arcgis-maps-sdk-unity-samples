@@ -12,35 +12,34 @@ public class SetWeatherType : MonoBehaviour
 
     public void SetWeatherTypeFromIndex(int index)
     {
-        if (index == 0) //Sunny
+        switch (index)
         {
-            weatherSystem.SetToSunny();
-        }
-        else if (index == 1) //Cloudy
-        {
-            weatherSystem.SetToCloudy();
-        }
-        else if (index == 2) //Rainy
-        {
-            weatherSystem.SetToRainy();
-        }
-        else if (index == 3) //Snowy
-        {
-            weatherSystem.SetToSnowy();
-        }
-        else if (index == 4) //Thunder
-        {
-            weatherSystem.SetToThunder();
+            case 0:
+                weatherSystem?.SetToSunny();
+                break;
+
+            case 1:
+                weatherSystem?.SetToCloudy();
+                break;
+
+            case 2:
+                weatherSystem?.SetToRainy();
+                break;
+
+            case 3:
+                weatherSystem?.SetToSnowy();
+                break;
+
+            case 4:
+                weatherSystem?.SetToThunder();
+                break;
         }
     }
 
     private void InitializeWeather()
     {
         weatherSystem = FindAnyObjectByType<WeatherSystem>();
-        if (weatherSystem)
-        {
-            SetWeatherTypeFromIndex(0);
-        }
+        SetWeatherTypeFromIndex(0);
     }
 
     private void Start()

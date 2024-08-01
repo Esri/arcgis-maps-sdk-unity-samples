@@ -48,7 +48,7 @@ public class LocationSelector : MonoBehaviour
 
     // List of coordinates to set to ArcGIS Map origin, leading to 3D city scene layers collected by Esri
     private List<coordinates> spawnLocations = new List<coordinates> {new coordinates("San Francisco", -122.4194f, 37.7749f, 0f, 150f, 0f), new coordinates("Girona, Spain", 2.8214f, 41.983f, 38f, 200f, 150f),
-    new coordinates("Christchurch, New Zealand", 172.64f, -43.534f, -331.45f, 40.8f, 542.1f), new coordinates("New York", -74.006f, 40.7128f, -331.45f, 200f, 250.0f), new coordinates("Redlands", -117.196453f, 34.060143f, 1000.05f, 500f, 250.0f),
+        new coordinates("Christchurch, New Zealand", 172.64f, -43.534f, -331.45f, 40.8f, 542.1f), new coordinates("New York", -74.006f, 40.7128f, -331.45f, 200f, 250.0f), new coordinates("Redlands", -117.196453f, 34.060143f, 1000.05f, 500f, 250.0f),
         new coordinates("Grand Canyon", -112.0962f, 36.1018f, 1500.0f, 1300f, 250.0f)};
 
     private GameObject XROrigin;
