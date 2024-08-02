@@ -192,7 +192,17 @@ public class Measure : MonoBehaviour
 		var bottomRightMarker = Instantiate(LineMarker, bottomRight, Quaternion.identity, arcGISMapComponent.transform);
 		var topLeftMarker = Instantiate(LineMarker, topLeft, Quaternion.identity, arcGISMapComponent.transform);
 		var topRightMarker = Instantiate(LineMarker, topRight, Quaternion.identity, arcGISMapComponent.transform);
-		
+
+		Debug.Log("top left:"+bottomLeftMarker.transform.position.y);
+
+		bottomLeftMarker.GetComponent<ArcGISLocationComponent>().enabled = true;
+		bottomRightMarker.GetComponent<ArcGISLocationComponent>().enabled = true;
+		topLeftMarker.GetComponent<ArcGISLocationComponent>().enabled = true;
+		topRightMarker.GetComponent<ArcGISLocationComponent>().enabled = true;
+
+		bottomLeftMarker.GetComponent<ArcGISLocationComponent>().SurfacePlacementMode
+
+
 		SetElevation(bottomLeftMarker);
 		SetElevation(bottomRightMarker);
 		SetElevation(topLeftMarker);
@@ -260,7 +270,6 @@ public class Measure : MonoBehaviour
         {
             var location = stop.GetComponent<ArcGISLocationComponent>();
             location.Position = arcGISMapComponent.EngineToGeographic(hitInfo.point);
-			stop.transform.position = new Vector3(hitInfo.point.x, hitInfo.point.y+2000, hitInfo.point.z); 
         }
     }
 
