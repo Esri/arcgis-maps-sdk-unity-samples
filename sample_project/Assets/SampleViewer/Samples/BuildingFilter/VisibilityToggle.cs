@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,9 +16,8 @@ public class DisciplineButton : MonoBehaviour
     private BuildingFilter filter;
     private float originalHeight;
 
-
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         filter = FindObjectOfType<BuildingFilter>();
         contentBoxes = FindObjectOfType<ContentBoxes>();
@@ -69,7 +65,6 @@ public class DisciplineButton : MonoBehaviour
                         childToggle.isOn = true;
                     }
                 }
-
             }
             else
             {
@@ -101,7 +96,7 @@ public class DisciplineButton : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
     }
 }

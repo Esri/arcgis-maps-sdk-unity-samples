@@ -1,9 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.PlayerSettings;
 
 public class ContentBoxes : MonoBehaviour
 {
@@ -16,20 +14,19 @@ public class ContentBoxes : MonoBehaviour
     [SerializeField] private RectTransform ScrollContent;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         filter = FindObjectOfType<BuildingFilter>();
         AddDisciplines(filter.DisciplineCategoryData);
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
     }
 
     public void AddDisciplines(List<Discipline> data)
     {
-
         // Clear existing content
         foreach (Transform child in contentTransform)
         {
@@ -63,9 +60,7 @@ public class ContentBoxes : MonoBehaviour
             LayoutRebuilder.ForceRebuildLayoutImmediate(ScrollContent);
             ScrollContent.GetComponentInParent<ScrollRect>().verticalNormalizedPosition = 1f;
         }
-
     }
-
 
     public void RemoveDisciplines()
     {
@@ -74,5 +69,4 @@ public class ContentBoxes : MonoBehaviour
             Destroy(item);
         }
     }
-
 }

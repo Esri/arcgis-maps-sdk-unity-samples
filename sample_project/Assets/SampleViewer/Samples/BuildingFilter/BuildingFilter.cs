@@ -10,6 +10,7 @@ using TMPro;
 using System;
 using System.Linq;
 using Esri.GameEngine;
+
 public class BuildingFilter : MonoBehaviour
 {
     [SerializeField] private Button addNewBSL;
@@ -39,18 +40,15 @@ public class BuildingFilter : MonoBehaviour
     private BuildingStatistics buildingStatistics = new BuildingStatistics();
     public List<Discipline> DisciplineCategoryData = new List<Discipline>();
 
-
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-
         InitializeBuildingSceneLayer();
 
         disciplineToggle.onValueChanged.AddListener(delegate (bool active)
         {
             if (buildingSceneLayer.LoadStatus != ArcGISLoadStatus.NotLoaded)
             {
-
                 disciplineToggle.isOn = active;
                 interfaceObject.SetActive(active);
                 contentBoxes = FindObjectOfType<ContentBoxes>();
@@ -65,21 +63,15 @@ public class BuildingFilter : MonoBehaviour
                     disciplineToggle.GetComponent<Image>().sprite = hiddenSprite;
                 }
             }
-
-
-
-
         });
         addNewBSL.onClick.AddListener(delegate
         {
             String URL = serviceURL.text.ToString();
 
             NewBuildingSceneLayer(URL);
-
         });
         trashButton.onClick.AddListener(delegate
         {
-
             levelText.SetText("-");
             if (int.TryParse(phaseText.text, out phaseNumber))
             {
@@ -88,7 +80,6 @@ public class BuildingFilter : MonoBehaviour
         });
         leftLevel.onClick.AddListener(delegate
         {
-
             if (!int.TryParse(levelText.text, out levelNumber))
             {
                 // If parsing fails (e.g., because the text is a dash), set levelNumber to max
@@ -98,9 +89,7 @@ public class BuildingFilter : MonoBehaviour
                 {
                     GenerateWhereClause(levelNumber, phaseNumber, false, false);
                 }
-
             }
-
             else if (levelNumber > 0)
             {
                 --levelNumber;
@@ -114,7 +103,6 @@ public class BuildingFilter : MonoBehaviour
 
         rightLevel.onClick.AddListener(delegate
         {
-
             if (!int.TryParse(levelText.text, out levelNumber))
             {
                 levelNumber = buildingStatistics.bldgLevelMax;
@@ -166,11 +154,13 @@ public class BuildingFilter : MonoBehaviour
             phaseSlider.value = Mathf.Clamp(phaseSlider.value + buildingStatistics.stepSize, 0f, 1f);
         });
     }
+
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
     }
-    void InitializeBuildingSceneLayer()
+
+    private void InitializeBuildingSceneLayer()
     {
         arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
         if (arcGISMapComponent != null)
@@ -185,17 +175,17 @@ public class BuildingFilter : MonoBehaviour
             }
         }
     }
-    void NewBuildingSceneLayer(String source)
+
+    private void NewBuildingSceneLayer(String source)
     {
         var newLayer = new Esri.GameEngine.Layers.ArcGISBuildingSceneLayer(source, "UserBSL", 1.0f, true, "");
         var solidDef = new ArcGISSolidBuildingFilterDefinition("", "");
         var filter = new ArcGISBuildingAttributeFilter("Filter", "", solidDef);
         arcGISMapComponent.Map.Layers.Add(newLayer);
         StartCoroutine(Delay(5, false, newLayer, solidDef, filter));
-
-
     }
-    IEnumerator Delay(int time, bool isAdded, ArcGISBuildingSceneLayer newLayer, ArcGISSolidBuildingFilterDefinition solidDef, ArcGISBuildingAttributeFilter filter)
+
+    private IEnumerator Delay(int time, bool isAdded, ArcGISBuildingSceneLayer newLayer, ArcGISSolidBuildingFilterDefinition solidDef, ArcGISBuildingAttributeFilter filter)
     {
         loadingText.gameObject.SetActive(true);
         yield return new WaitForSeconds(time);
@@ -251,11 +241,9 @@ public class BuildingFilter : MonoBehaviour
                 GenerateWhereClause(buildingStatistics.bldgLevelMax, buildingStatistics.createdPhaseMax, true, true);
                 break;
         }
-
-
     }
 
-    String GetLoadStatus()
+    private String GetLoadStatus()
     {
         if (buildingSceneLayer == null)
         {
@@ -280,7 +268,8 @@ public class BuildingFilter : MonoBehaviour
             return "Failed";
         }
     }
-    void AddDisciplineCategoryData()
+
+    private void AddDisciplineCategoryData()
     {
         DisciplineCategoryData.Clear();
         if (buildingSceneLayer != null)
@@ -326,7 +315,7 @@ public class BuildingFilter : MonoBehaviour
             .ToList();
     }
 
-    void GetStatistics()
+    private void GetStatistics()
     {
         if (!buildingSceneLayer) { return; }
         var data = buildingSceneLayer.FetchStatisticsAsync();
@@ -390,6 +379,7 @@ public class BuildingFilter : MonoBehaviour
             buildingStatistics.stepSize = 1;
         }
     }
+
     public void PopulateSublayerMaps(string option, bool visible)
     {
         if (buildingSceneLayer != null)
@@ -450,7 +440,6 @@ public class BuildingFilter : MonoBehaviour
         if (!clearLevel)
         {
             WhereClause = string.Format("{0} and {1}", BuildingLevelClause, ConstructionPhaseClause);
-
         }
         if (noLevel)
         {
@@ -462,15 +451,18 @@ public class BuildingFilter : MonoBehaviour
         buildingSceneLayer.ActiveBuildingAttributeFilter = Filter;
     }
 }
+
 public class Discipline
 {
     public string Name;
     public List<Category> Categories = new List<Category>();
 }
+
 public class Category
 {
     public string Name;
 }
+
 public class BuildingStatistics
 {
     public int bldgLevelMin;
