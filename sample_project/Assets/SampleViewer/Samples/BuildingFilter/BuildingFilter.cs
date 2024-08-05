@@ -1,15 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Esri.ArcGISMapsSDK.Components;
-using Esri.Unity;
+using Esri.GameEngine;
 using Esri.GameEngine.Layers;
 using Esri.GameEngine.Layers.BuildingScene;
-using UnityEngine.UI;
-using TMPro;
+using Esri.Unity;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
-using Esri.GameEngine;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class BuildingFilter : MonoBehaviour
 {
@@ -272,42 +272,45 @@ public class BuildingFilter : MonoBehaviour
     private void AddDisciplineCategoryData()
     {
         DisciplineCategoryData.Clear();
-        if (buildingSceneLayer != null)
+        if (buildingSceneLayer == null) return;
+
+        var firstLayers = buildingSceneLayer.Sublayers;
+        for (ulong i = 0; i < firstLayers.GetSize(); i++)
         {
-            var firstLayers = buildingSceneLayer.Sublayers;
-            for (ulong i = 0; i < firstLayers.GetSize(); i++)
+            if (firstLayers.At(i).Name != "Full Model") continue;
+
+            var secondLayers = firstLayers.At(i).Sublayers;
+            for (ulong j = 0; j < secondLayers.GetSize(); j++)
             {
-                if (firstLayers.At(i).Name == "Full Model")
+                secondLayers.At(j).IsVisible = true;
+                Discipline newDiscipline = new Discipline
                 {
-                    var secondLayers = firstLayers.At(i).Sublayers;
-                    for (ulong j = 0; j < secondLayers.GetSize(); j++)
+                    Name = secondLayers.At(j).Name
+                };
+
+                var thirdLayers = secondLayers.At(j).Sublayers;
+                for (ulong k = 0; k < thirdLayers.GetSize(); k++)
+                {
+                    thirdLayers.At(k).IsVisible = true;
+                    Category subCategory = new Category
                     {
-                        secondLayers.At(j).IsVisible = true;
-                        Discipline newDiscipline = new Discipline();
-                        newDiscipline.Name = secondLayers.At(j).Name;
-                        var thirdLayers = secondLayers.At(j).Sublayers;
-                        for (ulong k = 0; k < thirdLayers.GetSize(); k++)
-                        {
-                            thirdLayers.At(k).IsVisible = true;
-                            Category subCategory = new Category();
-                            subCategory.Name = thirdLayers.At(k).Name;
-                            newDiscipline.Categories.Add(subCategory);
-                        }
-                        DisciplineCategoryData.Add(newDiscipline);
-                    }
+                        Name = thirdLayers.At(k).Name
+                    };
+                    newDiscipline.Categories.Add(subCategory);
                 }
+                DisciplineCategoryData.Add(newDiscipline);
             }
         }
 
         // Define the order
         Dictionary<string, int> DisciplineOrder = new Dictionary<string, int>
-        {
-            { "Architectural", 0 },
-            { "Structural", 1 },
-            { "Mechanical", 2 },
-            { "Electrical", 3 },
-            { "Piping", 4 }
-        };
+    {
+        { "Architectural", 0 },
+        { "Structural", 1 },
+        { "Mechanical", 2 },
+        { "Electrical", 3 },
+        { "Piping", 4 }
+    };
 
         // Order the disciplines by the predefined order
         DisciplineCategoryData = DisciplineCategoryData
@@ -382,30 +385,29 @@ public class BuildingFilter : MonoBehaviour
 
     public void PopulateSublayerMaps(string option, bool visible)
     {
-        if (buildingSceneLayer != null)
+        if (buildingSceneLayer == null) return;
+
+        var firstLayers = buildingSceneLayer.Sublayers;
+        for (ulong i = 0; i < firstLayers.GetSize(); i++)
         {
-            var firstLayers = buildingSceneLayer.Sublayers;
-            for (ulong i = 0; i < firstLayers.GetSize(); i++)
+            if (firstLayers.At(i).Name != "Full Model") continue;
+
+            var secondLayers = firstLayers.At(i).Sublayers;
+            for (ulong j = 0; j < secondLayers.GetSize(); j++)
             {
-                if (firstLayers.At(i).Name == "Full Model")
+                if (option == secondLayers.At(j).Name)
                 {
-                    var secondLayers = firstLayers.At(i).Sublayers;
-                    for (ulong j = 0; j < secondLayers.GetSize(); j++)
+                    secondLayers.At(j).IsVisible = visible;
+                    return; // Exit the method once the option is found and visibility is set
+                }
+
+                var thirdLayers = secondLayers.At(j).Sublayers;
+                for (ulong k = 0; k < thirdLayers.GetSize(); k++)
+                {
+                    if (option == thirdLayers.At(k).Name)
                     {
-                        if (option == secondLayers.At(j).Name)
-                        {
-                            secondLayers.At(j).IsVisible = visible;
-                            break;
-                        }
-                        var thirdLayers = secondLayers.At(j).Sublayers;
-                        for (ulong k = 0; k < thirdLayers.GetSize(); k++)
-                        {
-                            if (option == thirdLayers.At(k).Name)
-                            {
-                                thirdLayers.At(k).IsVisible = visible;
-                                break;
-                            }
-                        }
+                        thirdLayers.At(k).IsVisible = visible;
+                        return; // Exit the method once the option is found and visibility is set
                     }
                 }
             }
