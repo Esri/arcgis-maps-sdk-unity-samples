@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2283.2766, g: 2467.0198, b: 3665.5005, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1028,7 +1027,7 @@ MonoBehaviour:
   priority: 0
   blendDistance: 0
   weight: 1
-  sharedProfile: {fileID: 11400000, guid: b0dc2c982ed64a5439824082b42b59a7, type: 2}
+  sharedProfile: {fileID: 11400000, guid: 1e70cbbc1b395fb428a967d13d7415d6, type: 2}
 --- !u!4 &432432461
 Transform:
   m_ObjectHideFlags: 0
@@ -5121,6 +5120,8 @@ MonoBehaviour:
     Heading: 34.78037420451341
     Pitch: 59.92151398448675
     Roll: 359.9918967179902
+  surfacePlacementMode: 0
+  surfacePlacementOffset: 0
 --- !u!114 &1823688470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5179,8 +5180,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27afbdfc83e47004e95ef7726ed4a9cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxSpeed: 2000000
-  MinSpeed: 1000
+  MaxSpeed: 200
+  MinSpeed: 100
   IgnoreUI: 0
 --- !u!1 &1862610640
 GameObject:
@@ -5308,9 +5309,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   disciplinePrefab: {fileID: 2579476032273182110, guid: a8b76a6db7048884692b96bf885ec6a9, type: 3}
   categoryPrefab: {fileID: 1977099709480561782, guid: 2e5a594f75eb7cb4b8c30d5afe52e59f, type: 3}
-  panelPrefab: {fileID: 6894974234331905329, guid: 1d055517343be284ca5bd47fe46c6b9a, type: 3}
   contentTransform: {fileID: 1997180123}
   verticalLayoutGroup: {fileID: 1997180125}
+  contentList: []
   ScrollContent: {fileID: 473311786}
 --- !u!114 &1997180125
 MonoBehaviour:
@@ -5628,7 +5629,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Profile: {fileID: 11400000, guid: b0dc2c982ed64a5439824082b42b59a7, type: 2}
-  m_StaticLightingSkyUniqueID: 4
+  m_StaticLightingSkyUniqueID: 0
   m_StaticLightingCloudsUniqueID: 0
   m_StaticLightingVolumetricClouds: 0
 --- !u!4 &2013410475
@@ -5750,13 +5751,13 @@ MonoBehaviour:
     Opacity: 1
     IsVisible: 1
     Authentication:
-      ConfigurationIndex: -1
+      ConfigurationIndex: 0
     BuildingSceneLayerFilter:
       ActiveBuildingAttributeFilterIndex: 0
       BuildingAttributeFilters:
       - Description: 
         FilterID: 
-        Name: New Filter
+        Name: Filter
         SolidFilterDefinition:
           Title: 
           WhereClause: 
@@ -5764,7 +5765,7 @@ MonoBehaviour:
       IsBuildingAttributeFilterEnabled: 1
       IsBuildingDisciplinesCategoriesFilterEnabled: 1
       EnabledCategories: 1200000000000000110000000000000010000000000000000f000000000000000e000000000000000d000000000000000c000000000000000b000000000000000a000000000000000900000000000000080000000000000007000000000000000600000000000000050000000000000004000000000000000300000000000000020000000000000001000000000000000000000000000000
-      EnabledDisciplines: 0100000003000000ffffffff00000000
+      EnabledDisciplines: 010000000300000000000000ffffffff
     MeshModifications:
       IsEnabled: 0
       MeshModifications: []
@@ -5772,37 +5773,37 @@ MonoBehaviour:
       IsEnabled: 1
       Polygons:
       - Points:
-        - x: -13046326.1973157
-          y: 4036656.308436705
-          z: 392.78045654296875
+        - x: -13046270.94567538
+          y: 4036734.215113951
+          z: 393.287841796875
           SRWkid: 3857
-        - x: -13046270.554462917
-          y: 4036657.260188414
-          z: 392.78045654296875
+        - x: -13046326.480106838
+          y: 4036734.44320233
+          z: 393.287841796875
           SRWkid: 3857
-        - x: -13046268.846943386
-          y: 4036739.3771622907
-          z: 392.78045654296875
+        - x: -13046326.455524929
+          y: 4036738.2457535993
+          z: 393.287841796875
           SRWkid: 3857
-        - x: -13046326.742252834
-          y: 4036733.990138365
-          z: 392.78045654296875
+        - x: -13046357.361179836
+          y: 4036738.1581986677
+          z: 393.287841796875
           SRWkid: 3857
-        - x: -13046326.68823672
-          y: 4036737.168605162
-          z: 392.78045654296875
+        - x: -13046359.551167019
+          y: 4036635.593592955
+          z: 393.287841796875
           SRWkid: 3857
-        - x: -13046357.668186672
-          y: 4036737.9530595075
-          z: 392.78045654296875
+        - x: -13046326.327824123
+          y: 4036634.5288651716
+          z: 393.287841796875
           SRWkid: 3857
-        - x: -13046358.764637478
-          y: 4036636.1860001814
-          z: 392.78045654296875
+        - x: -13046326.600101955
+          y: 4036656.24889691
+          z: 393.287841796875
           SRWkid: 3857
-        - x: -13046326.437565334
-          y: 4036634.3395035993
-          z: 392.78045654296875
+        - x: -13046270.922649868
+          y: 4036656.9407609235
+          z: 393.287841796875
           SRWkid: 3857
       Type: 1
   originPosition:

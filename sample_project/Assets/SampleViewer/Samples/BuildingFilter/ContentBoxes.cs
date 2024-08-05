@@ -9,10 +9,9 @@ public class ContentBoxes : MonoBehaviour
 {
     [SerializeField] private GameObject disciplinePrefab;
     [SerializeField] private GameObject categoryPrefab;
-    [SerializeField] private GameObject panelPrefab;
     [SerializeField] private Transform contentTransform;
     [SerializeField] private VerticalLayoutGroup verticalLayoutGroup;
-    private List<GameObject> contentList = new List<GameObject>();
+    public List<GameObject> contentList = new List<GameObject>();
     private BuildingFilter filter;
     [SerializeField] private RectTransform ScrollContent;
 
@@ -20,7 +19,7 @@ public class ContentBoxes : MonoBehaviour
     void Start()
     {
         filter = FindObjectOfType<BuildingFilter>();
-        AddDisciplines(filter.disciplineCategoryData);
+        AddDisciplines(filter.DisciplineCategoryData);
     }
 
     // Update is called once per frame
@@ -43,7 +42,6 @@ public class ContentBoxes : MonoBehaviour
             // Instantiate a discipline item
             GameObject disciplineItem = Instantiate(disciplinePrefab);
             disciplineItem.GetComponentInChildren<TextMeshProUGUI>().text = discipline.Name;
-            Debug.Log(discipline.Name);
             disciplineItem.transform.SetParent(verticalLayoutGroup.transform, false);
             var disciplineContent = disciplineItem.GetComponent<RectTransform>();
             contentList.Add(disciplineItem);
@@ -58,15 +56,13 @@ public class ContentBoxes : MonoBehaviour
                 categoryItem.transform.SetParent(disciplineLayout.transform, false);
                 disciplineContent.sizeDelta = new Vector2(disciplineContent.sizeDelta.x, disciplineContent.sizeDelta.y + 15);
                 ScrollContent.sizeDelta = new Vector2(ScrollContent.sizeDelta.x, ScrollContent.sizeDelta.y + 30);
-                Debug.Log(ScrollContent.sizeDelta);
                 categoryItem.GetComponentInChildren<TextMeshProUGUI>().text = category.Name;
                 contentList.Add(categoryItem);
             }
 
             LayoutRebuilder.ForceRebuildLayoutImmediate(ScrollContent);
+            ScrollContent.GetComponentInParent<ScrollRect>().verticalNormalizedPosition = 1f;
         }
-
-
 
     }
 

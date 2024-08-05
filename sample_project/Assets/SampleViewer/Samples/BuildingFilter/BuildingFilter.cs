@@ -36,8 +36,8 @@ public class BuildingFilter : MonoBehaviour
     private ContentBoxes contentBoxes;
     private int levelNumber;
     private int phaseNumber;
-    public BuildingStatistics buildingStatistics = new BuildingStatistics();
-    public List<Discipline> disciplineCategoryData = new List<Discipline>();
+    private BuildingStatistics buildingStatistics = new BuildingStatistics();
+    public List<Discipline> DisciplineCategoryData = new List<Discipline>();
 
 
     // Start is called before the first frame update
@@ -141,7 +141,6 @@ public class BuildingFilter : MonoBehaviour
             int phaseRange = buildingStatistics.createdPhaseMax - buildingStatistics.createdPhaseMin;
             int phase = Mathf.RoundToInt(value * phaseRange) + buildingStatistics.createdPhaseMin;
 
-            Debug.Log(phase);
             if (int.TryParse(levelText.text, out levelNumber))
             {
                 GenerateWhereClause(levelNumber, phase, false, false);
@@ -181,9 +180,7 @@ public class BuildingFilter : MonoBehaviour
             {
                 if (allLayers.At(i).GetType().Name == "ArcGISBuildingSceneLayer")
                 {
-                    Debug.Log(allLayers.At(i).GetType().Name);
                     buildingSceneLayer = allLayers.At(i) as ArcGISBuildingSceneLayer;
-                    Debug.Log(buildingSceneLayer.Name);
                 }
             }
         }
@@ -194,20 +191,17 @@ public class BuildingFilter : MonoBehaviour
         var solidDef = new ArcGISSolidBuildingFilterDefinition("", "");
         var filter = new ArcGISBuildingAttributeFilter("Filter", "", solidDef);
         arcGISMapComponent.Map.Layers.Add(newLayer);
-        Debug.Log("Layer Added");
         StartCoroutine(Delay(5, false, newLayer, solidDef, filter));
 
 
     }
-    IEnumerator Delay(int time, bool bIsAdded, ArcGISBuildingSceneLayer newLayer, ArcGISSolidBuildingFilterDefinition solidDef, ArcGISBuildingAttributeFilter filter)
+    IEnumerator Delay(int time, bool isAdded, ArcGISBuildingSceneLayer newLayer, ArcGISSolidBuildingFilterDefinition solidDef, ArcGISBuildingAttributeFilter filter)
     {
-        Debug.Log("Delay called");
         loadingText.gameObject.SetActive(true);
         yield return new WaitForSeconds(time);
 
-        if (!bIsAdded)
+        if (!isAdded)
         {
-            Debug.Log("Delay called 1");
             buildingSceneLayer = arcGISMapComponent.Map.Layers.Last() as ArcGISBuildingSceneLayer;
             if (buildingSceneLayer != null)
             {
@@ -217,12 +211,11 @@ public class BuildingFilter : MonoBehaviour
                     if (firstLayers.At(i).Name == "Full Model")
                     {
                         firstLayers.At(i).IsVisible = true;
-                        Debug.Log("first layer set to visible");
                     }
                     else if (firstLayers.At(i).Name == "Overview")
                     {
                         firstLayers.At(i).IsVisible = false;
-                        Debug.Log("Overview set to invisible");
+                        firstLayers.At(i).IsVisible = false;
                     }
                 }
             }
@@ -245,7 +238,7 @@ public class BuildingFilter : MonoBehaviour
                 loadingText.gameObject.SetActive(false);
                 AddDisciplineCategoryData();
                 contentBoxes.RemoveDisciplines();
-                contentBoxes.AddDisciplines(disciplineCategoryData);
+                contentBoxes.AddDisciplines(DisciplineCategoryData);
                 GetStatistics();
                 filter.SolidFilterDefinition = solidDef;
                 buildingSceneLayer.BuildingAttributeFilters.Add(filter);
@@ -259,7 +252,7 @@ public class BuildingFilter : MonoBehaviour
                 break;
         }
 
-        Debug.Log("adding to layer collection");
+
     }
 
     String GetLoadStatus()
@@ -289,7 +282,7 @@ public class BuildingFilter : MonoBehaviour
     }
     void AddDisciplineCategoryData()
     {
-        disciplineCategoryData.Clear();
+        DisciplineCategoryData.Clear();
         if (buildingSceneLayer != null)
         {
             var firstLayers = buildingSceneLayer.Sublayers;
@@ -311,7 +304,7 @@ public class BuildingFilter : MonoBehaviour
                             subCategory.Name = thirdLayers.At(k).Name;
                             newDiscipline.Categories.Add(subCategory);
                         }
-                        disciplineCategoryData.Add(newDiscipline);
+                        DisciplineCategoryData.Add(newDiscipline);
                     }
                 }
             }
@@ -328,7 +321,7 @@ public class BuildingFilter : MonoBehaviour
         };
 
         // Order the disciplines by the predefined order
-        disciplineCategoryData = disciplineCategoryData
+        DisciplineCategoryData = DisciplineCategoryData
             .OrderBy(d => DisciplineOrder.ContainsKey(d.Name) ? DisciplineOrder[d.Name] : int.MaxValue)
             .ToList();
     }
@@ -429,7 +422,7 @@ public class BuildingFilter : MonoBehaviour
         }
     }
 
-    public void GenerateWhereClause(int level, int phase, bool bClearLevel, bool bNoLevel)
+    public void GenerateWhereClause(int level, int phase, bool clearLevel, bool noLevel)
     {
         ArcGISBuildingAttributeFilter Filter = buildingSceneLayer.ActiveBuildingAttributeFilter;
         string BuildingLevels = "('" + level.ToString() + "')";
@@ -454,12 +447,12 @@ public class BuildingFilter : MonoBehaviour
         string ConstructionPhaseClause = string.Format("CreatedPhase in {0}", ConstructionPhases);
         string WhereClause = ConstructionPhaseClause;
 
-        if (!bClearLevel)
+        if (!clearLevel)
         {
             WhereClause = string.Format("{0} and {1}", BuildingLevelClause, ConstructionPhaseClause);
 
         }
-        if (bNoLevel)
+        if (noLevel)
         {
             WhereClause = ConstructionPhaseClause;
         }
@@ -467,9 +460,6 @@ public class BuildingFilter : MonoBehaviour
         Filter.SolidFilterDefinition.WhereClause = WhereClause;
 
         buildingSceneLayer.ActiveBuildingAttributeFilter = Filter;
-
-        Debug.Log(WhereClause);
-
     }
 }
 public class Discipline
