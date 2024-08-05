@@ -17,6 +17,8 @@ public class BuildingFilter : MonoBehaviour
     [SerializeField] private ArcGISLocationComponent cameraLocation;
     [SerializeField] private Toggle disciplineToggle;
     [SerializeField] private TextMeshProUGUI Denom;
+    [SerializeField] private Button disableAll;
+    [SerializeField] private Button enableAll;
     [SerializeField] private TextMeshProUGUI failedToLoadText;
     [SerializeField] private Sprite hiddenSprite;
     [SerializeField] private GameObject interfaceObject;
@@ -44,7 +46,6 @@ public class BuildingFilter : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-
         disciplineToggle.onValueChanged.AddListener(delegate (bool active)
         {
             if (initialized == false)
@@ -55,7 +56,6 @@ public class BuildingFilter : MonoBehaviour
             }
             if (buildingSceneLayer.LoadStatus != ArcGISLoadStatus.NotLoaded)
             {
-
                 disciplineToggle.isOn = active;
                 interfaceObject.SetActive(active);
                 contentBoxes = FindObjectOfType<ContentBoxes>();
@@ -76,6 +76,20 @@ public class BuildingFilter : MonoBehaviour
             String URL = serviceURL.text.ToString();
 
             NewBuildingSceneLayer(URL);
+        });
+        enableAll.onClick.AddListener(delegate
+        {
+            foreach (var item in contentBoxes.contentList)
+            {
+                item.GetComponentInChildren<Toggle>().isOn = true;
+            }
+        });
+        disableAll.onClick.AddListener(delegate
+        {
+            foreach (var item in contentBoxes.contentList)
+            {
+                item.GetComponentInChildren<Toggle>().isOn = false;
+            }
         });
         trashButton.onClick.AddListener(delegate
         {

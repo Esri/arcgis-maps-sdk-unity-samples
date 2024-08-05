@@ -9,7 +9,7 @@ public class DisciplineButton : MonoBehaviour
     [SerializeField] private Sprite expandSprite;
     [SerializeField] private Sprite hiddenSprite;
     [SerializeField] private Sprite minimizeSprite;
-    [SerializeField] private Toggle selectionToggle;
+    [SerializeField] public Toggle selectionToggle;
     [SerializeField] private VerticalLayoutGroup verticalLayoutGroup;
     [SerializeField] private Sprite visibleSprite;
     private ContentBoxes contentBoxes;
