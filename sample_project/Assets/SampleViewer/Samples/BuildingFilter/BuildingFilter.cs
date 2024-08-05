@@ -39,16 +39,23 @@ public class BuildingFilter : MonoBehaviour
     private int phaseNumber;
     private BuildingStatistics buildingStatistics = new BuildingStatistics();
     public List<Discipline> DisciplineCategoryData = new List<Discipline>();
+    private bool initialized = false;
 
     // Start is called before the first frame update
     private void Start()
     {
-        InitializeBuildingSceneLayer();
 
         disciplineToggle.onValueChanged.AddListener(delegate (bool active)
         {
+            if (initialized == false)
+            {
+                InitializeBuildingSceneLayer();
+                //change
+                initialized = true;
+            }
             if (buildingSceneLayer.LoadStatus != ArcGISLoadStatus.NotLoaded)
             {
+
                 disciplineToggle.isOn = active;
                 interfaceObject.SetActive(active);
                 contentBoxes = FindObjectOfType<ContentBoxes>();
