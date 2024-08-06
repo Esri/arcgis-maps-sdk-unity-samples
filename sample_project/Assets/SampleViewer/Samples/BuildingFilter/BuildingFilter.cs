@@ -57,7 +57,6 @@ public class BuildingFilter : MonoBehaviour
             if (initialized == false)
             {
                 InitializeBuildingSceneLayer();
-                //change
                 initialized = true;
             }
             if (buildingSceneLayer.LoadStatus != ArcGISLoadStatus.NotLoaded)
@@ -79,9 +78,7 @@ public class BuildingFilter : MonoBehaviour
         });
         addNewBSL.onClick.AddListener(delegate
         {
-            String URL = serviceURL.text.ToString();
-
-            NewBuildingSceneLayer(URL);
+            NewBuildingSceneLayer(serviceURL.text.ToString());
         });
         enableAll.onClick.AddListener(delegate
         {
@@ -182,28 +179,25 @@ public class BuildingFilter : MonoBehaviour
         });
     }
 
-    // Update is called once per frame
-    private void Update()
-    {
-    }
-
     private void InitializeBuildingSceneLayer()
     {
         arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
-        if (arcGISMapComponent != null)
+        if (arcGISMapComponent == null)
         {
-            var allLayers = arcGISMapComponent.Map.Layers;
-            for (ulong i = 0; i < allLayers.GetSize(); i++)
+            return;
+        }
+        var allLayers = arcGISMapComponent.Map.Layers;
+        for (ulong i = 0; i < allLayers.GetSize(); i++)
+        {
+            if (allLayers.At(i).GetType().Name == "ArcGISBuildingSceneLayer")
             {
-                if (allLayers.At(i).GetType().Name == "ArcGISBuildingSceneLayer")
-                {
-                    buildingSceneLayer = allLayers.At(i) as ArcGISBuildingSceneLayer;
-                }
+                buildingSceneLayer = allLayers.At(i) as ArcGISBuildingSceneLayer;
+                break;
             }
         }
     }
 
-    private void NewBuildingSceneLayer(String source)
+    private void NewBuildingSceneLayer(string source)
     {
         var newLayer = new Esri.GameEngine.Layers.ArcGISBuildingSceneLayer(source, "UserBSL", 1.0f, true, "");
         var solidDef = new ArcGISSolidBuildingFilterDefinition("", "");
@@ -232,26 +226,18 @@ public class BuildingFilter : MonoBehaviour
                     else if (firstLayers.At(i).Name == "Overview")
                     {
                         firstLayers.At(i).IsVisible = false;
-                        firstLayers.At(i).IsVisible = false;
                     }
                 }
             }
         }
 
-        switch (GetLoadStatus())
+        switch (buildingSceneLayer.LoadStatus)
         {
-            case "Loading":
+            case ArcGISLoadStatus.Loading:
                 StartCoroutine(Delay(time, true, newLayer, solidDef, filter));
                 break;
 
-            case "Failed":
-                loadingText.gameObject.SetActive(false);
-                failedToLoadText.gameObject.SetActive(true);
-                yield return new WaitForSeconds(5);
-                failedToLoadText.gameObject.SetActive(false);
-                break;
-
-            case "Loaded":
+            case ArcGISLoadStatus.Loaded:
                 loadingText.gameObject.SetActive(false);
                 AddDisciplineCategoryData();
                 contentBoxes.RemoveDisciplines();
@@ -262,37 +248,22 @@ public class BuildingFilter : MonoBehaviour
                 buildingSceneLayer.ActiveBuildingAttributeFilter = filter;
                 var layerCenter = buildingSceneLayer.Extent.Center;
                 arcGISMapComponent.OriginPosition = layerCenter;
+                yield return new WaitForSeconds(1);
                 cameraLocation.Position = layerCenter;
                 phaseText.text = buildingStatistics.createdPhaseMax.ToString();
                 trashButton.onClick.Invoke();
                 GenerateWhereClause(buildingStatistics.bldgLevelMax, buildingStatistics.createdPhaseMax, true, true);
                 break;
-        }
-    }
 
-    private String GetLoadStatus()
-    {
-        if (buildingSceneLayer == null)
-        {
-            return "Failed";
-        }
-        var loadStatus = buildingSceneLayer.LoadStatus;
-
-        if (loadStatus == ArcGISLoadStatus.Loaded)
-        {
-            return "Loaded";
-        }
-        else if (loadStatus == ArcGISLoadStatus.Loading)
-        {
-            return "Loading";
-        }
-        else
-        {
-            var index = arcGISMapComponent.Map.Layers.GetSize() - 1;
-            arcGISMapComponent.Map.Layers.Remove(index);
-            --index;
-            buildingSceneLayer = arcGISMapComponent.Map.Layers.At(index) as ArcGISBuildingSceneLayer;
-            return "Failed";
+            default:
+                var index = arcGISMapComponent.Map.Layers.GetSize() - 1;
+                arcGISMapComponent.Map.Layers.Remove(index);
+                buildingSceneLayer = arcGISMapComponent.Map.Layers.Last() as ArcGISBuildingSceneLayer;
+                loadingText.gameObject.SetActive(false);
+                failedToLoadText.gameObject.SetActive(true);
+                yield return new WaitForSeconds(5);
+                failedToLoadText.gameObject.SetActive(false);
+                break;
         }
     }
 
@@ -331,13 +302,13 @@ public class BuildingFilter : MonoBehaviour
 
         // Define the order
         Dictionary<string, int> DisciplineOrder = new Dictionary<string, int>
-    {
-        { "Architectural", 0 },
-        { "Structural", 1 },
-        { "Mechanical", 2 },
-        { "Electrical", 3 },
-        { "Piping", 4 }
-    };
+        {
+            { "Architectural", 0 },
+            { "Structural", 1 },
+            { "Mechanical", 2 },
+            { "Electrical", 3 },
+            { "Piping", 4 }
+        };
 
         // Order the disciplines by the predefined order
         DisciplineCategoryData = DisciplineCategoryData
@@ -353,7 +324,8 @@ public class BuildingFilter : MonoBehaviour
         var stats = data.Get();
         stats.TryGetValue("BldgLevel", out var count);
         var bldgLevelMostFrequentValuesCollection = count.MostFrequentValues;
-        List<int> bldgLevelValues = new List<int>();
+        var bldgLevelValues = new List<int>();
+
         // Process BldgLevel statistics
         for (ulong i = 0; i < bldgLevelMostFrequentValuesCollection.GetSize(); i++)
         {
@@ -372,7 +344,7 @@ public class BuildingFilter : MonoBehaviour
         // Process CreatedPhase statistics
         stats.TryGetValue("CreatedPhase", out var phaseCount);
         var createdPhaseMostFrequentValuesCollection = phaseCount.MostFrequentValues;
-        List<int> createdPhaseValues = new List<int>();
+        var createdPhaseValues = new List<int>();
         for (ulong i = 0; i < createdPhaseMostFrequentValuesCollection.GetSize(); i++)
         {
             var valueStr = createdPhaseMostFrequentValuesCollection.At(i);
@@ -385,7 +357,7 @@ public class BuildingFilter : MonoBehaviour
         {
             buildingStatistics.createdPhaseMin = createdPhaseValues.Min();
             buildingStatistics.createdPhaseMax = createdPhaseValues.Max();
-            String denomText = "/" + buildingStatistics.createdPhaseMax.ToString();
+            var denomText = $"/{buildingStatistics.createdPhaseMax}";
             Denom.text = denomText;
         }
 
@@ -444,7 +416,7 @@ public class BuildingFilter : MonoBehaviour
     public void GenerateWhereClause(int level, int phase, bool clearLevel, bool noLevel)
     {
         ArcGISBuildingAttributeFilter Filter = buildingSceneLayer.ActiveBuildingAttributeFilter;
-        string BuildingLevels = "('" + level.ToString() + "')";
+        string BuildingLevels = $"('{level}')";
         string ConstructionPhases = "('";
 
         for (int i = buildingStatistics.createdPhaseMin; i <= phase; ++i)
@@ -462,20 +434,16 @@ public class BuildingFilter : MonoBehaviour
         }
 
         // Create the where clauses
-        string BuildingLevelClause = string.Format("BldgLevel in {0}", BuildingLevels);
-        string ConstructionPhaseClause = string.Format("CreatedPhase in {0}", ConstructionPhases);
-        string WhereClause = ConstructionPhaseClause;
-
-        if (!clearLevel)
+        string BuildingLevelClause = $"BldgLevel in {BuildingLevels}";
+        string ConstructionPhaseClause = $"CreatedPhase in {ConstructionPhases}";
+        if (!clearLevel && !noLevel)
         {
-            WhereClause = string.Format("{0} and {1}", BuildingLevelClause, ConstructionPhaseClause);
+            Filter.SolidFilterDefinition.WhereClause = $"{BuildingLevelClause} and {ConstructionPhaseClause}";
         }
-        if (noLevel)
+        else
         {
-            WhereClause = ConstructionPhaseClause;
+            Filter.SolidFilterDefinition.WhereClause = ConstructionPhaseClause;
         }
-
-        Filter.SolidFilterDefinition.WhereClause = WhereClause;
 
         buildingSceneLayer.ActiveBuildingAttributeFilter = Filter;
     }

@@ -14,21 +14,16 @@ public class ContentBoxes : MonoBehaviour
     [SerializeField] private GameObject disciplinePrefab;
     [SerializeField] private GameObject categoryPrefab;
     [SerializeField] private Transform contentTransform;
-    [SerializeField] private VerticalLayoutGroup verticalLayoutGroup;
-    public List<GameObject> contentList = new List<GameObject>();
-    private BuildingFilter filter;
     [SerializeField] private RectTransform ScrollContent;
+    [SerializeField] private VerticalLayoutGroup verticalLayoutGroup;
+    private BuildingFilter filter;
+    public List<GameObject> contentList = new List<GameObject>();
 
     // Start is called before the first frame update
     private void Start()
     {
         filter = FindObjectOfType<BuildingFilter>();
         AddDisciplines(filter.DisciplineCategoryData);
-    }
-
-    // Update is called once per frame
-    private void Update()
-    {
     }
 
     public void AddDisciplines(List<Discipline> data)

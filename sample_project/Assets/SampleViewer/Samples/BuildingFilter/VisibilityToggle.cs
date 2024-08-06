@@ -90,19 +90,7 @@ public class DisciplineButton : MonoBehaviour
     // Method to set the height of the VerticalLayoutGroup
     private void SetVerticalLayoutGroupHeight(bool active)
     {
-        RectTransform rectTransform = verticalLayoutGroup.GetComponent<RectTransform>();
-        if (active)
-        {
-            rectTransform.localScale = Vector3.one;
-        }
-        else
-        {
-            rectTransform.localScale = Vector3.zero;
-        }
-    }
-
-    // Update is called once per frame
-    private void Update()
-    {
+        var rectTransform = verticalLayoutGroup.GetComponent<RectTransform>();
+        rectTransform.localScale = active ? Vector3.one : Vector3.zero;
     }
 }
