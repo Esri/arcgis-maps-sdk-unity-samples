@@ -57,7 +57,7 @@ public class ContentBoxes : MonoBehaviour
             {
                 GameObject categoryItem = Instantiate(categoryPrefab);
                 categoryItem.transform.SetParent(disciplineLayout.transform, false);
-                disciplineContent.sizeDelta = new Vector2(disciplineContent.sizeDelta.x, disciplineContent.sizeDelta.y + 15);
+                disciplineContent.sizeDelta = new Vector2(disciplineContent.sizeDelta.x, disciplineContent.sizeDelta.y + 16);
                 ScrollContent.sizeDelta = new Vector2(ScrollContent.sizeDelta.x, ScrollContent.sizeDelta.y + 30);
                 categoryItem.GetComponentInChildren<TextMeshProUGUI>().text = category.Name;
                 contentList.Add(categoryItem);
