@@ -78,7 +78,7 @@ public class LocationSelector : MonoBehaviour
         ToggleSlot(slots[slotIndex], true);
 
         backButton.interactable = slotIndex > 0;
-        forwardButton.interactable = slotIndex < slots.Length - 2;
+        forwardButton.interactable = slotIndex < slots.Length - 1;
     }
 
     private void GetLocation(int index)
@@ -111,11 +111,9 @@ public class LocationSelector : MonoBehaviour
         menuManager.GetComponent<VRMenuManager>().SetCurrentlyTeleporting(false);
         XROrigin.GetComponent<ActivateGrabRay>().currentlyTransporting = false;
 
-        if (!menu.activeSelf)
-        {
-            menu.SetActive(true);
-        }
-        menuManager.GetComponent<VRMenuManager>().RealignMenu();
+        yield return new WaitForEndOfFrame();
+
+        menuManager.GetComponent<VRMenuManager>().ToggleMenu(true);
     }
 
     private void SetNewArcGISMapOrigin(float longitude, float latitude)
@@ -146,11 +144,8 @@ public class LocationSelector : MonoBehaviour
         XROrigin = FindObjectOfType<XROrigin>().gameObject;
         arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
         continuousMovement = XROrigin.GetComponent<ContinuousMovement>();
-        menu = GameObject.FindWithTag("VRCanvas");
-        menuManager = FindObjectOfType<VRMenuManager>().gameObject;
 
-        // Get a random set of coordinates from the list to spawn user in unique location
-        GoToRandomLocation();
+        menuManager = FindObjectOfType<VRMenuManager>().gameObject;
     }
 
     private void ToggleSlot(CanvasGroup slot, bool state)

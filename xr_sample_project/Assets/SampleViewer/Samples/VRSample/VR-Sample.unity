@@ -1467,17 +1467,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7674790538359957212, guid: 71c126e43990139498b8761c71893200, type: 3}
   m_PrefabInstance: {fileID: 416216338}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &675574215 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1776833334209699436, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-  m_PrefabInstance: {fileID: 6455011808731382214}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 482749c8018bca147b40dd53a98bbd82, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &681320081 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3017294104001733366, guid: 7c54e74494ab92a47a490a7f58dc81c1, type: 3}
@@ -1498,17 +1487,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 03a5df2202a8b96488c744be3bd0c33e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1102332985 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-  m_PrefabInstance: {fileID: 6455011808731382214}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: efba25b03c2f1b546a077deb5926b972, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &1377037080 stripped
@@ -2046,13 +2024,33 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 1406080834}
+    - target: {fileID: 646340996184574195, guid: c7fe8e20114dacc4b9f3df6a32251ebe, type: 3}
+      propertyPath: cloudHeight
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 646340996184574195, guid: c7fe8e20114dacc4b9f3df6a32251ebe, type: 3}
+      propertyPath: weatherHeight
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 646340996184574195, guid: c7fe8e20114dacc4b9f3df6a32251ebe, type: 3}
+      propertyPath: playerOffset.y
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4359715580498991179, guid: c7fe8e20114dacc4b9f3df6a32251ebe, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 10000000
+      objectReference: {fileID: 0}
+    - target: {fileID: 4359715580498991179, guid: c7fe8e20114dacc4b9f3df6a32251ebe, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 10000000
+      objectReference: {fileID: 0}
     - target: {fileID: 6635771444361323431, guid: c7fe8e20114dacc4b9f3df6a32251ebe, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6635771444361323431, guid: c7fe8e20114dacc4b9f3df6a32251ebe, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1235
+      value: 2235
       objectReference: {fileID: 0}
     - target: {fileID: 6635771444361323431, guid: c7fe8e20114dacc4b9f3df6a32251ebe, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2107,22 +2105,6 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 386871951271410043, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: m_IsOn
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 386871951271410043, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 675574215}
-    - target: {fileID: 386871951271410043, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetWeatherTypeFromIndex
-      objectReference: {fileID: 0}
-    - target: {fileID: 898418390562199073, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: m_Alpha
-      value: 0.5
-      objectReference: {fileID: 0}
     - target: {fileID: 1473359988647781501, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.size
       value: 1
@@ -2151,10 +2133,6 @@ PrefabInstance:
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
-    - target: {fileID: 1776833334209699436, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2099542323816363192, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2167,45 +2145,9 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4453252185341695232, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: m_IsOn
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4453252185341695232, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 675574215}
-    - target: {fileID: 4453252185341695232, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetWeatherTypeFromIndex
-      objectReference: {fileID: 0}
     - target: {fileID: 4473193714864938387, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5916596815978499347, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: m_IsOn
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5916596815978499347, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 675574215}
-    - target: {fileID: 5916596815978499347, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetWeatherTypeFromIndex
-      objectReference: {fileID: 0}
-    - target: {fileID: 6379121215213979319, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: m_Interactable
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6455011808052903704, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1102332985}
-    - target: {fileID: 6455011808052903704, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: GoToLocation
       objectReference: {fileID: 0}
     - target: {fileID: 6455011808300450744, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
       propertyPath: m_AnchorMax.x
@@ -2231,22 +2173,6 @@ PrefabInstance:
       propertyPath: continuousTurn
       value: 
       objectReference: {fileID: 681320081}
-    - target: {fileID: 6455011808870070565, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1102332985}
-    - target: {fileID: 6455011808870070565, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: GoToLocation
-      objectReference: {fileID: 0}
-    - target: {fileID: 6455011808901366481, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1102332985}
-    - target: {fileID: 6455011808901366481, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: GoToLocation
-      objectReference: {fileID: 0}
     - target: {fileID: 6455011809230632321, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -2271,10 +2197,6 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6455011809578124932, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 6455011809585513187, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -2286,10 +2208,6 @@ PrefabInstance:
     - target: {fileID: 6455011809585513187, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
       propertyPath: m_AnchorMin.x
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6455011809646734628, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: m_RootOrder
-      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6455011809646734628, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2367,104 +2285,12 @@ PrefabInstance:
       propertyPath: toggleMenuButton.m_SingletonActionBindings.Array.data[0].m_Action
       value: Toggle Menu Button
       objectReference: {fileID: 0}
-    - target: {fileID: 6571263845776945505, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 675574215}
-    - target: {fileID: 6571263845776945505, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetWeatherTypeFromIndex
-      objectReference: {fileID: 0}
-    - target: {fileID: 7071890012609981683, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: m_Interactable
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7401064209401922103, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7507205705372452972, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: m_Value
-      value: 50
-      objectReference: {fileID: 0}
     - target: {fileID: 7799961601964827800, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: coordinateList.Array.size
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: spawnLocations.Array.data[0].altitude
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: spawnLocations.Array.data[0].latitude
-      value: 37.78708
-      objectReference: {fileID: 0}
-    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: spawnLocations.Array.data[1].altitude
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: spawnLocations.Array.data[1].latitude
-      value: 41.9794
-      objectReference: {fileID: 0}
-    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: spawnLocations.Array.data[2].altitude
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: spawnLocations.Array.data[2].latitude
-      value: -43.532
-      objectReference: {fileID: 0}
-    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: spawnLocations.Array.data[3].altitude
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: spawnLocations.Array.data[4].altitude
-      value: 500
-      objectReference: {fileID: 0}
-    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: spawnLocations.Array.data[5].altitude
-      value: 1000
-      objectReference: {fileID: 0}
-    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: spawnLocations.Array.data[0].longitude
-      value: -122.4062
-      objectReference: {fileID: 0}
-    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: spawnLocations.Array.data[2].longitude
-      value: 172.6306
-      objectReference: {fileID: 0}
-    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: spawnLocations.Array.data[0].playerSpawnY
-      value: 250
-      objectReference: {fileID: 0}
-    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: spawnLocations.Array.data[1].playerSpawnX
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: spawnLocations.Array.data[1].playerSpawnY
-      value: 250
-      objectReference: {fileID: 0}
-    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: spawnLocations.Array.data[1].playerSpawnZ
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: spawnLocations.Array.data[2].playerSpawnX
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: spawnLocations.Array.data[2].playerSpawnY
-      value: 250
-      objectReference: {fileID: 0}
-    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: spawnLocations.Array.data[2].playerSpawnZ
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8361840664085881412, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
@@ -2494,18 +2320,6 @@ PrefabInstance:
     - target: {fileID: 8851782251877026553, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
       propertyPath: m_AnchorMin.x
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8952993423792173969, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: m_IsOn
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8952993423792173969, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 675574215}
-    - target: {fileID: 8952993423792173969, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
-      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetWeatherTypeFromIndex
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:

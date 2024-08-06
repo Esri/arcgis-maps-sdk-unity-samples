@@ -11,6 +11,8 @@ using UnityEngine.VFX;
 
 public class WeatherSystem : MonoBehaviour
 {
+    [ColorUsage(true, true)]
+
     private Material cloudMaterial;
 
     [Header("General Settings")]
@@ -18,7 +20,8 @@ public class WeatherSystem : MonoBehaviour
 
     [SerializeField] private VisualEffect lightningEffect;
     [SerializeField] private XROrigin player;
-    [SerializeField] private Vector3 playerOffset;
+    [SerializeField] private float weatherHeight;
+    [SerializeField] private float cloudHeight;
     [SerializeField] private AudioSource rainAudio;
 
     [Header("Rainy Settings")]
@@ -42,13 +45,16 @@ public class WeatherSystem : MonoBehaviour
 
         if (rainAudio.isPlaying) rainAudio.Stop();
 
-        cloudMaterial.SetFloat("_Cloud_size", 1000);
+        cloudMaterial.SetFloat("_Cloud_size", 500000f);
         cloudMaterial.SetFloat("_Cloud_density", 1f);
         cloudMaterial.SetFloat("_Cloud_alpha", 1);
-        cloudMaterial.SetVector("_Cloud_speed", new Vector2(0.0003f, 0));
+        cloudMaterial.SetVector("_Cloud_speed", new Vector2(0.0000003f, 0));
         cloudMaterial.SetVector("_Cloud_height", new Vector3(0, 100, 0));
-        cloudMaterial.SetColor("_Color", new Color32(255, 255, 255, 255));
-        cloudMaterial.SetColor("_Color_1", new Color32(204, 231, 255, 255));
+
+        float factor = Mathf.Pow(2f, 2f);
+        
+        cloudMaterial.SetColor("_Color", new Color(244, 246, 246, 246));
+        cloudMaterial.SetColor("_Color_1", new Color(135, 206, 235, 255));
     }
 
     public void SetToRainy()
@@ -61,13 +67,13 @@ public class WeatherSystem : MonoBehaviour
 
         if (!rainAudio.isPlaying) rainAudio.Play();
 
-        cloudMaterial.SetFloat("_Cloud_size", 5000);
+        cloudMaterial.SetFloat("_Cloud_size", 5);
         cloudMaterial.SetFloat("_Cloud_density", 1f);
         cloudMaterial.SetFloat("_Cloud_alpha", 10);
         cloudMaterial.SetVector("_Cloud_speed", new Vector2(0.00003f, 0));
         cloudMaterial.SetVector("_Cloud_height", new Vector3(0, 100, 0));
-        cloudMaterial.SetColor("_Color", new Color32(65, 65, 65, 255));
-        cloudMaterial.SetColor("_Color_1", new Color32(161, 161, 161, 255));
+        cloudMaterial.SetColor("_Color", new Color(65, 65, 65, 255));
+        cloudMaterial.SetColor("_Color_1", new Color(161, 161, 161, 255));
     }
 
     public void SetToSnowy()
@@ -80,13 +86,13 @@ public class WeatherSystem : MonoBehaviour
 
         if (rainAudio.isPlaying) rainAudio.Stop();
 
-        cloudMaterial.SetFloat("_Cloud_size", 5000);
+        cloudMaterial.SetFloat("_Cloud_size", 5);
         cloudMaterial.SetFloat("_Cloud_density", 1f);
         cloudMaterial.SetFloat("_Cloud_alpha", 20);
         cloudMaterial.SetVector("_Cloud_speed", new Vector2(0.000003f, 0));
         cloudMaterial.SetVector("_Cloud_height", new Vector3(0, 100, 0));
-        cloudMaterial.SetColor("_Color", new Color32(224, 224, 224, 255));
-        cloudMaterial.SetColor("_Color_1", new Color32(190, 190, 190, 255));
+        cloudMaterial.SetColor("_Color", new Color(224, 224, 224, 255));
+        cloudMaterial.SetColor("_Color_1", new Color(190, 190, 190, 255));
     }
 
     public void SetToSunny()
@@ -99,13 +105,13 @@ public class WeatherSystem : MonoBehaviour
 
         if (rainAudio.isPlaying) rainAudio.Stop();
 
-        cloudMaterial.SetFloat("_Cloud_size", 20000);
+        cloudMaterial.SetFloat("_Cloud_size", 2);
         cloudMaterial.SetFloat("_Cloud_density", 0.02f);
         cloudMaterial.SetFloat("_Cloud_alpha", 1);
         cloudMaterial.SetVector("_Cloud_speed", new Vector2(0.0003f, 0));
         cloudMaterial.SetVector("_Cloud_height", new Vector3(0, 100, 0));
-        cloudMaterial.SetColor("_Color", new Color32(255, 255, 255, 255));
-        cloudMaterial.SetColor("_Color_1", new Color32(0, 124, 233, 255));
+        cloudMaterial.SetColor("_Color", new Color(255, 255, 255, 255));
+        cloudMaterial.SetColor("_Color_1", new Color(0, 124, 233, 255));
     }
 
     public void SetToThunder()
@@ -116,13 +122,13 @@ public class WeatherSystem : MonoBehaviour
 
         BeginStorm();
 
-        cloudMaterial.SetFloat("_Cloud_size", 9000);
+        cloudMaterial.SetFloat("_Cloud_size", 9);
         cloudMaterial.SetFloat("_Cloud_density", 1f);
         cloudMaterial.SetFloat("_Cloud_alpha", 50);
         cloudMaterial.SetVector("_Cloud_speed", new Vector2(0.0001f, 0));
         cloudMaterial.SetVector("_Cloud_height", new Vector3(0, 100, 0));
-        cloudMaterial.SetColor("_Color", new Color32(22, 22, 22, 255));
-        cloudMaterial.SetColor("_Color_1", new Color32(12, 12, 12, 255));
+        cloudMaterial.SetColor("_Color", new Color(22, 22, 22, 255));
+        cloudMaterial.SetColor("_Color_1", new Color(12, 12, 12, 255));
     }
 
     private void BeginStorm()
@@ -179,6 +185,7 @@ public class WeatherSystem : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        transform.position = player.transform.position + playerOffset;
+        transform.position = player.transform.position + new Vector3(0f, weatherHeight, 0f);
+        cloudRenderer.transform.position = transform.position + new Vector3(0f, cloudHeight, 0f);
     }
 }

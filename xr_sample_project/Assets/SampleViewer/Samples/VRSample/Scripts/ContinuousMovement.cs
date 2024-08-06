@@ -32,7 +32,7 @@ public class ContinuousMovement : MonoBehaviour
     [Header("----------Input Sources----------")]
     [SerializeField] private XRNode leftInputSource;
 
-    private GameObject menu;
+    private VRMenuManager menuManager;
     [SerializeField] private bool moveInLookDirection = true;
     private XROrigin rig;
     [SerializeField] private ActionBasedController rightController;
@@ -101,7 +101,7 @@ public class ContinuousMovement : MonoBehaviour
         }
 
         // Allow the player to move only when the menu UI is not up
-        if (!menu.activeSelf)
+        if (!menuManager.menuActive)
         {
             controller.Move(direction * finalSpeed * Time.fixedDeltaTime);
             controller.Move(up * upSpeed * Time.fixedDeltaTime);
@@ -121,7 +121,7 @@ public class ContinuousMovement : MonoBehaviour
         // Cache component references
         controller = GetComponent<CharacterController>();
         rig = GetComponent<XROrigin>();
-        menu = GameObject.FindWithTag("VRCanvas");
+        menuManager = FindAnyObjectByType<VRMenuManager>();
     }
 
     private void Update()
