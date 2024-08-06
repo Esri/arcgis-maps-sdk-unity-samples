@@ -15460,8 +15460,45 @@ MonoBehaviour:
   cloudRenderer: {fileID: 3691070283824526449}
   lightningEffect: {fileID: 1201153954891429761}
   player: {fileID: 0}
-  playerOffset: {x: 0, y: 100, z: 0}
+  weatherHeight: 0
+  cloudHeight: 0
   rainAudio: {fileID: 7776083489094653154}
+  cloudSettings:
+  - cloudSize: 8000
+    cloudDensity: 10
+    cloudAlpha: 0.5
+    cloudSpeed: {x: 0.00003, y: 0}
+    cloudHeight: {x: 0, y: 1, z: 0}
+    color: {r: 0.95686275, g: 0.95686275, b: 0.95686275, a: 1}
+    color1: {r: 0.5294118, g: 0.80784315, b: 0.92156863, a: 1}
+  - cloudSize: 8000
+    cloudDensity: 6
+    cloudAlpha: 1
+    cloudSpeed: {x: 0.00003, y: 0}
+    cloudHeight: {x: 0, y: 1, z: 0}
+    color: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    color1: {r: 0.7490196, g: 0.7490196, b: 0.7490196, a: 1}
+  - cloudSize: 5
+    cloudDensity: 1
+    cloudAlpha: 10
+    cloudSpeed: {x: 0.00003, y: 0}
+    cloudHeight: {x: 0, y: 100, z: 0}
+    color: {r: 0.25490198, g: 0.25490198, b: 0.25490198, a: 1}
+    color1: {r: 0.6313726, g: 0.6313726, b: 0.6313726, a: 1}
+  - cloudSize: 5
+    cloudDensity: 1
+    cloudAlpha: 20
+    cloudSpeed: {x: 0.000003, y: 0}
+    cloudHeight: {x: 0, y: 100, z: 0}
+    color: {r: 0.8784314, g: 0.8784314, b: 0.8784314, a: 1}
+    color1: {r: 0.74509805, g: 0.74509805, b: 0.74509805, a: 1}
+  - cloudSize: 9
+    cloudDensity: 1
+    cloudAlpha: 50
+    cloudSpeed: {x: 0.0001, y: 0}
+    cloudHeight: {x: 0, y: 100, z: 0}
+    color: {r: 0.08627451, g: 0.08627451, b: 0.08627451, a: 1}
+    color1: {r: 0.047058824, g: 0.047058824, b: 0.047058824, a: 1}
   rainSystem: {fileID: 5466023708161268053}
   snowAudio: {fileID: 4110998366195162110}
   snowSystem: {fileID: 6809607897991832704}

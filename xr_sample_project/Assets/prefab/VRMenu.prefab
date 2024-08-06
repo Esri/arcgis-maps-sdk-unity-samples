@@ -3061,8 +3061,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7678874961741456812}
-        m_TargetAssemblyTypeName: InstructionMenu, VRSample
+      - m_Target: {fileID: 6455011809646734631}
+        m_TargetAssemblyTypeName: VRMenuManager, VRSample
         m_MethodName: OpenInstructions
         m_Mode: 1
         m_Arguments:
@@ -5809,8 +5809,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7678874961741456812}
-        m_TargetAssemblyTypeName: InstructionMenu, VRSample
+      - m_Target: {fileID: 6455011809646734631}
+        m_TargetAssemblyTypeName: VRMenuManager, VRSample
         m_MethodName: ReturnToMenu
         m_Mode: 1
         m_Arguments:
@@ -6620,7 +6620,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &3785451873274914184
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6657,9 +6657,9 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5807615337543364815}
   m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!1 &5913631714750996692
 GameObject:
@@ -7671,7 +7671,6 @@ GameObject:
   - component: {fileID: 6455011808456682472}
   - component: {fileID: 6455011808456682485}
   - component: {fileID: 1776833334209699436}
-  - component: {fileID: 7678874961741456812}
   - component: {fileID: 8212849917610883786}
   - component: {fileID: 7834512530214340862}
   - component: {fileID: 903225153073329046}
@@ -7807,20 +7806,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weatherSystem: {fileID: 0}
---- !u!114 &7678874961741456812
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6455011808456682475}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 409e19f36b70f1f46b0c2e5e4cf3c527, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  instructions: {fileID: 1099684546110518244}
-  menu: {fileID: 2047562510686169352}
 --- !u!114 &8212849917610883786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8883,7 +8868,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentlyTeleporting: 0
   esriLogo: {fileID: 8939962279484561044}
-  esriMenu: {fileID: 903225153073329046}
+  esriCanvas: {fileID: 903225153073329046}
+  esriMenu: {fileID: 2047562510686169352}
+  esriInstructions: {fileID: 1099684546110518244}
   spawnDistance: 1.5
   toggleMenuButton:
     m_Name: Toggle Menu Button
@@ -9301,8 +9288,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7678874961741456812}
-        m_TargetAssemblyTypeName: InstructionMenu, VRSample
+      - m_Target: {fileID: 6455011809646734631}
+        m_TargetAssemblyTypeName: VRMenuManager, VRSample
         m_MethodName: ExitMenus
         m_Mode: 1
         m_Arguments:

@@ -39,7 +39,7 @@ public class SetWeatherType : MonoBehaviour
     private void InitializeWeather()
     {
         weatherSystem = FindAnyObjectByType<WeatherSystem>();
-        SetWeatherTypeFromIndex(1);
+        SetWeatherTypeFromIndex(0);
     }
 
     private void Start()

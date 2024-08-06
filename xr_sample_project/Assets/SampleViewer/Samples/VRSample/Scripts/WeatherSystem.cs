@@ -4,37 +4,85 @@
 // You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
 //
 
+using System;
 using System.Collections;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.VFX;
 
+[Serializable]
+public struct CloudSettings
+{
+    [SerializeField] public float cloudSize;
+    [SerializeField] public float cloudDensity;
+    [SerializeField] public float cloudAlpha;
+    [SerializeField] public Vector2 cloudSpeed;
+    [SerializeField] public Vector3 cloudHeight;
+
+    [ColorUsage(true, true)]
+    [SerializeField] public Color color;
+
+    [ColorUsage(true, true)]
+    [SerializeField] public Color color1;
+
+    public CloudSettings(float size, float density, float alpha, Vector2 speed, Vector3 height, Color color, Color color1)
+    {
+        this.cloudSize = size;
+        this.cloudDensity = density;
+        this.cloudAlpha = alpha;
+        this.cloudSpeed = speed;
+        this.cloudHeight = height;
+        this.color = color;
+        this.color1 = color1;
+    }
+}
+
 public class WeatherSystem : MonoBehaviour
 {
     [ColorUsage(true, true)]
-
     private Material cloudMaterial;
 
     [Header("General Settings")]
     [SerializeField] private Renderer cloudRenderer;
 
-    [SerializeField] private VisualEffect lightningEffect;
     [SerializeField] private XROrigin player;
     [SerializeField] private float weatherHeight;
     [SerializeField] private float cloudHeight;
-    [SerializeField] private AudioSource rainAudio;
+
+    [SerializeField] private CloudSettings[] cloudSettings;
 
     [Header("Rainy Settings")]
     [SerializeField] private ParticleSystem rainSystem;
-    [SerializeField] private AudioSource snowAudio;
+
+    [SerializeField] private AudioSource rainAudio;
 
     [Header("Snowy Settings")]
     [SerializeField] private ParticleSystem snowSystem;
-    [SerializeField] private AudioSource[] thunderAudio;
+
+    [SerializeField] private AudioSource snowAudio;
 
     [Header("Thunder Settings")]
     [SerializeField] private ParticleSystem thunderRainParticles;
+
+    [SerializeField] private VisualEffect lightningEffect;
+    [SerializeField] private AudioSource[] thunderAudio;
     private Coroutine thunderStormRoutine;
+
+    private void ModifyClouds(int index)
+    {
+        if (index < 0 || index >= cloudSettings.Length)
+        {
+            return;
+        }
+        cloudMaterial.SetFloat("_Cloud_size", cloudSettings[index].cloudSize);
+        cloudMaterial.SetFloat("_Cloud_density", cloudSettings[index].cloudDensity);
+        cloudMaterial.SetFloat("_Cloud_alpha", cloudSettings[index].cloudAlpha);
+        cloudMaterial.SetVector("_Cloud_speed", cloudSettings[index].cloudSpeed);
+        cloudMaterial.SetVector("_Cloud_height", cloudSettings[index].cloudHeight);
+        cloudMaterial.SetColor("_Color", cloudSettings[index].color);
+        cloudMaterial.SetColor("_Color_1", cloudSettings[index].color1);
+    }
+
     public void SetToCloudy()
     {
         rainSystem.Stop();
@@ -45,16 +93,7 @@ public class WeatherSystem : MonoBehaviour
 
         if (rainAudio.isPlaying) rainAudio.Stop();
 
-        cloudMaterial.SetFloat("_Cloud_size", 500000f);
-        cloudMaterial.SetFloat("_Cloud_density", 1f);
-        cloudMaterial.SetFloat("_Cloud_alpha", 1);
-        cloudMaterial.SetVector("_Cloud_speed", new Vector2(0.0000003f, 0));
-        cloudMaterial.SetVector("_Cloud_height", new Vector3(0, 100, 0));
-
-        float factor = Mathf.Pow(2f, 2f);
-        
-        cloudMaterial.SetColor("_Color", new Color(244, 246, 246, 246));
-        cloudMaterial.SetColor("_Color_1", new Color(135, 206, 235, 255));
+        ModifyClouds(1);
     }
 
     public void SetToRainy()
@@ -67,13 +106,7 @@ public class WeatherSystem : MonoBehaviour
 
         if (!rainAudio.isPlaying) rainAudio.Play();
 
-        cloudMaterial.SetFloat("_Cloud_size", 5);
-        cloudMaterial.SetFloat("_Cloud_density", 1f);
-        cloudMaterial.SetFloat("_Cloud_alpha", 10);
-        cloudMaterial.SetVector("_Cloud_speed", new Vector2(0.00003f, 0));
-        cloudMaterial.SetVector("_Cloud_height", new Vector3(0, 100, 0));
-        cloudMaterial.SetColor("_Color", new Color(65, 65, 65, 255));
-        cloudMaterial.SetColor("_Color_1", new Color(161, 161, 161, 255));
+        ModifyClouds(2);
     }
 
     public void SetToSnowy()
@@ -86,13 +119,7 @@ public class WeatherSystem : MonoBehaviour
 
         if (rainAudio.isPlaying) rainAudio.Stop();
 
-        cloudMaterial.SetFloat("_Cloud_size", 5);
-        cloudMaterial.SetFloat("_Cloud_density", 1f);
-        cloudMaterial.SetFloat("_Cloud_alpha", 20);
-        cloudMaterial.SetVector("_Cloud_speed", new Vector2(0.000003f, 0));
-        cloudMaterial.SetVector("_Cloud_height", new Vector3(0, 100, 0));
-        cloudMaterial.SetColor("_Color", new Color(224, 224, 224, 255));
-        cloudMaterial.SetColor("_Color_1", new Color(190, 190, 190, 255));
+        ModifyClouds(3);
     }
 
     public void SetToSunny()
@@ -105,13 +132,7 @@ public class WeatherSystem : MonoBehaviour
 
         if (rainAudio.isPlaying) rainAudio.Stop();
 
-        cloudMaterial.SetFloat("_Cloud_size", 2);
-        cloudMaterial.SetFloat("_Cloud_density", 0.02f);
-        cloudMaterial.SetFloat("_Cloud_alpha", 1);
-        cloudMaterial.SetVector("_Cloud_speed", new Vector2(0.0003f, 0));
-        cloudMaterial.SetVector("_Cloud_height", new Vector3(0, 100, 0));
-        cloudMaterial.SetColor("_Color", new Color(255, 255, 255, 255));
-        cloudMaterial.SetColor("_Color_1", new Color(0, 124, 233, 255));
+        ModifyClouds(0);
     }
 
     public void SetToThunder()
@@ -122,13 +143,7 @@ public class WeatherSystem : MonoBehaviour
 
         BeginStorm();
 
-        cloudMaterial.SetFloat("_Cloud_size", 9);
-        cloudMaterial.SetFloat("_Cloud_density", 1f);
-        cloudMaterial.SetFloat("_Cloud_alpha", 50);
-        cloudMaterial.SetVector("_Cloud_speed", new Vector2(0.0001f, 0));
-        cloudMaterial.SetVector("_Cloud_height", new Vector3(0, 100, 0));
-        cloudMaterial.SetColor("_Color", new Color(22, 22, 22, 255));
-        cloudMaterial.SetColor("_Color_1", new Color(12, 12, 12, 255));
+        ModifyClouds(4);
     }
 
     private void BeginStorm()
@@ -157,28 +172,27 @@ public class WeatherSystem : MonoBehaviour
     {
         cloudMaterial = cloudRenderer.material;
     }
+
     private IEnumerator ThunderStorm()
     {
         while (true)
         {
-            yield return new WaitForSeconds(Random.Range(5f, 10f));
+            yield return new WaitForSeconds(UnityEngine.Random.Range(5f, 10f));
 
             lightningEffect.transform.position = player.transform.position + (player.Camera.transform.forward * 4000f) + new Vector3(0, 50f, 0);
             lightningEffect.transform.LookAt(player.Camera.transform);
 
-            cloudMaterial.SetColor("_Color", new Color32(137, 137, 137, 255));
-            cloudMaterial.SetColor("_Color_1", new Color32(171, 171, 171, 255));
+            cloudMaterial.SetColor("_Color", new Color32(245, 245, 245, 255));
 
             lightningEffect.Play();
 
             yield return new WaitForSeconds(0.5f);
 
-            cloudMaterial.SetColor("_Color", new Color32(22, 22, 22, 255));
-            cloudMaterial.SetColor("_Color_1", new Color32(12, 12, 12, 255));
+            cloudMaterial.SetColor("_Color", cloudSettings[4].color);
 
             yield return new WaitForSeconds(0.5f);
 
-            thunderAudio[Random.Range(0, thunderAudio.Length - 1)].Play();
+            thunderAudio[UnityEngine.Random.Range(0, thunderAudio.Length - 1)].Play();
         }
     }
 

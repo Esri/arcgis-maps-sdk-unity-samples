@@ -13,7 +13,9 @@ public class VRMenuManager : MonoBehaviour
 {
     [SerializeField] private bool currentlyTeleporting = false;
     [SerializeField] private CanvasGroup esriLogo;
+    [SerializeField] private CanvasGroup esriCanvas;
     [SerializeField] private CanvasGroup esriMenu;
+    [SerializeField] private CanvasGroup esriInstructions;
     public bool menuActive { get; private set; } = true;
     [Min(0)][SerializeField] private float spawnDistance = 2f;
     [SerializeField] private InputAction toggleMenuButton;
@@ -21,9 +23,9 @@ public class VRMenuManager : MonoBehaviour
 
     public void RealignMenu()
     {
-        esriMenu.transform.position = VRhead.position + new Vector3(VRhead.forward.x, 0, VRhead.forward.z).normalized * spawnDistance;
-        esriMenu.transform.LookAt(new Vector3(VRhead.position.x, esriMenu.transform.position.y, VRhead.position.z));
-        esriMenu.transform.forward *= -1;
+        esriCanvas.transform.position = VRhead.position + new Vector3(VRhead.forward.x, 0, VRhead.forward.z).normalized * spawnDistance;
+        esriCanvas.transform.LookAt(new Vector3(VRhead.position.x, esriMenu.transform.position.y, VRhead.position.z));
+        esriCanvas.transform.forward *= -1;
     }
 
     public void SetCurrentlyTeleporting(bool isCurrentlyTeleporting)
@@ -46,17 +48,36 @@ public class VRMenuManager : MonoBehaviour
         }
     }
 
-    public void ToggleMenu(bool state)
+    public void ToggleMenu(bool state, bool mainMenu = true)
     {
-        esriMenu.alpha = state ? 1 : 0;
-        esriMenu.interactable = state;
-        esriMenu.blocksRaycasts = state;
-        menuActive = state;
+        CanvasGroup group = mainMenu ? esriMenu : esriInstructions;
+        group.alpha = state ? 1 : 0;
+        group.interactable = state;
+        group.blocksRaycasts = state;
+        menuActive = esriMenu.interactable || esriInstructions.interactable;
 
         if (state)
         {
             RealignMenu();
         }
+    }
+
+    public void ExitMenus()
+    {
+        ToggleMenu(false, false);
+        ToggleMenu(false);
+    }
+
+    public void OpenInstructions()
+    {
+        ToggleMenu(true, false);
+        ToggleMenu(false);
+    }
+
+    public void ReturnToMenu()
+    {
+        ToggleMenu(false, false);
+        ToggleMenu(true);
     }
 
     private void OnDisable()
@@ -76,17 +97,25 @@ public class VRMenuManager : MonoBehaviour
 
         ToggleMenu(true);
     }
-private void Update()
+    
+    private void Update()
 {
-        if (esriMenu)
+        if (esriCanvas)
         {
             if (toggleMenuButton.triggered)
             {
-                ToggleMenu(!menuActive);
+                if(esriInstructions.interactable)
+                {
+                    ExitMenus();
+                }
+                else
+                {
+                    ToggleMenu(!menuActive);
+                }
             }
 
-            esriMenu.transform.LookAt(new Vector3(VRhead.position.x, esriMenu.transform.position.y, VRhead.position.z));
-            esriMenu.transform.forward *= -1;
+            esriCanvas.transform.LookAt(new Vector3(VRhead.position.x, esriMenu.transform.position.y, VRhead.position.z));
+            esriCanvas.transform.forward *= -1;
         }
     }
 }
