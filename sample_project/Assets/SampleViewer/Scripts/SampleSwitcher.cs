@@ -48,7 +48,7 @@ public class SampleSwitcher : MonoBehaviour
 			DoExitGame();
 		});
 
-#if (UNITY_ANDROID || UNITY_IOS || UNITY_WSA || UNITY_VISIONOS)
+#if (UNITY_ANDROID || UNITY_IOS || UNITY_WSA)
         SetPipeline("URP");
         SetPipelineColor(1, pipelineButtons[1].colors.selectedColor, false);
 #else
