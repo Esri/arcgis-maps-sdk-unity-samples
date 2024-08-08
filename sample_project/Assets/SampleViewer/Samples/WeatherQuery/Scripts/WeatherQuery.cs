@@ -7,7 +7,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Networking;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 [System.Serializable]
@@ -224,14 +223,6 @@ public class WeatherQuery : MonoBehaviour
 
     private void Start()
     {
-        /*if (SceneManager.GetActiveScene().name != "WeatherQuery")
-        {
-            var sampleSwitcher = FindObjectOfType<SampleSwitcher>();
-            sampleSwitcher.PipelineButtonOnClick();
-            sampleSwitcher.OnPipelineButtonClicked(GameObject.Find("HDRP").GetComponent<Button>());
-            sampleSwitcher.SetPipelineText("HDRP");
-        }*/
-
         StartCoroutine(GetFeatures());
 
         dropDownButton.onValueChanged.AddListener(delegate (bool value)
