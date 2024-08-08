@@ -1,29 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+// Copyright 2024 Esri.
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+//
 
+using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
 public class XROffsetGrabInteractable : XRGrabInteractable
 {
-
     private Vector3 initialLocalPos;
     private Quaternion initialLocalRot;
-
-    void Start()
-    {
-        if (!attachTransform)
-        {
-            GameObject attachPoint = new GameObject("Offset Grab Pivot");
-            attachPoint.transform.SetParent(transform, false);
-            attachTransform = attachPoint.transform;
-        }
-        else
-        {
-            initialLocalPos = attachTransform.localPosition;
-            initialLocalRot = attachTransform.localRotation;
-        }
-    }
 
     protected override void OnSelectEntered(SelectEnterEventArgs args)
     {
@@ -39,5 +26,20 @@ public class XROffsetGrabInteractable : XRGrabInteractable
         }
 
         base.OnSelectEntered(args);
+    }
+
+    private void Start()
+    {
+        if (!attachTransform)
+        {
+            GameObject attachPoint = new GameObject("Offset Grab Pivot");
+            attachPoint.transform.SetParent(transform, false);
+            attachTransform = attachPoint.transform;
+        }
+        else
+        {
+            initialLocalPos = attachTransform.localPosition;
+            initialLocalRot = attachTransform.localRotation;
+        }
     }
 }
