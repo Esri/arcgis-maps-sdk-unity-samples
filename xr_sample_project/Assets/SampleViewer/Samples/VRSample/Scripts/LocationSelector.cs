@@ -18,10 +18,10 @@ using UnityEngine.UI;
 [Serializable]
 public struct coordinates
 {
-    public float altitude;
-    public float latitude;
-    public float longitude;
     public string name;
+    public float longitude;
+    public float latitude;
+    public float altitude;
 
     // Constructor
     public coordinates(string name, float longitude, float latitude, float altitude)

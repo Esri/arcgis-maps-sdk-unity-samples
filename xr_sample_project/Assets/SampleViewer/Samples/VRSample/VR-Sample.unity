@@ -1789,8 +1789,8 @@ MonoBehaviour:
       Polygons: []
       Type: 0
   - Name: New York
-    Type: 1
-    Source: https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_NewYork_17/SceneServer
+    Type: 2
+    Source: https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/New_York_Mesh/SceneServer
     Opacity: 1
     IsVisible: 1
     Authentication:
@@ -1852,7 +1852,7 @@ MonoBehaviour:
       Polygons: []
       Type: 0
   - Name: ChristChurch Buildings
-    Type: 7
+    Type: 1
     Source: https://tiles.arcgis.com/tiles/XTtANUDT8Va4DLwI/arcgis/rest/services/Christchurch_3D_Buildings_2018_WGS84/SceneServer
     Opacity: 1
     IsVisible: 1
@@ -1873,8 +1873,29 @@ MonoBehaviour:
       Polygons: []
       Type: 0
   - Name: Montreal
-    Type: 7
+    Type: 1
     Source: https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Building_Montreal/SceneServer
+    Opacity: 1
+    IsVisible: 1
+    Authentication:
+      ConfigurationIndex: 0
+    BuildingSceneLayerFilter:
+      ActiveBuildingAttributeFilterIndex: -1
+      BuildingAttributeFilters: []
+      IsBuildingAttributeFilterEnabled: 0
+      IsBuildingDisciplinesCategoriesFilterEnabled: 0
+      EnabledCategories: 
+      EnabledDisciplines: 
+    MeshModifications:
+      IsEnabled: 1
+      MeshModifications: []
+    SpatialFeatureFilter:
+      IsEnabled: 0
+      Polygons: []
+      Type: 0
+  - Name: Redlands
+    Type: 1
+    Source: https://services.arcgis.com/B7X7NCOKKXditlwZ/arcgis/rest/services/Fixed_Wireless_Assessment_WSL5/SceneServer
     Opacity: 1
     IsVisible: 1
     Authentication:
@@ -2871,6 +2892,62 @@ PrefabInstance:
     - target: {fileID: 7799961601964827800, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: spawnLocations.Array.data[0].altitude
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: spawnLocations.Array.data[0].latitude
+      value: 37.78708
+      objectReference: {fileID: 0}
+    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: spawnLocations.Array.data[1].altitude
+      value: 101.9794
+      objectReference: {fileID: 0}
+    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: spawnLocations.Array.data[1].latitude
+      value: 41.98449
+      objectReference: {fileID: 0}
+    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: spawnLocations.Array.data[2].altitude
+      value: 35.592
+      objectReference: {fileID: 0}
+    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: spawnLocations.Array.data[2].latitude
+      value: -43.53196
+      objectReference: {fileID: 0}
+    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: spawnLocations.Array.data[3].altitude
+      value: 90.046104
+      objectReference: {fileID: 0}
+    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: spawnLocations.Array.data[3].latitude
+      value: 40.74568
+      objectReference: {fileID: 0}
+    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: spawnLocations.Array.data[4].altitude
+      value: 406.8522
+      objectReference: {fileID: 0}
+    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: spawnLocations.Array.data[4].latitude
+      value: 34.056618
+      objectReference: {fileID: 0}
+    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: spawnLocations.Array.data[1].longitude
+      value: 2.824152
+      objectReference: {fileID: 0}
+    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: spawnLocations.Array.data[2].longitude
+      value: 172.63054
+      objectReference: {fileID: 0}
+    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: spawnLocations.Array.data[3].longitude
+      value: -73.98743
+      objectReference: {fileID: 0}
+    - target: {fileID: 7834512530214340862, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
+      propertyPath: spawnLocations.Array.data[4].longitude
+      value: -117.195335
       objectReference: {fileID: 0}
     - target: {fileID: 8361840664085881412, guid: 8388842b0fb6c614e8d550a643b26534, type: 3}
       propertyPath: m_AnchorMax.y
