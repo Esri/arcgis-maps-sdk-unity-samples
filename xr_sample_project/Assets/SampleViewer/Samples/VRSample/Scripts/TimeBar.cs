@@ -17,7 +17,7 @@ public class TimeBar : MonoBehaviour
     {
         if (timeText)
         {
-            timeText.text = DateTime.Now.ToString("M/d/yyyy h:mm");
+            timeText.text = DateTime.Now.ToString("hh:mm tt MMM dd, yyyy");
         }
     }
 }

@@ -17,39 +17,32 @@ public struct CloudSettings
     [SerializeField] public float cloudDensity;
     [SerializeField] public float cloudAlpha;
     [SerializeField] public Vector2 cloudSpeed;
-    [SerializeField] public Vector3 cloudHeight;
+    [SerializeField] public Color cloudColor;
+    [SerializeField] public Color zeninthColor;
+    [SerializeField] public Color horizonColor;
 
-    [ColorUsage(true, true)]
-    [SerializeField] public Color color;
-
-    [ColorUsage(true, true)]
-    [SerializeField] public Color color1;
-
-    public CloudSettings(float size, float density, float alpha, Vector2 speed, Vector3 height, Color color, Color color1)
+    public CloudSettings(float cloudSize, float cloudDensity, float cloudAlpha, Vector2 cloudSpeed, Color cloudColor, Color zeninthColor, Color horizonColor)
     {
-        this.cloudSize = size;
-        this.cloudDensity = density;
-        this.cloudAlpha = alpha;
-        this.cloudSpeed = speed;
-        this.cloudHeight = height;
-        this.color = color;
-        this.color1 = color1;
+        this.cloudSize = cloudSize;
+        this.cloudDensity = cloudDensity;
+        this.cloudAlpha = cloudAlpha;
+        this.cloudSpeed = cloudSpeed;
+        this.cloudColor = cloudColor;
+        this.zeninthColor = zeninthColor;
+        this.horizonColor = horizonColor;
     }
 }
 
 public class WeatherSystem : MonoBehaviour
 {
-    [ColorUsage(true, true)]
-    private Material cloudMaterial;
-
     [Header("General Settings")]
-    [SerializeField] private Renderer cloudRenderer;
+    [SerializeField] private Material cloudMaterial;
 
     [SerializeField] private XROrigin player;
     [SerializeField] private float weatherHeight;
-    [SerializeField] private float cloudHeight;
 
     [SerializeField] private CloudSettings[] cloudSettings;
+    [SerializeField] private LightmapData[] lightmaps;
 
     [Header("Rainy Settings")]
     [SerializeField] private ParticleSystem rainSystem;
@@ -63,6 +56,7 @@ public class WeatherSystem : MonoBehaviour
 
     [Header("Thunder Settings")]
     [SerializeField] private ParticleSystem thunderRainParticles;
+    [SerializeField] private float lightingStartHeight;
 
     [SerializeField] private VisualEffect lightningEffect;
     [SerializeField] private AudioSource[] thunderAudio;
@@ -74,13 +68,14 @@ public class WeatherSystem : MonoBehaviour
         {
             return;
         }
+       
         cloudMaterial.SetFloat("_Cloud_size", cloudSettings[index].cloudSize);
         cloudMaterial.SetFloat("_Cloud_density", cloudSettings[index].cloudDensity);
         cloudMaterial.SetFloat("_Cloud_alpha", cloudSettings[index].cloudAlpha);
         cloudMaterial.SetVector("_Cloud_speed", cloudSettings[index].cloudSpeed);
-        cloudMaterial.SetVector("_Cloud_height", cloudSettings[index].cloudHeight);
-        cloudMaterial.SetColor("_Color", cloudSettings[index].color);
-        cloudMaterial.SetColor("_Color_1", cloudSettings[index].color1);
+        cloudMaterial.SetColor("_CloudColor", cloudSettings[index].cloudColor);
+        cloudMaterial.SetColor("_ZenithColor", cloudSettings[index].zeninthColor);
+        cloudMaterial.SetColor("_HorizonColor", cloudSettings[index].horizonColor);
     }
 
     public void SetToCloudy()
@@ -170,7 +165,7 @@ public class WeatherSystem : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        cloudMaterial = cloudRenderer.material;
+        cloudMaterial = RenderSettings.skybox;
     }
 
     private IEnumerator ThunderStorm()
@@ -179,16 +174,18 @@ public class WeatherSystem : MonoBehaviour
         {
             yield return new WaitForSeconds(UnityEngine.Random.Range(5f, 10f));
 
-            lightningEffect.transform.position = player.transform.position + (player.Camera.transform.forward * 4000f) + new Vector3(0, 50f, 0);
+            Vector3 placement = player.transform.position + (player.Camera.transform.forward * 4000f) + new Vector3(0, 50f, 0);
+
+            lightningEffect.transform.position = new Vector3(placement.x, player.transform.position.y + lightingStartHeight, placement.z);
             lightningEffect.transform.LookAt(player.Camera.transform);
 
-            cloudMaterial.SetColor("_Color", new Color32(245, 245, 245, 255));
+            cloudMaterial.SetColor("_CloudColor", new Color32(245, 245, 245, 255));
 
             lightningEffect.Play();
 
             yield return new WaitForSeconds(0.5f);
 
-            cloudMaterial.SetColor("_Color", cloudSettings[4].color);
+            cloudMaterial.SetColor("_CloudColor", cloudSettings[4].cloudColor);
 
             yield return new WaitForSeconds(0.5f);
 
@@ -200,6 +197,5 @@ public class WeatherSystem : MonoBehaviour
     private void Update()
     {
         transform.position = player.transform.position + new Vector3(0f, weatherHeight, 0f);
-        cloudRenderer.transform.position = transform.position + new Vector3(0f, cloudHeight, 0f);
     }
 }
