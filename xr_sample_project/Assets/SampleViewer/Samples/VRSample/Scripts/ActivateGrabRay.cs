@@ -14,18 +14,18 @@ public class ActivateGrabRay : MonoBehaviour
 
     [Header("--------Interactor Scripts--------")]
     [SerializeField] private XRDirectInteractor leftDirectGrab;
-
-    [SerializeField] private GameObject leftGrabRay;
-
     [SerializeField] private XRDirectInteractor rightDirectGrab;
 
     [Header("-----------Ray Objects-----------")]
-    [SerializeField] private GameObject rightGrabRay;
+    [SerializeField] private XRRayInteractor rightGrabRay;
+    [SerializeField] private XRRayInteractor leftGrabRay;
+    [SerializeField] private XRInteractorLineVisual rightGrabLine;
+    [SerializeField] private XRInteractorLineVisual leftGrabLine;
 
     private void Update()
     {
         // Only show the raycast grab lines when the player is not traveling to a new location and there is something in the raycast to interact with
-        rightGrabRay.SetActive(!currentlyTransporting && rightDirectGrab.interactablesSelected.Count == 0);
-        leftGrabRay.SetActive(!currentlyTransporting && leftDirectGrab.interactablesSelected.Count == 0);
+        rightGrabRay.enabled = rightGrabLine.enabled = (!currentlyTransporting && rightDirectGrab.interactablesSelected.Count == 0);
+        leftGrabRay.enabled = leftGrabLine.enabled = (!currentlyTransporting && leftDirectGrab.interactablesSelected.Count == 0);
     }
 }

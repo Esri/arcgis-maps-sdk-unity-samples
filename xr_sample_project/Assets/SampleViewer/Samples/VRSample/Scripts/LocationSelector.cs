@@ -54,11 +54,6 @@ public class LocationSelector : MonoBehaviour
     public void GoToLocation(int placeIndex)
     {
         GetLocation(placeIndex);
-
-        // Confirm reference to continuousMovement component before calling method within it
-        continuousMovement = continuousMovement ? continuousMovement : XROrigin.GetComponent<ContinuousMovement>();
-        continuousMovement.SetSpeed(50f);
-        continuousMovement.SetVerticalSpeed(15f);
     }
 
     public void GoToRandomLocation()
