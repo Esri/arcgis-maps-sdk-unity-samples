@@ -14,7 +14,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.InputSystem.HID;
+using Esri.ArcGISMapsSDK.Samples.Components;
 
 public class Geometries : MonoBehaviour
 {
@@ -26,6 +26,7 @@ public class Geometries : MonoBehaviour
 	public GameObject LineMarker;
 	public GameObject InterpolationMarker;
 	public float InterpolationInterval = 100;
+	public Button[] ModeButtons;
 	public Button[] UnitButtons;
 	public Button ClearButton;
 	[SerializeField] float MarkerHeight = 200f;
@@ -47,10 +48,14 @@ public class Geometries : MonoBehaviour
 	private bool isDragging = false;
 	public GameObject EnvelopeMarker = new GameObject();
 	private ArcGISPoint startPoint;
+	private ArcGISCameraControllerComponent arcGISCameraControllerComponent;
 
 	private void Start()
 	{
 		arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
+		arcGISCameraControllerComponent = FindObjectOfType<ArcGISCameraControllerComponent>();
+		arcGISCameraControllerComponent.IgnoreUI = true;
+		arcGISCameraControllerComponent.EnableLeftDragging = false;
 
 		lineRenderer = Line.GetComponent<LineRenderer>();
 		lineRenderer.widthMultiplier = LineWidth;
@@ -61,6 +66,7 @@ public class Geometries : MonoBehaviour
 			ClearLine();
 		});
 
+		ModeButtons[0].interactable = false;
 		UnitButtons[0].interactable = false;
 	}
 
@@ -377,6 +383,9 @@ public class Geometries : MonoBehaviour
 		isPolylineMode = true;
 		isPolygonMode = false;
 		isEnvelopeMode = false;
+		ModeButtons[0].interactable = false;
+		ModeButtons[1].interactable = true;
+		ModeButtons[2].interactable = true;
 	}
 
 	public void SetPolygonMode()
@@ -385,6 +394,9 @@ public class Geometries : MonoBehaviour
 		isPolygonMode = true;
 		isEnvelopeMode = false;
 		isPolylineMode = false;
+		ModeButtons[0].interactable = true;
+		ModeButtons[1].interactable = false;
+		ModeButtons[2].interactable = true;
 	}
 	public void SetEnvelopeMode()
 	{
@@ -392,6 +404,9 @@ public class Geometries : MonoBehaviour
 		isEnvelopeMode = true;
 		isPolygonMode= false;
 		isPolylineMode = false;
+		ModeButtons[0].interactable = true;
+		ModeButtons[1].interactable = true;
+		ModeButtons[2].interactable = false;
 	}
 
 	private void UnitChanged()
@@ -402,10 +417,7 @@ public class Geometries : MonoBehaviour
 			geodeticDistance = currentUnit.ConvertTo(newLinearUnit, geodeticDistance);
 			currentUnit = newLinearUnit;
 			UpdateDisplay();
-		}
-		
-
-		
+		}	
 	}
 
 	private void UpdateDisplay()

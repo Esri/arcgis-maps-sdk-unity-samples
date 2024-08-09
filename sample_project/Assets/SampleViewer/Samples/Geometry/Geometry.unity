@@ -324,6 +324,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27afbdfc83e47004e95ef7726ed4a9cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MaxSpeed: 2000000
+  MinSpeed: 1000
+  IgnoreUI: 0
+  EnableLeftDragging: 1
 --- !u!114 &150318285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3490,17 +3494,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Line: {fileID: 820472294}
   result: {fileID: 1408886456}
+  miUnit: {fileID: 1886599900}
+  ftUnit: {fileID: 1082983606}
+  mUnit: {fileID: 279642343}
+  kmUnit: {fileID: 953556087}
   LineMarker: {fileID: 5022259574890728151, guid: c71f2b8d1ec452a4390a12246e65c700, type: 3}
+  EnvelopeMarker: {fileID: 0}
   InterpolationMarker: {fileID: 8846720079027601179, guid: e62483263eba74b4b8b1786109d7105c, type: 3}
   InterpolationInterval: 100
+  ModeButtons:
+  - {fileID: 541059373}
+  - {fileID: 1391939050}
+  - {fileID: 1394917535}
   UnitButtons:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 1013740325}
+  - {fileID: 949467399}
+  - {fileID: 1219529829}
+  - {fileID: 857304953}
   ClearButton: {fileID: 1307470794}
   MarkerHeight: 200
-  EnvelopeMarker: {fileID: 0}
 --- !u!1 &1808036063
 GameObject:
   m_ObjectHideFlags: 0
@@ -3845,7 +3857,7 @@ GameObject:
   - component: {fileID: 1993417936}
   - component: {fileID: 1993417937}
   m_Layer: 0
-  m_Name: ButtonLayout
+  m_Name: UnitButtons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
