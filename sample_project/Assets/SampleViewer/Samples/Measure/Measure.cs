@@ -200,7 +200,7 @@ public class Measure : MonoBehaviour
 		topLeftMarker.GetComponent<ArcGISLocationComponent>().enabled = true;
 		topRightMarker.GetComponent<ArcGISLocationComponent>().enabled = true;
 
-		bottomLeftMarker.GetComponent<ArcGISLocationComponent>().SurfacePlacementMode
+		//bottomLeftMarker.GetComponent<ArcGISLocationComponent>().SurfacePlacementMode
 
 
 		SetElevation(bottomLeftMarker);
