@@ -199,22 +199,16 @@ public class Geometries : MonoBehaviour
 		var bottomRightMarker = Instantiate(LineMarker, bottomRight, Quaternion.identity, arcGISMapComponent.transform);
 		var topLeftMarker = Instantiate(LineMarker, topLeft, Quaternion.identity, arcGISMapComponent.transform);
 		var topRightMarker = Instantiate(LineMarker, topRight, Quaternion.identity, arcGISMapComponent.transform);		
-
-		Debug.Log("top left:" + bottomLeftMarker.GetComponent<ArcGISLocationComponent>().Position.X);
 		
 		SetSurfacePlacement(bottomLeftMarker, MarkerHeight);
 		SetSurfacePlacement(bottomRightMarker, MarkerHeight);
 		SetSurfacePlacement(topLeftMarker, MarkerHeight);
 		SetSurfacePlacement(topRightMarker, MarkerHeight);
-
-		Debug.Log("top left:" + bottomLeftMarker.GetComponent<ArcGISLocationComponent>().Position.Z);
 		
 		SetElevation(bottomLeftMarker);
 		SetElevation(bottomRightMarker);
 		SetElevation(topLeftMarker);
 		SetElevation(topRightMarker);
-		
-		Debug.Log("top left:" + bottomLeftMarker.GetComponent<ArcGISLocationComponent>().Position.Z);
 
 		stops.Push(topLeftMarker);
 		stops.Push(topRightMarker);
