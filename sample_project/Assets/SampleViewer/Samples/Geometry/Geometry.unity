@@ -38,6 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
+  m_IndirectSpecularColor: {r: 262.33694, g: 325.04984, b: 430.2193, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -328,6 +329,7 @@ MonoBehaviour:
   MinSpeed: 1000
   IgnoreUI: 0
   EnableLeftDragging: 1
+  EnableRightDragging: 1
 --- !u!114 &150318285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1534,8 +1536,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Measure, Sample Viewer
+      - m_Target: {fileID: 1654661345}
+        m_TargetAssemblyTypeName: Geometries, Sample Viewer
         m_MethodName: SetUnitText
         m_Mode: 5
         m_Arguments:
@@ -1546,8 +1548,8 @@ MonoBehaviour:
           m_StringArgument: Kilometers
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Measure, Sample Viewer
+      - m_Target: {fileID: 1654661345}
+        m_TargetAssemblyTypeName: Geometries, Sample Viewer
         m_MethodName: UnitButtonOnClick
         m_Mode: 1
         m_Arguments:
@@ -1555,11 +1557,11 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Kilometers
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Measure, Sample Viewer
+      - m_Target: {fileID: 1654661345}
+        m_TargetAssemblyTypeName: Geometries, Sample Viewer
         m_MethodName: OnUnitButtonClicked
         m_Mode: 2
         m_Arguments:
@@ -1691,8 +1693,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Measure, Sample Viewer
+      - m_Target: {fileID: 1654661345}
+        m_TargetAssemblyTypeName: Geometries, Sample Viewer
         m_MethodName: SetUnitText
         m_Mode: 5
         m_Arguments:
@@ -1703,8 +1705,8 @@ MonoBehaviour:
           m_StringArgument: Feet
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Measure, Sample Viewer
+      - m_Target: {fileID: 1654661345}
+        m_TargetAssemblyTypeName: Geometries, Sample Viewer
         m_MethodName: UnitButtonOnClick
         m_Mode: 1
         m_Arguments:
@@ -1712,11 +1714,11 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Feet
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Measure, Sample Viewer
+      - m_Target: {fileID: 1654661345}
+        m_TargetAssemblyTypeName: Geometries, Sample Viewer
         m_MethodName: OnUnitButtonClicked
         m_Mode: 2
         m_Arguments:
@@ -1982,8 +1984,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Measure, Sample Viewer
+      - m_Target: {fileID: 1654661345}
+        m_TargetAssemblyTypeName: Geometries, Sample Viewer
         m_MethodName: SetUnitText
         m_Mode: 5
         m_Arguments:
@@ -1994,8 +1996,8 @@ MonoBehaviour:
           m_StringArgument: Miles
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Measure, Sample Viewer
+      - m_Target: {fileID: 1654661345}
+        m_TargetAssemblyTypeName: Geometries, Sample Viewer
         m_MethodName: UnitButtonOnClick
         m_Mode: 1
         m_Arguments:
@@ -2003,11 +2005,11 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Miles
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Measure, Sample Viewer
+      - m_Target: {fileID: 1654661345}
+        m_TargetAssemblyTypeName: Geometries, Sample Viewer
         m_MethodName: OnUnitButtonClicked
         m_Mode: 2
         m_Arguments:
@@ -2573,8 +2575,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Measure, Sample Viewer
+      - m_Target: {fileID: 1654661345}
+        m_TargetAssemblyTypeName: Geometries, Sample Viewer
         m_MethodName: SetUnitText
         m_Mode: 5
         m_Arguments:
@@ -2585,8 +2587,8 @@ MonoBehaviour:
           m_StringArgument: Meters
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Measure, Sample Viewer
+      - m_Target: {fileID: 1654661345}
+        m_TargetAssemblyTypeName: Geometries, Sample Viewer
         m_MethodName: UnitButtonOnClick
         m_Mode: 1
         m_Arguments:
@@ -2594,11 +2596,11 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Meters
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Measure, Sample Viewer
+      - m_Target: {fileID: 1654661345}
+        m_TargetAssemblyTypeName: Geometries, Sample Viewer
         m_MethodName: OnUnitButtonClicked
         m_Mode: 2
         m_Arguments:
@@ -3494,12 +3496,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Line: {fileID: 820472294}
   result: {fileID: 1408886456}
-  miUnit: {fileID: 1886599900}
-  ftUnit: {fileID: 1082983606}
-  mUnit: {fileID: 279642343}
-  kmUnit: {fileID: 953556087}
   LineMarker: {fileID: 5022259574890728151, guid: c71f2b8d1ec452a4390a12246e65c700, type: 3}
-  EnvelopeMarker: {fileID: 0}
   InterpolationMarker: {fileID: 8846720079027601179, guid: e62483263eba74b4b8b1786109d7105c, type: 3}
   InterpolationInterval: 100
   ModeButtons:
@@ -3513,6 +3510,7 @@ MonoBehaviour:
   - {fileID: 857304953}
   ClearButton: {fileID: 1307470794}
   MarkerHeight: 200
+  EnvelopeMarker: {fileID: 0}
 --- !u!1 &1808036063
 GameObject:
   m_ObjectHideFlags: 0
@@ -3601,10 +3599,10 @@ MonoBehaviour:
     UseOriginAsCenter: 0
   layers: []
   originPosition:
-    x: -73.9656
-    y: 40.7826
+    x: -8233812.928218955
+    y: 4980327.904429988
     z: 1300
-    SRWkid: 4326
+    SRWkid: 3857
   mapType: 1
   editorModeEnabled: 1
   dataFetchWithSceneView: 1

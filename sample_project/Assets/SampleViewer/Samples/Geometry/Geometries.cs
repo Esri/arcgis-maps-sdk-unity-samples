@@ -39,8 +39,8 @@ public class Geometries : MonoBehaviour
 	private double polygonArea = 0;
 	private double envelopeArea = 0;
 	private LineRenderer lineRenderer;
-	private ArcGISLinearUnit currentUnit = new ArcGISLinearUnit(ArcGISLinearUnitId.Miles);
-	private ArcGISAreaUnit areaUnit = new ArcGISAreaUnit(ArcGISAreaUnitId.SquareMeters);
+	private ArcGISLinearUnit currentLinearUnit = new ArcGISLinearUnit(ArcGISLinearUnitId.Miles);
+	private ArcGISAreaUnit currentAreaUnit = new ArcGISAreaUnit(ArcGISAreaUnitId.SquareMiles);
 	private string unitText;
 	private bool isPolylineMode = true;
 	private bool isPolygonMode = false;
@@ -68,6 +68,7 @@ public class Geometries : MonoBehaviour
 
 		ModeButtons[0].interactable = false;
 		UnitButtons[0].interactable = false;
+		
 	}
 
 	private void Update()
@@ -141,7 +142,7 @@ public class Geometries : MonoBehaviour
 						if(isPolylineMode)
 						{
 							// Calculate distance from last point to this point.
-							geodeticDistance += ArcGISGeometryEngine.DistanceGeodetic(lastPoint, thisPoint, currentUnit, new ArcGISAngularUnit(ArcGISAngularUnitId.Degrees), ArcGISGeodeticCurveType.Geodesic).Distance;
+							geodeticDistance += ArcGISGeometryEngine.DistanceGeodetic(lastPoint, thisPoint, currentLinearUnit, new ArcGISAngularUnit(ArcGISAngularUnitId.Degrees), ArcGISGeodeticCurveType.Geodesic).Distance;
 							UpdateDisplay();
 						}
 						featurePoints.Add(lastStop);
@@ -178,7 +179,7 @@ public class Geometries : MonoBehaviour
 
 		VisualizeEnvelope(envelope);
 
-		envelopeArea = ArcGISGeometryEngine.AreaGeodetic(envelope, areaUnit, ArcGISGeodeticCurveType.Geodesic);
+		envelopeArea = ArcGISGeometryEngine.AreaGeodetic(envelope, currentAreaUnit, ArcGISGeodeticCurveType.Geodesic);
 		UpdateDisplay();
 	}
 
@@ -249,7 +250,7 @@ public class Geometries : MonoBehaviour
 
 		var polygon = polygonBuilder.ToGeometry();
 
-		polygonArea = ArcGISGeometryEngine.AreaGeodetic(polygon, areaUnit, ArcGISGeodeticCurveType.Geodesic);
+		polygonArea = ArcGISGeometryEngine.AreaGeodetic(polygon, currentAreaUnit, ArcGISGeodeticCurveType.Geodesic);
 		UpdateDisplay();
 	}
 	private void Interpolate(GameObject start, GameObject end, List<GameObject> featurePoints)
@@ -386,6 +387,11 @@ public class Geometries : MonoBehaviour
 		ModeButtons[0].interactable = false;
 		ModeButtons[1].interactable = true;
 		ModeButtons[2].interactable = true;
+
+		UnitButtons[0].GetComponentInChildren<TMP_Text>().text = "mi";
+		UnitButtons[1].GetComponentInChildren<TMP_Text>().text = "ft";
+		UnitButtons[2].GetComponentInChildren<TMP_Text>().text = "m";
+		UnitButtons[3].GetComponentInChildren<TMP_Text>().text = "km";
 	}
 
 	public void SetPolygonMode()
@@ -397,6 +403,11 @@ public class Geometries : MonoBehaviour
 		ModeButtons[0].interactable = true;
 		ModeButtons[1].interactable = false;
 		ModeButtons[2].interactable = true;
+
+		UnitButtons[0].GetComponentInChildren<TMP_Text>().text = "mi²";
+		UnitButtons[1].GetComponentInChildren<TMP_Text>().text = "ft²";
+		UnitButtons[2].GetComponentInChildren<TMP_Text>().text = "m²";
+		UnitButtons[3].GetComponentInChildren<TMP_Text>().text = "km²";
 	}
 	public void SetEnvelopeMode()
 	{
@@ -407,6 +418,11 @@ public class Geometries : MonoBehaviour
 		ModeButtons[0].interactable = true;
 		ModeButtons[1].interactable = true;
 		ModeButtons[2].interactable = false;
+
+		UnitButtons[0].GetComponentInChildren<TMP_Text>().text = "mi²";
+		UnitButtons[1].GetComponentInChildren<TMP_Text>().text = "ft²";
+		UnitButtons[2].GetComponentInChildren<TMP_Text>().text = "m²";
+		UnitButtons[3].GetComponentInChildren<TMP_Text>().text = "km²";
 	}
 
 	private void UnitChanged()
@@ -414,10 +430,18 @@ public class Geometries : MonoBehaviour
 		if(isPolylineMode)
 		{
 			var newLinearUnit = new ArcGISLinearUnit(Enum.Parse<ArcGISLinearUnitId>(unitText));
-			geodeticDistance = currentUnit.ConvertTo(newLinearUnit, geodeticDistance);
-			currentUnit = newLinearUnit;
+			geodeticDistance = currentLinearUnit.ConvertTo(newLinearUnit, geodeticDistance);
+			currentLinearUnit = newLinearUnit;
 			UpdateDisplay();
-		}	
+		}
+		else 
+		{
+			var newAreaUnit = new ArcGISAreaUnit(Enum.Parse<ArcGISAreaUnitId>(unitText));
+			polygonArea = currentAreaUnit.ConvertTo(newAreaUnit, polygonArea);
+			envelopeArea = currentAreaUnit.ConvertTo(newAreaUnit, envelopeArea);
+			currentAreaUnit = newAreaUnit;
+			UpdateDisplay();
+		}
 	}
 
 	private void UpdateDisplay()
@@ -435,11 +459,17 @@ public class Geometries : MonoBehaviour
 			result.text = $"{Math.Round(envelopeArea, 3)}";
 		}
 	}
-
-
 	public void SetUnitText(string text)
 	{
-		unitText = text;
+		if(isPolylineMode)
+		{
+			unitText = text;
+		}
+		else 
+		{
+			unitText = "Square" + text;
+		}
+		
 	}
 
 	public void UnitButtonOnClick()
