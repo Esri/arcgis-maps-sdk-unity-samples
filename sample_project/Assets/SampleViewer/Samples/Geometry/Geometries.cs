@@ -22,27 +22,28 @@ public class Geometries : MonoBehaviour
 	private const float LineWidth = 5f;
 
 	public GameObject Line;
-	public TMP_Text GeodeticDistanceText;
+	public TMP_Text result;
 	public GameObject LineMarker;
 	public GameObject InterpolationMarker;
 	public float InterpolationInterval = 100;
 	public Button[] UnitButtons;
 	public Button ClearButton;
 	[SerializeField] float MarkerHeight = 200f;
-
 	private ArcGISMapComponent arcGISMapComponent;
 	private List<GameObject> featurePoints = new List<GameObject>();
 	private List<GameObject> lastToStartInterpolationPoints = new List<GameObject>();
 	private Stack<GameObject> stops = new Stack<GameObject>();
 	private double3 lastRootPosition;
 	private double geodeticDistance = 0;
+	private double polygonArea = 0;
+	private double envelopeArea = 0;
 	private LineRenderer lineRenderer;
 	private ArcGISLinearUnit currentUnit = new ArcGISLinearUnit(ArcGISLinearUnitId.Miles);
+	private ArcGISAreaUnit areaUnit = new ArcGISAreaUnit(ArcGISAreaUnitId.SquareMeters);
 	private string unitText;
 	private bool isPolylineMode = true;
 	private bool isPolygonMode = false;
 	private bool isEnvelopeMode = false;
-	private ArcGISAreaUnit areaUnit = new ArcGISAreaUnit(ArcGISAreaUnitId.SquareMeters);
 	private bool isDragging = false;
 	public GameObject EnvelopeMarker = new GameObject();
 	private ArcGISPoint startPoint;
@@ -78,9 +79,7 @@ public class Geometries : MonoBehaviour
 					if (Physics.Raycast(ray, out hit))
 					{
 						hit.point += new Vector3(0, MarkerHeight, 0);
-						var startPointMarker = Instantiate(LineMarker, hit.point, Quaternion.identity, arcGISMapComponent.transform);
 						startPoint = arcGISMapComponent.EngineToGeographic(hit.point);
-						Debug.Log("start point: " + startPointMarker.transform.position.x + "," + startPointMarker.transform.position.y + "," + startPointMarker.transform.position.z);
 
 						isDragging = true;
 					}
@@ -94,9 +93,7 @@ public class Geometries : MonoBehaviour
 					if (Physics.Raycast(ray, out hit))
 					{
 						hit.point += new Vector3(0, MarkerHeight, 0);
-						var endPointMarker = Instantiate(LineMarker, hit.point, Quaternion.identity, arcGISMapComponent.transform);
 						var endPoint = arcGISMapComponent.EngineToGeographic(hit.point);
-						Debug.Log("end point: " + endPointMarker.transform.position.x + "," + endPointMarker.transform.position.y + "," + endPointMarker.transform.position.z);
 						CreateAndCalculateEnvelope(startPoint, endPoint);
 					}
 				}
@@ -135,13 +132,13 @@ public class Geometries : MonoBehaviour
 					{
 						GameObject lastStop = stops.Peek();
 						var lastPoint = lastStop.GetComponent<ArcGISLocationComponent>().Position;
-
-						// Calculate distance from last point to this point.
-						geodeticDistance += ArcGISGeometryEngine.DistanceGeodetic(lastPoint, thisPoint, currentUnit, new ArcGISAngularUnit(ArcGISAngularUnitId.Degrees), ArcGISGeodeticCurveType.Geodesic).Distance;
-						UpdateDisplay();
-
+						if(isPolylineMode)
+						{
+							// Calculate distance from last point to this point.
+							geodeticDistance += ArcGISGeometryEngine.DistanceGeodetic(lastPoint, thisPoint, currentUnit, new ArcGISAngularUnit(ArcGISAngularUnitId.Degrees), ArcGISGeodeticCurveType.Geodesic).Distance;
+							UpdateDisplay();
+						}
 						featurePoints.Add(lastStop);
-
 						// Interpolate middle points between last point and this point.
 						Interpolate(lastStop, lineMarker, featurePoints);
 						featurePoints.Add(lineMarker);
@@ -152,14 +149,10 @@ public class Geometries : MonoBehaviour
 
 					if (isPolygonMode)
 					{
-						//	if (polygonPoints.Count > 2)
-						//{
-						//close polygon 
 						Interpolate(lineMarker, featurePoints[0], lastToStartInterpolationPoints);
 						CreateandCalculatePolygon();
-						//}
 					}
-
+					
 					RenderLine(ref featurePoints);
 					RebaseLine();
 				}
@@ -179,8 +172,8 @@ public class Geometries : MonoBehaviour
 
 		VisualizeEnvelope(envelope);
 
-		var area = ArcGISGeometryEngine.AreaGeodetic(envelope, areaUnit, ArcGISGeodeticCurveType.Geodesic);
-		Debug.Log($"Rectangle Area: {area} square meters");
+		envelopeArea = ArcGISGeometryEngine.AreaGeodetic(envelope, areaUnit, ArcGISGeodeticCurveType.Geodesic);
+		UpdateDisplay();
 	}
 
 	private void VisualizeEnvelope(ArcGISEnvelope envelope)
@@ -199,22 +192,16 @@ public class Geometries : MonoBehaviour
 		var bottomRightMarker = Instantiate(LineMarker, bottomRight, Quaternion.identity, arcGISMapComponent.transform);
 		var topLeftMarker = Instantiate(LineMarker, topLeft, Quaternion.identity, arcGISMapComponent.transform);
 		var topRightMarker = Instantiate(LineMarker, topRight, Quaternion.identity, arcGISMapComponent.transform);		
-
-		Debug.Log("top left:" + bottomLeftMarker.GetComponent<ArcGISLocationComponent>().Position.X);
 		
 		SetSurfacePlacement(bottomLeftMarker, MarkerHeight);
 		SetSurfacePlacement(bottomRightMarker, MarkerHeight);
 		SetSurfacePlacement(topLeftMarker, MarkerHeight);
 		SetSurfacePlacement(topRightMarker, MarkerHeight);
-
-		Debug.Log("top left:" + bottomLeftMarker.GetComponent<ArcGISLocationComponent>().Position.Z);
 		
 		SetElevation(bottomLeftMarker);
 		SetElevation(bottomRightMarker);
 		SetElevation(topLeftMarker);
 		SetElevation(topRightMarker);
-		
-		Debug.Log("top left:" + bottomLeftMarker.GetComponent<ArcGISLocationComponent>().Position.Z);
 
 		stops.Push(topLeftMarker);
 		stops.Push(topRightMarker);
@@ -256,8 +243,8 @@ public class Geometries : MonoBehaviour
 
 		var polygon = polygonBuilder.ToGeometry();
 
-		var area = ArcGISGeometryEngine.AreaGeodetic(polygon, areaUnit, ArcGISGeodeticCurveType.Geodesic);
-		Debug.Log($"Polygon Area: {area} square meters");
+		polygonArea = ArcGISGeometryEngine.AreaGeodetic(polygon, areaUnit, ArcGISGeodeticCurveType.Geodesic);
+		UpdateDisplay();
 	}
 	private void Interpolate(GameObject start, GameObject end, List<GameObject> featurePoints)
 	{
@@ -353,8 +340,12 @@ public class Geometries : MonoBehaviour
 
 		featurePoints.Clear();
 		stops.Clear();
+
 		geodeticDistance = 0;
+		polygonArea = 0;
+		envelopeArea = 0;
 		UpdateDisplay();
+
 		if (lineRenderer)
 		{
 			lineRenderer.positionCount = 0;
@@ -384,31 +375,55 @@ public class Geometries : MonoBehaviour
 	{
 		ClearLine();
 		isPolylineMode = true;
+		isPolygonMode = false;
+		isEnvelopeMode = false;
 	}
 
 	public void SetPolygonMode()
 	{
 		ClearLine();
 		isPolygonMode = true;
+		isEnvelopeMode = false;
+		isPolylineMode = false;
 	}
 	public void SetEnvelopeMode()
 	{
 		ClearLine();
 		isEnvelopeMode = true;
+		isPolygonMode= false;
+		isPolylineMode = false;
 	}
 
 	private void UnitChanged()
 	{
-		var newLinearUnit = new ArcGISLinearUnit(Enum.Parse<ArcGISLinearUnitId>(unitText));
-		geodeticDistance = currentUnit.ConvertTo(newLinearUnit, geodeticDistance);
-		currentUnit = newLinearUnit;
-		UpdateDisplay();
+		if(isPolylineMode)
+		{
+			var newLinearUnit = new ArcGISLinearUnit(Enum.Parse<ArcGISLinearUnitId>(unitText));
+			geodeticDistance = currentUnit.ConvertTo(newLinearUnit, geodeticDistance);
+			currentUnit = newLinearUnit;
+			UpdateDisplay();
+		}
+		
+
+		
 	}
 
 	private void UpdateDisplay()
 	{
-		GeodeticDistanceText.text = $"{Math.Round(geodeticDistance, 3)}";
+		if (isPolylineMode)
+		{
+			result.text = $"{Math.Round(geodeticDistance, 3)}";
+		}
+		else if (isPolygonMode)
+		{
+			result.text = $"{Math.Round(polygonArea, 3)}";
+		}
+		else if (isEnvelopeMode)
+		{
+			result.text = $"{Math.Round(envelopeArea, 3)}";
+		}
 	}
+
 
 	public void SetUnitText(string text)
 	{
@@ -420,7 +435,6 @@ public class Geometries : MonoBehaviour
 		UnitChanged();
 	}
 
-	// Keep unit buttons pressed after selection
 	public void OnUnitButtonClicked(Button clickedButton)
 	{
 		int btnIndex = System.Array.IndexOf(UnitButtons, clickedButton);
