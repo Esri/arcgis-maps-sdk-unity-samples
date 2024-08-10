@@ -31,13 +31,14 @@ public class Geometries : MonoBehaviour
 	public Button ClearButton;
 	[SerializeField] float MarkerHeight = 200f;
 	private ArcGISMapComponent arcGISMapComponent;
+	private ArcGISCameraControllerComponent arcGISCameraControllerComponent;
 	private List<GameObject> featurePoints = new List<GameObject>();
 	private List<GameObject> lastToStartInterpolationPoints = new List<GameObject>();
 	private Stack<GameObject> stops = new Stack<GameObject>();
 	private double3 lastRootPosition;
 	private double geodeticDistance = 0;
-	private double polygonArea = 0;
-	private double envelopeArea = 0;
+	private double geodeticAreaPolygon = 0;
+	private double geodeticAreaEnvelope = 0;
 	private LineRenderer lineRenderer;
 	private ArcGISLinearUnit currentLinearUnit = new ArcGISLinearUnit(ArcGISLinearUnitId.Miles);
 	private ArcGISAreaUnit currentAreaUnit = new ArcGISAreaUnit(ArcGISAreaUnitId.SquareMiles);
@@ -46,9 +47,8 @@ public class Geometries : MonoBehaviour
 	private bool isPolygonMode = false;
 	private bool isEnvelopeMode = false;
 	private bool isDragging = false;
-	public GameObject EnvelopeMarker = new GameObject();
 	private ArcGISPoint startPoint;
-	private ArcGISCameraControllerComponent arcGISCameraControllerComponent;
+	
 
 	private void Start()
 	{
@@ -80,25 +80,25 @@ public class Geometries : MonoBehaviour
 				if (Input.GetMouseButtonDown(0))
 				{
 					ClearLine();
+
 					RaycastHit hit;
 					Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
 					if (Physics.Raycast(ray, out hit))
 					{
+						isDragging = true;
 						hit.point += new Vector3(0, MarkerHeight, 0);
 						startPoint = arcGISMapComponent.EngineToGeographic(hit.point);
-
-						isDragging = true;
 					}
 				}
 				else if (Input.GetMouseButtonUp(0) && isDragging)
 				{
-					isDragging = false;
 					RaycastHit hit;
 					Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
 					if (Physics.Raycast(ray, out hit))
 					{
+						isDragging = false;
 						hit.point += new Vector3(0, MarkerHeight, 0);
 						var endPoint = arcGISMapComponent.EngineToGeographic(hit.point);
 						CreateAndCalculateEnvelope(startPoint, endPoint);
@@ -156,11 +156,14 @@ public class Geometries : MonoBehaviour
 
 					if (isPolygonMode)
 					{
-						Interpolate(lineMarker, featurePoints[0], lastToStartInterpolationPoints);
+						if(featurePoints.Count > 3)
+						{
+							Interpolate(lineMarker, featurePoints[0], lastToStartInterpolationPoints);
+						}
 						CreateandCalculatePolygon();
 					}
-					
-					RenderLine(ref featurePoints);
+					if (featurePoints.Count >= 2)
+						RenderLine(ref featurePoints);
 					RebaseLine();
 				}
 			}
@@ -179,7 +182,7 @@ public class Geometries : MonoBehaviour
 
 		VisualizeEnvelope(envelope);
 
-		envelopeArea = ArcGISGeometryEngine.AreaGeodetic(envelope, currentAreaUnit, ArcGISGeodeticCurveType.Geodesic);
+		geodeticAreaEnvelope = ArcGISGeometryEngine.AreaGeodetic(envelope, currentAreaUnit, ArcGISGeodeticCurveType.Geodesic);
 		UpdateDisplay();
 	}
 
@@ -223,11 +226,11 @@ public class Geometries : MonoBehaviour
 		Interpolate(bottomRightMarker, bottomLeftMarker, featurePoints);
 		featurePoints.Add(bottomLeftMarker);
 		Interpolate(bottomLeftMarker, topLeftMarker, featurePoints);
+		featurePoints.Add(topLeftMarker);
 
 		RenderLine(ref featurePoints);
 		RebaseLine();
 	
-		featurePoints.Add(topRightMarker);
 	}
 
 	private void SetSurfacePlacement(GameObject marker, double offset)
@@ -250,7 +253,7 @@ public class Geometries : MonoBehaviour
 
 		var polygon = polygonBuilder.ToGeometry();
 
-		polygonArea = ArcGISGeometryEngine.AreaGeodetic(polygon, currentAreaUnit, ArcGISGeodeticCurveType.Geodesic);
+		geodeticAreaPolygon = ArcGISGeometryEngine.AreaGeodetic(polygon, currentAreaUnit, ArcGISGeodeticCurveType.Geodesic);
 		UpdateDisplay();
 	}
 	private void Interpolate(GameObject start, GameObject end, List<GameObject> featurePoints)
@@ -349,8 +352,8 @@ public class Geometries : MonoBehaviour
 		stops.Clear();
 
 		geodeticDistance = 0;
-		polygonArea = 0;
-		envelopeArea = 0;
+		geodeticAreaPolygon = 0;
+		geodeticAreaEnvelope = 0;
 		UpdateDisplay();
 
 		if (lineRenderer)
@@ -437,8 +440,8 @@ public class Geometries : MonoBehaviour
 		else 
 		{
 			var newAreaUnit = new ArcGISAreaUnit(Enum.Parse<ArcGISAreaUnitId>(unitText));
-			polygonArea = currentAreaUnit.ConvertTo(newAreaUnit, polygonArea);
-			envelopeArea = currentAreaUnit.ConvertTo(newAreaUnit, envelopeArea);
+			geodeticAreaPolygon = currentAreaUnit.ConvertTo(newAreaUnit, geodeticAreaPolygon);
+			geodeticAreaEnvelope = currentAreaUnit.ConvertTo(newAreaUnit, geodeticAreaEnvelope);
 			currentAreaUnit = newAreaUnit;
 			UpdateDisplay();
 		}
@@ -452,11 +455,11 @@ public class Geometries : MonoBehaviour
 		}
 		else if (isPolygonMode)
 		{
-			result.text = $"{Math.Round(polygonArea, 3)}";
+			result.text = $"{Math.Round(geodeticAreaPolygon, 3)}";
 		}
 		else if (isEnvelopeMode)
 		{
-			result.text = $"{Math.Round(envelopeArea, 3)}";
+			result.text = $"{Math.Round(geodeticAreaEnvelope, 3)}";
 		}
 	}
 	public void SetUnitText(string text)
