@@ -15,6 +15,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Esri.ArcGISMapsSDK.Samples.Components;
+using UnityEngine.EventSystems;
 
 public class Geometries : MonoBehaviour
 {
@@ -52,7 +53,6 @@ public class Geometries : MonoBehaviour
 	{
 		arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
 		arcGISCameraControllerComponent = FindObjectOfType<ArcGISCameraControllerComponent>();
-		arcGISCameraControllerComponent.IgnoreUI = true;
 		arcGISCameraControllerComponent.EnableLeftDragging = false;
 
 		lineRenderer = Line.GetComponent<LineRenderer>();
@@ -70,6 +70,12 @@ public class Geometries : MonoBehaviour
 
 	private void Update()
 	{
+		if (EventSystem.current.IsPointerOverGameObject())
+		{
+			// Block 3D raycasts when mouse is over UI
+			return;
+		}
+
 		if (isEnvelopeMode)
 		{
 			if (Input.GetKey(KeyCode.LeftShift))
@@ -199,6 +205,7 @@ public class Geometries : MonoBehaviour
 		var bottomRightMarker = Instantiate(LineMarker, bottomRight, Quaternion.identity, arcGISMapComponent.transform);
 		var topLeftMarker = Instantiate(LineMarker, topLeft, Quaternion.identity, arcGISMapComponent.transform);
 		var topRightMarker = Instantiate(LineMarker, topRight, Quaternion.identity, arcGISMapComponent.transform);
+
 		SetSurfacePlacement(bottomLeftMarker, MarkerHeight);
 		SetSurfacePlacement(bottomRightMarker, MarkerHeight);
 		SetSurfacePlacement(topLeftMarker, MarkerHeight);
@@ -214,6 +221,7 @@ public class Geometries : MonoBehaviour
 		stops.Push(bottomRightMarker);
 		stops.Push(bottomLeftMarker);
 
+		//add feature points in order so that line renderer can correctly connects points; Add start point at the end to close envelope
 		featurePoints.Add(topLeftMarker);
 		Interpolate(topLeftMarker, topRightMarker, featurePoints);
 		featurePoints.Add(topRightMarker);
