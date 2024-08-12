@@ -18,9 +18,6 @@ using Esri.ArcGISMapsSDK.Samples.Components;
 
 public class Geometries : MonoBehaviour
 {
-	private const float RaycastHeight = 5000f;
-	private const float LineWidth = 5f;
-
 	public GameObject Line;
 	public TMP_Text result;
 	public GameObject LineMarker;
@@ -30,6 +27,8 @@ public class Geometries : MonoBehaviour
 	public Button[] UnitButtons;
 	public Button ClearButton;
 	[SerializeField] float MarkerHeight = 200f;
+	private const float RaycastHeight = 5000f;
+	private const float LineWidth = 5f;
 	private ArcGISMapComponent arcGISMapComponent;
 	private ArcGISCameraControllerComponent arcGISCameraControllerComponent;
 	private List<GameObject> featurePoints = new List<GameObject>();
@@ -48,7 +47,6 @@ public class Geometries : MonoBehaviour
 	private bool isEnvelopeMode = false;
 	private bool isDragging = false;
 	private ArcGISPoint startPoint;
-	
 
 	private void Start()
 	{
@@ -68,7 +66,6 @@ public class Geometries : MonoBehaviour
 
 		ModeButtons[0].interactable = false;
 		UnitButtons[0].interactable = false;
-		
 	}
 
 	private void Update()
@@ -139,7 +136,7 @@ public class Geometries : MonoBehaviour
 					{
 						GameObject lastStop = stops.Peek();
 						var lastPoint = lastStop.GetComponent<ArcGISLocationComponent>().Position;
-						if(isPolylineMode)
+						if (isPolylineMode)
 						{
 							// Calculate distance from last point to this point.
 							geodeticDistance += ArcGISGeometryEngine.DistanceGeodetic(lastPoint, thisPoint, currentLinearUnit, new ArcGISAngularUnit(ArcGISAngularUnitId.Degrees), ArcGISGeodeticCurveType.Geodesic).Distance;
@@ -156,7 +153,7 @@ public class Geometries : MonoBehaviour
 
 					if (isPolygonMode)
 					{
-						if(featurePoints.Count > 3)
+						if (featurePoints.Count > 3)
 						{
 							Interpolate(lineMarker, featurePoints[0], lastToStartInterpolationPoints);
 						}
@@ -170,7 +167,7 @@ public class Geometries : MonoBehaviour
 		}
 
 	}
-	
+
 	private void CreateAndCalculateEnvelope(ArcGISPoint start, ArcGISPoint end)
 	{
 		var spatialReference = new ArcGISSpatialReference(3857);
@@ -201,13 +198,12 @@ public class Geometries : MonoBehaviour
 		var bottomLeftMarker = Instantiate(LineMarker, bottomLeft, Quaternion.identity, arcGISMapComponent.transform);
 		var bottomRightMarker = Instantiate(LineMarker, bottomRight, Quaternion.identity, arcGISMapComponent.transform);
 		var topLeftMarker = Instantiate(LineMarker, topLeft, Quaternion.identity, arcGISMapComponent.transform);
-		var topRightMarker = Instantiate(LineMarker, topRight, Quaternion.identity, arcGISMapComponent.transform);		
-		
+		var topRightMarker = Instantiate(LineMarker, topRight, Quaternion.identity, arcGISMapComponent.transform);
 		SetSurfacePlacement(bottomLeftMarker, MarkerHeight);
 		SetSurfacePlacement(bottomRightMarker, MarkerHeight);
 		SetSurfacePlacement(topLeftMarker, MarkerHeight);
 		SetSurfacePlacement(topRightMarker, MarkerHeight);
-		
+
 		SetElevation(bottomLeftMarker);
 		SetElevation(bottomRightMarker);
 		SetElevation(topLeftMarker);
@@ -230,7 +226,6 @@ public class Geometries : MonoBehaviour
 
 		RenderLine(ref featurePoints);
 		RebaseLine();
-	
 	}
 
 	private void SetSurfacePlacement(GameObject marker, double offset)
@@ -302,7 +297,6 @@ public class Geometries : MonoBehaviour
 			location.Position = arcGISMapComponent.EngineToGeographic(hitInfo.point);
 		}
 	}
-
 	private void RenderLine(ref List<GameObject> featurePoints)
 	{
 		var allPoints = new List<Vector3>();
@@ -416,7 +410,7 @@ public class Geometries : MonoBehaviour
 	{
 		ClearLine();
 		isEnvelopeMode = true;
-		isPolygonMode= false;
+		isPolygonMode = false;
 		isPolylineMode = false;
 		ModeButtons[0].interactable = true;
 		ModeButtons[1].interactable = true;
@@ -430,14 +424,14 @@ public class Geometries : MonoBehaviour
 
 	private void UnitChanged()
 	{
-		if(isPolylineMode)
+		if (isPolylineMode)
 		{
 			var newLinearUnit = new ArcGISLinearUnit(Enum.Parse<ArcGISLinearUnitId>(unitText));
 			geodeticDistance = currentLinearUnit.ConvertTo(newLinearUnit, geodeticDistance);
 			currentLinearUnit = newLinearUnit;
 			UpdateDisplay();
 		}
-		else 
+		else
 		{
 			var newAreaUnit = new ArcGISAreaUnit(Enum.Parse<ArcGISAreaUnitId>(unitText));
 			geodeticAreaPolygon = currentAreaUnit.ConvertTo(newAreaUnit, geodeticAreaPolygon);
@@ -464,15 +458,15 @@ public class Geometries : MonoBehaviour
 	}
 	public void SetUnitText(string text)
 	{
-		if(isPolylineMode)
+		if (isPolylineMode)
 		{
 			unitText = text;
 		}
-		else 
+		else
 		{
 			unitText = "Square" + text;
 		}
-		
+
 	}
 
 	public void UnitButtonOnClick()
