@@ -18,13 +18,18 @@ public class SetTurnType : MonoBehaviour
 
     public event ChangedTurnType OnTypeChanged;
 
+    private float continuousSpeed = 45f;
+    private float snapSpeed = 45f;
+
     public void SetSmoothTurnSpeed(float speed)
     {
-        continuousTurn.turnSpeed = speed;
+        continuousSpeed = speed;
+        continuousTurn.turnSpeed = continuousSpeed;
     }
 
-    public void SetSnapTurnSpeed(float snapSpeed)
+    public void SetSnapTurnSpeed(float speed)
     {
+        snapSpeed = speed;
         snapTurn.turnAmount = snapSpeed;
     }
 
@@ -36,7 +41,12 @@ public class SetTurnType : MonoBehaviour
 
     private void SetTurnTypeFromIndex(bool isSmooth)
     {
-        snapTurn.enabled = !isSmooth;
-        continuousTurn.enabled = isSmooth;
+        snapTurn.turnAmount = !isSmooth ? snapSpeed : 0f;
+        continuousTurn.turnSpeed = isSmooth ? continuousSpeed : 0f;
+    }
+
+    private void Start()
+    {
+        SetTurnTypeFromIndex(true);
     }
 }

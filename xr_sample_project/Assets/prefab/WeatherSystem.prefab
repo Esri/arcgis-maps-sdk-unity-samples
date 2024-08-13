@@ -416,7 +416,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 0.5
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -2827,7 +2827,7 @@ ParticleSystem:
     strength:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.2
+      scalar: 0.4
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -15174,112 +15174,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!1 &4778409497581312680
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4359715580498991179}
-  - component: {fileID: 135287050454848213}
-  - component: {fileID: 3691070283824526449}
-  - component: {fileID: 8083651663638926961}
-  m_Layer: 6
-  m_Name: Clouds
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4359715580498991179
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4778409497581312680}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1000, y: 1, z: 1000}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6635771444361323431}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &135287050454848213
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4778409497581312680}
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &3691070283824526449
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4778409497581312680}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 2cc829dc361ca394ca674ae08b994dbb, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &8083651663638926961
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4778409497581312680}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &5478996134392084371
 GameObject:
   m_ObjectHideFlags: 0
@@ -15439,7 +15333,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4359715580498991179}
   - {fileID: 181462743619023704}
   - {fileID: 3535984958324405777}
   - {fileID: 7808088585027688620}
@@ -15457,56 +15350,56 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3035296be2d3184daca0db45f943f74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cloudRenderer: {fileID: 3691070283824526449}
-  lightningEffect: {fileID: 1201153954891429761}
+  cloudMaterial: {fileID: 0}
   player: {fileID: 0}
   weatherHeight: 0
-  cloudHeight: 0
-  rainAudio: {fileID: 7776083489094653154}
   cloudSettings:
   - cloudSize: 8000
     cloudDensity: 10
     cloudAlpha: 0.5
     cloudSpeed: {x: 0.00003, y: 0}
-    cloudHeight: {x: 0, y: 1, z: 0}
-    color: {r: 0.95686275, g: 0.95686275, b: 0.95686275, a: 1}
-    color1: {r: 0.5294118, g: 0.80784315, b: 0.92156863, a: 1}
+    cloudColor: {r: 0, g: 0, b: 0, a: 0}
+    zeninthColor: {r: 0, g: 0, b: 0, a: 0}
+    horizonColor: {r: 0, g: 0, b: 0, a: 0}
   - cloudSize: 8000
     cloudDensity: 6
     cloudAlpha: 1
     cloudSpeed: {x: 0.00003, y: 0}
-    cloudHeight: {x: 0, y: 1, z: 0}
-    color: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    color1: {r: 0.7490196, g: 0.7490196, b: 0.7490196, a: 1}
+    cloudColor: {r: 0, g: 0, b: 0, a: 0}
+    zeninthColor: {r: 0, g: 0, b: 0, a: 0}
+    horizonColor: {r: 0, g: 0, b: 0, a: 0}
   - cloudSize: 5
     cloudDensity: 1
     cloudAlpha: 10
     cloudSpeed: {x: 0.00003, y: 0}
-    cloudHeight: {x: 0, y: 100, z: 0}
-    color: {r: 0.25490198, g: 0.25490198, b: 0.25490198, a: 1}
-    color1: {r: 0.6313726, g: 0.6313726, b: 0.6313726, a: 1}
+    cloudColor: {r: 0, g: 0, b: 0, a: 0}
+    zeninthColor: {r: 0, g: 0, b: 0, a: 0}
+    horizonColor: {r: 0, g: 0, b: 0, a: 0}
   - cloudSize: 5
     cloudDensity: 1
     cloudAlpha: 20
     cloudSpeed: {x: 0.000003, y: 0}
-    cloudHeight: {x: 0, y: 100, z: 0}
-    color: {r: 0.8784314, g: 0.8784314, b: 0.8784314, a: 1}
-    color1: {r: 0.74509805, g: 0.74509805, b: 0.74509805, a: 1}
+    cloudColor: {r: 0, g: 0, b: 0, a: 0}
+    zeninthColor: {r: 0, g: 0, b: 0, a: 0}
+    horizonColor: {r: 0, g: 0, b: 0, a: 0}
   - cloudSize: 9
     cloudDensity: 1
     cloudAlpha: 50
     cloudSpeed: {x: 0.0001, y: 0}
-    cloudHeight: {x: 0, y: 100, z: 0}
-    color: {r: 0.08627451, g: 0.08627451, b: 0.08627451, a: 1}
-    color1: {r: 0.047058824, g: 0.047058824, b: 0.047058824, a: 1}
+    cloudColor: {r: 0, g: 0, b: 0, a: 0}
+    zeninthColor: {r: 0, g: 0, b: 0, a: 0}
+    horizonColor: {r: 0, g: 0, b: 0, a: 0}
   rainSystem: {fileID: 5466023708161268053}
-  snowAudio: {fileID: 4110998366195162110}
+  rainAudio: {fileID: 7776083489094653154}
   snowSystem: {fileID: 6809607897991832704}
+  snowAudio: {fileID: 4110998366195162110}
+  thunderRainParticles: {fileID: 6604631961702233551}
+  lightingStartHeight: 0
+  lightningEffect: {fileID: 1201153954891429761}
   thunderAudio:
   - {fileID: 1787632761799261878}
   - {fileID: 4853221682528218370}
   - {fileID: 3598010242196841049}
-  thunderRainParticles: {fileID: 6604631961702233551}
 --- !u!1 &8118081735601655649
 GameObject:
   m_ObjectHideFlags: 0
