@@ -1,4 +1,5 @@
 using Esri.ArcGISMapsSDK.Components;
+using Esri.ArcGISMapsSDK.Utils.GeoCoord;
 using Esri.GameEngine.Geometry;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -49,6 +50,7 @@ public class ScrollItem : MonoBehaviour, IPointerClickHandler
 
             var locationComponent = weatherSystem.GetComponent<ArcGISLocationComponent>();
             locationComponent.Position = new ArcGISPoint(longitude, latitude, 3000.0f, ArcGISSpatialReference.WGS84());
+            locationComponent.Rotation = new ArcGISRotation(0, 90, 0);
             locationComponent.enabled = true;
             weatherQuery.LocationText.text = "Lat: " + latitude + ", Long: " + longitude;
             weatherQuery.TempText.text = weatherData.ConvertTemp(tempurature, weatherQuery.TempuratureToggle.isOn).ToString();
