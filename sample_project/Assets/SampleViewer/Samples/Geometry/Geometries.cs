@@ -1,21 +1,21 @@
-// Copyright 2023 Esri.
+// Copyright 2024 Esri.
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
 //
 
 using Esri.ArcGISMapsSDK.Components;
+using Esri.ArcGISMapsSDK.Samples.Components;
 using Esri.ArcGISMapsSDK.Utils.GeoCoord;
 using Esri.GameEngine.Geometry;
 using Esri.HPFramework;
-using System;
 using System.Collections.Generic;
-using Unity.Mathematics;
-using UnityEngine;
-using UnityEngine.UI;
+using System;
 using TMPro;
-using Esri.ArcGISMapsSDK.Samples.Components;
+using Unity.Mathematics;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using UnityEngine;
 
 public class Geometries : MonoBehaviour
 {
@@ -191,46 +191,41 @@ public class Geometries : MonoBehaviour
 
 	private void VisualizeEnvelope(ArcGISEnvelope envelope)
 	{
-		var bottomLeft = arcGISMapComponent.GeographicToEngine(new ArcGISPoint(envelope.XMin, envelope.YMin, envelope.SpatialReference));
-		var bottomRight = arcGISMapComponent.GeographicToEngine(new ArcGISPoint(envelope.XMax, envelope.YMin, envelope.SpatialReference));
-		var topLeft = arcGISMapComponent.GeographicToEngine(new ArcGISPoint(envelope.XMin, envelope.YMax, envelope.SpatialReference));
-		var topRight = arcGISMapComponent.GeographicToEngine(new ArcGISPoint(envelope.XMax, envelope.YMax, envelope.SpatialReference));
+		var corners = new[]
+		{
+		new ArcGISPoint(envelope.XMin, envelope.YMin, envelope.SpatialReference), 
+        new ArcGISPoint(envelope.XMax, envelope.YMin, envelope.SpatialReference), 
+        new ArcGISPoint(envelope.XMax, envelope.YMax, envelope.SpatialReference), 
+        new ArcGISPoint(envelope.XMin, envelope.YMax, envelope.SpatialReference)  
+    };
 
-		bottomLeft.y += MarkerHeight;
-		bottomRight.y += MarkerHeight;
-		topLeft.y += MarkerHeight;
-		topRight.y += MarkerHeight;
+		var markers = new List<GameObject>();
 
-		var bottomLeftMarker = Instantiate(LineMarker, bottomLeft, Quaternion.identity, arcGISMapComponent.transform);
-		var bottomRightMarker = Instantiate(LineMarker, bottomRight, Quaternion.identity, arcGISMapComponent.transform);
-		var topLeftMarker = Instantiate(LineMarker, topLeft, Quaternion.identity, arcGISMapComponent.transform);
-		var topRightMarker = Instantiate(LineMarker, topRight, Quaternion.identity, arcGISMapComponent.transform);
+		foreach (var corner in corners)
+		{
+			var point = arcGISMapComponent.GeographicToEngine(corner);
+			point.y += MarkerHeight;
 
-		SetSurfacePlacement(bottomLeftMarker, MarkerHeight);
-		SetSurfacePlacement(bottomRightMarker, MarkerHeight);
-		SetSurfacePlacement(topLeftMarker, MarkerHeight);
-		SetSurfacePlacement(topRightMarker, MarkerHeight);
+			var marker = Instantiate(LineMarker, point, Quaternion.identity, arcGISMapComponent.transform);
+			SetSurfacePlacement(marker, MarkerHeight);
+			SetElevation(marker);
 
-		SetElevation(bottomLeftMarker);
-		SetElevation(bottomRightMarker);
-		SetElevation(topLeftMarker);
-		SetElevation(topRightMarker);
+			markers.Add(marker);
+			stops.Push(marker);
+		}
 
-		stops.Push(topLeftMarker);
-		stops.Push(topRightMarker);
-		stops.Push(bottomRightMarker);
-		stops.Push(bottomLeftMarker);
+		// Add the corners to featurePoints in correct order to form the rectangle
+		for (int i = 0; i < markers.Count; i++)
+		{
+			var currentMarker = markers[i];
+			var nextMarker = markers[(i + 1) % markers.Count]; 
 
-		//add feature points in order so that line renderer can correctly connects points; Add start point at the end to close envelope
-		featurePoints.Add(topLeftMarker);
-		Interpolate(topLeftMarker, topRightMarker, featurePoints);
-		featurePoints.Add(topRightMarker);
-		Interpolate(topRightMarker, bottomRightMarker, featurePoints);
-		featurePoints.Add(bottomRightMarker);
-		Interpolate(bottomRightMarker, bottomLeftMarker, featurePoints);
-		featurePoints.Add(bottomLeftMarker);
-		Interpolate(bottomLeftMarker, topLeftMarker, featurePoints);
-		featurePoints.Add(topLeftMarker);
+			featurePoints.Add(currentMarker);
+			Interpolate(currentMarker, nextMarker, featurePoints);
+		}
+
+		// Close the rectangle by adding the first point at the end
+		featurePoints.Add(markers[0]);
 
 		RenderLine(ref featurePoints);
 		RebaseLine();
@@ -364,6 +359,19 @@ public class Geometries : MonoBehaviour
 		}
 	}
 
+	public void ResetMode()
+	{
+		ClearLine();
+
+		isPolygonMode = false;
+		isEnvelopeMode = false;
+		isPolylineMode = false;
+
+		ModeButtons[0].interactable = true;
+		ModeButtons[1].interactable = true;
+		ModeButtons[2].interactable = true;
+	}
+
 	private void RebaseLine()
 	{
 		var rootPosition = arcGISMapComponent.GetComponent<HPRoot>().RootUniversePosition;
@@ -383,15 +391,13 @@ public class Geometries : MonoBehaviour
 			lastRootPosition = rootPosition;
 		}
 	}
+
 	public void SetPolylineMode()
 	{
-		ClearLine();
+		ResetMode();
+
 		isPolylineMode = true;
-		isPolygonMode = false;
-		isEnvelopeMode = false;
 		ModeButtons[0].interactable = false;
-		ModeButtons[1].interactable = true;
-		ModeButtons[2].interactable = true;
 
 		UnitButtons[0].GetComponentInChildren<TMP_Text>().text = "mi";
 		UnitButtons[1].GetComponentInChildren<TMP_Text>().text = "ft";
@@ -401,27 +407,22 @@ public class Geometries : MonoBehaviour
 
 	public void SetPolygonMode()
 	{
-		ClearLine();
+		ResetMode();
+
 		isPolygonMode = true;
-		isEnvelopeMode = false;
-		isPolylineMode = false;
-		ModeButtons[0].interactable = true;
 		ModeButtons[1].interactable = false;
-		ModeButtons[2].interactable = true;
 
 		UnitButtons[0].GetComponentInChildren<TMP_Text>().text = "mi²";
 		UnitButtons[1].GetComponentInChildren<TMP_Text>().text = "ft²";
 		UnitButtons[2].GetComponentInChildren<TMP_Text>().text = "m²";
 		UnitButtons[3].GetComponentInChildren<TMP_Text>().text = "km²";
 	}
+
 	public void SetEnvelopeMode()
 	{
-		ClearLine();
+		ResetMode();
+
 		isEnvelopeMode = true;
-		isPolygonMode = false;
-		isPolylineMode = false;
-		ModeButtons[0].interactable = true;
-		ModeButtons[1].interactable = true;
 		ModeButtons[2].interactable = false;
 
 		UnitButtons[0].GetComponentInChildren<TMP_Text>().text = "mi²";
@@ -436,8 +437,7 @@ public class Geometries : MonoBehaviour
 		{
 			var newLinearUnit = new ArcGISLinearUnit(Enum.Parse<ArcGISLinearUnitId>(unitText));
 			geodeticDistance = currentLinearUnit.ConvertTo(newLinearUnit, geodeticDistance);
-			currentLinearUnit = newLinearUnit;
-			UpdateDisplay();
+			currentLinearUnit = newLinearUnit;			
 		}
 		else
 		{
@@ -445,8 +445,8 @@ public class Geometries : MonoBehaviour
 			geodeticAreaPolygon = currentAreaUnit.ConvertTo(newAreaUnit, geodeticAreaPolygon);
 			geodeticAreaEnvelope = currentAreaUnit.ConvertTo(newAreaUnit, geodeticAreaEnvelope);
 			currentAreaUnit = newAreaUnit;
-			UpdateDisplay();
 		}
+		UpdateDisplay();
 	}
 
 	private void UpdateDisplay()
@@ -466,15 +466,7 @@ public class Geometries : MonoBehaviour
 	}
 	public void SetUnitText(string text)
 	{
-		if (isPolylineMode)
-		{
-			unitText = text;
-		}
-		else
-		{
-			unitText = "Square" + text;
-		}
-
+		unitText = isPolylineMode ? text : $"Square{text}";
 	}
 
 	public void UnitButtonOnClick()
