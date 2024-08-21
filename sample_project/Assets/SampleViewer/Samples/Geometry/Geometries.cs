@@ -98,9 +98,15 @@ public class Geometries : MonoBehaviour
 					if (Physics.Raycast(ray, out hit))
 					{
 						isDragging = true;
-						arcGISCameraControllerComponent.enabled = false;
+
 						hit.point += new Vector3(0, MarkerHeight, 0);
 						startPoint = arcGISMapComponent.EngineToGeographic(hit.point);
+						var lineMarker = Instantiate(LineMarker, hit.point, Quaternion.identity, arcGISMapComponent.transform);
+						var location = lineMarker.GetComponent<ArcGISLocationComponent>();
+						location.enabled = true;
+						location.Position = startPoint;
+						location.Rotation = new ArcGISRotation(0, 90, 0);
+						stops.Push(lineMarker);
 					}
 				}
 				else if (Input.GetMouseButtonUp(0) && isDragging)
@@ -114,10 +120,10 @@ public class Geometries : MonoBehaviour
 						hit.point += new Vector3(0, MarkerHeight, 0);
 						var endPoint = arcGISMapComponent.EngineToGeographic(hit.point);
 						CreateAndCalculateEnvelope(startPoint, endPoint);
-						arcGISCameraControllerComponent.enabled = true;
 					}
 				}
 			}
+			arcGISCameraControllerComponent.enabled = true;
 		}
 		else
 		{
@@ -181,7 +187,6 @@ public class Geometries : MonoBehaviour
 				}
 			}
 		}
-
 	}
 
 	private void CreateAndCalculateEnvelope(ArcGISPoint start, ArcGISPoint end)
@@ -201,13 +206,14 @@ public class Geometries : MonoBehaviour
 
 	private void VisualizeEnvelope(ArcGISEnvelope envelope)
 	{
+		ClearLine();
 		var corners = new[]
 		{
-		new ArcGISPoint(envelope.XMin, envelope.YMin, envelope.SpatialReference), 
-        new ArcGISPoint(envelope.XMax, envelope.YMin, envelope.SpatialReference), 
-        new ArcGISPoint(envelope.XMax, envelope.YMax, envelope.SpatialReference), 
-        new ArcGISPoint(envelope.XMin, envelope.YMax, envelope.SpatialReference)  
-    };
+		new ArcGISPoint(envelope.XMin, envelope.YMin, envelope.SpatialReference),
+		new ArcGISPoint(envelope.XMax, envelope.YMin, envelope.SpatialReference),
+		new ArcGISPoint(envelope.XMax, envelope.YMax, envelope.SpatialReference),
+		new ArcGISPoint(envelope.XMin, envelope.YMax, envelope.SpatialReference)
+		};
 
 		var markers = new List<GameObject>();
 
@@ -228,7 +234,7 @@ public class Geometries : MonoBehaviour
 		for (int i = 0; i < markers.Count; i++)
 		{
 			var currentMarker = markers[i];
-			var nextMarker = markers[(i + 1) % markers.Count]; 
+			var nextMarker = markers[(i + 1) % markers.Count];
 
 			featurePoints.Add(currentMarker);
 			Interpolate(currentMarker, nextMarker, featurePoints);
@@ -264,6 +270,7 @@ public class Geometries : MonoBehaviour
 		geodeticAreaPolygon = ArcGISGeometryEngine.AreaGeodetic(polygon, currentAreaUnit, ArcGISGeodeticCurveType.Geodesic);
 		UpdateDisplay();
 	}
+
 	private void Interpolate(GameObject start, GameObject end, List<GameObject> featurePoints)
 	{
 
@@ -310,6 +317,7 @@ public class Geometries : MonoBehaviour
 			location.Position = arcGISMapComponent.EngineToGeographic(hitInfo.point);
 		}
 	}
+
 	private void RenderLine(ref List<GameObject> featurePoints)
 	{
 		var allPoints = new List<Vector3>();
@@ -345,9 +353,14 @@ public class Geometries : MonoBehaviour
 
 	public void ClearLine()
 	{
-		foreach (var stop in featurePoints)
+		foreach (var stop in stops)
 		{
 			Destroy(stop);
+		}
+
+		foreach (var point in featurePoints)
+		{
+			Destroy(point);
 		}
 
 		foreach (var point in lastToStartInterpolationPoints)
@@ -447,7 +460,7 @@ public class Geometries : MonoBehaviour
 		{
 			var newLinearUnit = new ArcGISLinearUnit(Enum.Parse<ArcGISLinearUnitId>(unitText));
 			geodeticDistance = currentLinearUnit.ConvertTo(newLinearUnit, geodeticDistance);
-			currentLinearUnit = newLinearUnit;			
+			currentLinearUnit = newLinearUnit;
 		}
 		else
 		{
@@ -465,15 +478,12 @@ public class Geometries : MonoBehaviour
 		{
 			result.text = $"{Math.Round(geodeticDistance, 3)}";
 		}
-		else if (isPolygonMode)
-		{
-			result.text = $"{Math.Round(geodeticAreaPolygon, 3)}";
-		}
-		else if (isEnvelopeMode)
+		else
 		{
 			result.text = $"{Math.Round(geodeticAreaEnvelope, 3)}";
 		}
 	}
+
 	public void SetUnitText(string text)
 	{
 		unitText = isPolylineMode ? text : $"Square{text}";
