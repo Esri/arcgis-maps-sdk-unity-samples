@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 262.33694, g: 325.04984, b: 430.2193, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -303,14 +302,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position:
-    x: 12956639.695567025
-    y: 4853699.072609687
-    z: 1326.7129554748535
+    x: NaN
+    y: NaN
+    z: NaN
     SRWkid: 3857
   rotation:
-    Heading: 358.21301696251203
-    Pitch: 6.427466795484349
-    Roll: 0.00038231257263483955
+    Heading: 358.2130169588399
+    Pitch: 6.427481435017285
+    Roll: 0.00038185077958813584
   surfacePlacementMode: 0
   surfacePlacementOffset: 0
 --- !u!114 &150318284
@@ -1416,9 +1415,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position:
-    x: 0
-    y: -0.0000000007081154551613622
-    z: 0
+    x: NaN
+    y: NaN
+    z: NaN
     SRWkid: 3857
   rotation:
     Heading: 0
@@ -2991,8 +2990,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -241.49998, y: -14.6}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: -190, y: -14.6}
+  m_SizeDelta: {x: 300, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1408886456
 MonoBehaviour:
@@ -3494,22 +3493,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 187db49a0d9156d4bb34b422021cffc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Line: {fileID: 820472294}
-  result: {fileID: 1408886456}
-  LineMarker: {fileID: 5022259574890728151, guid: c71f2b8d1ec452a4390a12246e65c700, type: 3}
-  InterpolationMarker: {fileID: 8846720079027601179, guid: e62483263eba74b4b8b1786109d7105c, type: 3}
   InterpolationInterval: 150
+  InterpolationMarker: {fileID: 8846720079027601179, guid: e62483263eba74b4b8b1786109d7105c, type: 3}
+  Line: {fileID: 820472294}
+  LineMarker: {fileID: 5022259574890728151, guid: c71f2b8d1ec452a4390a12246e65c700, type: 3}
+  MarkerHeight: 200
+  ClearButton: {fileID: 1307470794}
   ModeButtons:
   - {fileID: 541059373}
   - {fileID: 1391939050}
   - {fileID: 1394917535}
+  result: {fileID: 1408886456}
   UnitButtons:
   - {fileID: 1013740325}
   - {fileID: 949467399}
   - {fileID: 1219529829}
   - {fileID: 857304953}
-  ClearButton: {fileID: 1307470794}
-  MarkerHeight: 200
 --- !u!1 &1808036063
 GameObject:
   m_ObjectHideFlags: 0
@@ -3558,7 +3557,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c703502c1493f5b4eb3e95b2efe0271e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  apiKey: AAPKa40efa429efc4e16984e44a16ba19bc11OTHHFKax6E0TeVm33shVA6CmchLA8r67sPXl3ZjBM5EVq6w8q2ukFksMl-97l_G
+  apiKey: 
   basemap: https://basemapstyles-api.arcgis.com/arcgis/rest/services/styles/v2/webmaps/arcgis/navigation-night
   basemapType: 0
   basemapAuthentication:

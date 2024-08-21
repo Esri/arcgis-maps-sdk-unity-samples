@@ -9,51 +9,59 @@ using Esri.ArcGISMapsSDK.Samples.Components;
 using Esri.ArcGISMapsSDK.Utils.GeoCoord;
 using Esri.GameEngine.Geometry;
 using Esri.HPFramework;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using TMPro;
-using Unity.Mathematics;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using UnityEngine;
+using Unity.Mathematics;
 
 public class Geometries : MonoBehaviour
 {
-	public GameObject Line;
-	public TMP_Text result;
-	public GameObject LineMarker;
-	public GameObject InterpolationMarker;
-	public float InterpolationInterval = 100;
-	public Button[] ModeButtons;
-	public Button[] UnitButtons;
-	public Button ClearButton;
-	[SerializeField] float MarkerHeight = 200f;
-	private const float RaycastHeight = 5000f;
-	private const float LineWidth = 5f;
-	private ArcGISMapComponent arcGISMapComponent;
+	[Header("-----------ArcGIS Components-----------")]
 	private ArcGISCameraControllerComponent arcGISCameraControllerComponent;
-	private List<GameObject> featurePoints = new List<GameObject>();
-	private List<GameObject> lastToStartInterpolationPoints = new List<GameObject>();
-	private Stack<GameObject> stops = new Stack<GameObject>();
+	private ArcGISMapComponent arcGISMapComponent;
 	private double3 lastRootPosition;
-	private double geodeticDistance = 0;
-	private double geodeticAreaPolygon = 0;
+
+	[Header("-----------Line Objects-----------")]
+	[SerializeField] public float InterpolationInterval = 100;
+	[SerializeField] public GameObject InterpolationMarker;
+	[SerializeField] public GameObject Line;
+	[SerializeField] public GameObject LineMarker;
+	[SerializeField] float MarkerHeight = 200f;
+	private List<GameObject> featurePoints = new List<GameObject>();
 	private double geodeticAreaEnvelope = 0;
+	private double geodeticAreaPolygon = 0;
+	private double geodeticDistance = 0;
+	private List<GameObject> lastToStartInterpolationPoints = new List<GameObject>();
+	private const float LineWidth = 5f;
 	private LineRenderer lineRenderer;
-	private ArcGISLinearUnit currentLinearUnit = new ArcGISLinearUnit(ArcGISLinearUnitId.Miles);
-	private ArcGISAreaUnit currentAreaUnit = new ArcGISAreaUnit(ArcGISAreaUnitId.SquareMiles);
-	private string unitText;
-	private bool isPolylineMode = true;
-	private bool isPolygonMode = false;
-	private bool isEnvelopeMode = false;
-	private bool isDragging = false;
+	private const float RaycastHeight = 5000f;
 	private ArcGISPoint startPoint;
+	private Stack<GameObject> stops = new Stack<GameObject>();
+
+	[Header("-----------Units-----------")]
+	private ArcGISAreaUnit currentAreaUnit = new ArcGISAreaUnit(ArcGISAreaUnitId.SquareMiles);
+	private ArcGISLinearUnit currentLinearUnit = new ArcGISLinearUnit(ArcGISLinearUnitId.Miles);
+	private string unitText;
+
+	[Header("-----------State Management-----------")]
+	private bool isDragging = false;
+	private bool isEnvelopeMode = false;
+	private bool isPolygonMode = false;
+	private bool isPolylineMode = true;
+
+	[Header("-----------UI-----------")]
+	[SerializeField] public Button ClearButton;
+	[SerializeField] public Button[] ModeButtons;
+	[SerializeField] public TMP_Text result;
+	[SerializeField] public Button[] UnitButtons;
 
 	private void Start()
 	{
 		arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
 		arcGISCameraControllerComponent = FindObjectOfType<ArcGISCameraControllerComponent>();
-		arcGISCameraControllerComponent.EnableLeftDragging = false;
 
 		lineRenderer = Line.GetComponent<LineRenderer>();
 		lineRenderer.widthMultiplier = LineWidth;
@@ -80,16 +88,17 @@ public class Geometries : MonoBehaviour
 		{
 			if (Input.GetKey(KeyCode.LeftShift))
 			{
+				arcGISCameraControllerComponent.enabled = false;
 				if (Input.GetMouseButtonDown(0))
 				{
 					ClearLine();
-
 					RaycastHit hit;
 					Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
 					if (Physics.Raycast(ray, out hit))
 					{
 						isDragging = true;
+						arcGISCameraControllerComponent.enabled = false;
 						hit.point += new Vector3(0, MarkerHeight, 0);
 						startPoint = arcGISMapComponent.EngineToGeographic(hit.point);
 					}
@@ -105,6 +114,7 @@ public class Geometries : MonoBehaviour
 						hit.point += new Vector3(0, MarkerHeight, 0);
 						var endPoint = arcGISMapComponent.EngineToGeographic(hit.point);
 						CreateAndCalculateEnvelope(startPoint, endPoint);
+						arcGISCameraControllerComponent.enabled = true;
 					}
 				}
 			}
