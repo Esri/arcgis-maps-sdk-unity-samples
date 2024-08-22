@@ -426,10 +426,10 @@ public class Geometries : MonoBehaviour
 		isPolygonMode = true;
 		ModeButtons[1].interactable = false;
 
-		UnitButtons[0].GetComponentInChildren<TMP_Text>().text = "mi²";
-		UnitButtons[1].GetComponentInChildren<TMP_Text>().text = "ft²";
-		UnitButtons[2].GetComponentInChildren<TMP_Text>().text = "m²";
-		UnitButtons[3].GetComponentInChildren<TMP_Text>().text = "km²";
+		UnitButtons[0].GetComponentInChildren<TMP_Text>().text = "mi\u00B2";
+		UnitButtons[1].GetComponentInChildren<TMP_Text>().text = "ft\u00B2";
+		UnitButtons[2].GetComponentInChildren<TMP_Text>().text = "m\u00B2";
+		UnitButtons[3].GetComponentInChildren<TMP_Text>().text = "km\u00B2";
 	}
 
 	public void SetEnvelopeMode()
@@ -439,10 +439,10 @@ public class Geometries : MonoBehaviour
 		isEnvelopeMode = true;
 		ModeButtons[2].interactable = false;
 
-		UnitButtons[0].GetComponentInChildren<TMP_Text>().text = "mi²";
-		UnitButtons[1].GetComponentInChildren<TMP_Text>().text = "ft²";
-		UnitButtons[2].GetComponentInChildren<TMP_Text>().text = "m²";
-		UnitButtons[3].GetComponentInChildren<TMP_Text>().text = "km²";
+		UnitButtons[0].GetComponentInChildren<TMP_Text>().text = "mi\u00B2";
+		UnitButtons[1].GetComponentInChildren<TMP_Text>().text = "ft\u00B2";
+		UnitButtons[2].GetComponentInChildren<TMP_Text>().text = "m\u00B2";
+		UnitButtons[3].GetComponentInChildren<TMP_Text>().text = "km\u00B2";
 	}
 
 	private void UnitChanged()
@@ -456,7 +456,6 @@ public class Geometries : MonoBehaviour
 		else
 		{
 			var newAreaUnit = new ArcGISAreaUnit(Enum.Parse<ArcGISAreaUnitId>(unitText));
-			calculation = currentAreaUnit.ConvertTo(newAreaUnit, calculation);
 			calculation = currentAreaUnit.ConvertTo(newAreaUnit, calculation);
 			currentAreaUnit = newAreaUnit;
 		}

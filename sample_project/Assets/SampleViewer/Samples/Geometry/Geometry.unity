@@ -1088,7 +1088,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -230.00006, y: -219}
+  m_AnchoredPosition: {x: -230.00006, y: -249}
   m_SizeDelta: {x: 80, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &492856484
@@ -3349,7 +3349,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -360, y: -231}
+  m_AnchoredPosition: {x: -360, y: -259}
   m_SizeDelta: {x: 150, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1608952235
@@ -4208,7 +4208,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Left Click
+  m_text: Left Click/Drag
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e59fb78ae467b9446bad6955a0dd0766, type: 2}
   m_sharedMaterial: {fileID: 8862657535182535335, guid: e59fb78ae467b9446bad6955a0dd0766, type: 2}
@@ -4293,8 +4293,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -228.50049, y: -280.8}
-  m_SizeDelta: {x: 150, y: 50}
+  m_AnchoredPosition: {x: -228.50049, y: -315}
+  m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8225324982850248679
 CanvasRenderer:
@@ -4439,7 +4439,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -500.90005, y: -280.69986}
+  m_AnchoredPosition: {x: -500.90005, y: -315}
   m_SizeDelta: {x: 150, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8225324983434390377
@@ -4776,7 +4776,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -502.00006, y: -233}
+  m_AnchoredPosition: {x: -502.00006, y: -257}
   m_SizeDelta: {x: 160, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8225324984649553139
@@ -5150,8 +5150,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Hold Left Shift + Left Click on the map to begin measuring the distance.
-    Click different units above to set the unit.
+  m_text: Hold Left Shift + Left Click on the map to add points. Hold Left Shift
+    + Left Dragging to begin drawing an envelope. Click different units above to
+    set the unit.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e59fb78ae467b9446bad6955a0dd0766, type: 2}
   m_sharedMaterial: {fileID: 8862657535182535335, guid: e59fb78ae467b9446bad6955a0dd0766, type: 2}
