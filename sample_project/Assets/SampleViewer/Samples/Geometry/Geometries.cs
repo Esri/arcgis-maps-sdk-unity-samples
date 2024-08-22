@@ -29,7 +29,7 @@ public class Geometries : MonoBehaviour
 	[SerializeField] public GameObject InterpolationMarker;
 	[SerializeField] public GameObject Line;
 	[SerializeField] public GameObject LineMarker;
-	[SerializeField] float MarkerHeight = 200f;
+	[SerializeField] float MarkerHeight = 300f;
 	private double calculation = 0;
 	private List<GameObject> featurePoints = new List<GameObject>();
 	private List<GameObject> lastToStartInterpolationPoints = new List<GameObject>();
@@ -45,7 +45,6 @@ public class Geometries : MonoBehaviour
 	private string unitText;
 
 	[Header("-----------State Management-----------")]
-	private bool isDragging = false;
 	private bool isEnvelopeMode = false;
 	private bool isPolygonMode = false;
 	private bool isPolylineMode = true;
@@ -89,35 +88,25 @@ public class Geometries : MonoBehaviour
 				arcGISCameraControllerComponent.enabled = false;
 				if (Input.GetMouseButtonDown(0))
 				{
-					ClearLine();
 					RaycastHit hit;
 					Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
 					if (Physics.Raycast(ray, out hit))
 					{
-						isDragging = true;
-
 						hit.point += new Vector3(0, MarkerHeight, 0);
 						startPoint = arcGISMapComponent.EngineToGeographic(hit.point);
-						var lineMarker = Instantiate(LineMarker, hit.point, Quaternion.identity, arcGISMapComponent.transform);
-						var location = lineMarker.GetComponent<ArcGISLocationComponent>();
-						location.enabled = true;
-						location.Position = startPoint;
-						location.Rotation = new ArcGISRotation(0, 90, 0);
-						stops.Push(lineMarker);
 					}
 				}
-				else if (Input.GetMouseButtonUp(0) && isDragging)
+				else if (Input.GetMouseButton(0))  
 				{
 					RaycastHit hit;
 					Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
 					if (Physics.Raycast(ray, out hit))
 					{
-						isDragging = false;
 						hit.point += new Vector3(0, MarkerHeight, 0);
-						var endPoint = arcGISMapComponent.EngineToGeographic(hit.point);
-						CreateAndCalculateEnvelope(startPoint, endPoint);
+						var currentPoint = arcGISMapComponent.EngineToGeographic(hit.point);
+						CreateAndCalculateEnvelope(startPoint, currentPoint);  // Continuously update visual cue
 					}
 				}
 			}
@@ -205,6 +194,7 @@ public class Geometries : MonoBehaviour
 	private void VisualizeEnvelope(ArcGISEnvelope envelope)
 	{
 		ClearLine();
+
 		var corners = new[]
 		{
 		new ArcGISPoint(envelope.XMin, envelope.YMin, envelope.SpatialReference),
@@ -218,7 +208,6 @@ public class Geometries : MonoBehaviour
 		foreach (var corner in corners)
 		{
 			var point = arcGISMapComponent.GeographicToEngine(corner);
-			point.y += MarkerHeight;
 
 			var marker = Instantiate(LineMarker, point, Quaternion.identity, arcGISMapComponent.transform);
 			SetSurfacePlacement(marker, MarkerHeight);
@@ -306,15 +295,20 @@ public class Geometries : MonoBehaviour
 	// Set height for point transform and location component.
 	private void SetElevation(GameObject stop)
 	{
-		// Start the raycast in the air at an arbitrary to ensure it is above the ground.
+		// Start the raycast in the air at an arbitrary point to ensure it is above the ground.
 		var position = stop.transform.position;
 		var raycastStart = new Vector3(position.x, position.y + RaycastHeight, position.z);
 		if (Physics.Raycast(raycastStart, Vector3.down, out RaycastHit hitInfo))
 		{
+			var elevatedPosition = hitInfo.point + new Vector3(0, MarkerHeight, 0);
+
+			stop.transform.position = elevatedPosition;
+
 			var location = stop.GetComponent<ArcGISLocationComponent>();
-			location.Position = arcGISMapComponent.EngineToGeographic(hitInfo.point);
+			location.Position = arcGISMapComponent.EngineToGeographic(elevatedPosition);
 		}
 	}
+
 
 	private void RenderLine(ref List<GameObject> featurePoints)
 	{
@@ -369,14 +363,14 @@ public class Geometries : MonoBehaviour
 		featurePoints.Clear();
 		stops.Clear();
 
-		calculation = 0;
-
-		UpdateDisplay();
-
 		if (lineRenderer)
 		{
 			lineRenderer.positionCount = 0;
 		}
+
+		calculation = 0;
+
+		UpdateDisplay();
 	}
 
 	public void ResetMode()
