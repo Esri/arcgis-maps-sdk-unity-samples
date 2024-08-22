@@ -30,10 +30,8 @@ public class Geometries : MonoBehaviour
 	[SerializeField] public GameObject Line;
 	[SerializeField] public GameObject LineMarker;
 	[SerializeField] float MarkerHeight = 200f;
+	private double calculation = 0;
 	private List<GameObject> featurePoints = new List<GameObject>();
-	private double geodeticAreaEnvelope = 0;
-	private double geodeticAreaPolygon = 0;
-	private double geodeticDistance = 0;
 	private List<GameObject> lastToStartInterpolationPoints = new List<GameObject>();
 	private const float LineWidth = 5f;
 	private LineRenderer lineRenderer;
@@ -161,7 +159,7 @@ public class Geometries : MonoBehaviour
 						if (isPolylineMode)
 						{
 							// Calculate distance from last point to this point.
-							geodeticDistance += ArcGISGeometryEngine.DistanceGeodetic(lastPoint, thisPoint, currentLinearUnit, new ArcGISAngularUnit(ArcGISAngularUnitId.Degrees), ArcGISGeodeticCurveType.Geodesic).Distance;
+							calculation += ArcGISGeometryEngine.DistanceGeodetic(lastPoint, thisPoint, currentLinearUnit, new ArcGISAngularUnit(ArcGISAngularUnitId.Degrees), ArcGISGeodeticCurveType.Geodesic).Distance;
 							UpdateDisplay();
 						}
 						featurePoints.Add(lastStop);
@@ -200,7 +198,7 @@ public class Geometries : MonoBehaviour
 
 		VisualizeEnvelope(envelope);
 
-		geodeticAreaEnvelope = ArcGISGeometryEngine.AreaGeodetic(envelope, currentAreaUnit, ArcGISGeodeticCurveType.Geodesic);
+		calculation = ArcGISGeometryEngine.AreaGeodetic(envelope, currentAreaUnit, ArcGISGeodeticCurveType.Geodesic);
 		UpdateDisplay();
 	}
 
@@ -267,7 +265,7 @@ public class Geometries : MonoBehaviour
 
 		var polygon = polygonBuilder.ToGeometry();
 
-		geodeticAreaPolygon = ArcGISGeometryEngine.AreaGeodetic(polygon, currentAreaUnit, ArcGISGeodeticCurveType.Geodesic);
+		calculation = ArcGISGeometryEngine.AreaGeodetic(polygon, currentAreaUnit, ArcGISGeodeticCurveType.Geodesic);
 		UpdateDisplay();
 	}
 
@@ -371,9 +369,8 @@ public class Geometries : MonoBehaviour
 		featurePoints.Clear();
 		stops.Clear();
 
-		geodeticDistance = 0;
-		geodeticAreaPolygon = 0;
-		geodeticAreaEnvelope = 0;
+		calculation = 0;
+
 		UpdateDisplay();
 
 		if (lineRenderer)
@@ -459,14 +456,14 @@ public class Geometries : MonoBehaviour
 		if (isPolylineMode)
 		{
 			var newLinearUnit = new ArcGISLinearUnit(Enum.Parse<ArcGISLinearUnitId>(unitText));
-			geodeticDistance = currentLinearUnit.ConvertTo(newLinearUnit, geodeticDistance);
+			calculation = currentLinearUnit.ConvertTo(newLinearUnit, calculation);
 			currentLinearUnit = newLinearUnit;
 		}
 		else
 		{
 			var newAreaUnit = new ArcGISAreaUnit(Enum.Parse<ArcGISAreaUnitId>(unitText));
-			geodeticAreaPolygon = currentAreaUnit.ConvertTo(newAreaUnit, geodeticAreaPolygon);
-			geodeticAreaEnvelope = currentAreaUnit.ConvertTo(newAreaUnit, geodeticAreaEnvelope);
+			calculation = currentAreaUnit.ConvertTo(newAreaUnit, calculation);
+			calculation = currentAreaUnit.ConvertTo(newAreaUnit, calculation);
 			currentAreaUnit = newAreaUnit;
 		}
 		UpdateDisplay();
@@ -474,14 +471,7 @@ public class Geometries : MonoBehaviour
 
 	private void UpdateDisplay()
 	{
-		if (isPolylineMode)
-		{
-			result.text = $"{Math.Round(geodeticDistance, 3)}";
-		}
-		else
-		{
-			result.text = $"{Math.Round(geodeticAreaEnvelope, 3)}";
-		}
+		result.text = $"{Math.Round(calculation, 3)}";
 	}
 
 	public void SetUnitText(string text)
