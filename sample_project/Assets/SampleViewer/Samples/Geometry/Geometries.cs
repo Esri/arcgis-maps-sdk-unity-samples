@@ -78,8 +78,11 @@ public class Geometries : MonoBehaviour
 		if (EventSystem.current.IsPointerOverGameObject())
 		{
 			// Block 3D raycasts when mouse is over UI
+			arcGISCameraControllerComponent.enabled = false;
 			return;
 		}
+
+		arcGISCameraControllerComponent.enabled = true;
 
 		if (isEnvelopeMode)
 		{
@@ -426,10 +429,10 @@ public class Geometries : MonoBehaviour
 		isPolygonMode = true;
 		ModeButtons[1].interactable = false;
 
-		UnitButtons[0].GetComponentInChildren<TMP_Text>().text = "mi\u00B2";
-		UnitButtons[1].GetComponentInChildren<TMP_Text>().text = "ft\u00B2";
-		UnitButtons[2].GetComponentInChildren<TMP_Text>().text = "m\u00B2";
-		UnitButtons[3].GetComponentInChildren<TMP_Text>().text = "km\u00B2";
+		UnitButtons[0].GetComponentInChildren<TMP_Text>().text = "mi<sup>2</sup>";
+		UnitButtons[1].GetComponentInChildren<TMP_Text>().text = "ft<sup>2</sup>";
+		UnitButtons[2].GetComponentInChildren<TMP_Text>().text = "m<sup>2</sup>";
+		UnitButtons[3].GetComponentInChildren<TMP_Text>().text = "km<sup>2</sup>";
 	}
 
 	public void SetEnvelopeMode()
@@ -439,10 +442,10 @@ public class Geometries : MonoBehaviour
 		isEnvelopeMode = true;
 		ModeButtons[2].interactable = false;
 
-		UnitButtons[0].GetComponentInChildren<TMP_Text>().text = "mi\u00B2";
-		UnitButtons[1].GetComponentInChildren<TMP_Text>().text = "ft\u00B2";
-		UnitButtons[2].GetComponentInChildren<TMP_Text>().text = "m\u00B2";
-		UnitButtons[3].GetComponentInChildren<TMP_Text>().text = "km\u00B2";
+		UnitButtons[0].GetComponentInChildren<TMP_Text>().text = "mi<sup>2</sup>";
+		UnitButtons[1].GetComponentInChildren<TMP_Text>().text = "ft<sup>2</sup>";
+		UnitButtons[2].GetComponentInChildren<TMP_Text>().text = "m<sup>2</sup>";
+		UnitButtons[3].GetComponentInChildren<TMP_Text>().text = "km<sup>2</sup>";
 	}
 
 	private void UnitChanged()
