@@ -15,6 +15,8 @@ Draw polylines, polygons and envelopes on the map and get their lengths or areas
 
 This sample uses the [geometry API](https://developers.arcgis.com/unity/api-reference/gameengine/geometry/arcgisgeometry/) for creating polygons, envelopes and calculate areas. It uses Unity's [line renderer](https://docs.unity3d.com/ScriptReference/LineRenderer.html) to create polylines, and use the geometry API to calculate distance. The distance calculated is [geodetic distance, also called geodesic distance](https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-analyst/geodesic-versus-planar-distance.htm). The area calculated is geodetic area. You could also use the [polyline builder](https://developers.arcgis.com/unity/api-reference/gameengine/geometry/arcgispolylinebuilder/) to create polylines. But you can only get the [planar distance](https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-analyst/geodesic-versus-planar-distance.htm) with polylines created this way. 
 
+Note that the polyline distance calculation accounts for elevation but is an approximation. The polygon and envelope calculation don't take elevation into account.  
+
 ## About the data
 
 Basemap is [navigation (night)](https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/New_York_LoD2_3D_Buildings/SceneServer/layers/0) hosted by Esri.
