@@ -263,7 +263,6 @@ public class Geometries : MonoBehaviour
 
 	private void Interpolate(GameObject start, GameObject end, List<GameObject> featurePoints)
 	{
-
 		float lengthOfLine = Vector3.Distance(start.transform.position, end.transform.position);
 		float n = Mathf.Floor(lengthOfLine / InterpolationInterval);
 		double dx = (end.transform.position.x - start.transform.position.x) / n;
