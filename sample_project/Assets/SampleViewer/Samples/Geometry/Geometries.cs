@@ -206,7 +206,7 @@ public class Geometries : MonoBehaviour
 			hit.point += new Vector3(0, MarkerHeight, 0);
 			var currentPoint = arcGISMapComponent.EngineToGeographic(hit.point);
 
-			CreateAndCalculateEnvelope(startPoint, currentPoint);  
+			CreateAndCalculateEnvelope(startPoint, currentPoint);
 		}
 	}
 
@@ -217,15 +217,6 @@ public class Geometries : MonoBehaviour
 		{
 			UpdateDraggingVisualization();
 		}
-		/*
-		if (EventSystem.current.IsPointerOverGameObject())
-		{
-			// Block 3D raycasts when mouse is over UI
-			arcGISCameraControllerComponent.enabled = false;
-			return;
-		}
-
-		arcGISCameraControllerComponent.enabled = true;*/
 	}
 
 	private void CreateAndCalculateEnvelope(ArcGISPoint start, ArcGISPoint end)
@@ -451,9 +442,10 @@ public class Geometries : MonoBehaviour
 		isEnvelopeMode = false;
 		isPolylineMode = false;
 
-		ModeButtons[0].interactable = true;
-		ModeButtons[1].interactable = true;
-		ModeButtons[2].interactable = true;
+		foreach (var button in ModeButtons)
+		{
+			button.interactable = true;
+		}
 	}
 
 	public void SetPolylineMode()
