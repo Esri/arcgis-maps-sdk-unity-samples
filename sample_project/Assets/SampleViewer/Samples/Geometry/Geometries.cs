@@ -200,10 +200,10 @@ public class Geometries : MonoBehaviour
 
 		var corners = new[]
 		{
-		new ArcGISPoint(envelope.XMin, envelope.YMin, envelope.SpatialReference),
-		new ArcGISPoint(envelope.XMax, envelope.YMin, envelope.SpatialReference),
-		new ArcGISPoint(envelope.XMax, envelope.YMax, envelope.SpatialReference),
-		new ArcGISPoint(envelope.XMin, envelope.YMax, envelope.SpatialReference)
+			new ArcGISPoint(envelope.XMin, envelope.YMin, envelope.SpatialReference),
+			new ArcGISPoint(envelope.XMax, envelope.YMin, envelope.SpatialReference),
+			new ArcGISPoint(envelope.XMax, envelope.YMax, envelope.SpatialReference),
+			new ArcGISPoint(envelope.XMin, envelope.YMax, envelope.SpatialReference)
 		};
 
 		var markers = new List<GameObject>();
