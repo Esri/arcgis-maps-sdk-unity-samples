@@ -56,7 +56,7 @@ public static class CallReImport
         }
     }
 
-    [MenuItem("ArcGIS Maps SDK/Re-Import Samples Materials")]
+    [MenuItem("Tools/ArcGIS Maps SDK/Re-Import Samples Materials")]
     public static void ManualCall()
     {
        reImport();

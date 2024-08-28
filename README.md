@@ -2,7 +2,7 @@
 
 ![image](arcgis-maps-sdk-unity-samples.png)
 
-Here is a Unity project containing a set of samples showing you how to accomplish various things using the combined features of Unity and the ArcGIS Maps SDK for Unity. The `main` branch is configured to work with our most recent release (1.5.0) if you want to use the sample repo with an older release check out the corresponding tag of the sample repo, `git checkout 1.0.0` for the sample repo that worked with our 1.0.0 release.
+Here is a Unity project containing a set of samples showing you how to accomplish various things using the combined features of Unity and the ArcGIS Maps SDK for Unity. The `main` branch is configured to work with our most recent release (1.6.0) if you want to use the sample repo with an older release check out the corresponding tag of the sample repo, `git checkout 1.0.0` for the sample repo that worked with our 1.0.0 release.
 
 ### Note
 
@@ -11,13 +11,13 @@ This repository is made up of two separate Unity projects. If you would like to 
 ### Requirements for Sample Project
 
 * Computer running Windows or macOS
-* The Unity project was created with 2021.3.24 LTS but is compatible with any version of 2021.3 LTS and also works with 2022.3 LTS
+* The Unity project requires a minimum of Unity `2022.3.35f1`
 * ArcGISMaps SDK for Unity
 
 ### Requirements for XR Sample Project
 
 * Computer running Windows (OpenXR is not supported on macOS)
-* The Unity project was created with 2023.3.19 LTS but is compatible with any version of 2022.3 LTS
+* The Unity project requires a minimum of Unity `2022.3.35f1`
 * ArcGISMaps SDK for Unity
 * A VR Headset and the necessary software to run through Desktop Mode
 
