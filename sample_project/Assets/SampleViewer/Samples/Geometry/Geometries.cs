@@ -12,11 +12,11 @@ using Esri.HPFramework;
 using System;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using Unity.Mathematics;
 
 public class Geometries : MonoBehaviour
 {
@@ -46,8 +46,9 @@ public class Geometries : MonoBehaviour
 	private string unitText;
 
 	[Header("-----------State Management-----------")]
-	bool isDragging = false;
+	private bool isDragging = false;
 	private bool isEnvelopeMode = false;
+	private bool isLeftShiftPressed = false;
 	private bool isPolygonMode = false;
 	private bool isPolylineMode = true;
 
@@ -63,6 +64,7 @@ public class Geometries : MonoBehaviour
 	{
 		inputActions = new InputActions();
 	}
+
 	private void OnEnable()
 	{
 		inputActions.Enable();
@@ -79,14 +81,6 @@ public class Geometries : MonoBehaviour
 		inputActions.DrawingControls.LeftClick.canceled -= OnLeftClickEnd;
 		inputActions.DrawingControls.LeftShift.performed -= ctx => OnLeftShift(true);
 		inputActions.DrawingControls.LeftShift.canceled -= ctx => OnLeftShift(false);
-	}
-
-	private void OnLeftShift(bool isPressed)
-	{
-		if (isEnvelopeMode)
-		{
-			arcGISCameraControllerComponent.enabled = !isPressed;
-		}
 	}
 
 	private void Start()
@@ -107,9 +101,16 @@ public class Geometries : MonoBehaviour
 		UnitButtons[0].interactable = false;
 	}
 
+	private void OnLeftShift(bool isPressed)
+	{
+		isLeftShiftPressed = isPressed;
+
+		arcGISCameraControllerComponent.enabled = !isPressed;
+	}
+
 	private void OnLeftClickStart(InputAction.CallbackContext context)
 	{
-		if (!EventSystem.current.IsPointerOverGameObject())
+		if (isLeftShiftPressed && !EventSystem.current.IsPointerOverGameObject())
 		{
 			RaycastHit hit;
 			Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
@@ -121,11 +122,9 @@ public class Geometries : MonoBehaviour
 
 				if (isEnvelopeMode)
 				{
-					arcGISCameraControllerComponent.enabled = false;
 					startPoint = hitPoint;
 					isDragging = true;
 				}
-
 				else
 				{
 					if (isPolygonMode)
@@ -151,7 +150,7 @@ public class Geometries : MonoBehaviour
 						var lastPoint = lastStop.GetComponent<ArcGISLocationComponent>().Position;
 						if (isPolylineMode)
 						{
-							// Calculate distance from last point to this point.
+							// Calculate distance from last point to this point, and add to the total distance calculation.
 							calculation += ArcGISGeometryEngine.DistanceGeodetic(lastPoint, hitPoint, currentLinearUnit, new ArcGISAngularUnit(ArcGISAngularUnitId.Degrees), ArcGISGeodeticCurveType.Geodesic).Distance;
 							UpdateDisplay();
 						}
@@ -182,7 +181,7 @@ public class Geometries : MonoBehaviour
 
 	private void OnLeftClickEnd(InputAction.CallbackContext context)
 	{
-		if (isEnvelopeMode)
+		if (isLeftShiftPressed && isEnvelopeMode)
 		{
 			RaycastHit hit;
 			Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
@@ -193,8 +192,6 @@ public class Geometries : MonoBehaviour
 				var endPoint = arcGISMapComponent.EngineToGeographic(hit.point);
 				CreateAndCalculateEnvelope(startPoint, endPoint);
 			}
-
-			arcGISCameraControllerComponent.enabled = true;
 			isDragging = false;
 		}
 	}
@@ -209,16 +206,26 @@ public class Geometries : MonoBehaviour
 			hit.point += new Vector3(0, MarkerHeight, 0);
 			var currentPoint = arcGISMapComponent.EngineToGeographic(hit.point);
 
-			CreateAndCalculateEnvelope(startPoint, currentPoint);  // Continuously update visual cue
+			CreateAndCalculateEnvelope(startPoint, currentPoint);  
 		}
 	}
 
 	private void Update()
 	{
+		// Continuously update visual cue in update
 		if (isEnvelopeMode && isDragging)
 		{
 			UpdateDraggingVisualization();
 		}
+		/*
+		if (EventSystem.current.IsPointerOverGameObject())
+		{
+			// Block 3D raycasts when mouse is over UI
+			arcGISCameraControllerComponent.enabled = false;
+			return;
+		}
+
+		arcGISCameraControllerComponent.enabled = true;*/
 	}
 
 	private void CreateAndCalculateEnvelope(ArcGISPoint start, ArcGISPoint end)
@@ -262,7 +269,7 @@ public class Geometries : MonoBehaviour
 			stops.Push(marker);
 		}
 
-		// Add the corners to featurePoints in correct order to form the rectangle
+		// Add the corners to featurePoints in correct order to form the envelope
 		for (int i = 0; i < markers.Count; i++)
 		{
 			var currentMarker = markers[i];
@@ -353,7 +360,6 @@ public class Geometries : MonoBehaviour
 		}
 	}
 
-
 	private void RenderLine(ref List<GameObject> featurePoints)
 	{
 		var allPoints = new List<Vector3>();
@@ -417,19 +423,6 @@ public class Geometries : MonoBehaviour
 		UpdateDisplay();
 	}
 
-	public void ResetMode()
-	{
-		ClearLine();
-
-		isPolygonMode = false;
-		isEnvelopeMode = false;
-		isPolylineMode = false;
-
-		ModeButtons[0].interactable = true;
-		ModeButtons[1].interactable = true;
-		ModeButtons[2].interactable = true;
-	}
-
 	private void RebaseLine()
 	{
 		var rootPosition = arcGISMapComponent.GetComponent<HPRoot>().RootUniversePosition;
@@ -448,6 +441,19 @@ public class Geometries : MonoBehaviour
 			}
 			lastRootPosition = rootPosition;
 		}
+	}
+
+	public void ResetMode()
+	{
+		ClearLine();
+
+		isPolygonMode = false;
+		isEnvelopeMode = false;
+		isPolylineMode = false;
+
+		ModeButtons[0].interactable = true;
+		ModeButtons[1].interactable = true;
+		ModeButtons[2].interactable = true;
 	}
 
 	public void SetPolylineMode()
