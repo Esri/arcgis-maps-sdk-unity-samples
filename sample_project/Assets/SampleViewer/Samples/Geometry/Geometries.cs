@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Unity.Mathematics;
 
@@ -45,6 +46,7 @@ public class Geometries : MonoBehaviour
 	private string unitText;
 
 	[Header("-----------State Management-----------")]
+	bool isDragging = false;
 	private bool isEnvelopeMode = false;
 	private bool isPolygonMode = false;
 	private bool isPolylineMode = true;
@@ -54,6 +56,38 @@ public class Geometries : MonoBehaviour
 	[SerializeField] public Button[] ModeButtons;
 	[SerializeField] public TMP_Text result;
 	[SerializeField] public Button[] UnitButtons;
+
+	private InputActions inputActions;
+
+	private void Awake()
+	{
+		inputActions = new InputActions();
+	}
+	private void OnEnable()
+	{
+		inputActions.Enable();
+		inputActions.DrawingControls.LeftClick.started += OnLeftClickStart;
+		inputActions.DrawingControls.LeftClick.canceled += OnLeftClickEnd;
+		inputActions.DrawingControls.LeftShift.performed += ctx => OnLeftShift(true);
+		inputActions.DrawingControls.LeftShift.canceled += ctx => OnLeftShift(false);
+	}
+
+	private void OnDisable()
+	{
+		inputActions.Disable();
+		inputActions.DrawingControls.LeftClick.started -= OnLeftClickStart;
+		inputActions.DrawingControls.LeftClick.canceled -= OnLeftClickEnd;
+		inputActions.DrawingControls.LeftShift.performed -= ctx => OnLeftShift(true);
+		inputActions.DrawingControls.LeftShift.canceled -= ctx => OnLeftShift(false);
+	}
+
+	private void OnLeftShift(bool isPressed)
+	{
+		if (isEnvelopeMode)
+		{
+			arcGISCameraControllerComponent.enabled = !isPressed;
+		}
+	}
 
 	private void Start()
 	{
@@ -73,75 +107,42 @@ public class Geometries : MonoBehaviour
 		UnitButtons[0].interactable = false;
 	}
 
-	private void Update()
+	private void OnLeftClickStart(InputAction.CallbackContext context)
 	{
-		if (EventSystem.current.IsPointerOverGameObject())
+		if (!EventSystem.current.IsPointerOverGameObject())
 		{
-			// Block 3D raycasts when mouse is over UI
-			arcGISCameraControllerComponent.enabled = false;
-			return;
-		}
+			RaycastHit hit;
+			Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
 
-		arcGISCameraControllerComponent.enabled = true;
-
-		if (isEnvelopeMode)
-		{
-			if (Input.GetKey(KeyCode.LeftShift))
+			if (Physics.Raycast(ray, out hit))
 			{
-				arcGISCameraControllerComponent.enabled = false;
-				if (Input.GetMouseButtonDown(0))
-				{
-					RaycastHit hit;
-					Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+				hit.point += new Vector3(0, MarkerHeight, 0);
+				var hitPoint = arcGISMapComponent.EngineToGeographic(hit.point);
 
-					if (Physics.Raycast(ray, out hit))
-					{
-						hit.point += new Vector3(0, MarkerHeight, 0);
-						startPoint = arcGISMapComponent.EngineToGeographic(hit.point);
-					}
-				}
-				else if (Input.GetMouseButton(0))  
+				if (isEnvelopeMode)
 				{
-					RaycastHit hit;
-					Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-					if (Physics.Raycast(ray, out hit))
-					{
-						hit.point += new Vector3(0, MarkerHeight, 0);
-						var currentPoint = arcGISMapComponent.EngineToGeographic(hit.point);
-						CreateAndCalculateEnvelope(startPoint, currentPoint);  // Continuously update visual cue
-					}
-				}
-			}
-			arcGISCameraControllerComponent.enabled = true;
-		}
-		else
-		{
-			if (Input.GetKey(KeyCode.LeftShift) && Input.GetMouseButtonDown(0))
-			{
-				if (isPolygonMode)
-				{
-					//clear interpolation points of last segments 
-					foreach (var point in lastToStartInterpolationPoints)
-					{
-						Destroy(point);
-						continue;
-					}
-					lastToStartInterpolationPoints.Clear();
+					arcGISCameraControllerComponent.enabled = false;
+					startPoint = hitPoint;
+					isDragging = true;
 				}
 
-				RaycastHit hit;
-				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-				if (Physics.Raycast(ray, out hit))
+				else
 				{
-					hit.point += new Vector3(0, MarkerHeight, 0);
+					if (isPolygonMode)
+					{
+						//clear interpolation points of last segments 
+						foreach (var point in lastToStartInterpolationPoints)
+						{
+							Destroy(point);
+							continue;
+						}
+						lastToStartInterpolationPoints.Clear();
+					}
+
 					var lineMarker = Instantiate(LineMarker, hit.point, Quaternion.identity, arcGISMapComponent.transform);
-					var thisPoint = arcGISMapComponent.EngineToGeographic(hit.point);
-
 					var location = lineMarker.GetComponent<ArcGISLocationComponent>();
 					location.enabled = true;
-					location.Position = thisPoint;
+					location.Position = hitPoint;
 					location.Rotation = new ArcGISRotation(0, 90, 0);
 
 					if (stops.Count > 0)
@@ -151,7 +152,7 @@ public class Geometries : MonoBehaviour
 						if (isPolylineMode)
 						{
 							// Calculate distance from last point to this point.
-							calculation += ArcGISGeometryEngine.DistanceGeodetic(lastPoint, thisPoint, currentLinearUnit, new ArcGISAngularUnit(ArcGISAngularUnitId.Degrees), ArcGISGeodeticCurveType.Geodesic).Distance;
+							calculation += ArcGISGeometryEngine.DistanceGeodetic(lastPoint, hitPoint, currentLinearUnit, new ArcGISAngularUnit(ArcGISAngularUnitId.Degrees), ArcGISGeodeticCurveType.Geodesic).Distance;
 							UpdateDisplay();
 						}
 						featurePoints.Add(lastStop);
@@ -176,6 +177,47 @@ public class Geometries : MonoBehaviour
 					RebaseLine();
 				}
 			}
+		}
+	}
+
+	private void OnLeftClickEnd(InputAction.CallbackContext context)
+	{
+		if (isEnvelopeMode)
+		{
+			RaycastHit hit;
+			Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+
+			if (Physics.Raycast(ray, out hit))
+			{
+				hit.point += new Vector3(0, MarkerHeight, 0);
+				var endPoint = arcGISMapComponent.EngineToGeographic(hit.point);
+				CreateAndCalculateEnvelope(startPoint, endPoint);
+			}
+
+			arcGISCameraControllerComponent.enabled = true;
+			isDragging = false;
+		}
+	}
+
+	private void UpdateDraggingVisualization()
+	{
+		RaycastHit hit;
+		Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+
+		if (Physics.Raycast(ray, out hit))
+		{
+			hit.point += new Vector3(0, MarkerHeight, 0);
+			var currentPoint = arcGISMapComponent.EngineToGeographic(hit.point);
+
+			CreateAndCalculateEnvelope(startPoint, currentPoint);  // Continuously update visual cue
+		}
+	}
+
+	private void Update()
+	{
+		if (isEnvelopeMode && isDragging)
+		{
+			UpdateDraggingVisualization();
 		}
 	}
 
