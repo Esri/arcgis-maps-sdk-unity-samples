@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 3813.7563, g: 3454.3071, b: 4653.0786, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -635,7 +634,7 @@ Transform:
   m_GameObject: {fileID: 195093959}
   serializedVersion: 2
   m_LocalRotation: {x: 0.114229746, y: -0.0000000015946787, z: 0.000000022226812, w: 0.9934544}
-  m_LocalPosition: {x: 0.0000008298084, y: 1500.2566, z: -1810.9874}
+  m_LocalPosition: {x: 0.0000008288771, y: 1500.2566, z: -2388.9094}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -791,6 +790,8 @@ MonoBehaviour:
     Heading: 0.00000011233469114868042
     Pitch: 76.88160063110143
     Roll: 0.0000025767031345209926
+  surfacePlacementMode: 0
+  surfacePlacementOffset: 0
 --- !u!114 &195093963
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -885,7 +886,7 @@ MonoBehaviour:
   m_LocalPosition:
     x: -8238310.235646175
     y: 1500.2566193412556
-    z: 4530317.177376839
+    z: 4967682.669705094
   m_LocalRotation:
     value:
       x: 0.11422974
@@ -1669,6 +1670,7 @@ GameObject:
   - component: {fileID: 522148127}
   - component: {fileID: 522148126}
   - component: {fileID: 522148125}
+  - component: {fileID: 522148128}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -1736,6 +1738,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &522148128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 522148124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7a1fcb0d5e135d429750d74680ff277, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &646769576
 GameObject:
   m_ObjectHideFlags: 0
@@ -2729,9 +2743,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_LocalPosition:
-    x: -8238310.235647005
+    x: -8238310.235647004
     y: 0
-    z: 4532128.1647683885
+    z: 4970071.579142429
   m_LocalRotation:
     value:
       x: 0

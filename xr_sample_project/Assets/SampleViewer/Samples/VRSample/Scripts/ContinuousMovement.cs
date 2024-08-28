@@ -1,5 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
+// Copyright 2024 Esri.
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+//
+
 using UnityEngine;
 
 using Unity.XR.CoreUtils;
@@ -10,48 +14,63 @@ using UnityEngine.XR.Interaction.Toolkit;
 [RequireComponent(typeof(CharacterController))]
 public class ContinuousMovement : MonoBehaviour
 {
-    [Header("----------Input Sources----------")]
-    [SerializeField] private XRNode leftInputSource;
-    [SerializeField] private XRNode rightInputSource;
-    [SerializeField] private InputActionProperty increaseSpeedAction;
-
     private CharacterController controller;
-    private Vector2 leftInputAxis;
-    private Vector2 rightInputAxis;
-
-    [Header("----------Movement Variables----------")]
-    [Min(0)] [SerializeField] private float speed;
-    [Min(0)] [SerializeField] private float speedAccelerator = 0.2f;
-    [Min(0)] [SerializeField] private float speedMultiplier = 2f;
-    [Min(0)] [SerializeField] private float upSpeed;
 
     private float fallSpeed;
-    private bool stillGoingInSameDirection = false;
+
     private float finalSpeed;
 
     [Header("-------------Other-------------")]
     [SerializeField] private LayerMask groundLayer;
 
     private float heightOffset = 0.2f;
-    private GameObject menu;
-    private XROrigin rig;
 
-    private void Start()
+    [SerializeField] private InputActionProperty increaseSpeedAction;
+
+    private Vector2 leftInputAxis;
+
+    [Header("----------Input Sources----------")]
+    [SerializeField] private XRNode leftInputSource;
+
+    private VRMenuManager menuManager;
+    [SerializeField] private bool moveInLookDirection = true;
+    private XROrigin rig;
+    [SerializeField] private ActionBasedController rightController;
+    private Vector2 rightInputAxis;
+    [SerializeField] private XRNode rightInputSource;
+
+    [Header("----------Movement Variables----------")]
+    [Min(0)][SerializeField] private float speed;
+
+    [Min(0)][SerializeField] private float speedAccelerator = 0.2f;
+    [Min(0)][SerializeField] private float speedMultiplier = 2f;
+    private bool stillGoingInSameDirection = false;
+    [Min(0)][SerializeField] private float upSpeed;
+
+    public void SetMoveInLookDirection(bool state)
     {
-        // Cache component references
-        controller = GetComponent<CharacterController>();
-        rig = GetComponent<XROrigin>();
-        menu = GameObject.FindWithTag("VRCanvas");
+        moveInLookDirection = state;
+    }
+
+    public void SetSpeed(float newSpeed)
+    {
+        speed = newSpeed;
+    }
+
+    public void SetVerticalSpeed(float newSpeed)
+    {
+        upSpeed = newSpeed;
     }
 
     private void FixedUpdate()
     {
-
         FollowHeadset();
 
+        var yawYValue = moveInLookDirection ? rig.Camera.transform.eulerAngles.y : rightController.transform.eulerAngles.y;
+        var yaw = Quaternion.Euler(0, yawYValue, 0);
+        var direction = yaw * new Vector3(leftInputAxis.x, 0, leftInputAxis.y);
+
         // Calcuate move vectors based on input actions
-        Quaternion headYaw = Quaternion.Euler(0, rig.Camera.transform.eulerAngles.y, 0);
-        Vector3 direction = headYaw * new Vector3(leftInputAxis.x, 0, leftInputAxis.y);
         Vector3 up = new Vector3(0, rightInputAxis.y, 0);
 
         // Calculate speed based on trigger hold
@@ -82,21 +101,11 @@ public class ContinuousMovement : MonoBehaviour
         }
 
         // Allow the player to move only when the menu UI is not up
-        if (!menu.activeSelf)
+        if (!menuManager.menuActive)
         {
             controller.Move(direction * finalSpeed * Time.fixedDeltaTime);
             controller.Move(up * upSpeed * Time.fixedDeltaTime);
         }
-
-    }
-
-    private void Update()
-    {
-        // Obtain input values from input devices
-        UnityEngine.XR.InputDevice leftDevice = InputDevices.GetDeviceAtXRNode(leftInputSource);
-        leftDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxis, out leftInputAxis);
-        UnityEngine.XR.InputDevice rightDevice = InputDevices.GetDeviceAtXRNode(rightInputSource);
-        rightDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxis, out rightInputAxis);
     }
 
     private void FollowHeadset()
@@ -107,13 +116,20 @@ public class ContinuousMovement : MonoBehaviour
         controller.center = new Vector3(capsuleCenter.x, controller.height / 2 + controller.skinWidth, capsuleCenter.z);
     }
 
-    public void SetSpeed(float newSpeed)
+    private void Start()
     {
-        speed = newSpeed;
+        // Cache component references
+        controller = GetComponent<CharacterController>();
+        rig = GetComponent<XROrigin>();
+        menuManager = FindAnyObjectByType<VRMenuManager>();
     }
 
-    public void SetVerticalSpeed(float newSpeed)
+    private void Update()
     {
-        upSpeed = newSpeed;
+        // Obtain input values from input devices
+        UnityEngine.XR.InputDevice leftDevice = InputDevices.GetDeviceAtXRNode(leftInputSource);
+        leftDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxis, out leftInputAxis);
+        UnityEngine.XR.InputDevice rightDevice = InputDevices.GetDeviceAtXRNode(rightInputSource);
+        rightDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxis, out rightInputAxis);
     }
 }
