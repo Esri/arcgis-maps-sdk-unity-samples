@@ -16,57 +16,75 @@ public class ArcGISRaycast : MonoBehaviour
 {
     [SerializeField] private InputAction inputAction;
     private const float offSet = 200f;
-	
+
     public ArcGISMapComponent arcGISMapComponent;
     public ArcGISCameraComponent arcGISCamera;
     public Canvas canvas;
     public TextMeshProUGUI featureText;
+    private InputActions inputActions;
+    private bool isLeftShiftPressed;
 
-    private void Start()
+    private void Awake()
     {
-	    canvas.enabled = false;
+        inputActions = new InputActions();
     }
 
     private void OnEnable()
     {
-	    inputAction.Enable();
+        inputActions.Enable();
+        inputActions.DrawingControls.LeftClick.started += OnLeftClickStart;
+        inputActions.DrawingControls.LeftShift.performed += ctx => OnLeftShift(true);
+        inputActions.DrawingControls.LeftShift.canceled += ctx => OnLeftShift(false);
     }
 
     private void OnDisable()
     {
-	    inputAction.Disable();
+        inputActions.Disable();
+        inputActions.DrawingControls.LeftClick.started -= OnLeftClickStart;
+        inputActions.DrawingControls.LeftShift.performed -= ctx => OnLeftShift(true);
+        inputActions.DrawingControls.LeftShift.canceled -= ctx => OnLeftShift(false);
     }
 
-    private void Update()
+    private void OnLeftShift(bool isPressed)
     {
-	    if (inputAction.triggered)
-	    {
-		    if (!canvas.enabled)
-		    {
-			    canvas.enabled = true;
-		    }
-		    RaycastHit hit;
-		    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        isLeftShiftPressed = isPressed;
+    }
 
-		    if (Physics.Raycast(ray, out hit))
-		    {
-			    var arcGISRaycastHit = arcGISMapComponent.GetArcGISRaycastHit(hit);
-			    var layer = arcGISRaycastHit.layer;
-			    var featureId = arcGISRaycastHit.featureId;
+    private void OnLeftClickStart(InputAction.CallbackContext context)
+    {
+        if (isLeftShiftPressed)
+        {
+            if (!canvas.enabled)
+            {
+                canvas.enabled = true;
+            }
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
 
-			    if (layer != null && featureId != -1)
-			    {
-				    featureText.text = featureId.ToString();
+            if (Physics.Raycast(ray, out hit))
+            {
+                var arcGISRaycastHit = arcGISMapComponent.GetArcGISRaycastHit(hit);
+                var layer = arcGISRaycastHit.layer;
+                var featureId = arcGISRaycastHit.featureId;
 
-				    var geoPosition = arcGISMapComponent.EngineToGeographic(hit.point);
-				    var offsetPosition = new ArcGISPoint(geoPosition.X, geoPosition.Y, geoPosition.Z + offSet, geoPosition.SpatialReference);
+                if (layer != null && featureId != -1)
+                {
+                    featureText.text = featureId.ToString();
 
-				    var rotation = arcGISCamera.GetComponent<ArcGISLocationComponent>().Rotation;
-				    var location = canvas.GetComponent<ArcGISLocationComponent>();
-				    location.Position = offsetPosition;
-				    location.Rotation = rotation;
-			    }
-		    }
-	    }
+                    var geoPosition = arcGISMapComponent.EngineToGeographic(hit.point);
+                    var offsetPosition = new ArcGISPoint(geoPosition.X, geoPosition.Y, geoPosition.Z + offSet, geoPosition.SpatialReference);
+
+                    var rotation = arcGISCamera.GetComponent<ArcGISLocationComponent>().Rotation;
+                    var location = canvas.GetComponent<ArcGISLocationComponent>();
+                    location.Position = offsetPosition;
+                    location.Rotation = rotation;
+                }
+            }
+        }
+    }
+
+    private void Start()
+    {
+        canvas.enabled = false;
     }
 }

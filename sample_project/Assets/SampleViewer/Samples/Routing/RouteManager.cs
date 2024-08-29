@@ -19,6 +19,8 @@ using TMPro;
 
 using Newtonsoft.Json.Linq;
 using Unity.Mathematics;
+using Esri.ArcGISMapsSDK.Samples.Components;
+using UnityEngine.InputSystem;
 
 public class RouteManager : MonoBehaviour
 {
@@ -45,26 +47,38 @@ public class RouteManager : MonoBehaviour
 
     double3 lastRootPosition;
 
-    void Start()
+    private InputActions inputActions;
+    private bool isLeftShiftPressed;
+
+    private void Awake()
     {
-        // We need HPRoot for the HitToGeoPosition Method
-        hpRoot = FindObjectOfType<HPRoot>();
-
-        // We need this ArcGISMapComponent for the FromCartesianPosition Method
-        // defined on the ArcGISMapComponent.View
-        arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
-
-        animator = GameObject.Find("InfoMenu").GetComponent<Animator>();
-
-        lineRenderer = Route.GetComponent<LineRenderer>();
-
-        lastRootPosition = arcGISMapComponent.GetComponent<HPRoot>().RootUniversePosition;
+        inputActions = new InputActions();
     }
 
-    async void Update()
+    private void OnEnable()
     {
-        // Only Create Marker when Shift is Held and Mouse is Clicked
-        if (Input.GetKey(KeyCode.LeftShift) && Input.GetMouseButtonDown(0))
+        inputActions.Enable();
+        inputActions.DrawingControls.LeftClick.started += OnLeftClickStart;
+        inputActions.DrawingControls.LeftShift.performed += ctx => OnLeftShift(true);
+        inputActions.DrawingControls.LeftShift.canceled += ctx => OnLeftShift(false);
+    }
+
+    private void OnDisable()
+    {
+        inputActions.Disable();
+        inputActions.DrawingControls.LeftClick.started -= OnLeftClickStart;
+        inputActions.DrawingControls.LeftShift.performed -= ctx => OnLeftShift(true);
+        inputActions.DrawingControls.LeftShift.canceled -= ctx => OnLeftShift(false);
+    }
+
+    private void OnLeftShift(bool isPressed)
+    {
+        isLeftShiftPressed = isPressed;
+    }
+
+    private async void OnLeftClickStart(InputAction.CallbackContext context)
+    {
+        if (isLeftShiftPressed) 
         {
             if (routing)
             {
@@ -77,7 +91,7 @@ public class RouteManager : MonoBehaviour
             DisplayNoteText("Hold Left Shift + Left Click on the map to begin routing.");
 
             RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
 
             if (Physics.Raycast(ray, out hit))
             {
@@ -109,7 +123,7 @@ public class RouteManager : MonoBehaviour
                     else
                     {
                         routing = true;
-                        StartCoroutine(DrawRoute(results));                       
+                        StartCoroutine(DrawRoute(results));
                     }
                 }
             }
@@ -117,7 +131,23 @@ public class RouteManager : MonoBehaviour
 
         RebaseRoute();
     }
-    
+
+    void Start()
+    {
+        // We need HPRoot for the HitToGeoPosition Method
+        hpRoot = FindObjectOfType<HPRoot>();
+
+        // We need this ArcGISMapComponent for the FromCartesianPosition Method
+        // defined on the ArcGISMapComponent.View
+        arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
+
+        animator = GameObject.Find("InfoMenu").GetComponent<Animator>();
+
+        lineRenderer = Route.GetComponent<LineRenderer>();
+
+        lastRootPosition = arcGISMapComponent.GetComponent<HPRoot>().RootUniversePosition;
+    }
+
     /// <summary>
     /// Return GeoPosition Based on RaycastHit; I.E. Where the user clicked in the Scene.
     /// </summary>
