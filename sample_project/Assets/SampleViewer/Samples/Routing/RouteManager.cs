@@ -91,7 +91,7 @@ public class RouteManager : MonoBehaviour
             DisplayNoteText("Hold Left Shift + Left Click on the map to begin routing.");
 
             RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
 
             if (Physics.Raycast(ray, out hit))
             {
@@ -128,6 +128,8 @@ public class RouteManager : MonoBehaviour
                 }
             }
         }
+
+        RebaseRoute();
     }
 
     void Start()
@@ -146,11 +148,6 @@ public class RouteManager : MonoBehaviour
         lastRootPosition = arcGISMapComponent.GetComponent<HPRoot>().RootUniversePosition;
     }
 
-    void Update()
-    {
-        RebaseRoute();
-    }
-    
     /// <summary>
     /// Return GeoPosition Based on RaycastHit; I.E. Where the user clicked in the Scene.
     /// </summary>

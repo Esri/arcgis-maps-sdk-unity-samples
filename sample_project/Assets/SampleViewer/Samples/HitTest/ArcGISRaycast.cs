@@ -59,7 +59,7 @@ public class ArcGISRaycast : MonoBehaviour
                 canvas.enabled = true;
             }
             RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
 
             if (Physics.Raycast(ray, out hit))
             {

@@ -75,7 +75,7 @@ public class Measure : MonoBehaviour
         if (isLeftShiftPressed)
         {
             RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
 
             if (Physics.Raycast(ray, out hit))
             {

@@ -87,7 +87,7 @@ public class Geocoder : MonoBehaviour
     {
         if (isLeftShiftPressed)
         {
-            Ray ray = MainCamera.ScreenPointToRay(Input.mousePosition);
+            Ray ray = MainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
                 Vector3 direction = (hit.point - MainCamera.transform.position);
