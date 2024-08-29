@@ -27,8 +27,6 @@ using Esri.ArcGISMapsSDK.Components;
 using Esri.ArcGISMapsSDK.Utils.GeoCoord;
 using UnityEngine;
 using UnityEngine.UI;
-using Esri.ArcGISMapsSDK.Samples.Components;
-using UnityEngine.InputSystem;
 
 public class Geocoder : MonoBehaviour
 {
@@ -53,54 +51,6 @@ public class Geocoder : MonoBehaviour
     private readonly float MapLoadWaitTime = 1;
     private readonly string AddressQueryURL = "https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates";
     private readonly string LocationQueryURL = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode";
-
-    private InputActions inputActions;
-    private bool isLeftShiftPressed;
-
-    private void Awake()
-    {
-        inputActions = new InputActions();
-    }
-
-    private void OnEnable()
-    {
-        inputActions.Enable();
-        inputActions.DrawingControls.LeftClick.started += OnLeftClickStart;
-        inputActions.DrawingControls.LeftShift.performed += ctx => OnLeftShift(true);
-        inputActions.DrawingControls.LeftShift.canceled += ctx => OnLeftShift(false);
-    }
-
-    private void OnDisable()
-    {
-        inputActions.Disable();
-        inputActions.DrawingControls.LeftClick.started -= OnLeftClickStart;
-        inputActions.DrawingControls.LeftShift.performed -= ctx => OnLeftShift(true);
-        inputActions.DrawingControls.LeftShift.canceled -= ctx => OnLeftShift(false);
-    }
-
-    private void OnLeftShift(bool isPressed)
-    {
-        isLeftShiftPressed = isPressed;
-    }
-
-    private void OnLeftClickStart(InputAction.CallbackContext context)
-    {
-        if (isLeftShiftPressed)
-        {
-            Ray ray = MainCamera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit))
-            {
-                Vector3 direction = (hit.point - MainCamera.transform.position);
-                DistanceFromCamera = Vector3.Distance(MainCamera.transform.position, hit.point);
-                float scale = DistanceFromCamera * LocationMarkerScale / 400000; // Scale the marker based on its distance from camera 
-                Quaternion markerRotationPerpendicular = Quaternion.FromToRotation(Vector3.up, hit.normal);
-                Quaternion markerRotationFacingCamera = MainCamera.transform.rotation;
-                Quaternion markerRotation = markerRotationPerpendicular * markerRotationFacingCamera;
-                SetupQueryLocationGameObject(LocationMarkerTemplate, hit.point, markerRotation, new Vector3(scale, scale, scale));
-                ReverseGeocode(HitToGeoPosition(hit));
-            }
-        }
-    }
 
     void Start()
     {
@@ -136,6 +86,23 @@ public class Geocoder : MonoBehaviour
                     MarkerPosition.Z + CameraElevationOffset,
                     MarkerPosition.SpatialReference);
                 MainCamera.GetComponent<Camera>().cullingMask = -1;
+            }
+        }
+
+        // Determine the location that was clicked on and perform a location lookup
+        if (Input.GetKey(KeyCode.LeftShift) && Input.GetMouseButtonDown(0))
+        {
+            Ray ray = MainCamera.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                Vector3 direction = (hit.point - MainCamera.transform.position);
+                DistanceFromCamera = Vector3.Distance(MainCamera.transform.position, hit.point);
+                float scale = DistanceFromCamera * LocationMarkerScale / 400000; // Scale the marker based on its distance from camera 
+                Quaternion markerRotationPerpendicular = Quaternion.FromToRotation(Vector3.up, hit.normal);
+                Quaternion markerRotationFacingCamera = MainCamera.transform.rotation;
+                Quaternion markerRotation = markerRotationPerpendicular * markerRotationFacingCamera;
+                SetupQueryLocationGameObject(LocationMarkerTemplate, hit.point, markerRotation, new Vector3(scale, scale, scale));
+                ReverseGeocode(HitToGeoPosition(hit));
             }
         }
     }

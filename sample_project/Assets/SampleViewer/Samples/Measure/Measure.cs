@@ -14,8 +14,6 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.InputSystem;
-using Esri.ArcGISMapsSDK.Samples.Components;
 
 public class Measure : MonoBehaviour
 {
@@ -40,39 +38,25 @@ public class Measure : MonoBehaviour
     private ArcGISLinearUnit currentUnit = new ArcGISLinearUnit(ArcGISLinearUnitId.Miles);
     private string unitText;
 
-    private InputActions inputActions;
-    private bool isLeftShiftPressed;
-
-    private void Awake()
+    private void Start()
     {
-        inputActions = new InputActions();
+        arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
+
+        lineRenderer = Line.GetComponent<LineRenderer>();
+        lineRenderer.widthMultiplier = LineWidth;
+        lastRootPosition = arcGISMapComponent.GetComponent<HPRoot>().RootUniversePosition;
+
+        ClearButton.onClick.AddListener(delegate
+        {
+            ClearLine();
+        });
+
+        UnitButtons[0].interactable = false;
     }
 
-    private void OnEnable()
+    private void Update()
     {
-        inputActions.Enable();
-        inputActions.DrawingControls.LeftClick.started += OnLeftClickStart;
-        inputActions.DrawingControls.LeftShift.performed += ctx => OnLeftShift(true);
-        inputActions.DrawingControls.LeftShift.canceled += ctx => OnLeftShift(false);
-    }
-
-    private void OnDisable()
-    {
-        inputActions.Disable();
-        inputActions.DrawingControls.LeftClick.started -= OnLeftClickStart;
-        inputActions.DrawingControls.LeftShift.performed -= ctx => OnLeftShift(true);
-        inputActions.DrawingControls.LeftShift.canceled -= ctx => OnLeftShift(false);
-    }
-
-    private void OnLeftShift(bool isPressed)
-    {
-        isLeftShiftPressed = isPressed;
-        FindObjectOfType<ArcGISCameraControllerComponent>().enabled = !isPressed;
-    }
-
-    private void OnLeftClickStart(InputAction.CallbackContext context)
-    { 
-        if (isLeftShiftPressed)
+        if (Input.GetKey(KeyCode.LeftShift) && Input.GetMouseButtonDown(0))
         {
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -110,22 +94,6 @@ public class Measure : MonoBehaviour
                 RebaseLine();
             }
         }
-    }
-
-        private void Start()
-    {
-        arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
-
-        lineRenderer = Line.GetComponent<LineRenderer>();
-        lineRenderer.widthMultiplier = LineWidth;
-        lastRootPosition = arcGISMapComponent.GetComponent<HPRoot>().RootUniversePosition;
-
-        ClearButton.onClick.AddListener(delegate
-        {
-            ClearLine();
-        });
-
-        UnitButtons[0].interactable = false;
     }
 
     private void Interpolate(GameObject start, GameObject end, List<GameObject> featurePoints)
