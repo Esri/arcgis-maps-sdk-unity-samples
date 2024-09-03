@@ -6,7 +6,6 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
 #endif
 using UnityEngine.VFX;
-using static Codice.Client.Common.WebApi.WebApiEndpoints;
 
 [RequireComponent(typeof(ArcGISLocationComponent))]
 public class WeatherData : MonoBehaviour
