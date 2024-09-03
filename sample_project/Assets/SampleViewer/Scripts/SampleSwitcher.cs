@@ -12,36 +12,46 @@ using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Esri.ArcGISMapsSDK.Utils;
+using TMPro;
 
 
 public class SampleSwitcher : MonoBehaviour
 {
-	public GameObject MenuVideo;
-	public Button ExitButton;
-	public Camera cam;
-	public Button[] sceneButtons;
-	public Button[] pipelineButtons;
-	private string apiKey;
-	private string projectAPIKey;
+    [SerializeField] private string apiKey;
+    [SerializeField] private TextMeshProUGUI apiKeyInputField;
+    [SerializeField] private GameObject notificationMenu;
+    [SerializeField] private GameObject warning;
+
+    private Animator animator;
+    private string currentSceneName;
+    private string nextSceneName;
+    private string projectAPIKey;
 	private string pipelineModeText;
-	private string nextSceneName;
 	private string PipelineType;
-	private string currentSceneName;
 	private int sceneLoadedCount;
-	private Animator animator;
 
-	[SerializeField] private GameObject warning;
-	[SerializeField] private GameObject notificationMenu;
+    public GameObject MenuVideo;
+    public Button ExitButton;
+    public Camera cam;
+    public Button[] sceneButtons;
+    public Button[] pipelineButtons;
 
-	private void Start()
+    private void Start()
 	{
 		animator = notificationMenu.GetComponent<Animator>();
 		cam.enabled = true;
 
 		Invoke("SlideNotification", 2.0f);
 
-		projectAPIKey = ArcGISProjectSettingsAsset.Instance.APIKey;
-		CheckAPIKey(projectAPIKey);
+		if (apiKey != null && apiKey.Length == 100)
+		{
+			CheckAPIKey(apiKey);
+		}
+		else 
+		{
+			projectAPIKey = ArcGISProjectSettingsAsset.Instance.APIKey;
+			CheckAPIKey(projectAPIKey);
+		}
 
 		ExitButton.onClick.AddListener(delegate
 		{
@@ -59,8 +69,8 @@ public class SampleSwitcher : MonoBehaviour
 
 	private void Update()
 	{
-		// API Script handles api key differently than the mapcomponent
-		var api = FindObjectOfType<APIMapCreator>();
+        // API Script handles api key differently than the mapcomponent
+        var api = FindObjectOfType<APIMapCreator>();
 		if (api != null)
 		{
 			if (api.APIKey == "")
@@ -168,6 +178,16 @@ public class SampleSwitcher : MonoBehaviour
 	public void CheckAPIKey(string value)
 	{
 		apiKey = value;
+
+		if (apiKey == "")
+		{
+			apiKeyInputField.text = "Enter your API key here...";
+		}
+		else
+		{
+            apiKeyInputField.text = apiKey;
+        }
+
 		if(warning != null)
 		{
 			if (value.Length == 100)
@@ -181,8 +201,7 @@ public class SampleSwitcher : MonoBehaviour
 				DisableSceneButtons();
 			}
 		}
-		
-	}
+    }
 
 	public void SetPipelineText(string text)
 	{
