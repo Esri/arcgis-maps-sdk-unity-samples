@@ -16,6 +16,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.InputSystem;
 using Esri.ArcGISMapsSDK.Samples.Components;
+using UnityEngine.EventSystems;
 
 public class Measure : MonoBehaviour
 {
@@ -72,7 +73,7 @@ public class Measure : MonoBehaviour
 
     private void OnLeftClickStart(InputAction.CallbackContext context)
     { 
-        if (isLeftShiftPressed)
+        if (isLeftShiftPressed && !EventSystem.current.IsPointerOverGameObject())
         {
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());

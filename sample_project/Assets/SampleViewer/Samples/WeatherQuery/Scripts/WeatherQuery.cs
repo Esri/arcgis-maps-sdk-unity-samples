@@ -110,11 +110,6 @@ public class WeatherQuery : MonoBehaviour
         }
     }
 
-    private bool MouseOverUI()
-    {
-        return EventSystem.current.IsPointerOverGameObject();
-    }
-
     private void PopulateDropDown()
     {
         foreach (Feature feature in features)
@@ -238,10 +233,5 @@ public class WeatherQuery : MonoBehaviour
             }
         });
 
-    }
-
-    private void Update()
-    {
-        arcGISCamera.gameObject.GetComponent<ArcGISCameraControllerComponent>().enabled = !MouseOverUI();
     }
 }

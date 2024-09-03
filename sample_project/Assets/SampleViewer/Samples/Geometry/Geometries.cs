@@ -104,8 +104,6 @@ public class Geometries : MonoBehaviour
 	private void OnLeftShift(bool isPressed)
 	{
 		isLeftShiftPressed = isPressed;
-
-		arcGISCameraControllerComponent.enabled = !isPressed;
 	}
 
 	private void OnLeftClickStart(InputAction.CallbackContext context)

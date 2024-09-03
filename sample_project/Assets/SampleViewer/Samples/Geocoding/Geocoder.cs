@@ -85,7 +85,7 @@ public class Geocoder : MonoBehaviour
 
     private void OnLeftClickStart(InputAction.CallbackContext context)
     {
-        if (isLeftShiftPressed)
+        if (isLeftShiftPressed && !EventSystem.current.IsPointerOverGameObject())
         {
             Ray ray = MainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
             if (Physics.Raycast(ray, out RaycastHit hit))
