@@ -14,6 +14,8 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.InputSystem;
+using Esri.ArcGISMapsSDK.Samples.Components;
 
 public class Measure : MonoBehaviour
 {
@@ -38,28 +40,42 @@ public class Measure : MonoBehaviour
     private ArcGISLinearUnit currentUnit = new ArcGISLinearUnit(ArcGISLinearUnitId.Miles);
     private string unitText;
 
-    private void Start()
+    private InputActions inputActions;
+    private bool isLeftShiftPressed;
+
+    private void Awake()
     {
-        arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
-
-        lineRenderer = Line.GetComponent<LineRenderer>();
-        lineRenderer.widthMultiplier = LineWidth;
-        lastRootPosition = arcGISMapComponent.GetComponent<HPRoot>().RootUniversePosition;
-
-        ClearButton.onClick.AddListener(delegate
-        {
-            ClearLine();
-        });
-
-        UnitButtons[0].interactable = false;
+        inputActions = new InputActions();
     }
 
-    private void Update()
+    private void OnEnable()
     {
-        if (Input.GetKey(KeyCode.LeftShift) && Input.GetMouseButtonDown(0))
+        inputActions.Enable();
+        inputActions.DrawingControls.LeftClick.started += OnLeftClickStart;
+        inputActions.DrawingControls.LeftShift.performed += ctx => OnLeftShift(true);
+        inputActions.DrawingControls.LeftShift.canceled += ctx => OnLeftShift(false);
+    }
+
+    private void OnDisable()
+    {
+        inputActions.Disable();
+        inputActions.DrawingControls.LeftClick.started -= OnLeftClickStart;
+        inputActions.DrawingControls.LeftShift.performed -= ctx => OnLeftShift(true);
+        inputActions.DrawingControls.LeftShift.canceled -= ctx => OnLeftShift(false);
+    }
+
+    private void OnLeftShift(bool isPressed)
+    {
+        isLeftShiftPressed = isPressed;
+        FindObjectOfType<ArcGISCameraControllerComponent>().enabled = !isPressed;
+    }
+
+    private void OnLeftClickStart(InputAction.CallbackContext context)
+    { 
+        if (isLeftShiftPressed)
         {
             RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
 
             if (Physics.Raycast(ray, out hit))
             {
@@ -94,6 +110,22 @@ public class Measure : MonoBehaviour
                 RebaseLine();
             }
         }
+    }
+
+        private void Start()
+    {
+        arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
+
+        lineRenderer = Line.GetComponent<LineRenderer>();
+        lineRenderer.widthMultiplier = LineWidth;
+        lastRootPosition = arcGISMapComponent.GetComponent<HPRoot>().RootUniversePosition;
+
+        ClearButton.onClick.AddListener(delegate
+        {
+            ClearLine();
+        });
+
+        UnitButtons[0].interactable = false;
     }
 
     private void Interpolate(GameObject start, GameObject end, List<GameObject> featurePoints)
