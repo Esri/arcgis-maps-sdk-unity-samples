@@ -194,7 +194,7 @@ namespace StarterAssets
                 LockCameraPosition = true;
             }
 
-            if (leftClick.triggered)
+            if (leftClick.triggered && !MouseOverUI())
             {
                 onScreenClicked();
             }
@@ -205,6 +205,11 @@ namespace StarterAssets
         {
             HideMouseCursor();
             LockCameraPosition = false;
+        }
+
+        private bool MouseOverUI()
+        {
+            return EventSystem.current.IsPointerOverGameObject();
         }
 
         private void LateUpdate()
