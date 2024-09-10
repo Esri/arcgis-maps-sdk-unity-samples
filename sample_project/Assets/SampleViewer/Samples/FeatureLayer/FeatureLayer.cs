@@ -284,14 +284,4 @@ public class FeatureLayer : MonoBehaviour
             }
         }
     }
-    
-    private void Update()
-    {
-        arcGISCamera.gameObject.GetComponent<ArcGISCameraControllerComponent>().enabled = !MouseOverUI();
-    }
-    
-    private bool MouseOverUI()
-    {
-        return EventSystem.current.IsPointerOverGameObject();
-    }
 }

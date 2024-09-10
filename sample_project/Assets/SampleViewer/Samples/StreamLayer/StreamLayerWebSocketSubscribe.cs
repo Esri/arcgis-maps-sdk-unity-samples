@@ -140,25 +140,11 @@ public class StreamLayerWebSocketSubscribe : MonoBehaviour
             connectionStatus.text = "Connection Status: Not Connected";
             connectionIndicator.color = Color.red;
         }
-
-        if (MouseOverUI())
-        {
-            ArcGISCamera.GetComponent<ArcGISCameraControllerComponent>().enabled = false;
-        }
-        else
-        {
-            ArcGISCamera.GetComponent<ArcGISCameraControllerComponent>().enabled = true;
-        }
     }
 
     private void LateUpdate()
     {
         DisplayPlaneData();
-    }
-
-    private bool MouseOverUI()
-    {
-        return EventSystem.current.IsPointerOverGameObject();
     }
 
     private void HandleMessage(byte[] buffer, int count)
