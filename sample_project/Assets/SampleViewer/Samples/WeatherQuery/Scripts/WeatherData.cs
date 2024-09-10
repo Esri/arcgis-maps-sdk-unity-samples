@@ -2,7 +2,9 @@ using Esri.ArcGISMapsSDK.Components;
 using Esri.GameEngine.Geometry;
 using UnityEngine;
 using UnityEngine.Rendering;
+#if USE_HDRP_PACKAGE
 using UnityEngine.Rendering.HighDefinition;
+#endif
 using UnityEngine.VFX;
 
 [RequireComponent(typeof(ArcGISLocationComponent))]
@@ -26,7 +28,9 @@ public class WeatherData : MonoBehaviour
     private bool thunderAndLightning;
     [SerializeField] private Volume volume;
     [SerializeField] private VolumeProfile volumeProfile;
+#if USE_HDRP_PACKAGE
     private VolumetricClouds vClouds;
+#endif
     private WeatherQuery weatherQuery;
 
     [Header("WeatherVFX")]
@@ -93,6 +97,7 @@ public class WeatherData : MonoBehaviour
 
     public void SetSky()
     {
+#if USE_HDRP_PACKAGE
         if (volumeProfile.TryGet(out vClouds))
         {
             if (skyCondition.ToLower().Contains("overcast"))
@@ -106,7 +111,7 @@ public class WeatherData : MonoBehaviour
                 directionalLight.color = new Color(1, 1, 1, 1);
             }
             else if (currentWeather.ToLower().Contains("thunder"))
-            { 
+            {
                 vClouds.cloudPreset = VolumetricClouds.CloudPresets.Stormy;
                 directionalLight.color = new Color(1, 1, 1, 1);
             }
@@ -116,6 +121,24 @@ public class WeatherData : MonoBehaviour
                 directionalLight.color = new Color(1, 1, 1, 1);
             }
         }
+#else
+        if (skyCondition.ToLower().Contains("overcast"))
+        {
+            directionalLight.color = new Color(0.1803922f, 0.1803922f, 0.1803922f, 1.0f);
+        }
+        else if (skyCondition.ToLower().Contains("cloud"))
+        {
+            directionalLight.color = new Color(1, 1, 1, 1);
+        }
+        else if (currentWeather.ToLower().Contains("thunder"))
+        {
+            directionalLight.color = new Color(1, 1, 1, 1);
+        }
+        else
+        {
+            directionalLight.color = new Color(1, 1, 1, 1);
+        }
+#endif
     }
 
     public void SetWeather()
@@ -139,7 +162,9 @@ public class WeatherData : MonoBehaviour
         }
         else
         {
+#if USE_HDRP_PACKAGE
             vClouds.cloudPreset = VolumetricClouds.CloudPresets.Sparse;
+#endif
             directionalLight.color = new Color(1, 1, 1, 1);
             DisableWeather();
         }
