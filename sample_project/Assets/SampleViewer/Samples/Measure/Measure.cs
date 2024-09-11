@@ -166,15 +166,8 @@ public class Measure : MonoBehaviour
     // Set height for point transform and location component.
     private void SetElevation(GameObject stop)
     {
-        // Start the raycast in the air at an arbitrary to ensure it is above the ground.
-        var position = stop.transform.position;
-        var raycastStart = new Vector3(position.x, position.y + RaycastHeight, position.z);
-        if (Physics.Raycast(raycastStart, Vector3.down, out RaycastHit hitInfo))
-        {
-            var location = stop.GetComponent<ArcGISLocationComponent>();
-            location.Position = arcGISMapComponent.EngineToGeographic(hitInfo.point);
-            stop.transform.position = hitInfo.point;
-        }
+        var location = stop.GetComponent<ArcGISLocationComponent>();
+        location.SurfacePlacementMode = ArcGISSurfacePlacementMode.OnTheGround;
     }
 
     private void RenderLine(ref List<GameObject> featurePoints)

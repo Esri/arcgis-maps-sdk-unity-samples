@@ -322,23 +322,8 @@ public class Geocoder : MonoBehaviour
     /// <param name="markerGO"></param>
     void PlaceOnGround(GameObject markerGO)
     {
-        Vector3 position = MainCamera.transform.position;
-        var raycastStart = new Vector3(position.x, position.y, position.z);
-
-        if (Physics.Raycast(raycastStart, Vector3.down, out RaycastHit hitInfo))
-        {
-            // Detrmine the geographic location of the point hit by the raycast and place the game object there
-            markerGO.GetComponent<ArcGISLocationComponent>().Position = HitToGeoPosition(hitInfo, 0);
-        }
-        else // Raycast didn't hit an object. Print a warning
-        {
-            markerGO.GetComponent<ArcGISLocationComponent>().Position = MainCamera.GetComponent<ArcGISLocationComponent>().Position;
-            Debug.LogWarning("The elevation at the queried location could not be determined.");
-        }
-
-        markerGO.GetComponent<ArcGISLocationComponent>().Rotation = new ArcGISRotation(0, 90, 0);
-
-        ShouldPlaceMarker = false;
+        var locationComponent = markerGO.GetComponent<ArcGISLocationComponent>();
+        locationComponent.SurfacePlacementMode = ArcGISSurfacePlacementMode.OnTheGround;
     }
 
     /// <summary>
