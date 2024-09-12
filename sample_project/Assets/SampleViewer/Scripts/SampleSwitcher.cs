@@ -155,7 +155,7 @@ public class SampleSwitcher : MonoBehaviour
         {
             btn.interactable = true;
 
-#if USE_URP_PACKAGE || UNITY_ANDROID || UNITY_IOS
+#if !USE_HDRP_PACKAGE || UNITY_ANDROID || UNITY_IOS
             if (btn.gameObject.GetComponent<DisableSampleButtonsForURP>() || btn.gameObject.GetComponent<DisableSampleButtonForMobile>())
             {
                 btn.interactable = false;

@@ -6,7 +6,7 @@ public class DisablePipelineButtons : MonoBehaviour
 {
     private void Awake()
     {
-#if !UNITY_EDITOR
+#if !USE_URP_PACKAGE || !USE_HDRP_PACKAGE
         gameObject.SetActive(false);
 #endif
     }
