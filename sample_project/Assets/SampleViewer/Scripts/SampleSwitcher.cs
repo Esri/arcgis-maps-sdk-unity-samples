@@ -154,6 +154,13 @@ public class SampleSwitcher : MonoBehaviour
         foreach (Button btn in sceneButtons)
         {
             btn.interactable = true;
+
+#if USE_URP_PACKAGE || UNITY_ANDROID || UNITY_IOS
+            if (btn.gameObject.GetComponent<DisableSampleButtonsForURP>() || btn.gameObject.GetComponent<DisableSampleButtonForMobile>())
+            {
+                btn.interactable = false;
+            }
+#endif
         }
     }
 
