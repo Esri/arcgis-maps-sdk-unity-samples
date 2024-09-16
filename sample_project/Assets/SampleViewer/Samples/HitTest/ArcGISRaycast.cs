@@ -4,12 +4,13 @@
 // You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
 //
 
-using System;
+using System.Linq;
 using Esri.ArcGISMapsSDK.Components;
 using Esri.GameEngine.Geometry;
 using TMPro;
 using UnityEngine.InputSystem;
 using UnityEngine;
+using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.UI;
 
 public class ArcGISRaycast : MonoBehaviour
@@ -21,28 +22,47 @@ public class ArcGISRaycast : MonoBehaviour
     public ArcGISCameraComponent arcGISCamera;
     public Canvas canvas;
     public TextMeshProUGUI featureText;
+#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
     private InputActions inputActions;
+#else
+    private TouchControls touchControls;
+#endif
     private bool isLeftShiftPressed;
 
     private void Awake()
     {
+#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
         inputActions = new InputActions();
+#else
+        touchControls = new TouchControls();
+#endif
     }
 
     private void OnEnable()
     {
+#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
         inputActions.Enable();
         inputActions.DrawingControls.LeftClick.started += OnLeftClickStart;
         inputActions.DrawingControls.LeftShift.performed += ctx => OnLeftShift(true);
         inputActions.DrawingControls.LeftShift.canceled += ctx => OnLeftShift(false);
+#else
+        TouchSimulation.Enable();
+        touchControls.Enable();
+        touchControls.Touch.TouchPress.started += ctx => OnTouchInputStarted(ctx);
+        touchControls.Touch.TouchPress.canceled += ctx => OnTouchInputEnded(ctx);
+#endif
     }
-
+    
     private void OnDisable()
     {
+#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
         inputActions.Disable();
         inputActions.DrawingControls.LeftClick.started -= OnLeftClickStart;
         inputActions.DrawingControls.LeftShift.performed -= ctx => OnLeftShift(true);
         inputActions.DrawingControls.LeftShift.canceled -= ctx => OnLeftShift(false);
+#else
+        touchControls.Disable();
+#endif
     }
 
     private void OnLeftShift(bool isPressed)
@@ -83,6 +103,16 @@ public class ArcGISRaycast : MonoBehaviour
         }
     }
 
+    private void OnTouchInputStarted(InputAction.CallbackContext ctx)
+    {
+        Debug.LogWarning("Touch Started: " + touchControls.Touch.TouchPosition.ReadValue<Vector2>());
+    }
+
+    private void OnTouchInputEnded(InputAction.CallbackContext ctx)
+    {
+        Debug.LogWarning("Touch Ended: " + touchControls.Touch.TouchPosition.ReadValue<Vector2>());
+    }
+    
     private void Start()
     {
         canvas.enabled = false;
