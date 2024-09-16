@@ -166,8 +166,7 @@ public class Measure : MonoBehaviour
     // Set height for point transform and location component.
     private void SetElevation(GameObject stop)
     {
-        var location = stop.GetComponent<ArcGISLocationComponent>();
-        location.SurfacePlacementMode = ArcGISSurfacePlacementMode.OnTheGround;
+        stop.GetComponent<ArcGISLocationComponent>().SurfacePlacementMode = ArcGISSurfacePlacementMode.OnTheGround;
     }
 
     private void RenderLine(ref List<GameObject> featurePoints)

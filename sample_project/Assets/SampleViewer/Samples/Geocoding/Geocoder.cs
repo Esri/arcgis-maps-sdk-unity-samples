@@ -125,7 +125,7 @@ public class Geocoder : MonoBehaviour
                 float CameraElevationOffset = 2000; // Height of the camera above the queried address
 
                 SetupQueryLocationGameObject(AddressMarkerTemplate, scale: new Vector3(AddressMarkerScale, AddressMarkerScale, AddressMarkerScale));
-                PlaceOnGround(QueryLocationGO);
+                QueryLocationGO.GetComponent<ArcGISLocationComponent>().SurfacePlacementMode = ArcGISSurfacePlacementMode.OnTheGround;
                 CreateAddressCard(true);
 
                 // Place the camera above the marker and start rendering again
@@ -313,17 +313,6 @@ public class Geocoder : MonoBehaviour
         response.EnsureSuccessStatusCode();
         string results = await response.Content.ReadAsStringAsync();
         return results;
-    }
-
-    /// <summary>
-    /// Perform a raycast from current camera location towards the map to determine the height of earth's surface at that point.
-    /// The game object received as input argument is placed on the ground and rotated upright
-    /// </summary>
-    /// <param name="markerGO"></param>
-    void PlaceOnGround(GameObject markerGO)
-    {
-        var locationComponent = markerGO.GetComponent<ArcGISLocationComponent>();
-        locationComponent.SurfacePlacementMode = ArcGISSurfacePlacementMode.OnTheGround;
     }
 
     /// <summary>
