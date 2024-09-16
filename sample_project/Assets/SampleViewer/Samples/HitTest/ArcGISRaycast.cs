@@ -22,12 +22,9 @@ public class ArcGISRaycast : MonoBehaviour
     public ArcGISCameraComponent arcGISCamera;
     public Canvas canvas;
     public TextMeshProUGUI featureText;
-#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
     private InputActions inputActions;
-#else
-    private TouchControls touchControls;
-#endif
     private bool isLeftShiftPressed;
+    private TouchControls touchControls;
 
     private void Awake()
     {
@@ -46,10 +43,8 @@ public class ArcGISRaycast : MonoBehaviour
         inputActions.DrawingControls.LeftShift.performed += ctx => OnLeftShift(true);
         inputActions.DrawingControls.LeftShift.canceled += ctx => OnLeftShift(false);
 #else
-        TouchSimulation.Enable();
         touchControls.Enable();
         touchControls.Touch.TouchPress.started += ctx => OnTouchInputStarted(ctx);
-        touchControls.Touch.TouchPress.canceled += ctx => OnTouchInputEnded(ctx);
 #endif
     }
     
@@ -62,6 +57,7 @@ public class ArcGISRaycast : MonoBehaviour
         inputActions.DrawingControls.LeftShift.canceled -= ctx => OnLeftShift(false);
 #else
         touchControls.Disable();
+        touchControls.Touch.TouchPress.started -= ctx => OnTouchInputStarted(ctx);
 #endif
     }
 
@@ -105,12 +101,32 @@ public class ArcGISRaycast : MonoBehaviour
 
     private void OnTouchInputStarted(InputAction.CallbackContext ctx)
     {
-        Debug.LogWarning("Touch Started: " + touchControls.Touch.TouchPosition.ReadValue<Vector2>());
-    }
+        if (!canvas.enabled)
+        {
+            canvas.enabled = true;
+        }
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(touchControls.Touch.TouchPosition.ReadValue<Vector2>());
 
-    private void OnTouchInputEnded(InputAction.CallbackContext ctx)
-    {
-        Debug.LogWarning("Touch Ended: " + touchControls.Touch.TouchPosition.ReadValue<Vector2>());
+        if (Physics.Raycast(ray, out hit))
+        {
+            var arcGISRaycastHit = arcGISMapComponent.GetArcGISRaycastHit(hit);
+            var layer = arcGISRaycastHit.layer;
+            var featureId = arcGISRaycastHit.featureId;
+
+            if (layer != null && featureId != -1)
+            {
+                featureText.text = featureId.ToString();
+
+                var geoPosition = arcGISMapComponent.EngineToGeographic(hit.point);
+                var offsetPosition = new ArcGISPoint(geoPosition.X, geoPosition.Y, geoPosition.Z + offSet, geoPosition.SpatialReference);
+
+                var rotation = arcGISCamera.GetComponent<ArcGISLocationComponent>().Rotation;
+                var location = canvas.GetComponent<ArcGISLocationComponent>();
+                location.Position = offsetPosition;
+                location.Rotation = rotation;
+            }
+        }
     }
     
     private void Start()

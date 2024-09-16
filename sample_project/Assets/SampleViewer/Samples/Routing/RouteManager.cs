@@ -49,26 +49,41 @@ public class RouteManager : MonoBehaviour
 
     private InputActions inputActions;
     private bool isLeftShiftPressed;
+    private TouchControls touchControls;
 
     private void Awake()
     {
+#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
         inputActions = new InputActions();
+#else
+        touchControls = new TouchControls();
+#endif
     }
 
     private void OnEnable()
     {
+#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
         inputActions.Enable();
         inputActions.DrawingControls.LeftClick.started += OnLeftClickStart;
         inputActions.DrawingControls.LeftShift.performed += ctx => OnLeftShift(true);
         inputActions.DrawingControls.LeftShift.canceled += ctx => OnLeftShift(false);
+#else
+        touchControls.Enable();
+        touchControls.Touch.TouchPress.started += ctx => OnTouchInputStarted(ctx);
+#endif
     }
 
     private void OnDisable()
     {
+#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
         inputActions.Disable();
         inputActions.DrawingControls.LeftClick.started -= OnLeftClickStart;
         inputActions.DrawingControls.LeftShift.performed -= ctx => OnLeftShift(true);
         inputActions.DrawingControls.LeftShift.canceled -= ctx => OnLeftShift(false);
+#else
+        touchControls.Disable();
+        touchControls.Touch.TouchPress.started -= ctx => OnTouchInputStarted(ctx);
+#endif
     }
 
     private void OnLeftShift(bool isPressed)
@@ -130,6 +145,57 @@ public class RouteManager : MonoBehaviour
         }
 
         RebaseRoute();
+    }
+
+    private async void OnTouchInputStarted(InputAction.CallbackContext ctx)
+    {
+        if (routing)
+        {
+            DisplayNoteText("Please wait for the routing to finish.");
+            animator.Play("NotificationAnim");
+
+            return;
+        }
+        animator.Play("NotificationAnim_Close");
+        DisplayNoteText("Hold Left Shift + Left Click on the map to begin routing.");
+
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(touchControls.Touch.TouchPosition.ReadValue<Vector2>());
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            var routeMarker = Instantiate(RouteMarker, hit.point, Quaternion.identity, arcGISMapComponent.transform);
+
+            var geoPosition = HitToGeoPosition(hit);
+
+            var locationComponent = routeMarker.GetComponent<ArcGISLocationComponent>();
+            locationComponent.enabled = true;
+            locationComponent.Position = geoPosition;
+            locationComponent.Rotation = new ArcGISRotation(0, 90, 0);
+
+            stops.Enqueue(routeMarker);
+
+            routeMarkers.Add(routeMarker);
+
+            if (stops.Count > StopCount)
+                Destroy(stops.Dequeue());
+
+            if (stops.Count == StopCount)
+            {
+                string results = await FetchRoute(stops.ToArray());
+
+                if (results.Contains("error"))
+                {
+                    DisplayError(results);
+                    animator.Play("NotificationAnim");
+                }
+                else
+                {
+                    routing = true;
+                    StartCoroutine(DrawRoute(results));
+                }
+            }
+        }
     }
 
     void Start()

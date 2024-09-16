@@ -29,6 +29,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Esri.ArcGISMapsSDK.Samples.Components;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.EnhancedTouch;
 
 public class Geocoder : MonoBehaviour
 {
@@ -56,26 +57,42 @@ public class Geocoder : MonoBehaviour
 
     private InputActions inputActions;
     private bool isLeftShiftPressed;
+    private TouchControls touchControls;
 
     private void Awake()
     {
+#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
         inputActions = new InputActions();
+#else
+        touchControls = new TouchControls();
+#endif
     }
 
     private void OnEnable()
     {
+#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
         inputActions.Enable();
         inputActions.DrawingControls.LeftClick.started += OnLeftClickStart;
         inputActions.DrawingControls.LeftShift.performed += ctx => OnLeftShift(true);
         inputActions.DrawingControls.LeftShift.canceled += ctx => OnLeftShift(false);
+#else
+        TouchSimulation.Enable();
+        touchControls.Enable();
+        touchControls.Touch.TouchPress.started += ctx => OnTouchInputStarted(ctx);
+#endif
     }
 
     private void OnDisable()
     {
+#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
         inputActions.Disable();
         inputActions.DrawingControls.LeftClick.started -= OnLeftClickStart;
         inputActions.DrawingControls.LeftShift.performed -= ctx => OnLeftShift(true);
         inputActions.DrawingControls.LeftShift.canceled -= ctx => OnLeftShift(false);
+#else
+        touchControls.Disable();
+        touchControls.Touch.TouchPress.started -= ctx => OnTouchInputStarted(ctx);
+#endif
     }
 
     private void OnLeftShift(bool isPressed)
@@ -99,6 +116,22 @@ public class Geocoder : MonoBehaviour
                 SetupQueryLocationGameObject(LocationMarkerTemplate, hit.point, markerRotation, new Vector3(scale, scale, scale));
                 ReverseGeocode(HitToGeoPosition(hit));
             }
+        }
+    }
+
+    private void OnTouchInputStarted(InputAction.CallbackContext ctx)
+    {
+        Ray ray = MainCamera.ScreenPointToRay(touchControls.Touch.TouchPosition.ReadValue<Vector2>());
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            Vector3 direction = (hit.point - MainCamera.transform.position);
+            DistanceFromCamera = Vector3.Distance(MainCamera.transform.position, hit.point);
+            float scale = DistanceFromCamera * LocationMarkerScale / 400000; // Scale the marker based on its distance from camera 
+            Quaternion markerRotationPerpendicular = Quaternion.FromToRotation(Vector3.up, hit.normal);
+            Quaternion markerRotationFacingCamera = MainCamera.transform.rotation;
+            Quaternion markerRotation = markerRotationPerpendicular * markerRotationFacingCamera;
+            SetupQueryLocationGameObject(LocationMarkerTemplate, hit.point, markerRotation, new Vector3(scale, scale, scale));
+            ReverseGeocode(HitToGeoPosition(hit));
         }
     }
 
