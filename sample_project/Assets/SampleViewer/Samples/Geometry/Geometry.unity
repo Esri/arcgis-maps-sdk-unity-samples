@@ -274,6 +274,7 @@ GameObject:
   - component: {fileID: 150318284}
   - component: {fileID: 150318283}
   - component: {fileID: 150318290}
+  - component: {fileID: 150318291}
   m_Layer: 0
   m_Name: ArcGISCamera
   m_TagString: MainCamera
@@ -334,7 +335,7 @@ MonoBehaviour:
   MaxSpeed: 2000000
   MinSpeed: 1000
   IgnoreUI: 0
-  EnableLeftDragging: 1
+  EnableLeftDragging: 0
   EnableRightDragging: 1
 --- !u!114 &150318285
 MonoBehaviour:
@@ -497,6 +498,19 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &150318291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 150318280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b7511ad6dd4a23469c6b1d94255a41f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  JoystickCanvas: {fileID: 8245483605992596556, guid: f94e67b1f8188b441b93c2d9ac0435eb, type: 3}
 --- !u!1 &279642341
 GameObject:
   m_ObjectHideFlags: 0
@@ -1098,7 +1112,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -204.03003, y: -144.96994}
+  m_AnchoredPosition: {x: -204.03027, y: -144.96997}
   m_SizeDelta: {x: 70, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &541059373
@@ -2831,7 +2845,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -70.329956, y: -144.97995}
+  m_AnchoredPosition: {x: -70.33008, y: -144.97998}
   m_SizeDelta: {x: 70, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1394917535

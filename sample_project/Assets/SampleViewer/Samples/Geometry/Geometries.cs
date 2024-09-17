@@ -70,7 +70,7 @@ public class Geometries : MonoBehaviour
 
 	private void OnEnable()
 	{
-#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
+#if UNITY_EDITOR && !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
 		inputActions.Enable();
 		inputActions.DrawingControls.LeftClick.started += OnLeftClickStart;
 		inputActions.DrawingControls.LeftClick.canceled += OnLeftClickEnd;
@@ -85,7 +85,7 @@ public class Geometries : MonoBehaviour
 
 	private void OnDisable()
 	{
-#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
+#if UNITY_EDITOR && !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
 		inputActions.Disable();
 		inputActions.DrawingControls.LeftClick.started -= OnLeftClickStart;
 		inputActions.DrawingControls.LeftClick.canceled -= OnLeftClickEnd;
@@ -123,7 +123,7 @@ public class Geometries : MonoBehaviour
 
 	private void OnLeftClickStart(InputAction.CallbackContext context)
 	{
-		isTouch = true;
+		isTouch = false;
 
 		if (isLeftShiftPressed && !EventSystem.current.IsPointerOverGameObject())
 		{
