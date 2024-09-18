@@ -7,9 +7,7 @@ public class DisableTouchJoysticks : MonoBehaviour
     private void Awake()
     {
         instance = this;
-#if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
-        ToggleCanvas(false);
-#endif
+        gameObject.SetActive(false);
     }
 
     public void ToggleCanvas(bool active)
