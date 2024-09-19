@@ -46,13 +46,16 @@ public class Geocoder : MonoBehaviour
     private Animator animator;
     private string ResponseAddress = "";
     private string textInput;
-    private bool ShouldPlaceMarker = false;
     private bool WaitingForResponse = false;
     private float Timer = 0;
     private float DistanceFromCamera;
     private readonly float MapLoadWaitTime = 1;
-    private readonly string AddressQueryURL = "https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates";
-    private readonly string LocationQueryURL = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode";
+
+    private readonly string AddressQueryURL =
+        "https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates";
+
+    private readonly string LocationQueryURL =
+        "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode";
 
     private InputActions inputActions;
     private bool isLeftShiftPressed;
@@ -92,11 +95,13 @@ public class Geocoder : MonoBehaviour
             {
                 Vector3 direction = (hit.point - MainCamera.transform.position);
                 DistanceFromCamera = Vector3.Distance(MainCamera.transform.position, hit.point);
-                float scale = DistanceFromCamera * LocationMarkerScale / 400000; // Scale the marker based on its distance from camera 
+                float scale = DistanceFromCamera * LocationMarkerScale /
+                              400000; // Scale the marker based on its distance from camera 
                 Quaternion markerRotationPerpendicular = Quaternion.FromToRotation(Vector3.up, hit.normal);
                 Quaternion markerRotationFacingCamera = MainCamera.transform.rotation;
                 Quaternion markerRotation = markerRotationPerpendicular * markerRotationFacingCamera;
-                SetupQueryLocationGameObject(LocationMarkerTemplate, hit.point, markerRotation, new Vector3(scale, scale, scale));
+                SetupQueryLocationGameObject(LocationMarkerTemplate, hit.point, markerRotation,
+                    new Vector3(scale, scale, scale));
                 ReverseGeocode(HitToGeoPosition(hit));
             }
         }
@@ -110,33 +115,27 @@ public class Geocoder : MonoBehaviour
         SearchButton.onClick.AddListener(delegate { HandleTextInput(textInput); });
     }
 
-    void Update()
+    void SetCameraLocation()
     {
-        // Create a marker and address card after an address lookup
-        if (ShouldPlaceMarker)
+        // Wait for a fixed time for the map to load
+        if (!WaitingForResponse)
         {
-            // Wait for a fixed time for the map to load
-            if (Timer < MapLoadWaitTime)
-            {
-                Timer += Time.deltaTime;
-            }
-            else
-            {
-                float CameraElevationOffset = 2000; // Height of the camera above the queried address
+            float CameraElevationOffset = 2000; // Height of the camera above the queried address
 
-                SetupQueryLocationGameObject(AddressMarkerTemplate, scale: new Vector3(AddressMarkerScale, AddressMarkerScale, AddressMarkerScale));
-                QueryLocationGO.GetComponent<ArcGISLocationComponent>().SurfacePlacementMode = ArcGISSurfacePlacementMode.OnTheGround;
-                CreateAddressCard(true);
+            SetupQueryLocationGameObject(AddressMarkerTemplate,
+                scale: new Vector3(AddressMarkerScale, AddressMarkerScale, AddressMarkerScale));
+            QueryLocationGO.GetComponent<ArcGISLocationComponent>().SurfacePlacementMode =
+                ArcGISSurfacePlacementMode.OnTheGround;
+            CreateAddressCard(true);
 
-                // Place the camera above the marker and start rendering again
-                ArcGISPoint MarkerPosition = QueryLocationGO.GetComponent<ArcGISLocationComponent>().Position;
-                MainCamera.GetComponent<ArcGISLocationComponent>().Position = new ArcGISPoint(
-                    MarkerPosition.X,
-                    MarkerPosition.Y,
-                    MarkerPosition.Z + CameraElevationOffset,
-                    MarkerPosition.SpatialReference);
-                MainCamera.GetComponent<Camera>().cullingMask = -1;
-            }
+            // Place the camera above the marker and start rendering again
+            ArcGISPoint MarkerPosition = QueryLocationGO.GetComponent<ArcGISLocationComponent>().Position;
+            MainCamera.GetComponent<ArcGISLocationComponent>().Position = new ArcGISPoint(
+                MarkerPosition.X,
+                MarkerPosition.Y,
+                MarkerPosition.Z + CameraElevationOffset,
+                MarkerPosition.SpatialReference);
+            MainCamera.GetComponent<Camera>().cullingMask = -1;
         }
     }
 
@@ -197,12 +196,13 @@ public class Geocoder : MonoBehaviour
                     ResponseAddress = (string)array[0].SelectToken("address");
 
                     // Move the camera to the queried address
-                    MainCamera.GetComponent<Camera>().cullingMask = 0; // blacken the camera view until the scene is updated
-                    ArcGISLocationComponent CamLocComp = MainCamera.GetComponent(typeof(ArcGISLocationComponent)) as ArcGISLocationComponent;
+                    MainCamera.GetComponent<Camera>().cullingMask =
+                        0; // blacken the camera view until the scene is updated
+                    ArcGISLocationComponent CamLocComp =
+                        MainCamera.GetComponent(typeof(ArcGISLocationComponent)) as ArcGISLocationComponent;
                     CamLocComp.Rotation = new ArcGISRotation(0, 0, 0);
                     CamLocComp.Position = new ArcGISPoint((double)lon, (double)lat, cameraStartHeight, new ArcGISSpatialReference(4326));
-
-                    ShouldPlaceMarker = true;
+                    
                     Timer = 0;
                 }
                 else
@@ -214,8 +214,10 @@ public class Geocoder : MonoBehaviour
                 InfoField.text = array.Count switch
                 {
                     0 => "Query did not return a valid response.",
-                    1 => "Enter an address above to move there or Shift+Click on a location to see the address / description.",
-                    _ => "Query returned multiple results. If the shown location is not the intended one, make your input more specific.",
+                    1 =>
+                        "Enter an address above to move there or Shift+Click on a location to see the address / description.",
+                    _ =>
+                        "Query returned multiple results. If the shown location is not the intended one, make your input more specific.",
                 };
 
                 if (array.Count == 0 || array.Count == 50)
@@ -224,7 +226,9 @@ public class Geocoder : MonoBehaviour
                 }
             }
         }
+
         WaitingForResponse = false;
+        SetCameraLocation();
     }
 
     /// <summary>
@@ -261,10 +265,12 @@ public class Geocoder : MonoBehaviour
             }
             else
             {
-                InfoField.text = "Enter an address above to move there or Shift+Click on a location to see the address / description.";
+                InfoField.text =
+                    "Enter an address above to move there or Shift+Click on a location to see the address / description.";
                 CreateAddressCard(false);
             }
         }
+
         WaitingForResponse = false;
     }
 
@@ -275,7 +281,6 @@ public class Geocoder : MonoBehaviour
     /// <returns></returns>
     private async Task<string> SendAddressQuery(string address)
     {
-
         IEnumerable<KeyValuePair<string, string>> payload = new List<KeyValuePair<string, string>>()
         {
             new KeyValuePair<string, string>("address", address),
@@ -322,9 +327,11 @@ public class Geocoder : MonoBehaviour
     /// <returns></returns>
     private ArcGISPoint HitToGeoPosition(RaycastHit hit, float yOffset = 0)
     {
-        var worldPosition = math.inverse(arcGISMapComponent.WorldMatrix).HomogeneousTransformPoint(hit.point.ToDouble3());
+        var worldPosition = math.inverse(arcGISMapComponent.WorldMatrix)
+            .HomogeneousTransformPoint(hit.point.ToDouble3());
         var geoPosition = arcGISMapComponent.View.WorldToGeographic(worldPosition);
-        var offsetPosition = new ArcGISPoint(geoPosition.X, geoPosition.Y, geoPosition.Z + yOffset, geoPosition.SpatialReference);
+        var offsetPosition = new ArcGISPoint(geoPosition.X, geoPosition.Y, geoPosition.Z + yOffset,
+            geoPosition.SpatialReference);
 
         return GeoUtils.ProjectToSpatialReference(offsetPosition, new ArcGISSpatialReference(4326));
     }
@@ -353,6 +360,7 @@ public class Geocoder : MonoBehaviour
         {
             MarkerLocComp = QueryLocationGO.AddComponent<ArcGISLocationComponent>();
         }
+
         MarkerLocComp.enabled = true;
     }
 
@@ -375,7 +383,8 @@ public class Geocoder : MonoBehaviour
         else
         {
             float localScale = LocationMarkerScale / 40;
-            card.transform.localPosition = new Vector3(0, 300f / LocationMarkerScale + 400, -300f / LocationMarkerScale);
+            card.transform.localPosition =
+                new Vector3(0, 300f / LocationMarkerScale + 400, -300f / LocationMarkerScale);
             card.transform.localScale = new Vector3(localScale, localScale, localScale);
         }
 
