@@ -117,26 +117,22 @@ public class Geocoder : MonoBehaviour
 
     void SetCameraLocation()
     {
-        // Wait for a fixed time for the map to load
-        if (!WaitingForResponse)
-        {
-            float CameraElevationOffset = 2000; // Height of the camera above the queried address
+        float CameraElevationOffset = 2000; // Height of the camera above the queried address
 
-            SetupQueryLocationGameObject(AddressMarkerTemplate,
-                scale: new Vector3(AddressMarkerScale, AddressMarkerScale, AddressMarkerScale));
-            QueryLocationGO.GetComponent<ArcGISLocationComponent>().SurfacePlacementMode =
-                ArcGISSurfacePlacementMode.OnTheGround;
-            CreateAddressCard(true);
+        SetupQueryLocationGameObject(AddressMarkerTemplate,
+            scale: new Vector3(AddressMarkerScale, AddressMarkerScale, AddressMarkerScale));
+        QueryLocationGO.GetComponent<ArcGISLocationComponent>().SurfacePlacementMode =
+            ArcGISSurfacePlacementMode.OnTheGround;
+        CreateAddressCard(true);
 
-            // Place the camera above the marker and start rendering again
-            ArcGISPoint MarkerPosition = QueryLocationGO.GetComponent<ArcGISLocationComponent>().Position;
-            MainCamera.GetComponent<ArcGISLocationComponent>().Position = new ArcGISPoint(
-                MarkerPosition.X,
-                MarkerPosition.Y,
-                MarkerPosition.Z + CameraElevationOffset,
-                MarkerPosition.SpatialReference);
-            MainCamera.GetComponent<Camera>().cullingMask = -1;
-        }
+        // Place the camera above the marker and start rendering again
+        ArcGISPoint MarkerPosition = QueryLocationGO.GetComponent<ArcGISLocationComponent>().Position;
+        MainCamera.GetComponent<ArcGISLocationComponent>().Position = new ArcGISPoint(
+            MarkerPosition.X,
+            MarkerPosition.Y,
+            MarkerPosition.Z + CameraElevationOffset,
+            MarkerPosition.SpatialReference);
+        MainCamera.GetComponent<Camera>().cullingMask = -1;
     }
 
     /// <summary>
@@ -201,8 +197,9 @@ public class Geocoder : MonoBehaviour
                     ArcGISLocationComponent CamLocComp =
                         MainCamera.GetComponent(typeof(ArcGISLocationComponent)) as ArcGISLocationComponent;
                     CamLocComp.Rotation = new ArcGISRotation(0, 0, 0);
-                    CamLocComp.Position = new ArcGISPoint((double)lon, (double)lat, cameraStartHeight, new ArcGISSpatialReference(4326));
-                    
+                    CamLocComp.Position = new ArcGISPoint((double)lon, (double)lat, cameraStartHeight,
+                        new ArcGISSpatialReference(4326));
+
                     Timer = 0;
                 }
                 else
