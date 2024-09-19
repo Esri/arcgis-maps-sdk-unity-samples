@@ -47,11 +47,8 @@ public class Geocoder : MonoBehaviour
     private Animator animator;
     private string ResponseAddress = "";
     private string textInput;
-    private bool ShouldPlaceMarker = false;
     private bool WaitingForResponse = false;
-    private float Timer = 0;
     private float DistanceFromCamera;
-    private readonly float MapLoadWaitTime = 1;
     private readonly string AddressQueryURL = "https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates";
     private readonly string LocationQueryURL = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode";
 
@@ -143,36 +140,6 @@ public class Geocoder : MonoBehaviour
         SearchButton.onClick.AddListener(delegate { HandleTextInput(textInput); });
     }
 
-    void Update()
-    {
-        // Create a marker and address card after an address lookup
-        if (ShouldPlaceMarker)
-        {
-            // Wait for a fixed time for the map to load
-            if (Timer < MapLoadWaitTime)
-            {
-                Timer += Time.deltaTime;
-            }
-            else
-            {
-                float CameraElevationOffset = 2000; // Height of the camera above the queried address
-
-                SetupQueryLocationGameObject(AddressMarkerTemplate, scale: new Vector3(AddressMarkerScale, AddressMarkerScale, AddressMarkerScale));
-                PlaceOnGround(QueryLocationGO);
-                CreateAddressCard(true);
-
-                // Place the camera above the marker and start rendering again
-                ArcGISPoint MarkerPosition = QueryLocationGO.GetComponent<ArcGISLocationComponent>().Position;
-                MainCamera.GetComponent<ArcGISLocationComponent>().Position = new ArcGISPoint(
-                    MarkerPosition.X,
-                    MarkerPosition.Y,
-                    MarkerPosition.Z + CameraElevationOffset,
-                    MarkerPosition.SpatialReference);
-                MainCamera.GetComponent<Camera>().cullingMask = -1;
-            }
-        }
-    }
-
     /// <summary>
     /// Verify the input text and call the geocoder. This function is called when an address is entered in the text input field.
     /// </summary>
@@ -193,6 +160,14 @@ public class Geocoder : MonoBehaviour
         }
     }
 
+    private void PlacePin()
+    {
+        SetupQueryLocationGameObject(AddressMarkerTemplate, scale: new Vector3(AddressMarkerScale, AddressMarkerScale, AddressMarkerScale));
+        PlaceOnGround(QueryLocationGO);
+        CreateAddressCard(true);
+        MainCamera.GetComponent<Camera>().cullingMask = -1;
+    }
+    
     /// <summary>
     /// Perform a geocoding query (address lookup) and parse the response. If the server returned an error, the message is shown to the user.
     /// </summary>
@@ -215,7 +190,7 @@ public class Geocoder : MonoBehaviour
         }
         else
         {
-            var cameraStartHeight = 10000; // Use a high elevation to do a raycast from
+            var cameraStartHeight = 1500; // Use a high elevation to do a raycast from
 
             // Parse the query response
             var response = JObject.Parse(results);
@@ -234,9 +209,6 @@ public class Geocoder : MonoBehaviour
                     ArcGISLocationComponent CamLocComp = MainCamera.GetComponent(typeof(ArcGISLocationComponent)) as ArcGISLocationComponent;
                     CamLocComp.Rotation = new ArcGISRotation(0, 0, 0);
                     CamLocComp.Position = new ArcGISPoint((double)lon, (double)lat, cameraStartHeight, new ArcGISSpatialReference(4326));
-
-                    ShouldPlaceMarker = true;
-                    Timer = 0;
                 }
                 else
                 {
@@ -258,6 +230,7 @@ public class Geocoder : MonoBehaviour
             }
         }
         WaitingForResponse = false;
+        PlacePin();
     }
 
     /// <summary>
@@ -355,23 +328,9 @@ public class Geocoder : MonoBehaviour
     /// <param name="markerGO"></param>
     void PlaceOnGround(GameObject markerGO)
     {
-        Vector3 position = MainCamera.transform.position;
-        var raycastStart = new Vector3(position.x, position.y, position.z);
-
-        if (Physics.Raycast(raycastStart, Vector3.down, out RaycastHit hitInfo))
-        {
-            // Detrmine the geographic location of the point hit by the raycast and place the game object there
-            markerGO.GetComponent<ArcGISLocationComponent>().Position = HitToGeoPosition(hitInfo, 0);
-        }
-        else // Raycast didn't hit an object. Print a warning
-        {
-            markerGO.GetComponent<ArcGISLocationComponent>().Position = MainCamera.GetComponent<ArcGISLocationComponent>().Position;
-            Debug.LogWarning("The elevation at the queried location could not be determined.");
-        }
-
+        markerGO.GetComponent<ArcGISLocationComponent>().Position = MainCamera.GetComponent<ArcGISLocationComponent>().Position;
         markerGO.GetComponent<ArcGISLocationComponent>().Rotation = new ArcGISRotation(0, 90, 0);
-
-        ShouldPlaceMarker = false;
+        markerGO.GetComponent<ArcGISLocationComponent>().SurfacePlacementMode = ArcGISSurfacePlacementMode.OnTheGround;
     }
 
     /// <summary>
