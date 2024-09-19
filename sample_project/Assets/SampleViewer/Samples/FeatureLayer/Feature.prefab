@@ -26,6 +26,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4755475815220368639}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -4.327194, y: -2.2735758, z: 11.88209}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -33,7 +34,6 @@ Transform:
   m_Children:
   - {fileID: 1527505452278045786}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2926289532245673524
 MonoBehaviour:
@@ -74,10 +74,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1e3e0b8b5db15847a241e7210e29311, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FeatureRender: {fileID: 394600159236761397}
   ArcGISCamera: {fileID: 0}
   Coordinates: []
-  properties: []
+  FeatureRender: {fileID: 394600159236761397}
+  Properties: []
 --- !u!114 &5289912849815746152
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99,11 +99,14 @@ MonoBehaviour:
     Heading: 0
     Pitch: 0
     Roll: 0
+  surfacePlacementMode: 0
+  surfacePlacementOffset: 0
 --- !u!1001 &1348954948263230385
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 7644767205621091369}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 919463facfd6566498726b6c208257e0, type: 3}
@@ -155,6 +158,9 @@ PrefabInstance:
       value: Pin
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 919463facfd6566498726b6c208257e0, type: 3}
 --- !u!23 &394600159236761397 stripped
 MeshRenderer:
