@@ -18,4 +18,4 @@ Display the measured distance by drawing lines on the map.
 
 ## Tags
 
-measure, geometry, analysis, raycast
+measure, geometry, analysis
