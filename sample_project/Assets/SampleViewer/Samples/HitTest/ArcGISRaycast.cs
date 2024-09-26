@@ -7,7 +7,10 @@
 using System;
 using Esri.ArcGISMapsSDK.Components;
 using Esri.GameEngine.Geometry;
+using Esri.GameEngine.Layers;
+using Esri.Unity;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine.InputSystem;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,6 +26,7 @@ public class ArcGISRaycast : MonoBehaviour
     public TextMeshProUGUI featureText;
     private InputActions inputActions;
     private bool isLeftShiftPressed;
+    private ArcGIS3DObjectSceneLayer newYorkBuildings;
 
     private void Awake()
     {
@@ -82,7 +86,7 @@ public class ArcGISRaycast : MonoBehaviour
             }
         }
     }
-
+    
     private void Start()
     {
         canvas.enabled = false;
