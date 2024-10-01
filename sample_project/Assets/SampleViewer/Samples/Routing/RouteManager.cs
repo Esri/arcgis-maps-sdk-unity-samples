@@ -4,53 +4,54 @@
 // You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
 //
 
-using System.Net.Http;
 using System.Collections;
-using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 using Esri.ArcGISMapsSDK.Components;
+using Esri.ArcGISMapsSDK.Samples.Components;
 using Esri.ArcGISMapsSDK.Utils.GeoCoord;
 using Esri.GameEngine.Geometry;
 using Esri.HPFramework;
 
-using UnityEngine;
-using TMPro;
-
 using Newtonsoft.Json.Linq;
-using Unity.Mathematics;
-using Esri.ArcGISMapsSDK.Samples.Components;
+using UnityEngine;
 using UnityEngine.InputSystem;
+using Unity.Mathematics;
+using TMPro;
 
 public class RouteManager : MonoBehaviour
 {
-    public GameObject RouteMarker;
-    public GameObject RouteBreadcrumb;
-    public GameObject Route;
-    public GameObject RouteInfo;
-    public string apiKey;
+	public string apiKey;
+	public GameObject Route;
+	public GameObject RouteBreadcrumb;
+	public GameObject RouteInfo;
+	public GameObject RouteMarker;
 
-    [SerializeField] private TextMeshProUGUI InfoField;
+	[SerializeField] private TextMeshProUGUI InfoField;
 
-    private HPRoot hpRoot;
-    private ArcGISMapComponent arcGISMapComponent;
-    private Animator animator;
-    private float elevationOffset = 20.0f;
-    private int StopCount = 2;
-    private Queue<GameObject> stops = new Queue<GameObject>();
-    private bool routing = false;
-    private string routingURL = "https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve";
-    private List<GameObject> breadcrumbs = new List<GameObject>();
-    private List<GameObject> routeMarkers = new List<GameObject>();
-    private LineRenderer lineRenderer;
-    private HttpClient client = new HttpClient();
+	private Animator animator;
+	private ArcGISCameraComponent arcGISCamera;
+	private ArcGISMapComponent arcGISMapComponent;
+	private List<GameObject> breadcrumbs = new List<GameObject>();
+	private HPTransform cameraTransform;
+	private HttpClient client = new HttpClient();
+	private float elevationOffset = 20.0f;
+	private HPRoot hpRoot;
+	private InputActions inputActions;
+	private bool isLeftShiftPressed;
+	private double3 lastCameraPosition;
+	private Quaternion lastCameraRotation;
+	double3 lastRootPosition;
+	private LineRenderer lineRenderer;
+	private List<GameObject> routeMarkers = new List<GameObject>();
+	private bool routing = false;
+	private string routingURL = "https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve";
+	private Queue<GameObject> stops = new Queue<GameObject>();
+	private int StopCount = 2;
 
-    double3 lastRootPosition;
-
-    private InputActions inputActions;
-    private bool isLeftShiftPressed;
-
-    private void Awake()
+	private void Awake()
     {
         inputActions = new InputActions();
     }
@@ -148,12 +149,17 @@ public class RouteManager : MonoBehaviour
         lastRootPosition = arcGISMapComponent.GetComponent<HPRoot>().RootUniversePosition;
     }
 
-    /// <summary>
-    /// Return GeoPosition Based on RaycastHit; I.E. Where the user clicked in the Scene.
-    /// </summary>
-    /// <param name="hit"></param>
-    /// <returns></returns>
-    private ArcGISPoint HitToGeoPosition(RaycastHit hit, float yOffset = 0)
+	private void Update()
+	{
+        RebaseRoute();
+	}
+
+	/// <summary>
+	/// Return GeoPosition Based on RaycastHit; I.E. Where the user clicked in the Scene.
+	/// </summary>
+	/// <param name="hit"></param>
+	/// <returns></returns>
+	private ArcGISPoint HitToGeoPosition(RaycastHit hit, float yOffset = 0)
     {
         var worldPosition = math.inverse(arcGISMapComponent.WorldMatrix).HomogeneousTransformPoint(hit.point.ToDouble3());
 
