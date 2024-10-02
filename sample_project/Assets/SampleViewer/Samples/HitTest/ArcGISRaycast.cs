@@ -30,6 +30,7 @@ public class ArcGISRaycast : MonoBehaviour
     private List<String> outfields = new List<String>{"AREA_SQ_FT", "DISTRICT", "Height", "SUBDISTRIC", "ZONE_"};
     private List<String> properties = new List<String>{"Area", "District", "Height", "Sub District", "Zone"};
     [SerializeField] private TMP_Dropdown scrollView;
+    [SerializeField] private bool supressWarnings;
     private string weblink;
 
     [SerializeField] private TextMeshProUGUI property;
@@ -42,10 +43,10 @@ public class ArcGISRaycast : MonoBehaviour
     private void CreateLink(string objectID)
     {
         weblink = "https://services.arcgis.com/P3ePLMYs2RVChkJx/ArcGIS/rest/services/Buildings_Boston_USA/FeatureServer/0/query?f=geojson&where=1=1&objectids=" + objectID + "&outfields=*";
-        StartCoroutine(GetFeatures());
+        StartCoroutine(GetFeatures(objectID));
     }
     
-    private IEnumerator GetFeatures()
+    private IEnumerator GetFeatures(string objectID)
     {
         // To learn more about the Feature Layer rest API and all the things that are possible checkout
         // https://developers.arcgis.com/rest/services-reference/enterprise/query-feature-service-layer-.htm
@@ -61,12 +62,24 @@ public class ArcGISRaycast : MonoBehaviour
         {
             if (scrollView.value < 0)
             {
-                property.text = "No property selected. Please Select a property below.";
+                property.text = "Feature ID: " + objectID;
+                
+                if (!supressWarnings)
+                {
+                    Debug.LogWarning("Please select a value to get from the dropdown");
+                }
+
             }
             else if (GetObjectIDs(Request.downloadHandler.text).Length == 0)
             {
-                property.text = scrollView.captionText.text + ": " + "No value was found for that property here.";
+                property.text = "Feature ID: " + objectID;
+
+                if (!supressWarnings)
+                {
+                    Debug.LogWarning(scrollView.captionText.text + ": " + "No value was found for that property here.");
+                }
             }
+                
             else
             {
                 property.text = scrollView.captionText.text + ": " + GetObjectIDs(Request.downloadHandler.text);                
@@ -115,36 +128,6 @@ public class ArcGISRaycast : MonoBehaviour
         {
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-
-            if (Physics.Raycast(ray, out hit))
-            {
-                var arcGISRaycastHit = arcGISMapComponent.GetArcGISRaycastHit(hit);
-                var layer = arcGISRaycastHit.layer;
-                var featureId = arcGISRaycastHit.featureId;
-                
-                CreateLink(featureId.ToString());
-
-                if (layer != null)
-                {
-                    var geoPosition = arcGISMapComponent.EngineToGeographic(hit.point);
-                    var location = markerGO.GetComponent<ArcGISLocationComponent>();
-                    location.Position = new ArcGISPoint(geoPosition.X, geoPosition.Y, geoPosition.Z, geoPosition.SpatialReference);
-                    
-                    var point = ArcGISGeometryEngine.Project(geoPosition, ArcGISSpatialReference.WGS84()) as ArcGISPoint;
-                    var lat = Mathf.Round((float)point.Y * 1000) / 1000;
-                    var lon = Mathf.Round((float)point.X * 1000) / 1000; 
-                    locationText.text = "Lat: " + lat + " Long: " + lon;
-                }
-            }
-        }
-    }
-    
-    private void OnTouchStarted(InputAction.CallbackContext context)
-    {
-        if (!EventSystem.current.IsPointerOverGameObject())
-        {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(inputActions.DrawingControls.TouchPos.ReadValue<Vector2>());
 
             if (Physics.Raycast(ray, out hit))
             {
