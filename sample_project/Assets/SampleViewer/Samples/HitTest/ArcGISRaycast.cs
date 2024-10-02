@@ -5,34 +5,89 @@
 //
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Esri.ArcGISMapsSDK.Components;
 using Esri.GameEngine.Geometry;
-using Esri.GameEngine.Layers;
-using Esri.Unity;
+using Newtonsoft.Json.Linq;
 using TMPro;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine.InputSystem;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class ArcGISRaycast : MonoBehaviour
 {
-    [SerializeField] private InputAction inputAction;
-    private const float offSet = 200f;
-
     public ArcGISMapComponent arcGISMapComponent;
     public ArcGISCameraComponent arcGISCamera;
-    public Canvas canvas;
-    public TextMeshProUGUI featureText;
     private InputActions inputActions;
     private bool isLeftShiftPressed;
-    private ArcGIS3DObjectSceneLayer newYorkBuildings;
+    private JToken[] jFeatures;
+    [SerializeField] private TextMeshProUGUI locationText;
+    [SerializeField] private GameObject markerGO;
+    private List<String> outfields = new List<String>{"AREA_SQ_FT", "DISTRICT", "Height", "SUBDISTRIC", "ZONE_"};
+    private List<String> properties = new List<String>{"Area", "District", "Height", "Sub District", "Zone"};
+    [SerializeField] private TMP_Dropdown scrollView;
+    private string weblink;
+
+    [SerializeField] private TextMeshProUGUI property;
 
     private void Awake()
     {
         inputActions = new InputActions();
     }
 
+    private void CreateLink(string objectID)
+    {
+        weblink = "https://services.arcgis.com/P3ePLMYs2RVChkJx/ArcGIS/rest/services/Buildings_Boston_USA/FeatureServer/0/query?f=geojson&where=1=1&objectids=" + objectID + "&outfields=*";
+        StartCoroutine(GetFeatures());
+    }
+    
+    private IEnumerator GetFeatures()
+    {
+        // To learn more about the Feature Layer rest API and all the things that are possible checkout
+        // https://developers.arcgis.com/rest/services-reference/enterprise/query-feature-service-layer-.htm
+
+        UnityWebRequest Request = UnityWebRequest.Get(weblink);
+        yield return Request.SendWebRequest();
+
+        if (Request.result != UnityWebRequest.Result.Success)
+        {
+            Debug.Log(Request.error);
+        }
+        else
+        {
+            if (scrollView.value < 0)
+            {
+                property.text = "No property selected. Please Select a property below.";
+            }
+            else if (GetObjectIDs(Request.downloadHandler.text).Length == 0)
+            {
+                property.text = scrollView.captionText.text + ": " + "No value was found for that property here.";
+            }
+            else
+            {
+                property.text = scrollView.captionText.text + ": " + GetObjectIDs(Request.downloadHandler.text);                
+            }
+        }
+    }
+    
+    private String GetObjectIDs(string response)
+    {
+        var jObject = JObject.Parse(response);
+        jFeatures = jObject.SelectToken("features").ToArray();
+        var propertyValue = "";
+        
+        foreach (var property in jFeatures)
+        {
+            propertyValue = property.SelectToken("properties").SelectToken(outfields[scrollView.value]).ToString();
+        }
+
+        return propertyValue;
+    }
+    
     private void OnEnable()
     {
         inputActions.Enable();
@@ -56,12 +111,8 @@ public class ArcGISRaycast : MonoBehaviour
 
     private void OnLeftClickStart(InputAction.CallbackContext context)
     {
-        if (isLeftShiftPressed)
+        if (isLeftShiftPressed && !EventSystem.current.IsPointerOverGameObject())
         {
-            if (!canvas.enabled)
-            {
-                canvas.enabled = true;
-            }
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
 
@@ -70,25 +121,61 @@ public class ArcGISRaycast : MonoBehaviour
                 var arcGISRaycastHit = arcGISMapComponent.GetArcGISRaycastHit(hit);
                 var layer = arcGISRaycastHit.layer;
                 var featureId = arcGISRaycastHit.featureId;
+                
+                CreateLink(featureId.ToString());
 
-                if (layer != null && featureId != -1)
+                if (layer != null)
                 {
-                    featureText.text = featureId.ToString();
-
                     var geoPosition = arcGISMapComponent.EngineToGeographic(hit.point);
-                    var offsetPosition = new ArcGISPoint(geoPosition.X, geoPosition.Y, geoPosition.Z + offSet, geoPosition.SpatialReference);
-
-                    var rotation = arcGISCamera.GetComponent<ArcGISLocationComponent>().Rotation;
-                    var location = canvas.GetComponent<ArcGISLocationComponent>();
-                    location.Position = offsetPosition;
-                    location.Rotation = rotation;
+                    var location = markerGO.GetComponent<ArcGISLocationComponent>();
+                    location.Position = new ArcGISPoint(geoPosition.X, geoPosition.Y, geoPosition.Z, geoPosition.SpatialReference);
+                    
+                    var point = ArcGISGeometryEngine.Project(geoPosition, ArcGISSpatialReference.WGS84()) as ArcGISPoint;
+                    var lat = Mathf.Round((float)point.Y * 1000) / 1000;
+                    var lon = Mathf.Round((float)point.X * 1000) / 1000; 
+                    locationText.text = "Lat: " + lat + " Long: " + lon;
                 }
             }
         }
     }
     
+    private void OnTouchStarted(InputAction.CallbackContext context)
+    {
+        if (!EventSystem.current.IsPointerOverGameObject())
+        {
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(inputActions.DrawingControls.TouchPos.ReadValue<Vector2>());
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                var arcGISRaycastHit = arcGISMapComponent.GetArcGISRaycastHit(hit);
+                var layer = arcGISRaycastHit.layer;
+                var featureId = arcGISRaycastHit.featureId;
+                
+                CreateLink(featureId.ToString());
+
+                if (layer != null)
+                {
+                    var geoPosition = arcGISMapComponent.EngineToGeographic(hit.point);
+                    var location = markerGO.GetComponent<ArcGISLocationComponent>();
+                    location.Position = new ArcGISPoint(geoPosition.X, geoPosition.Y, geoPosition.Z, geoPosition.SpatialReference);
+                    
+                    var point = ArcGISGeometryEngine.Project(geoPosition, ArcGISSpatialReference.WGS84()) as ArcGISPoint;
+                    var lat = Mathf.Round((float)point.Y * 1000) / 1000;
+                    var lon = Mathf.Round((float)point.X * 1000) / 1000; 
+                    locationText.text = "Lat: " + lat + " Long: " + lon;
+                }
+            }
+        }
+    }
+    
+    private void PopulateOutfieldsDropdown()
+    {
+        scrollView.AddOptions(properties);
+    }
+    
     private void Start()
     {
-        canvas.enabled = false;
+        PopulateOutfieldsDropdown();
     }
 }
