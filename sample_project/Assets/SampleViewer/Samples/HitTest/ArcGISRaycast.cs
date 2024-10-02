@@ -22,6 +22,7 @@ public class ArcGISRaycast : MonoBehaviour
 {
     public ArcGISMapComponent arcGISMapComponent;
     public ArcGISCameraComponent arcGISCamera;
+    private int featureId;
     private InputActions inputActions;
     private bool isLeftShiftPressed;
     private JToken[] jFeatures;
@@ -31,6 +32,7 @@ public class ArcGISRaycast : MonoBehaviour
     private List<String> properties = new List<String>{"Area", "District", "Height", "Sub District", "Zone"};
     [SerializeField] private TMP_Dropdown scrollView;
     [SerializeField] private bool supressWarnings;
+    [SerializeField] private Image warningImage;
     private string weblink;
 
     [SerializeField] private TextMeshProUGUI property;
@@ -63,7 +65,8 @@ public class ArcGISRaycast : MonoBehaviour
             if (scrollView.value < 0)
             {
                 property.text = "Feature ID: " + objectID;
-                
+                warningImage.enabled = true;
+
                 if (!supressWarnings)
                 {
                     Debug.LogWarning("Please select a value to get from the dropdown");
@@ -73,15 +76,21 @@ public class ArcGISRaycast : MonoBehaviour
             else if (GetObjectIDs(Request.downloadHandler.text).Length == 0)
             {
                 property.text = "Feature ID: " + objectID;
+                warningImage.enabled = true;
 
                 if (!supressWarnings)
                 {
                     Debug.LogWarning(scrollView.captionText.text + ": " + "No value was found for that property here.");
                 }
             }
-                
+            else if (scrollView.value == 0 || scrollView.value == 2)
+            {
+                warningImage.enabled = false;
+                property.text = scrollView.captionText.text + ": " + GetObjectIDs(Request.downloadHandler.text) + " ft";
+            }
             else
             {
+                warningImage.enabled = false;
                 property.text = scrollView.captionText.text + ": " + GetObjectIDs(Request.downloadHandler.text);                
             }
         }
@@ -133,7 +142,7 @@ public class ArcGISRaycast : MonoBehaviour
             {
                 var arcGISRaycastHit = arcGISMapComponent.GetArcGISRaycastHit(hit);
                 var layer = arcGISRaycastHit.layer;
-                var featureId = arcGISRaycastHit.featureId;
+                featureId = arcGISRaycastHit.featureId;
                 
                 CreateLink(featureId.ToString());
 
@@ -159,6 +168,15 @@ public class ArcGISRaycast : MonoBehaviour
     
     private void Start()
     {
+        warningImage.enabled = false;
         PopulateOutfieldsDropdown();
+
+        scrollView.onValueChanged.AddListener(delegate
+        {
+            if (featureId != 0)
+            {
+                CreateLink(featureId.ToString());
+            }
+        });
     }
 }
