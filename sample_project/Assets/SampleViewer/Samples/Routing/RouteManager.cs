@@ -24,33 +24,33 @@ using UnityEngine.InputSystem;
 
 public class RouteManager : MonoBehaviour
 {
-	public GameObject RouteMarker;
-	public GameObject RouteBreadcrumb;
-	public GameObject Route;
-	public GameObject RouteInfo;
-	public string apiKey;
+    public GameObject RouteMarker;
+    public GameObject RouteBreadcrumb;
+    public GameObject Route;
+    public GameObject RouteInfo;
+    public string apiKey;
 
-	[SerializeField] private TextMeshProUGUI InfoField;
+    [SerializeField] private TextMeshProUGUI InfoField;
 
-	private HPRoot hpRoot;
-	private ArcGISMapComponent arcGISMapComponent;
-	private Animator animator;
-	private float elevationOffset = 20.0f;
-	private int StopCount = 2;
-	private Queue<GameObject> stops = new Queue<GameObject>();
-	private bool routing = false;
-	private string routingURL = "https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve";
-	private List<GameObject> breadcrumbs = new List<GameObject>();
-	private List<GameObject> routeMarkers = new List<GameObject>();
-	private LineRenderer lineRenderer;
-	private HttpClient client = new HttpClient();
+    private HPRoot hpRoot;
+    private ArcGISMapComponent arcGISMapComponent;
+    private Animator animator;
+    private float elevationOffset = 20.0f;
+    private int StopCount = 2;
+    private Queue<GameObject> stops = new Queue<GameObject>();
+    private bool routing = false;
+    private string routingURL = "https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve";
+    private List<GameObject> breadcrumbs = new List<GameObject>();
+    private List<GameObject> routeMarkers = new List<GameObject>();
+    private LineRenderer lineRenderer;
+    private HttpClient client = new HttpClient();
 
-	double3 lastRootPosition;
+    double3 lastRootPosition;
 
-	private InputActions inputActions;
-	private bool isLeftShiftPressed;
+    private InputActions inputActions;
+    private bool isLeftShiftPressed;
 
-	private void Awake()
+    private void Awake()
     {
         inputActions = new InputActions();
     }
@@ -69,9 +69,14 @@ public class RouteManager : MonoBehaviour
         inputActions.DrawingControls.LeftClick.started -= OnLeftClickStart;
         inputActions.DrawingControls.LeftShift.performed -= ctx => OnLeftShift(true);
         inputActions.DrawingControls.LeftShift.canceled -= ctx => OnLeftShift(false);
-    }
 
-    private void OnLeftShift(bool isPressed)
+		if (arcGISMapComponent != null)
+		{
+			arcGISMapComponent.RootChanged.RemoveListener(RebaseRoute);
+		}
+	}
+
+	private void OnLeftShift(bool isPressed)
     {
         isLeftShiftPressed = isPressed;
     }
@@ -148,12 +153,12 @@ public class RouteManager : MonoBehaviour
 		arcGISMapComponent.RootChanged.AddListener(RebaseRoute);
 	}
 
-	/// <summary>
-	/// Return GeoPosition Based on RaycastHit; I.E. Where the user clicked in the Scene.
-	/// </summary>
-	/// <param name="hit"></param>
-	/// <returns></returns>
-	private ArcGISPoint HitToGeoPosition(RaycastHit hit, float yOffset = 0)
+    /// <summary>
+    /// Return GeoPosition Based on RaycastHit; I.E. Where the user clicked in the Scene.
+    /// </summary>
+    /// <param name="hit"></param>
+    /// <returns></returns>
+    private ArcGISPoint HitToGeoPosition(RaycastHit hit, float yOffset = 0)
     {
         var worldPosition = math.inverse(arcGISMapComponent.WorldMatrix).HomogeneousTransformPoint(hit.point.ToDouble3());
 
