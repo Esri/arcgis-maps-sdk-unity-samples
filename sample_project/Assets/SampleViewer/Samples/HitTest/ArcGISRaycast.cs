@@ -59,6 +59,7 @@ public class ArcGISRaycast : MonoBehaviour
         if (Request.result != UnityWebRequest.Result.Success)
         {
             Debug.Log(Request.error);
+            yield break;
         }
         else
         {
