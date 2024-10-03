@@ -74,7 +74,7 @@ public class RouteManager : MonoBehaviour
         {
             arcGISMapComponent.RootChanged.RemoveListener(RebaseRoute);
         }
-	}
+    }
 
     private void OnLeftShift(bool isPressed)
     {
@@ -151,7 +151,7 @@ public class RouteManager : MonoBehaviour
         lastRootPosition = arcGISMapComponent.GetComponent<HPRoot>().RootUniversePosition;
 
         arcGISMapComponent.RootChanged.AddListener(RebaseRoute);
-	}
+    }
 
     /// <summary>
     /// Return GeoPosition Based on RaycastHit; I.E. Where the user clicked in the Scene.
