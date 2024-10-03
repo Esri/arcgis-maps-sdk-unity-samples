@@ -70,13 +70,13 @@ public class RouteManager : MonoBehaviour
         inputActions.DrawingControls.LeftShift.performed -= ctx => OnLeftShift(true);
         inputActions.DrawingControls.LeftShift.canceled -= ctx => OnLeftShift(false);
 
-		if (arcGISMapComponent != null)
-		{
-			arcGISMapComponent.RootChanged.RemoveListener(RebaseRoute);
-		}
+        if (arcGISMapComponent != null)
+        {
+            arcGISMapComponent.RootChanged.RemoveListener(RebaseRoute);
+        }
 	}
 
-	private void OnLeftShift(bool isPressed)
+    private void OnLeftShift(bool isPressed)
     {
         isLeftShiftPressed = isPressed;
     }
@@ -150,7 +150,7 @@ public class RouteManager : MonoBehaviour
 
         lastRootPosition = arcGISMapComponent.GetComponent<HPRoot>().RootUniversePosition;
 
-		arcGISMapComponent.RootChanged.AddListener(RebaseRoute);
+        arcGISMapComponent.RootChanged.AddListener(RebaseRoute);
 	}
 
     /// <summary>
