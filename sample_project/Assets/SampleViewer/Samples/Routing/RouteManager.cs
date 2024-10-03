@@ -69,6 +69,11 @@ public class RouteManager : MonoBehaviour
         inputActions.DrawingControls.LeftClick.started -= OnLeftClickStart;
         inputActions.DrawingControls.LeftShift.performed -= ctx => OnLeftShift(true);
         inputActions.DrawingControls.LeftShift.canceled -= ctx => OnLeftShift(false);
+
+        if (arcGISMapComponent != null)
+        {
+            arcGISMapComponent.RootChanged.RemoveListener(RebaseRoute);
+        }
     }
 
     private void OnLeftShift(bool isPressed)
@@ -128,8 +133,6 @@ public class RouteManager : MonoBehaviour
                 }
             }
         }
-
-        RebaseRoute();
     }
 
     void Start()
@@ -146,6 +149,8 @@ public class RouteManager : MonoBehaviour
         lineRenderer = Route.GetComponent<LineRenderer>();
 
         lastRootPosition = arcGISMapComponent.GetComponent<HPRoot>().RootUniversePosition;
+
+        arcGISMapComponent.RootChanged.AddListener(RebaseRoute);
     }
 
     /// <summary>
