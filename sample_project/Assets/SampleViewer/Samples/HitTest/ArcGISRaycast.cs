@@ -28,8 +28,8 @@ public class ArcGISRaycast : MonoBehaviour
     private JToken[] jFeatures;
     [SerializeField] private TextMeshProUGUI locationText;
     [SerializeField] private GameObject markerGO;
-    private List<String> outfields = new List<String>{"AREA_SQ_FT", "DISTRICT", "Height", "SUBDISTRIC", "ZONE_"};
-    private List<String> properties = new List<String>{"Area", "District", "Height", "Sub District", "Zone"};
+    private List<string> outfields = new List<string>{"AREA_SQ_FT", "DISTRICT", "Height", "SUBDISTRIC", "ZONE_"};
+    private List<string> properties = new List<string>{"Area", "District", "Height", "Sub District", "Zone"};
     [SerializeField] private TMP_Dropdown scrollView;
     [SerializeField] private bool supressWarnings;
     [SerializeField] private Image warningImage;
@@ -96,7 +96,7 @@ public class ArcGISRaycast : MonoBehaviour
         }
     }
     
-    private String GetObjectIDs(string response)
+    private string GetObjectIDs(string response)
     {
         var jObject = JObject.Parse(response);
         jFeatures = jObject.SelectToken("features").ToArray();
@@ -143,19 +143,16 @@ public class ArcGISRaycast : MonoBehaviour
                 var arcGISRaycastHit = arcGISMapComponent.GetArcGISRaycastHit(hit);
                 var layer = arcGISRaycastHit.layer;
                 featureId = arcGISRaycastHit.featureId;
-                
-                CreateLink(featureId.ToString());
 
-                if (layer != null)
+                if (layer != null && featureId != -1)
                 {
+                    CreateLink(featureId.ToString());
                     var geoPosition = arcGISMapComponent.EngineToGeographic(hit.point);
                     var location = markerGO.GetComponent<ArcGISLocationComponent>();
                     location.Position = new ArcGISPoint(geoPosition.X, geoPosition.Y, geoPosition.Z, geoPosition.SpatialReference);
-                    
+
                     var point = ArcGISGeometryEngine.Project(geoPosition, ArcGISSpatialReference.WGS84()) as ArcGISPoint;
-                    var lat = Mathf.Round((float)point.Y * 1000) / 1000;
-                    var lon = Mathf.Round((float)point.X * 1000) / 1000; 
-                    locationText.text = "Lat: " + lat + " Long: " + lon;
+                    locationText.text = $"Lat: {string.Format("{0:0.##}", point.Y)} Long: {string.Format("{0:0.##}", point.X)}";
                 }
             }
         }
@@ -173,7 +170,7 @@ public class ArcGISRaycast : MonoBehaviour
 
         scrollView.onValueChanged.AddListener(delegate
         {
-            if (featureId != 0)
+            if (featureId != 0 || featureId != -1)
             {
                 CreateLink(featureId.ToString());
             }
