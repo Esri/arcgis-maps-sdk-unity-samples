@@ -41,9 +41,7 @@ public class ArcGISGeospatialController : MonoBehaviour
         {
             var location = EarthManager.CameraGeospatialPose;
             SetOrigin(new ArcGISPoint(location.Longitude, location.Latitude, 0, ArcGISSpatialReference.WGS84()));
-            locationText.text = "Origin: " + mapComponent.OriginPosition.X + 
-            ", " + mapComponent.OriginPosition.Y + 
-            ", " + mapComponent.OriginPosition.Z;
+            locationText.text = "Origin: " + mapComponent.OriginPosition.X + ", " + mapComponent.OriginPosition.Y + ", " + mapComponent.OriginPosition.Z;
         });
     }
 

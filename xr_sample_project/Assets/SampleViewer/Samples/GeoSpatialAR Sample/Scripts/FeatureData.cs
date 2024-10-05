@@ -1,5 +1,4 @@
 using Esri.ArcGISMapsSDK.Components;
-using Esri.GameEngine.Geometry;
 using Esri.HPFramework;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,7 +20,6 @@ public class FeatureData : MonoBehaviour
     {
         cameraLocationComponent = ArcGISCamera.GetComponent<ArcGISLocationComponent>();
         locationComponent = transform.GetComponent<ArcGISLocationComponent>();
-        featureHP = transform.GetComponent<HPTransform>();
         featureHP = transform.GetComponent<HPTransform>();
         locationComponent.SurfacePlacementMode = ArcGISSurfacePlacementMode.OnTheGround;
     }
