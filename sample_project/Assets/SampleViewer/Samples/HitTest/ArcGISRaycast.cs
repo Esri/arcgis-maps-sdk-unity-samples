@@ -21,21 +21,15 @@ using UnityEngine.UI;
 public class ArcGISRaycast : MonoBehaviour
 {
     public ArcGISMapComponent arcGISMapComponent;
-    public ArcGISCameraComponent arcGISCamera;
     private int featureId;
     private InputActions inputActions;
     private bool isLeftShiftPressed;
     private JToken[] jFeatures;
     [SerializeField] private TextMeshProUGUI locationText;
     [SerializeField] private GameObject markerGO;
-    private List<string> outfields = new List<string>{"AREA_SQ_FT", "DISTRICT", "Height", "SUBDISTRIC", "ZONE_"};
-    private List<string> properties = new List<string>{"Area", "District", "Height", "Sub District", "Zone"};
-    [SerializeField] private TMP_Dropdown scrollView;
-    [SerializeField] private bool supressWarnings;
-    [SerializeField] private Image warningImage;
+    private List<string> outfields = new List<string> { "AREA_SQ_FT", "DISTRICT", "Height", "SUBDISTRIC", "ZONE_" };
+    [SerializeField] private TextMeshProUGUI resultText;
     private string weblink;
-
-    [SerializeField] private TextMeshProUGUI property;
 
     private void Awake()
     {
@@ -44,10 +38,12 @@ public class ArcGISRaycast : MonoBehaviour
 
     private void CreateLink(string objectID)
     {
-        weblink = "https://services.arcgis.com/P3ePLMYs2RVChkJx/ArcGIS/rest/services/Buildings_Boston_USA/FeatureServer/0/query?f=geojson&where=1=1&objectids=" + objectID + "&outfields=*";
+        weblink =
+            "https://services.arcgis.com/P3ePLMYs2RVChkJx/ArcGIS/rest/services/Buildings_Boston_USA/FeatureServer/0/query?f=geojson&where=1=1&objectids=" +
+            objectID + "&outfields=AREA_SQ_FT,DISTRICT,Height,SUBDISTRIC,ZONE_";
         StartCoroutine(GetFeatures(objectID));
     }
-    
+
     private IEnumerator GetFeatures(string objectID)
     {
         // To learn more about the Feature Layer rest API and all the things that are possible checkout
@@ -61,56 +57,32 @@ public class ArcGISRaycast : MonoBehaviour
             Debug.Log(Request.error);
             yield break;
         }
-        else
+
+        resultText.text = "- FeatureID: " + featureId + "\n";
+        
+        foreach (var outfield in outfields)
         {
-            if (scrollView.value < 0)
+            if (GetObjectIDs(Request.downloadHandler.text, outfield) != "")
             {
-                property.text = "Feature ID: " + objectID;
-                warningImage.enabled = true;
-
-                if (!supressWarnings)
-                {
-                    Debug.LogWarning("Please select a value to get from the dropdown");
-                }
-
-            }
-            else if (GetObjectIDs(Request.downloadHandler.text).Length == 0)
-            {
-                property.text = "Feature ID: " + objectID;
-                warningImage.enabled = true;
-
-                if (!supressWarnings)
-                {
-                    Debug.LogWarning(scrollView.captionText.text + ": " + "No value was found for that property here.");
-                }
-            }
-            else if (scrollView.value == 0 || scrollView.value == 2)
-            {
-                warningImage.enabled = false;
-                property.text = scrollView.captionText.text + ": " + GetObjectIDs(Request.downloadHandler.text) + " ft";
-            }
-            else
-            {
-                warningImage.enabled = false;
-                property.text = scrollView.captionText.text + ": " + GetObjectIDs(Request.downloadHandler.text);                
+                resultText.text += "- " + outfield + ": " + GetObjectIDs(Request.downloadHandler.text, outfield) + "\n";
             }
         }
     }
-    
-    private string GetObjectIDs(string response)
+
+    private string GetObjectIDs(string response, string outfield)
     {
         var jObject = JObject.Parse(response);
         jFeatures = jObject.SelectToken("features").ToArray();
         var propertyValue = "";
-        
+
         foreach (var property in jFeatures)
         {
-            propertyValue = property.SelectToken("properties").SelectToken(outfields[scrollView.value]).ToString();
+            propertyValue = property.SelectToken("properties").SelectToken(outfield).ToString();
         }
 
         return propertyValue;
     }
-    
+
     private void OnEnable()
     {
         inputActions.Enable();
@@ -150,31 +122,20 @@ public class ArcGISRaycast : MonoBehaviour
                     CreateLink(featureId.ToString());
                     var geoPosition = arcGISMapComponent.EngineToGeographic(hit.point);
                     var location = markerGO.GetComponent<ArcGISLocationComponent>();
-                    location.Position = new ArcGISPoint(geoPosition.X, geoPosition.Y, geoPosition.Z, geoPosition.SpatialReference);
+                    location.Position = new ArcGISPoint(geoPosition.X, geoPosition.Y, geoPosition.Z,
+                        geoPosition.SpatialReference);
 
-                    var point = ArcGISGeometryEngine.Project(geoPosition, ArcGISSpatialReference.WGS84()) as ArcGISPoint;
-                    locationText.text = $"Lat: {string.Format("{0:0.##}", point.Y)} Long: {string.Format("{0:0.##}", point.X)}";
+                    var point = ArcGISGeometryEngine.Project(geoPosition,
+                        ArcGISSpatialReference.WGS84()) as ArcGISPoint;
+                    locationText.text =
+                        $"Lat: {string.Format("{0:0.##}", point.Y)} Long: {string.Format("{0:0.##}", point.X)}";
                 }
             }
         }
     }
-    
-    private void PopulateOutfieldsDropdown()
-    {
-        scrollView.AddOptions(properties);
-    }
-    
+
     private void Start()
     {
-        warningImage.enabled = false;
-        PopulateOutfieldsDropdown();
-
-        scrollView.onValueChanged.AddListener(delegate
-        {
-            if (featureId != 0 || featureId != -1)
-            {
-                CreateLink(featureId.ToString());
-            }
-        });
+        resultText.text = "Select a building to begin.";
     }
 }
