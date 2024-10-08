@@ -11,6 +11,8 @@ using UnityEngine.XR.ARSubsystems;
 
 public class ArcGISGeospatialController : MonoBehaviour
 {
+    public GeospatialPose location;
+    
     private AREarthManager EarthManager;
     [SerializeField] private TextMeshProUGUI locationText;
     [SerializeField] private Button locationButton;
@@ -39,9 +41,9 @@ public class ArcGISGeospatialController : MonoBehaviour
 
         locationButton.onClick.AddListener(delegate
         {
-            var location = EarthManager.CameraGeospatialPose;
+            location = EarthManager.CameraGeospatialPose;
             SetOrigin(new ArcGISPoint(location.Longitude, location.Latitude, 0, ArcGISSpatialReference.WGS84()));
-            locationText.text = "Origin: " + mapComponent.OriginPosition.X + ", " + mapComponent.OriginPosition.Y + ", " + mapComponent.OriginPosition.Z;
+            locationText.text = "Origin: " + location.Longitude + ", " + location.Latitude + ", " + location.Altitude;
         });
     }
 

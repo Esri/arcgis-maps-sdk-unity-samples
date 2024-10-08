@@ -45,6 +45,7 @@ public class FeatureLayerQuery : MonoBehaviour
     [SerializeField] private GameObject featurePrefab;
     private int featureSRWKID = 4326;
     private FeatureData featureInfo;
+    private ArcGISGeospatialController geospatialController;
     private ArcGISLocationComponent locationComponent;
     [SerializeField] private List<string> outfields = new List<string>();
     private float stadiumSpawnHeight = 10000.0f;
@@ -60,10 +61,21 @@ public class FeatureLayerQuery : MonoBehaviour
     private int StartValue;
     public WebLink WebLink;
 
+    [SerializeField] private Button button;
+
+    private void Awake()
+    {
+        geospatialController = GetComponentInParent<ArcGISGeospatialController>();
+    }
+
     private void Start()
     {
         CreateLink(WebLink.Link);
-        StartCoroutine(GetFeatures());
+        
+        button.onClick.AddListener(delegate
+        {
+            StartCoroutine(GetFeatures()); 
+        });
     }
 
     public void CreateLink(string link)
@@ -180,7 +192,7 @@ public class FeatureLayerQuery : MonoBehaviour
 
             featureInfo.ArcGISCamera = camera;
             var position = new ArcGISPoint(featureInfo.Coordinates[0], featureInfo.Coordinates[1],
-                stadiumSpawnHeight, new ArcGISSpatialReference(featureSRWKID));
+                geospatialController.location.Altitude, new ArcGISSpatialReference(featureSRWKID));
             var rotation = new ArcGISRotation(0.0, 90.0, 0.0);
             locationComponent.enabled = true;
             locationComponent.Position = position;
