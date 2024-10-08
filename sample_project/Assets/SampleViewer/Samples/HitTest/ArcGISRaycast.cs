@@ -28,6 +28,7 @@ public class ArcGISRaycast : MonoBehaviour
     [SerializeField] private TextMeshProUGUI locationText;
     [SerializeField] private GameObject markerGO;
     private List<string> outfields = new List<string> { "AREA_SQ_FT", "DISTRICT", "Height", "SUBDISTRIC", "ZONE_" };
+    private string position;
     [SerializeField] private TextMeshProUGUI resultText;
     private string weblink;
 
@@ -58,7 +59,8 @@ public class ArcGISRaycast : MonoBehaviour
             yield break;
         }
 
-        resultText.text = "- FeatureID: " + featureId + "\n";
+        resultText.text = "\n";
+        resultText.text += "- FeatureID: " + featureId + "\n";
         
         foreach (var outfield in outfields)
         {
@@ -67,6 +69,9 @@ public class ArcGISRaycast : MonoBehaviour
                 resultText.text += "- " + outfield + ": " + GetObjectIDs(Request.downloadHandler.text, outfield) + "\n";
             }
         }
+
+        resultText.text += "- " + position + " \n";
+        resultText.text += "\n";
     }
 
     private string GetObjectIDs(string response, string outfield)
@@ -127,7 +132,7 @@ public class ArcGISRaycast : MonoBehaviour
 
                     var point = ArcGISGeometryEngine.Project(geoPosition,
                         ArcGISSpatialReference.WGS84()) as ArcGISPoint;
-                    locationText.text =
+                    position =
                         $"Lat: {string.Format("{0:0.##}", point.Y)} Long: {string.Format("{0:0.##}", point.X)}";
                 }
             }
@@ -136,6 +141,6 @@ public class ArcGISRaycast : MonoBehaviour
 
     private void Start()
     {
-        resultText.text = "Select a building to begin.";
+        resultText.text = "\n Select a building to begin. \n \n";
     }
 }
