@@ -84,6 +84,11 @@ public class RouteManager : MonoBehaviour
         touchControls.Disable();
         touchControls.Touch.TouchPress.started -= ctx => OnTouchInputStarted(ctx);
 #endif
+
+        if (arcGISMapComponent != null)
+        {
+            arcGISMapComponent.RootChanged.RemoveListener(RebaseRoute);
+        }
     }
 
     private void OnLeftShift(bool isPressed)
@@ -143,8 +148,6 @@ public class RouteManager : MonoBehaviour
                 }
             }
         }
-
-        RebaseRoute();
     }
 
     private async void OnTouchInputStarted(InputAction.CallbackContext ctx)
@@ -212,6 +215,8 @@ public class RouteManager : MonoBehaviour
         lineRenderer = Route.GetComponent<LineRenderer>();
 
         lastRootPosition = arcGISMapComponent.GetComponent<HPRoot>().RootUniversePosition;
+
+        arcGISMapComponent.RootChanged.AddListener(RebaseRoute);
     }
 
     /// <summary>
