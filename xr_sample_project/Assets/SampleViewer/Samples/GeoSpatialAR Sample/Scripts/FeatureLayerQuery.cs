@@ -192,7 +192,7 @@ public class FeatureLayerQuery : MonoBehaviour
 
             featureInfo.ArcGISCamera = camera;
             var position = new ArcGISPoint(featureInfo.Coordinates[0], featureInfo.Coordinates[1],
-                geospatialController.location.Altitude, new ArcGISSpatialReference(featureSRWKID));
+                0, new ArcGISSpatialReference(featureSRWKID));
             var rotation = new ArcGISRotation(0.0, 90.0, 0.0);
             locationComponent.enabled = true;
             locationComponent.Position = position;

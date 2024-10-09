@@ -779,7 +779,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   apiKey: AAPK1733da5491544f05ae71518d08e30ea5RW7FclTJA-x6-LAshjwcCYEUVMwB41TVhmd6_BLXpj5xcgDkYuzACtVxhwpGl-oZ
-  basemap: https://basemapstyles-api.arcgis.com/arcgis/rest/services/styles/v2/webmaps/arcgis/imagery/standard
+  basemap: 
   basemapType: 0
   basemapAuthentication:
     ConfigurationIndex: -1
@@ -860,9 +860,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_LocalPosition:
-    x: -13044696.22988278
+    x: -13044696.229882782
     y: 0
-    z: 4036270.193270056
+    z: 3791052.0506594074
   m_LocalRotation:
     value:
       x: 0
@@ -884,7 +884,6 @@ Transform:
   m_Children:
   - {fileID: 1988125414}
   - {fileID: 2104364924}
-  - {fileID: 1529573624}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &327766986
@@ -1500,11 +1499,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1529573624}
-  - component: {fileID: 1529573629}
   - component: {fileID: 1529573626}
   - component: {fileID: 1529573625}
   - component: {fileID: 1529573627}
-  - component: {fileID: 1529573628}
   m_Layer: 0
   m_Name: XR Origin (XR Rig)
   m_TagString: Untagged
@@ -1520,13 +1517,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1529573623}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.0000000027939677}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 567924882}
-  m_Father: {fileID: 327766985}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1529573625
 MonoBehaviour:
@@ -1572,56 +1569,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   propertiesText: {fileID: 998977809}
---- !u!114 &1529573628
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1529573623}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e295d62bf65a7247bc772a43507fd4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  position:
-    x: -117.1825
-    y: 34.055599999999984
-    z: 0
-    SRWkid: 4326
-  rotation:
-    Heading: 0
-    Pitch: 90
-    Roll: 0
-  surfacePlacementMode: 0
-  surfacePlacementOffset: 0
---- !u!114 &1529573629
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1529573623}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea4c056ecab070c43bf3f5e9fb15b826, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IsInitialized: 1
-  m_LocalPosition:
-    x: -13044696.22988278
-    y: 0
-    z: 4036270.1932700532
-  m_LocalRotation:
-    value:
-      x: 0
-      y: 0
-      z: 0
-      w: 1
-  m_LocalScale:
-    x: 1
-    y: 1
-    z: 1
 --- !u!1 &1766434941
 GameObject:
   m_ObjectHideFlags: 0
@@ -1806,7 +1753,6 @@ MonoBehaviour:
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
-  m_ScrollDeltaPerTick: 6
 --- !u!1 &1833654054
 GameObject:
   m_ObjectHideFlags: 0
@@ -2134,7 +2080,7 @@ Transform:
   m_GameObject: {fileID: 2104364923}
   serializedVersion: 2
   m_LocalRotation: {x: 0.70710677, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 500, z: -0.0000000027939677}
+  m_LocalPosition: {x: 0.0000000018626451, y: 500, z: 245218.14}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2198,7 +2144,7 @@ MonoBehaviour:
   m_LocalPosition:
     x: -13044696.22988278
     y: 500
-    z: 4036270.1932700532
+    z: 4036270.193270054
   m_LocalRotation:
     value:
       x: 0.70710677
@@ -2220,3 +2166,4 @@ SceneRoots:
   - {fileID: 1162729211}
   - {fileID: 327766985}
   - {fileID: 1799659476}
+  - {fileID: 1529573624}

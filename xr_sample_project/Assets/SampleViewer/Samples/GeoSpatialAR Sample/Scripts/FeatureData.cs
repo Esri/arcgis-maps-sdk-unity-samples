@@ -21,6 +21,6 @@ public class FeatureData : MonoBehaviour
         cameraLocationComponent = ArcGISCamera.GetComponent<ArcGISLocationComponent>();
         locationComponent = transform.GetComponent<ArcGISLocationComponent>();
         featureHP = transform.GetComponent<HPTransform>();
-        locationComponent.SurfacePlacementMode = ArcGISSurfacePlacementMode.OnTheGround;
+        locationComponent.SurfacePlacementMode = ArcGISSurfacePlacementMode.AbsoluteHeight;
     }
 }
