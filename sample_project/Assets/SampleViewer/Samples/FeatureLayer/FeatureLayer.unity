@@ -319,6 +319,7 @@ GameObject:
   - component: {fileID: 91838851}
   - component: {fileID: 91838859}
   - component: {fileID: 91838860}
+  - component: {fileID: 91838861}
   m_Layer: 0
   m_Name: ArcGISCamera
   m_TagString: MainCamera
@@ -575,6 +576,19 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0
   m_Center: {x: 0.0000006868931, y: 0.49999627, z: 0.0000007203247}
+--- !u!114 &91838861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 91838849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b7511ad6dd4a23469c6b1d94255a41f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  JoystickCanvas: {fileID: 8245483605992596556, guid: f94e67b1f8188b441b93c2d9ac0435eb, type: 3}
 --- !u!1 &119836412
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,6 +17,7 @@ using TMPro;
 using UnityEngine.InputSystem;
 using Esri.ArcGISMapsSDK.Samples.Components;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.EnhancedTouch;
 
 public class Measure : MonoBehaviour
 {
@@ -40,29 +41,44 @@ public class Measure : MonoBehaviour
     private LineRenderer lineRenderer;
     private ArcGISLinearUnit currentUnit = new ArcGISLinearUnit(ArcGISLinearUnitId.Miles);
     private string unitText;
-
     private InputActions inputActions;
     private bool isLeftShiftPressed;
+    private TouchControls touchControls;
 
     private void Awake()
     {
+#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
         inputActions = new InputActions();
+#else
+        touchControls = new TouchControls();
+#endif
     }
 
     private void OnEnable()
     {
+#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
         inputActions.Enable();
         inputActions.DrawingControls.LeftClick.started += OnLeftClickStart;
         inputActions.DrawingControls.LeftShift.performed += ctx => OnLeftShift(true);
         inputActions.DrawingControls.LeftShift.canceled += ctx => OnLeftShift(false);
+#else
+        TouchSimulation.Enable();
+        touchControls.Enable();
+        touchControls.Touch.TouchPress.started += ctx => OnTouchInputStarted(ctx);
+#endif
     }
 
     private void OnDisable()
     {
+#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
         inputActions.Disable();
         inputActions.DrawingControls.LeftClick.started -= OnLeftClickStart;
         inputActions.DrawingControls.LeftShift.performed -= ctx => OnLeftShift(true);
         inputActions.DrawingControls.LeftShift.canceled -= ctx => OnLeftShift(false);
+#else
+        touchControls.Disable();
+        touchControls.Touch.TouchPress.started -= ctx => OnTouchInputStarted(ctx);
+#endif
     }
 
     private void OnLeftShift(bool isPressed)
@@ -113,7 +129,46 @@ public class Measure : MonoBehaviour
         }
     }
 
-        private void Start()
+    private void OnTouchInputStarted(InputAction.CallbackContext ctx)
+    {
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(touchControls.Touch.TouchPosition.ReadValue<Vector2>());
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            hit.point += new Vector3(0, MarkerHeight, 0);
+            var lineMarker = Instantiate(LineMarker, hit.point, Quaternion.identity, arcGISMapComponent.transform);
+            var thisPoint = arcGISMapComponent.EngineToGeographic(hit.point);
+
+            var location = lineMarker.GetComponent<ArcGISLocationComponent>();
+            location.enabled = true;
+            location.Position = thisPoint;
+            location.Rotation = new ArcGISRotation(0, 90, 0);
+
+            if (stops.Count > 0)
+            {
+                GameObject lastStop = stops.Peek();
+                var lastPoint = lastStop.GetComponent<ArcGISLocationComponent>().Position;
+
+                // Calculate distance from last point to this point.
+                geodeticDistance += ArcGISGeometryEngine.DistanceGeodetic(lastPoint, thisPoint, currentUnit, new ArcGISAngularUnit(ArcGISAngularUnitId.Degrees), ArcGISGeodeticCurveType.Geodesic).Distance;
+                UpdateDisplay();
+
+                featurePoints.Add(lastStop);
+
+                // Interpolate middle points between last point and this point.
+                Interpolate(lastStop, lineMarker, featurePoints);
+                featurePoints.Add(lineMarker);
+            }
+
+            // Add this point to stops and also to feature points where stop is user-drawed, and feature points is a collection of user-drawed and interpolated.
+            stops.Push(lineMarker);
+            RenderLine(ref featurePoints);
+            RebaseLine();
+        }
+    }
+
+    private void Start()
     {
         arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
 
