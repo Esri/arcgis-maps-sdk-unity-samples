@@ -131,17 +131,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 17569089}
-  - component: {fileID: 17569098}
   - component: {fileID: 17569096}
   - component: {fileID: 17569095}
   - component: {fileID: 17569094}
   - component: {fileID: 17569093}
   - component: {fileID: 17569092}
   - component: {fileID: 17569091}
-  - component: {fileID: 17569090}
-  - component: {fileID: 17569097}
   m_Layer: 0
-  m_Name: Main Camera
+  m_Name: ArcGISCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -155,32 +152,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 17569088}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.000014781952, z: -23.085297}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 567924882}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &17569090
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 17569088}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8bbba49acb848c0448694828560b07fc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UpdateClippingPlanes: 1
-  UseCameraViewportProperties: 1
-  verticalFov: 0
-  horizontalFov: 0
-  viewportSizeX: 0
-  viewportSizeY: 0
-  qualityScalingFactor: 1
 --- !u!114 &17569091
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -405,8 +383,8 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.1
-  far clip plane: 20
+  near clip plane: 0.5
+  far clip plane: 50000
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -425,56 +403,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!114 &17569097
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 17569088}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e295d62bf65a7247bc772a43507fd4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  position:
-    x: -117.19598371241463
-    y: 34.056601753694515
-    z: 396.4176025390625
-    SRWkid: 4326
-  rotation:
-    Heading: 0
-    Pitch: 90
-    Roll: 0
-  surfacePlacementMode: 0
-  surfacePlacementOffset: 0
---- !u!114 &17569098
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 17569088}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea4c056ecab070c43bf3f5e9fb15b826, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IsInitialized: 1
-  m_LocalPosition:
-    x: -13046197.22988278
-    y: 396.4176025390625
-    z: 3791163.5653705816
-  m_LocalRotation:
-    value:
-      x: 0
-      y: 0
-      z: 0
-      w: 1
-  m_LocalScale:
-    x: 1
-    y: 1
-    z: 1
 --- !u!1 &94542723
 GameObject:
   m_ObjectHideFlags: 0
@@ -606,7 +534,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 40.1, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 733.7151, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &157533039
@@ -851,7 +779,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   apiKey: AAPK1733da5491544f05ae71518d08e30ea5RW7FclTJA-x6-LAshjwcCYEUVMwB41TVhmd6_BLXpj5xcgDkYuzACtVxhwpGl-oZ
-  basemap: 
+  basemap: https://basemapstyles-api.arcgis.com/arcgis/rest/services/styles/v2/webmaps/arcgis/imagery/standard
   basemapType: 0
   basemapAuthentication:
     ConfigurationIndex: -1
@@ -864,7 +792,7 @@ MonoBehaviour:
     - Name: Terrain 3D
       Type: 0
       Source: https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer
-      IsEnabled: 1
+      IsEnabled: 0
       Authentication:
         ConfigurationIndex: -1
     MeshModifications:
@@ -887,7 +815,7 @@ MonoBehaviour:
     Type: 1
     Source: https://services.arcgis.com/hAJQfubNy25iblZJ/arcgis/rest/services/HQ_Campus_WSL1/SceneServer
     Opacity: 1
-    IsVisible: 0
+    IsVisible: 1
     Authentication:
       ConfigurationIndex: -1
     BuildingSceneLayerFilter:
@@ -932,9 +860,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_LocalPosition:
-    x: -13044696.229882782
+    x: -13044696.22988278
     y: 0
-    z: 3791052.0506594074
+    z: 4036270.193270056
   m_LocalRotation:
     value:
       x: 0
@@ -955,6 +883,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1988125414}
+  - {fileID: 2104364924}
   - {fileID: 1529573624}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -985,6 +914,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   locationText: {fileID: 94542724}
   locationButton: {fileID: 1833654056}
+  XROrigin: {fileID: 1529573626}
 --- !u!1 &567924881
 GameObject:
   m_ObjectHideFlags: 0
@@ -1053,7 +983,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 69}
+  m_AnchoredPosition: {x: 0, y: 229.6}
   m_SizeDelta: {x: 379.7062, y: 71.19501}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &625853411
@@ -1570,9 +1500,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1529573624}
+  - component: {fileID: 1529573629}
   - component: {fileID: 1529573626}
   - component: {fileID: 1529573625}
   - component: {fileID: 1529573627}
+  - component: {fileID: 1529573628}
   m_Layer: 0
   m_Name: XR Origin (XR Rig)
   m_TagString: Untagged
@@ -1589,7 +1521,7 @@ Transform:
   m_GameObject: {fileID: 1529573623}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1501, y: 395.3, z: 134.6}
+  m_LocalPosition: {x: 0, y: 0, z: -0.0000000027939677}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1640,6 +1572,56 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   propertiesText: {fileID: 998977809}
+--- !u!114 &1529573628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1529573623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e295d62bf65a7247bc772a43507fd4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  position:
+    x: -117.1825
+    y: 34.055599999999984
+    z: 0
+    SRWkid: 4326
+  rotation:
+    Heading: 0
+    Pitch: 90
+    Roll: 0
+  surfacePlacementMode: 0
+  surfacePlacementOffset: 0
+--- !u!114 &1529573629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1529573623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea4c056ecab070c43bf3f5e9fb15b826, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsInitialized: 1
+  m_LocalPosition:
+    x: -13044696.22988278
+    y: 0
+    z: 4036270.1932700532
+  m_LocalRotation:
+    value:
+      x: 0
+      y: 0
+      z: 0
+      w: 1
+  m_LocalScale:
+    x: 1
+    y: 1
+    z: 1
 --- !u!1 &1766434941
 GameObject:
   m_ObjectHideFlags: 0
@@ -1861,7 +1843,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -161.4}
+  m_AnchoredPosition: {x: 0, y: -158.58}
   m_SizeDelta: {x: 379.7062, y: 71.195}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1833654056
@@ -1990,7 +1972,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b28105756ea009418564fdd150ecc1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camera: {fileID: 17569090}
+  camera: {fileID: 2104364925}
   featurePrefab: {fileID: 739058485868985190, guid: 65cc958ce179b244a911bf1b2aea6759, type: 3}
   outfields: []
   Features: []
@@ -2005,7 +1987,7 @@ MonoBehaviour:
     - f=geojson
     - '&where=1=1'
     - '&outfields=*'
-  button: {fileID: 0}
+  button: {fileID: 625853411}
 --- !u!1 &2002522773
 GameObject:
   m_ObjectHideFlags: 0
@@ -2124,6 +2106,109 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1 &2104364923
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2104364924}
+  - component: {fileID: 2104364927}
+  - component: {fileID: 2104364926}
+  - component: {fileID: 2104364925}
+  m_Layer: 0
+  m_Name: ArcGISCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2104364924
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2104364923}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.70710677, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 500, z: -0.0000000027939677}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 327766985}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2104364925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2104364923}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bbba49acb848c0448694828560b07fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UpdateClippingPlanes: 1
+  UseCameraViewportProperties: 1
+  verticalFov: 90
+  horizontalFov: 90
+  viewportSizeX: 1024
+  viewportSizeY: 1024
+  qualityScalingFactor: 1
+--- !u!114 &2104364926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2104364923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e295d62bf65a7247bc772a43507fd4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  position:
+    x: -117.1825
+    y: 34.055599999999984
+    z: 500
+    SRWkid: 4326
+  rotation:
+    Heading: 0
+    Pitch: 0
+    Roll: 0
+  surfacePlacementMode: 0
+  surfacePlacementOffset: 0
+--- !u!114 &2104364927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2104364923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea4c056ecab070c43bf3f5e9fb15b826, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsInitialized: 1
+  m_LocalPosition:
+    x: -13044696.22988278
+    y: 500
+    z: 4036270.1932700532
+  m_LocalRotation:
+    value:
+      x: 0.70710677
+      y: 0
+      z: 0
+      w: 0.70710677
+  m_LocalScale:
+    x: 1
+    y: 1
+    z: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

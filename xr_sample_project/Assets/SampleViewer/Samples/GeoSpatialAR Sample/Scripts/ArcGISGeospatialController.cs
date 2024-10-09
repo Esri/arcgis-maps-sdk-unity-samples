@@ -1,8 +1,10 @@
+using System;
 using Esri.ArcGISMapsSDK.Components;
 using Esri.GameEngine.Geometry;
 using Google.XR.ARCoreExtensions;
 using System.Collections;
 using TMPro;
+using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.Android;
 using UnityEngine.UI;
@@ -18,6 +20,11 @@ public class ArcGISGeospatialController : MonoBehaviour
     [SerializeField] private Button locationButton;
     private bool _waitingForLocationService;
     private ArcGISMapComponent mapComponent;
+    
+    private const double _headingAccuracyThreshold = 25;
+    private double yawAccuracy = 1000;
+
+    public XROrigin XROrigin;
 
     private void Awake()
     {
@@ -38,6 +45,7 @@ public class ArcGISGeospatialController : MonoBehaviour
     void Start()
     {
         EarthManager = new AREarthManager();
+        InvokeRepeating(nameof(SetOriginLocation), 0.0f, 2.0f);
 
         locationButton.onClick.AddListener(delegate
         {
@@ -50,19 +58,48 @@ public class ArcGISGeospatialController : MonoBehaviour
     void Update()
     {
         var earthTrackingState = EarthManager.EarthTrackingState;
-
+        
         if (earthTrackingState == TrackingState.Tracking)
         {
             var cameraGeospatialPose = EarthManager.CameraGeospatialPose;
+            SetCamera(new ArcGISPoint(cameraGeospatialPose.Longitude, cameraGeospatialPose.Latitude, 100, ArcGISSpatialReference.WGS84()));
+            
+            if (cameraGeospatialPose.OrientationYawAccuracy < _headingAccuracyThreshold && Math.Round(cameraGeospatialPose.OrientationYawAccuracy, 1) < yawAccuracy)
+            {
+                Vector3 originRotation = XROrigin.transform.rotation.eulerAngles;
+                originRotation.y = cameraGeospatialPose.EunRotation.eulerAngles.y - Camera.main.transform.localEulerAngles.y;
+                XROrigin.transform.rotation = Quaternion.Euler(originRotation);
+
+                yawAccuracy = Math.Round(cameraGeospatialPose.OrientationYawAccuracy, 1);
+            }
         }
     }
 
+    private void SetOriginLocation()
+    {
+        var earthTrackingState = EarthManager.EarthTrackingState;
+        
+        if (earthTrackingState == TrackingState.Tracking)
+        {
+            var cameraGeospatialPose = EarthManager.CameraGeospatialPose;
+            XROrigin.GetComponent<ArcGISLocationComponent>().Position = new ArcGISPoint(cameraGeospatialPose.Longitude, cameraGeospatialPose.Latitude, ArcGISSpatialReference.WGS84());
+            Camera.main.transform.position = Vector3.zero;
+            
+            CancelInvoke(nameof(SetOriginLocation));
+            Debug.LogWarning("Cancelled");
+        }
+    }
 
     private void SetOrigin(ArcGISPoint OriginPoint)
     {
         mapComponent.OriginPosition = OriginPoint;
     }
 
+    private void SetCamera(ArcGISPoint OriginPoint)
+    {
+        mapComponent.GetComponentInChildren<ArcGISCameraComponent>().gameObject.GetComponent<ArcGISLocationComponent>().Position = OriginPoint;
+    }
+    
     private IEnumerator AvailabilityCheck()
     {
         if (ARSession.state == ARSessionState.None)
