@@ -276,8 +276,12 @@ public class Geometries : MonoBehaviour
                         }
                         CreateandCalculatePolygon();
                     }
+
                     if (featurePoints.Count >= 2)
-                        RenderLine(ref featurePoints);
+                    {
+	                    RenderLine(ref featurePoints);
+                    }
+                    
                     RebaseLine();
                 }
             }
@@ -286,7 +290,7 @@ public class Geometries : MonoBehaviour
 
 	private void OnTouchInputEnded(InputAction.CallbackContext context)
 	{
-        if (isEnvelopeMode)
+		if (isEnvelopeMode)
         {
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(touchControls.Touch.TouchPosition.ReadValue<Vector2>());

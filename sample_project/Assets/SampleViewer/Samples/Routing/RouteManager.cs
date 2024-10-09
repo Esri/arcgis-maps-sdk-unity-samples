@@ -181,7 +181,9 @@ public class RouteManager : MonoBehaviour
             routeMarkers.Add(routeMarker);
 
             if (stops.Count > StopCount)
-                Destroy(stops.Dequeue());
+            {
+                Destroy(stops.Dequeue());   
+            }
 
             if (stops.Count == StopCount)
             {
