@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.28093612, g: 0.28093612, b: 0.28093612, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -123,71 +122,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &25448420
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1008701132769291292, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1008701132769291292, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1008701132769291292, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1008701132769291292, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1008701132769291292, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1008701132769291292, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1008701132769291292, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1008701132769291292, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1008701132769291292, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1008701132769291292, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1008701132769291292, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1008701132769291293, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
-      propertyPath: IsCloudXRDemo
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1008701132769291295, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
-      propertyPath: m_Name
-      value: LightingManager
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
 --- !u!114 &153816489 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5821623131796228852, guid: 7c54e74494ab92a47a490a7f58dc81c1, type: 3}
@@ -1035,6 +969,8 @@ MonoBehaviour:
   m_StopLineAtSelection: 0
   m_SnapEndpointIfAvailable: 1
   m_LineBendRatio: 0.5
+  m_BendingEnabledInteractionLayers:
+    m_Bits: 4294967295
   m_OverrideInteractorLineOrigin: 1
   m_LineOriginTransform: {fileID: 0}
   m_LineOriginOffset: 0
@@ -1628,6 +1564,8 @@ MonoBehaviour:
     Heading: 0
     Pitch: 90
     Roll: 0
+  surfacePlacementMode: 0
+  surfacePlacementOffset: 0
 --- !u!114 &1406080839
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3165,7 +3103,6 @@ MonoBehaviour:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 25448420}
   - {fileID: 7370234522989513129}
   - {fileID: 229091429}
   - {fileID: 1655736736}
