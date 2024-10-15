@@ -6,7 +6,7 @@
 
 using UnityEngine;
 
-public class TouchCameraController : MonoBehaviour
+public class EnableTouchCanvas : MonoBehaviour
 {
     private void Awake()
     {

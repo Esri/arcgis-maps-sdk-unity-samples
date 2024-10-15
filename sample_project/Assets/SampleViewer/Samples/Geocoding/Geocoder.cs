@@ -75,7 +75,7 @@ public class Geocoder : MonoBehaviour
 #else
         TouchSimulation.Enable();
         touchControls.Enable();
-        touchControls.Touch.TouchPress.started += ctx => OnTouchInputStarted(ctx);
+        touchControls.Touch.TouchPress.started += OnTouchInputStarted;
 #endif
     }
 
@@ -88,7 +88,7 @@ public class Geocoder : MonoBehaviour
         inputActions.DrawingControls.LeftShift.canceled -= ctx => OnLeftShift(false);
 #else
         touchControls.Disable();
-        touchControls.Touch.TouchPress.started -= ctx => OnTouchInputStarted(ctx);
+        touchControls.Touch.TouchPress.started -= OnTouchInputStarted;
 #endif
     }
 
