@@ -66,7 +66,7 @@ public class ArcGISRaycast : MonoBehaviour
 
         resultText.text = "\n";
         resultText.text += "- FeatureID: " + featureId + "\n";
-        
+
         foreach (var outfield in outfields)
         {
             if (GetObjectIDs(Request.downloadHandler.text, outfield) != "")
@@ -105,7 +105,7 @@ public class ArcGISRaycast : MonoBehaviour
         touchControls.Touch.TouchPress.started += OnTouchInputStarted;
 #endif
     }
-    
+
     private void OnDisable()
     {
 #if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
@@ -180,7 +180,7 @@ public class ArcGISRaycast : MonoBehaviour
             }
         }
     }
-    
+
     private void Start()
     {
         resultText.text = "\n Select a building to begin. \n \n";
