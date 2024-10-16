@@ -7,16 +7,14 @@
 using Esri.ArcGISMapsSDK.Components;
 using Esri.GameEngine.Geometry;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using UnityEngine.InputSystem;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.Networking;
-using UnityEngine.UI;
 
 public class ArcGISRaycast : MonoBehaviour
 {
