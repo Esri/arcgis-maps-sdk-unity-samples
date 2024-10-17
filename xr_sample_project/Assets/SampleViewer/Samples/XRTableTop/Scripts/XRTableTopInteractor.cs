@@ -11,7 +11,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.XR;
-using UnityEngine.XR.Interaction.Toolkit;
+
 using CommonUsages = UnityEngine.XR.CommonUsages;
 using InputDevice = UnityEngine.XR.InputDevice;
 
@@ -37,14 +37,14 @@ public class XRTableTopInteractor : MonoBehaviour
 
     [Header("Hand Input")]
     [SerializeField] private XRNode leftInputSource;
-    [SerializeField] private XRRayInteractor leftControllerInteractor;
-    [SerializeField] private XRRayInteractor leftHandInteractor;
+    [SerializeField] private UnityEngine.XR.Interaction.Toolkit.Interactors.XRRayInteractor leftControllerInteractor;
+    [SerializeField] private UnityEngine.XR.Interaction.Toolkit.Interactors.XRRayInteractor leftHandInteractor;
     private Vector2 leftInputAxis;
     private RaycastHit leftHandHit;
     private RaycastHit leftControllerHit;
     [SerializeField] private XRNode rightInputSource;
-    [SerializeField] private XRRayInteractor rightControllerInteractor;
-    [SerializeField] private XRRayInteractor rightHandInteractor;
+    [SerializeField] private UnityEngine.XR.Interaction.Toolkit.Interactors.XRRayInteractor rightControllerInteractor;
+    [SerializeField] private UnityEngine.XR.Interaction.Toolkit.Interactors.XRRayInteractor rightHandInteractor;
     private Vector2 rightInputAxis;
     private RaycastHit rightHandHit;
     private RaycastHit rightControllerHit;
@@ -145,7 +145,7 @@ public class XRTableTopInteractor : MonoBehaviour
         }
     }
 
-    private void UpdatePointDrag(XRRayInteractor interactor)
+    private void UpdatePointDrag(UnityEngine.XR.Interaction.Toolkit.Interactors.XRRayInteractor interactor)
     {
         if (isDragging)
         {
