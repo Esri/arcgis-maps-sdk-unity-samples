@@ -6,12 +6,12 @@
 
 using UnityEngine;
 
-public class DisablePipelineButtons : MonoBehaviour
+public class EnableTouchCanvas : MonoBehaviour
 {
     private void Awake()
     {
-#if !USE_URP_PACKAGE || !USE_HDRP_PACKAGE
-        gameObject.SetActive(false);
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
+        DisableTouchJoysticks.instance.ToggleCanvas(true);
 #endif
     }
 }
