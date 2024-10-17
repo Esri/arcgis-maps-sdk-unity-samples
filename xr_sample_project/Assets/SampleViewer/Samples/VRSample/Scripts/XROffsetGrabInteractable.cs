@@ -7,14 +7,14 @@
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
-public class XROffsetGrabInteractable : XRGrabInteractable
+public class XROffsetGrabInteractable : UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable
 {
     private Vector3 initialLocalPos;
     private Quaternion initialLocalRot;
 
     protected override void OnSelectEntered(SelectEnterEventArgs args)
     {
-        if (args.interactorObject is XRDirectInteractor)
+        if (args.interactorObject is UnityEngine.XR.Interaction.Toolkit.Interactors.XRDirectInteractor)
         {
             attachTransform.position = args.interactorObject.transform.position;
             attachTransform.rotation = args.interactorObject.transform.rotation;

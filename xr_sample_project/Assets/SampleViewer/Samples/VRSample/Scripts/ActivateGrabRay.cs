@@ -6,21 +6,21 @@
 
 using UnityEngine;
 
-using UnityEngine.XR.Interaction.Toolkit;
+
 
 public class ActivateGrabRay : MonoBehaviour
 {
     public bool currentlyTransporting = false;
 
     [Header("--------Interactor Scripts--------")]
-    [SerializeField] private XRDirectInteractor leftDirectGrab;
-    [SerializeField] private XRDirectInteractor rightDirectGrab;
+    [SerializeField] private UnityEngine.XR.Interaction.Toolkit.Interactors.XRDirectInteractor leftDirectGrab;
+    [SerializeField] private UnityEngine.XR.Interaction.Toolkit.Interactors.XRDirectInteractor rightDirectGrab;
 
     [Header("-----------Ray Objects-----------")]
-    [SerializeField] private XRRayInteractor rightGrabRay;
-    [SerializeField] private XRRayInteractor leftGrabRay;
-    [SerializeField] private XRInteractorLineVisual rightGrabLine;
-    [SerializeField] private XRInteractorLineVisual leftGrabLine;
+    [SerializeField] private UnityEngine.XR.Interaction.Toolkit.Interactors.XRRayInteractor rightGrabRay;
+    [SerializeField] private UnityEngine.XR.Interaction.Toolkit.Interactors.XRRayInteractor leftGrabRay;
+    [SerializeField] private UnityEngine.XR.Interaction.Toolkit.Interactors.Visuals.XRInteractorLineVisual rightGrabLine;
+    [SerializeField] private UnityEngine.XR.Interaction.Toolkit.Interactors.Visuals.XRInteractorLineVisual leftGrabLine;
 
     private void Update()
     {
