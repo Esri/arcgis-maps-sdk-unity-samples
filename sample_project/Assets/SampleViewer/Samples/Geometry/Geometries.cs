@@ -59,29 +59,44 @@ public class Geometries : MonoBehaviour
 	[SerializeField] public Button[] UnitButtons;
 
 	private InputActions inputActions;
+	private TouchControls touchControls;
+	private bool isTouch = false;
 
 	private void Awake()
 	{
 		inputActions = new InputActions();
+		touchControls = new TouchControls();
 	}
 
 	private void OnEnable()
 	{
+#if UNITY_EDITOR && !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
 		inputActions.Enable();
 		inputActions.DrawingControls.LeftClick.started += OnLeftClickStart;
 		inputActions.DrawingControls.LeftClick.canceled += OnLeftClickEnd;
 		inputActions.DrawingControls.LeftShift.performed += ctx => OnLeftShift(true);
 		inputActions.DrawingControls.LeftShift.canceled += ctx => OnLeftShift(false);
-	}
+#else
+        touchControls.Enable();
+        touchControls.Touch.TouchPress.started += OnTouchInputStarted;
+        touchControls.Touch.TouchPress.canceled += OnTouchInputEnded;
+#endif
+    }
 
 	private void OnDisable()
 	{
+#if UNITY_EDITOR && !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
 		inputActions.Disable();
 		inputActions.DrawingControls.LeftClick.started -= OnLeftClickStart;
 		inputActions.DrawingControls.LeftClick.canceled -= OnLeftClickEnd;
 		inputActions.DrawingControls.LeftShift.performed -= ctx => OnLeftShift(true);
 		inputActions.DrawingControls.LeftShift.canceled -= ctx => OnLeftShift(false);
-	}
+#else
+        touchControls.Disable();
+        touchControls.Touch.TouchPress.started -= OnTouchInputStarted;
+        touchControls.Touch.TouchPress.canceled -= OnTouchInputEnded;
+#endif
+    }
 
 	private void Start()
 	{
@@ -108,6 +123,8 @@ public class Geometries : MonoBehaviour
 
 	private void OnLeftClickStart(InputAction.CallbackContext context)
 	{
+		isTouch = false;
+
 		if (isLeftShiftPressed && !EventSystem.current.IsPointerOverGameObject())
 		{
 			RaycastHit hit;
@@ -194,10 +211,105 @@ public class Geometries : MonoBehaviour
 		}
 	}
 
+	private void OnTouchInputStarted(InputAction.CallbackContext context)
+	{
+		isTouch = true;
+
+        if (!EventSystem.current.IsPointerOverGameObject(touchControls.Touch.TouchID.ReadValue<int>()))
+        {
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(touchControls.Touch.TouchPosition.ReadValue<Vector2>());
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                hit.point += new Vector3(0, MarkerHeight, 0);
+                var hitPoint = arcGISMapComponent.EngineToGeographic(hit.point);
+
+                if (isEnvelopeMode)
+                {
+                    startPoint = hitPoint;
+                    isDragging = true;
+                }
+                else
+                {
+                    if (isPolygonMode)
+                    {
+                        //clear interpolation points of last segments 
+                        foreach (var point in lastToStartInterpolationPoints)
+                        {
+                            Destroy(point);
+                            continue;
+                        }
+                        lastToStartInterpolationPoints.Clear();
+                    }
+
+                    var lineMarker = Instantiate(LineMarker, hit.point, Quaternion.identity, arcGISMapComponent.transform);
+                    var location = lineMarker.GetComponent<ArcGISLocationComponent>();
+                    location.enabled = true;
+                    location.Position = hitPoint;
+                    location.Rotation = new ArcGISRotation(0, 90, 0);
+
+                    if (stops.Count > 0)
+                    {
+                        GameObject lastStop = stops.Peek();
+                        var lastPoint = lastStop.GetComponent<ArcGISLocationComponent>().Position;
+                        if (isPolylineMode)
+                        {
+                            // Calculate distance from last point to this point, and add to the total distance calculation.
+                            calculation += ArcGISGeometryEngine.DistanceGeodetic(lastPoint, hitPoint, currentLinearUnit, new ArcGISAngularUnit(ArcGISAngularUnitId.Degrees), ArcGISGeodeticCurveType.Geodesic).Distance;
+                            UpdateDisplay();
+                        }
+                        featurePoints.Add(lastStop);
+                        // Interpolate middle points between last point and this point.
+                        Interpolate(lastStop, lineMarker, featurePoints);
+                        featurePoints.Add(lineMarker);
+                    }
+
+                    // Add this point to stops and also to feature points where stop is user-drawed, and feature points is a collection of user-drawed and interpolated.
+                    stops.Push(lineMarker);
+
+                    if (isPolygonMode)
+                    {
+                        if (featurePoints.Count > 3)
+                        {
+                            Interpolate(lineMarker, featurePoints[0], lastToStartInterpolationPoints);
+                        }
+                        CreateandCalculatePolygon();
+                    }
+
+                    if (featurePoints.Count >= 2)
+                    {
+	                    RenderLine(ref featurePoints);
+                    }
+                    
+                    RebaseLine();
+                }
+            }
+        }
+    }
+
+	private void OnTouchInputEnded(InputAction.CallbackContext context)
+	{
+		if (isEnvelopeMode)
+        {
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(touchControls.Touch.TouchPosition.ReadValue<Vector2>());
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                hit.point += new Vector3(0, MarkerHeight, 0);
+                var endPoint = arcGISMapComponent.EngineToGeographic(hit.point);
+                CreateAndCalculateEnvelope(startPoint, endPoint);
+            }
+            isDragging = false;
+        }
+    }
+
 	private void UpdateDraggingVisualization()
 	{
-		RaycastHit hit;
-		Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+		var position = isTouch ? touchControls.Touch.TouchPosition.ReadValue<Vector2>() : Mouse.current.position.ReadValue();
+        RaycastHit hit;
+		Ray ray = Camera.main.ScreenPointToRay(position);
 
 		if (Physics.Raycast(ray, out hit))
 		{
@@ -208,7 +320,7 @@ public class Geometries : MonoBehaviour
 		}
 	}
 
-	private void Update()
+    private void Update()
 	{
 		// Continuously update visual cue in update
 		if (isEnvelopeMode && isDragging)
