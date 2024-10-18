@@ -14,6 +14,7 @@ using UnityEngine.XR.ARSubsystems;
 public class ArcGISGeospatialController : MonoBehaviour
 {
     public GeospatialPose location;
+    public GeospatialPose cameraGeospatialPose;
     
     private AREarthManager EarthManager;
     [SerializeField] private TextMeshProUGUI locationText;
@@ -61,7 +62,7 @@ public class ArcGISGeospatialController : MonoBehaviour
         
         if (earthTrackingState == TrackingState.Tracking)
         {
-            var cameraGeospatialPose = EarthManager.CameraGeospatialPose;
+            cameraGeospatialPose = EarthManager.CameraGeospatialPose;
             SetCamera(new ArcGISPoint(cameraGeospatialPose.Longitude, cameraGeospatialPose.Latitude, 100, ArcGISSpatialReference.WGS84()));
             
             if (cameraGeospatialPose.OrientationYawAccuracy < _headingAccuracyThreshold && Math.Round(cameraGeospatialPose.OrientationYawAccuracy, 1) < yawAccuracy)
