@@ -61,8 +61,6 @@ public class FeatureLayerQuery : MonoBehaviour
     private int StartValue;
     public WebLink WebLink;
 
-    [SerializeField] private Button button;
-
     private void Awake()
     {
         geospatialController = GetComponentInParent<ArcGISGeospatialController>();
@@ -71,11 +69,6 @@ public class FeatureLayerQuery : MonoBehaviour
     private void Start()
     {
         CreateLink(WebLink.Link);
-        
-        button.onClick.AddListener(delegate
-        {
-            StartCoroutine(GetFeatures()); 
-        });
     }
 
     public void CreateLink(string link)
@@ -120,27 +113,25 @@ public class FeatureLayerQuery : MonoBehaviour
         var jObject = JObject.Parse(response);
         jFeatures = jObject.SelectToken("features").ToArray();
 
-        if (jFeatures[0].SelectToken("geometry").SelectToken("type").ToString().ToLower() == "point")
+        if (jFeatures[0].SelectToken("geometry").SelectToken("type").ToString().ToLower() != "point")
         {
-            if (GetAllFeatures)
-            {
-                CreateFeatures(0, jFeatures.Length);
-            }
-            else
-            {
-                if (jFeatures.Length < LastValue)
-                {
-                    CreateFeatures(StartValue, jFeatures.Length);
-                }
-                else
-                {
-                    CreateFeatures(StartValue, LastValue);
-                }
-            }
+            return;
+        }
+
+        if (GetAllFeatures)
+        {
+            CreateFeatures(0, jFeatures.Length);
         }
         else
         {
-            
+            if (jFeatures.Length < LastValue)
+            {
+                CreateFeatures(StartValue, jFeatures.Length);
+            }
+            else
+            {
+                CreateFeatures(StartValue, LastValue);
+            }
         }
     }
 

@@ -3,11 +3,9 @@ using Esri.ArcGISMapsSDK.Components;
 using Esri.GameEngine.Geometry;
 using Google.XR.ARCoreExtensions;
 using System.Collections;
-using TMPro;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.Android;
-using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
@@ -17,8 +15,6 @@ public class ArcGISGeospatialController : MonoBehaviour
     public GeospatialPose cameraGeospatialPose;
     
     private AREarthManager EarthManager;
-    [SerializeField] private TextMeshProUGUI locationText;
-    [SerializeField] private Button locationButton;
     private bool _waitingForLocationService;
     private ArcGISMapComponent mapComponent;
     
@@ -47,13 +43,7 @@ public class ArcGISGeospatialController : MonoBehaviour
     {
         EarthManager = new AREarthManager();
         InvokeRepeating(nameof(SetOriginLocation), 0.0f, 2.0f);
-
-        locationButton.onClick.AddListener(delegate
-        {
-            location = EarthManager.CameraGeospatialPose;
-            SetOrigin(new ArcGISPoint(location.Longitude, location.Latitude, 0, ArcGISSpatialReference.WGS84()));
-            locationText.text = "Origin: " + location.Longitude + ", " + location.Latitude + ", " + location.Altitude;
-        });
+        Invoke(nameof(SetLocation), 1.0f);
     }
 
     void Update()
@@ -74,6 +64,13 @@ public class ArcGISGeospatialController : MonoBehaviour
                 yawAccuracy = Math.Round(cameraGeospatialPose.OrientationYawAccuracy, 1);
             }
         }
+    }
+
+    private void SetLocation()
+    {
+        location = EarthManager.CameraGeospatialPose;
+        SetOrigin(new ArcGISPoint(location.Longitude, location.Latitude, 0, ArcGISSpatialReference.WGS84()));
+        Debug.Log("Origin Updated to Lat: " + location.Latitude + " Long: " + location.Longitude);
     }
 
     private void SetOriginLocation()

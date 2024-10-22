@@ -1,14 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class InputController : MonoBehaviour
 {
+    [SerializeField] private Animator anim;
+    [SerializeField] private Button button;
+    [SerializeField] private FeatureLayerQuery featureLayerQuery;
+    [SerializeField] private Button menuButton;
     private ARTouchControls touchControls;
     [SerializeField] private TextMeshProUGUI propertiesText;
+    [SerializeField] private TMP_InputField inputField;
+
+    private bool menuHidden = false;
+
     private void Awake()
     {
         touchControls = new ARTouchControls();
@@ -47,5 +53,39 @@ public class InputController : MonoBehaviour
                 Debug.LogWarning(ex);
             }
         }
+    }
+
+    private void Start()
+    {
+        inputField.text = featureLayerQuery.WebLink.Link;
+        anim.Play("ShowMenu");
+        menuHidden = false;
+
+        inputField.onSubmit.AddListener(delegate (string weblink)
+        {
+            menuHidden = true;
+            anim.Play("HideMenu");
+            featureLayerQuery.CreateLink(weblink);
+            StartCoroutine(featureLayerQuery.GetFeatures());
+        });
+
+        button.onClick.AddListener(delegate
+        {
+            StartCoroutine(featureLayerQuery.GetFeatures());
+        });
+
+        menuButton.onClick.AddListener(delegate
+        {
+            if (menuHidden)
+            {
+                anim.Play("ShowMenu");
+                menuHidden = false;
+            }
+            else
+            {
+                menuHidden = true;
+                anim.Play("HideMenu");
+            }
+        });
     }
 }
