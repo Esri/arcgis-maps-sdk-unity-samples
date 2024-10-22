@@ -41,12 +41,12 @@ public class SampleSwitcher : MonoBehaviour
         animator = notificationMenu.GetComponent<Animator>();
         cam.enabled = true;
 
-        Invoke("SlideNotification", 2.0f); 
+        Invoke("SlideNotification", 2.0f);
 
         if (!string.IsNullOrEmpty(apiKey))
         {
             CheckAPIKey(apiKey);
-		}
+        }
         else
         {
             projectAPIKey = ArcGISProjectSettingsAsset.Instance.APIKey;
