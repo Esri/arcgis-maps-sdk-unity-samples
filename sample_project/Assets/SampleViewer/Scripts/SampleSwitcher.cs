@@ -43,10 +43,10 @@ public class SampleSwitcher : MonoBehaviour
 
         Invoke("SlideNotification", 2.0f); 
 
-        if (apiKey != null)
+        if (!string.IsNullOrEmpty(apiKey))
         {
             CheckAPIKey(apiKey);
-        }
+		}
         else
         {
             projectAPIKey = ArcGISProjectSettingsAsset.Instance.APIKey;
