@@ -41,9 +41,9 @@ public class SampleSwitcher : MonoBehaviour
         animator = notificationMenu.GetComponent<Animator>();
         cam.enabled = true;
 
-        Invoke("SlideNotification", 2.0f);
+        Invoke("SlideNotification", 2.0f); 
 
-        if (apiKey != null && apiKey.Length == 100)
+        if (apiKey != null)
         {
             CheckAPIKey(apiKey);
         }
@@ -189,7 +189,7 @@ public class SampleSwitcher : MonoBehaviour
 
         if (warning != null)
         {
-            if (value.Length == 100)
+            if (value.Length == 100 || value.Length == 252)
             {
                 warning.gameObject.SetActive(false);
                 EnableSceneButtons();
