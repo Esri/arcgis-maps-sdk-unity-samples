@@ -18,10 +18,11 @@ public class ArcGISGeospatialController : MonoBehaviour
     private bool _waitingForLocationService;
     private ArcGISMapComponent mapComponent;
     
-    private const double _headingAccuracyThreshold = 25;
-    private double yawAccuracy = 1000;
+    public double _headingAccuracyThreshold = 25;
+    public double yawAccuracy = 1000;
 
     public XROrigin XROrigin;
+    [SerializeField] private GameObject precisionMarker;
 
     private void Awake()
     {
@@ -144,7 +145,17 @@ public class ArcGISGeospatialController : MonoBehaviour
 
         var location = Input.location.lastData;
         var vpsAvailabilityPromise =
-            AREarthManager.CheckVpsAvailabilityAsync(location.latitude, location.longitude); ;
+            AREarthManager.CheckVpsAvailabilityAsync(location.latitude, location.longitude);
+        
+        if (vpsAvailabilityPromise.Result != VpsAvailability.Available)
+        {
+            precisionMarker.SetActive(true);
+        }
+        else
+        {
+            precisionMarker.SetActive(false);
+        }
+        
         yield return vpsAvailabilityPromise;
 
         Debug.LogFormat("VPS Availability at ({0}, {1}): {2}",

@@ -41,14 +41,13 @@ public class Geometry
 
 public class FeatureLayerQuery : MonoBehaviour
 {
-    [SerializeField] private ArcGISCameraComponent camera;
+    [SerializeField] private ArcGISCameraComponent arcGISCamera;
     [SerializeField] private GameObject featurePrefab;
     private int featureSRWKID = 4326;
     private FeatureData featureInfo;
     private ArcGISGeospatialController geospatialController;
     private ArcGISLocationComponent locationComponent;
     [SerializeField] private List<string> outfields = new List<string>();
-    private float stadiumSpawnHeight = 10000.0f;
 
     public List<FeatureQuery> Features = new List<FeatureQuery>();
     private bool GetAllFeatures = true;
@@ -181,7 +180,7 @@ public class FeatureLayerQuery : MonoBehaviour
             }
 
 
-            featureInfo.ArcGISCamera = camera;
+            featureInfo.ArcGISCamera = arcGISCamera;
             var position = new ArcGISPoint(featureInfo.Coordinates[0], featureInfo.Coordinates[1],
                 0, new ArcGISSpatialReference(featureSRWKID));
             var rotation = new ArcGISRotation(0.0, 90.0, 0.0);
