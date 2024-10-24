@@ -1,4 +1,5 @@
 using Esri.ArcGISMapsSDK.Components;
+using Esri.GameEngine.Geometry;
 using Esri.GameEngine.MapView;
 using TMPro;
 using UnityEngine;
@@ -21,18 +22,18 @@ public class InputController : MonoBehaviour
     [SerializeField] private Button topHandle;
     private ARTouchControls touchControls;
 
-    [SerializeField] private Button expandButton;
+    [SerializeField] private Button exitButton;
+    private Button expandButton;
     [SerializeField] private GameObject miniMap;
     [SerializeField] private RenderTexture miniMapTexture;
 
-    [SerializeField] private Sprite cancelIcon;
-    [SerializeField] private Sprite expandIcon;
-    private bool expanded;
-
+    public GameObject propertiesPrefab;
+    
     private void Awake()
     {
         touchControls = new ARTouchControls();
         arcGISCamera = FindFirstObjectByType<ArcGISCameraComponent>().GetComponent<Camera>();
+        expandButton = miniMap.GetComponent<Button>();
     }
 
     private void DestroyFeatures()
@@ -41,13 +42,13 @@ public class InputController : MonoBehaviour
         {
             return;
         }
-        
+
         foreach (var feature in featureLayerQuery.FeatureItems)
         {
             Destroy(feature);
         }
     }
-    
+
     private void OnEnable()
     {
         touchControls.Enable();
@@ -59,32 +60,31 @@ public class InputController : MonoBehaviour
         touchControls.Disable();
         touchControls.TouchControls.Touched.started -= OnTouchStarted;
     }
-    
+
     private void OnTouchStarted(InputAction.CallbackContext context)
     {
         RaycastHit hit;
         var ray = Camera.main.ScreenPointToRay(touchControls.TouchControls.TouchPosition.ReadValue<Vector2>());
-        
+
         if (Physics.Raycast(ray, out hit))
         {
             try
             {
                 if (lastSelectedFeature)
                 {
-                    ClearAdditionalMaterial(lastSelectedFeature);   
+                    ClearAdditionalMaterial(lastSelectedFeature);
                 }
-                
+
                 lastSelectedFeature = hit.collider.gameObject;
                 var data = lastSelectedFeature.GetComponent<FeatureData>();
-                SetAdditionalMaterial(highlightMaterial,outlineMaterial ,hit.collider);
-                
-                if (!propertiesText.gameObject.activeInHierarchy)
-                {
-                    propertiesText.gameObject.SetActive(true);
-                }
-                
+                SetAdditionalMaterial(highlightMaterial, outlineMaterial, hit.collider);
+                propertiesPrefab.GetComponent<ArcGISLocationComponent>().Position = new ArcGISPoint(
+                    data.LocationComponent.Position.X,
+                    data.LocationComponent.Position.Y, data.LocationComponent.Position.Z + 10,
+                    ArcGISSpatialReference.WGS84());
+                propertiesPrefab.transform.LookAt(Camera.main.transform, Vector3.up);
                 propertiesText.text = "Properties: \n";
-                
+
                 foreach (var property in data.Properties)
                 {
                     propertiesText.text += "- " + property + "\n";
@@ -100,8 +100,8 @@ public class InputController : MonoBehaviour
     private void SetAdditionalMaterial(Material highlight, Material outLine, Collider collider)
     {
         Material[] materialsArray = new Material[collider.GetComponent<Renderer>().materials.Length + 2];
-        collider.GetComponent<Renderer>().materials.CopyTo(materialsArray,0);
-        collider.GetComponent<Renderer>().materials.CopyTo(materialsArray,1);
+        collider.GetComponent<Renderer>().materials.CopyTo(materialsArray, 0);
+        collider.GetComponent<Renderer>().materials.CopyTo(materialsArray, 1);
         materialsArray[materialsArray.Length - 1] = highlight;
         materialsArray[materialsArray.Length - 2] = outLine;
         collider.GetComponent<Renderer>().materials = materialsArray;
@@ -110,12 +110,12 @@ public class InputController : MonoBehaviour
     private void ClearAdditionalMaterial(GameObject feature)
     {
         Material[] materialsArray = new Material[feature.GetComponent<Renderer>().materials.Length - 2];
-        
+
         for (int i = 0; i < feature.GetComponent<Renderer>().materials.Length - 2; i++)
         {
             materialsArray[i] = feature.GetComponent<Renderer>().materials[i];
         }
-        
+
         feature.GetComponent<Renderer>().materials = materialsArray;
     }
 
@@ -128,14 +128,13 @@ public class InputController : MonoBehaviour
     {
         anim.Play("HideMenu");
     }
-    
+
     private void Start()
     {
         inputField.text = featureLayerQuery.WebLink.Link;
         anim.Play("ShowMenu");
-        propertiesText.gameObject.SetActive(false);
 
-        inputField.onSubmit.AddListener(delegate (string weblink)
+        inputField.onSubmit.AddListener(delegate(string weblink)
         {
             anim.Play("HideMenu");
             DestroyFeatures();
@@ -143,11 +142,8 @@ public class InputController : MonoBehaviour
             StartCoroutine(featureLayerQuery.GetFeatures());
         });
 
-        clearButton.onClick.AddListener(delegate
-        {
-            DestroyFeatures();
-        });
-        
+        clearButton.onClick.AddListener(delegate { DestroyFeatures(); });
+
         searchButton.onClick.AddListener(delegate
         {
             anim.Play("HideMenu");
@@ -155,34 +151,20 @@ public class InputController : MonoBehaviour
             StartCoroutine(featureLayerQuery.GetFeatures());
         });
 
-        topHandle.onClick.AddListener(delegate
-        {
-            PullDown();
-        });
-        
-        bottomHandle.onClick.AddListener(delegate
-        {
-            SwipeUp();
-        });
+        topHandle.onClick.AddListener(delegate { PullDown(); });
+
+        bottomHandle.onClick.AddListener(delegate { SwipeUp(); });
 
         expandButton.onClick.AddListener(delegate
         {
-            expandButton.GetComponent<Image>().sprite = expandIcon;
-
-            if (expanded)
-            {
-                miniMap.SetActive(true);
-                arcGISCamera.targetTexture = miniMapTexture;
-                expandButton.GetComponent<Image>().sprite = expandIcon;
-                expanded = false;
-            }
-            else
-            {
-                miniMap.SetActive(false);
-                arcGISCamera.targetTexture = null;
-                expandButton.GetComponent<Image>().sprite = cancelIcon;
-                expanded = true;
-            }
+            miniMap.SetActive(false);
+            arcGISCamera.targetTexture = null;
+        });
+        
+        exitButton.onClick.AddListener(delegate
+        {
+            miniMap.SetActive(true);
+            arcGISCamera.targetTexture = miniMapTexture;
         });
     }
 }
