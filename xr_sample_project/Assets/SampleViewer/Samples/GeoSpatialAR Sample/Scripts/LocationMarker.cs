@@ -1,7 +1,6 @@
 using Esri.ArcGISMapsSDK.Components;
 using Esri.ArcGISMapsSDK.Utils.GeoCoord;
 using Esri.GameEngine.Geometry;
-using TMPro;
 using UnityEngine;
 
 public class LocationMarker : MonoBehaviour

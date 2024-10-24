@@ -114,22 +114,6 @@ public class ArcGISGeospatialController : MonoBehaviour
         }
 
         yield return null;
-#if UNITY_ANDROID
-
-        if (!Permission.HasUserAuthorizedPermission(Permission.Camera))
-        {
-            Debug.Log("Requesting camera permission.");
-            Permission.RequestUserPermission(Permission.Camera);
-            yield return new WaitForSeconds(3.0f);
-        }
-
-        if (!Permission.HasUserAuthorizedPermission(Permission.Camera))
-        {
-            Debug.LogWarning(
-                "Failed to get the camera permission. VPS availability check isn't available.");
-            yield break;
-        }
-#endif
 
         while (_waitingForLocationService)
         {

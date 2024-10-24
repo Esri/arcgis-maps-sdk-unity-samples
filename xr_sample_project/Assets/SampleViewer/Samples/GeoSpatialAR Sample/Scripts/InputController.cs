@@ -1,3 +1,5 @@
+using Esri.ArcGISMapsSDK.Components;
+using Esri.GameEngine.MapView;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -5,6 +7,7 @@ using UnityEngine.UI;
 
 public class InputController : MonoBehaviour
 {
+    private Camera arcGISCamera;
     [SerializeField] private Animator anim;
     [SerializeField] private Button bottomHandle;
     [SerializeField] private Button clearButton;
@@ -18,9 +21,18 @@ public class InputController : MonoBehaviour
     [SerializeField] private Button topHandle;
     private ARTouchControls touchControls;
 
+    [SerializeField] private Button expandButton;
+    [SerializeField] private GameObject miniMap;
+    [SerializeField] private RenderTexture miniMapTexture;
+
+    [SerializeField] private Sprite cancelIcon;
+    [SerializeField] private Sprite expandIcon;
+    private bool expanded;
+
     private void Awake()
     {
         touchControls = new ARTouchControls();
+        arcGISCamera = FindFirstObjectByType<ArcGISCameraComponent>().GetComponent<Camera>();
     }
 
     private void DestroyFeatures()
@@ -151,6 +163,26 @@ public class InputController : MonoBehaviour
         bottomHandle.onClick.AddListener(delegate
         {
             SwipeUp();
+        });
+
+        expandButton.onClick.AddListener(delegate
+        {
+            expandButton.GetComponent<Image>().sprite = expandIcon;
+
+            if (expanded)
+            {
+                miniMap.SetActive(true);
+                arcGISCamera.targetTexture = miniMapTexture;
+                expandButton.GetComponent<Image>().sprite = expandIcon;
+                expanded = false;
+            }
+            else
+            {
+                miniMap.SetActive(false);
+                arcGISCamera.targetTexture = null;
+                expandButton.GetComponent<Image>().sprite = cancelIcon;
+                expanded = true;
+            }
         });
     }
 }
