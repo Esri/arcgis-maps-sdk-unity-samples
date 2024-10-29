@@ -9,30 +9,41 @@ using UnityEngine.UI;
 public class InputController : MonoBehaviour
 {
     private Camera arcGISCamera;
-    [SerializeField] private Animator anim;
-    [SerializeField] private Button bottomHandle;
-    [SerializeField] private Button clearButton;
-    [SerializeField] private FeatureLayerQuery featureLayerQuery;
-    [SerializeField] private Material highlightMaterial;
-    [SerializeField] private Material outlineMaterial;
+    private FeatureLayerQuery featureLayerQuery;
     private GameObject lastSelectedFeature;
-    [SerializeField] private TMP_InputField inputField;
-    [SerializeField] private TextMeshProUGUI propertiesText;
-    [SerializeField] private Button searchButton;
-    [SerializeField] private Button topHandle;
+    private bool menuVisible;
     private ARTouchControls touchControls;
 
-    [SerializeField] private Button exitButton;
+    [Header("Animations")]
+    [SerializeField] private Animator anim;
+    [SerializeField] private Animator infoAnim;
+
+    [Header("Materials")]
+    [SerializeField] private Material highlightMaterial;
+    [SerializeField] private Material outlineMaterial;
+
+    [Header("Mini Map")]
     private Button expandButton;
     [SerializeField] private GameObject miniMap;
     [SerializeField] private RenderTexture miniMapTexture;
 
-    public GameObject propertiesPrefab;
-    
+    [Header("UI Components")]
+    [SerializeField] private Sprite downSprite;
+    [SerializeField] private Button clearButton;
+    [SerializeField] private Button exitButton;
+    [SerializeField] private Button hideInfoButton;
+    [SerializeField] private Button infoButton;
+    [SerializeField] private TMP_InputField inputField;
+    [SerializeField] private Button menuButton;
+    [SerializeField] private TextMeshProUGUI propertiesText;
+    [SerializeField] private Button searchButton;
+    [SerializeField] private Sprite upSprite;
+
     private void Awake()
     {
         touchControls = new ARTouchControls();
         arcGISCamera = FindFirstObjectByType<ArcGISCameraComponent>().GetComponent<Camera>();
+        featureLayerQuery = FindFirstObjectByType<FeatureLayerQuery>();
         expandButton = miniMap.GetComponent<Button>();
     }
 
@@ -78,12 +89,6 @@ public class InputController : MonoBehaviour
                 lastSelectedFeature = hit.collider.gameObject;
                 var data = lastSelectedFeature.GetComponent<FeatureData>();
                 SetAdditionalMaterial(highlightMaterial, outlineMaterial, hit.collider);
-                propertiesPrefab.GetComponent<ArcGISLocationComponent>().Position = new ArcGISPoint(
-                    data.LocationComponent.Position.X,
-                    data.LocationComponent.Position.Y, data.LocationComponent.Position.Z + 10,
-                    ArcGISSpatialReference.WGS84());
-                propertiesPrefab.transform.LookAt(Camera.main.transform, Vector3.up);
-                propertiesText.text = "Properties: \n";
 
                 foreach (var property in data.Properties)
                 {
@@ -119,24 +124,21 @@ public class InputController : MonoBehaviour
         feature.GetComponent<Renderer>().materials = materialsArray;
     }
 
-    private void PullDown()
-    {
-        anim.Play("ShowMenu");
-    }
-
-    private void SwipeUp()
-    {
-        anim.Play("HideMenu");
-    }
-
     private void Start()
     {
         inputField.text = featureLayerQuery.WebLink.Link;
+        menuButton.image.sprite = upSprite;
+        menuButton.GetComponentInChildren<TextMeshProUGUI>().text = "Touch to Hide Menu";
         anim.Play("ShowMenu");
+        menuVisible = true;
+        exitButton.gameObject.SetActive(false);
 
-        inputField.onSubmit.AddListener(delegate(string weblink)
+        inputField.onSubmit.AddListener(delegate (string weblink)
         {
+            menuButton.image.sprite = downSprite;
+            menuButton.GetComponentInChildren<TextMeshProUGUI>().text = "Touch to Show Menu";
             anim.Play("HideMenu");
+            menuVisible = false;
             DestroyFeatures();
             featureLayerQuery.CreateLink(weblink);
             StartCoroutine(featureLayerQuery.GetFeatures());
@@ -146,25 +148,54 @@ public class InputController : MonoBehaviour
 
         searchButton.onClick.AddListener(delegate
         {
+            menuButton.image.sprite = downSprite;
+            menuButton.GetComponentInChildren<TextMeshProUGUI>().text = "Touch to Show Menu";
             anim.Play("HideMenu");
+            menuVisible = false;
             DestroyFeatures();
             StartCoroutine(featureLayerQuery.GetFeatures());
         });
 
-        topHandle.onClick.AddListener(delegate { PullDown(); });
-
-        bottomHandle.onClick.AddListener(delegate { SwipeUp(); });
+        menuButton.onClick.AddListener(delegate
+        {
+            if (menuVisible)
+            {
+                menuButton.image.sprite = downSprite;
+                menuButton.GetComponentInChildren<TextMeshProUGUI>().text = "Touch to Show Menu";
+                anim.Play("HideMenu");
+                menuVisible = false;
+            }
+            else
+            {
+                menuButton.image.sprite = upSprite;
+                menuButton.GetComponentInChildren<TextMeshProUGUI>().text = "Touch to Hide Menu";
+                anim.Play("ShowMenu");
+                menuVisible = true;
+            }
+        });
 
         expandButton.onClick.AddListener(delegate
         {
             miniMap.SetActive(false);
             arcGISCamera.targetTexture = null;
+            exitButton.gameObject.SetActive(true);
         });
-        
+
         exitButton.onClick.AddListener(delegate
         {
             miniMap.SetActive(true);
             arcGISCamera.targetTexture = miniMapTexture;
+            exitButton.gameObject.SetActive(false);
+        });
+
+        infoButton.onClick.AddListener(delegate
+        {
+            infoAnim.Play("ShowInstructions");
+        });
+
+        hideInfoButton.onClick.AddListener(delegate
+        {
+            infoAnim.Play("HideInstructions");
         });
     }
 }
