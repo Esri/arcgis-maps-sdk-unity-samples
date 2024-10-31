@@ -60,6 +60,9 @@ Once you are ready, please open the XR Sample Project. Once open you will need t
 
 8. (Optional) If you want to be able to open the `.cs` files in this project and have IntelliSense recognize variable correctly, in Unity navigate to `Edit -> Preferences -> External Tools -> Generate .csproj files for 'local tarball`
 
+### Setting Up the XR Sample Project
+Once you are ready, please open the XR Sample Project. Once open you will need to add the ArcGIS Maps SDK for Unity Plugin. You may do so through the Unity Asset Store, or from the ArcGIS Developer hub. In addition to the Maps SDK, you will also need to import the ArcGIS Maps SDK Samples. This can be found within the package manager under the ArcGIS Maps SDK Package. You will also need to import the samples for the XR Hands Package and the Samples called 'Starter Assets', 'HandsViewer', and 'XR Hands Demo' from the XR Interaction Toolkit Package.
+
 ## Requirements
 
 * Refer to the [ArcGIS Maps SDK for Unity's documentation on system requirements](https://developers.arcgis.com/unity/system-requirements/)
