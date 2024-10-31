@@ -177,6 +177,7 @@ public class InputController : MonoBehaviour
         expandButton.onClick.AddListener(delegate
         {
             miniMap.SetActive(false);
+            propertiesText.gameObject.SetActive(false);
             arcGISCamera.targetTexture = null;
             exitButton.gameObject.SetActive(true);
         });
@@ -184,6 +185,7 @@ public class InputController : MonoBehaviour
         exitButton.onClick.AddListener(delegate
         {
             miniMap.SetActive(true);
+            propertiesText.gameObject.SetActive(true);
             arcGISCamera.targetTexture = miniMapTexture;
             exitButton.gameObject.SetActive(false);
         });

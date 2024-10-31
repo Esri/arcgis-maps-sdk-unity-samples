@@ -32,7 +32,6 @@ public class ArcGISGeospatialController : MonoBehaviour
     private void OnEnable()
     {
         StartCoroutine("StartLocationService");
-        StartCoroutine("AvailabilityCheck");
     }
 
     private void OnDisable()
@@ -44,6 +43,7 @@ public class ArcGISGeospatialController : MonoBehaviour
     {
         EarthManager = new AREarthManager();
         InvokeRepeating(nameof(SetOriginLocation), 0.0f, 2.0f);
+        InvokeRepeating(nameof(AvailabilityCheck), 0.0f, 3.0f);
         Invoke(nameof(SetLocation), 1.0f);
     }
 
@@ -99,48 +99,27 @@ public class ArcGISGeospatialController : MonoBehaviour
         mapComponent.GetComponentInChildren<ArcGISCameraComponent>().gameObject.GetComponent<ArcGISLocationComponent>().Position = OriginPoint;
     }
     
-    private IEnumerator AvailabilityCheck()
+    private void AvailabilityCheck()
     {
-        if (ARSession.state == ARSessionState.None)
-        {
-            yield return ARSession.CheckAvailability();
-        }
-
-        yield return null;
-
-        if (ARSession.state == ARSessionState.NeedsInstall)
-        {
-            yield return ARSession.Install();
-        }
-
-        yield return null;
-
-        while (_waitingForLocationService)
-        {
-            yield return null;
-        }
-
         if (Input.location.status != LocationServiceStatus.Running)
         {
             Debug.LogWarning(
                 "Location services aren't running. VPS availability check is not available.");
-            yield break;
+            return;
         }
 
         var location = Input.location.lastData;
         var vpsAvailabilityPromise =
             AREarthManager.CheckVpsAvailabilityAsync(location.latitude, location.longitude);
         
-        if (vpsAvailabilityPromise.Result != VpsAvailability.Available)
-        {
-            precisionMarker.SetActive(true);
-        }
-        else
+        if (vpsAvailabilityPromise.Result == VpsAvailability.Available)
         {
             precisionMarker.SetActive(false);
         }
-        
-        yield return vpsAvailabilityPromise;
+        else
+        {
+            precisionMarker.SetActive(true);
+        }
 
         Debug.LogFormat("VPS Availability at ({0}, {1}): {2}",
             location.latitude, location.longitude, vpsAvailabilityPromise.Result);
