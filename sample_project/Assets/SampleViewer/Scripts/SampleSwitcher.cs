@@ -43,7 +43,7 @@ public class SampleSwitcher : MonoBehaviour
 
         Invoke("SlideNotification", 2.0f);
 
-        if (apiKey != null && apiKey.Length == 100)
+        if (!string.IsNullOrEmpty(apiKey))
         {
             CheckAPIKey(apiKey);
         }
@@ -189,7 +189,7 @@ public class SampleSwitcher : MonoBehaviour
 
         if (warning != null)
         {
-            if (value.Length == 100)
+            if (value.Length == 100 || value.Length == 252)
             {
                 warning.gameObject.SetActive(false);
                 EnableSceneButtons();
