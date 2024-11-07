@@ -189,7 +189,7 @@ public class SampleSwitcher : MonoBehaviour
 
         if (warning != null)
         {
-            if (value.Length == 100 || value.Length == 252)
+            if (!string.IsNullOrEmpty(apiKey))
             {
                 warning.gameObject.SetActive(false);
                 EnableSceneButtons();
