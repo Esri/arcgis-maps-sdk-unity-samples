@@ -23,13 +23,13 @@ namespace Esri.ArcGISMapsSDK.Samples.Components
     [ExecuteAlways]
     public class ArcGISAttributionDisplay : MonoBehaviour
     {
-        private TextMeshPro attributionText;
+        private TextMeshProUGUI attributionText;
 
         private ArcGISMapComponent mapComponent;
 
         private void OnEnable()
         {
-            attributionText = GetComponent<TextMeshPro>();
+            attributionText = GetComponent<TextMeshProUGUI>();
 
             if (attributionText == null)
             {
