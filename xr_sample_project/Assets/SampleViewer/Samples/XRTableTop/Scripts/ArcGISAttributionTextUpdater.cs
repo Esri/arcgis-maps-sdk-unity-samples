@@ -66,6 +66,8 @@ namespace Esri.ArcGISMapsSDK.Samples.Components
 
         private void SetAttributionText(string text)
         {
+            Debug.Log(text);
+
             if (attributionText == null)
             {
                 return;
