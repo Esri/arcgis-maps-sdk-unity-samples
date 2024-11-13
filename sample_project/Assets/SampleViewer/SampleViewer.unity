@@ -470,7 +470,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 1715400249}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: DisableTouchJoysticks, Sample Viewer
         m_MethodName: ToggleCanvas
         m_Mode: 6
@@ -1004,6 +1004,123 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23c1ce4fb46143f46bc5cb5224c934f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  clearColorMode: 0
+  backgroundColorHDR: {r: 0.025, g: 0.07, b: 0.19, a: 0}
+  clearDepth: 1
+  volumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  volumeAnchorOverride: {fileID: 0}
+  antialiasing: 0
+  SMAAQuality: 2
+  dithering: 0
+  stopNaNs: 0
+  taaSharpenStrength: 0.5
+  TAAQuality: 1
+  taaHistorySharpening: 0.35
+  taaAntiFlicker: 0.5
+  taaMotionVectorRejection: 0
+  taaAntiHistoryRinging: 0
+  taaBaseBlendFactor: 0.875
+  taaJitterScale: 1
+  physicalParameters:
+    m_Iso: 200
+    m_ShutterSpeed: 0.005
+    m_Aperture: 16
+    m_FocusDistance: 10
+    m_BladeCount: 5
+    m_Curvature: {x: 2, y: 11}
+    m_BarrelClipping: 0.25
+    m_Anamorphism: 0
+  flipYMode: 0
+  xrRendering: 1
+  fullscreenPassthrough: 0
+  allowDynamicResolution: 0
+  customRenderingSettings: 0
+  invertFaceCulling: 0
+  probeLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  hasPersistentHistory: 0
+  screenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
+  screenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
+  allowDeepLearningSuperSampling: 1
+  deepLearningSuperSamplingUseCustomQualitySettings: 0
+  deepLearningSuperSamplingQuality: 0
+  deepLearningSuperSamplingUseCustomAttributes: 0
+  deepLearningSuperSamplingUseOptimalSettings: 1
+  deepLearningSuperSamplingSharpening: 0
+  fsrOverrideSharpness: 0
+  fsrSharpness: 0.92
+  exposureTarget: {fileID: 0}
+  materialMipBias: 0
+  m_RenderingPathCustomFrameSettings:
+    bitDatas:
+      data1: 140666587840333
+      data2: 13763000512783810584
+    lodBias: 1
+    lodBiasMode: 0
+    lodBiasQualityLevel: 0
+    maximumLODLevel: 0
+    maximumLODLevelMode: 0
+    maximumLODLevelQualityLevel: 0
+    sssQualityMode: 0
+    sssQualityLevel: 0
+    sssCustomSampleBudget: 20
+    msaaMode: 1
+    materialQuality: 0
+  renderingPathCustomFrameSettingsOverrideMask:
+    mask:
+      data1: 0
+      data2: 0
+  defaultFrameSettings: 0
+  m_Version: 9
+  m_ObsoleteRenderingPath: 0
+  m_ObsoleteFrameSettings:
+    overrides: 0
+    enableShadow: 0
+    enableContactShadows: 0
+    enableShadowMask: 0
+    enableSSR: 0
+    enableSSAO: 0
+    enableSubsurfaceScattering: 0
+    enableTransmission: 0
+    enableAtmosphericScattering: 0
+    enableVolumetrics: 0
+    enableReprojectionForVolumetrics: 0
+    enableLightLayers: 0
+    enableExposureControl: 1
+    diffuseGlobalDimmer: 0
+    specularGlobalDimmer: 0
+    shaderLitMode: 0
+    enableDepthPrepassWithDeferredRendering: 0
+    enableTransparentPrepass: 0
+    enableMotionVectors: 0
+    enableObjectMotionVectors: 0
+    enableDecals: 0
+    enableRoughRefraction: 0
+    enableTransparentPostpass: 0
+    enableDistortion: 0
+    enablePostprocess: 0
+    enableOpaqueObjects: 0
+    enableTransparentObjects: 0
+    enableRealtimePlanarReflection: 0
+    enableMSAA: 0
+    enableAsyncCompute: 0
+    runLightListAsync: 0
+    runSSRAsync: 0
+    runSSAOAsync: 0
+    runContactShadowsAsync: 0
+    runVolumeVoxelizationAsync: 0
+    lightLoopSettings:
+      overrides: 0
+      enableDeferredTileAndCluster: 0
+      enableComputeLightEvaluation: 0
+      enableComputeLightVariants: 0
+      enableComputeMaterialVariants: 0
+      enableFptlForForwardOpaque: 0
+      enableBigTilePrepass: 0
+      isFptlEnabled: 0
 --- !u!1 &139799378
 GameObject:
   m_ObjectHideFlags: 0
@@ -2246,103 +2363,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 335788540}
   m_CullTransparentMesh: 1
---- !u!1001 &392942482
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4665616352964844481, guid: f94e67b1f8188b441b93c2d9ac0435eb, type: 3}
-      propertyPath: m_Pivot.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4665616352964844481, guid: f94e67b1f8188b441b93c2d9ac0435eb, type: 3}
-      propertyPath: m_Pivot.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4665616352964844481, guid: f94e67b1f8188b441b93c2d9ac0435eb, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4665616352964844481, guid: f94e67b1f8188b441b93c2d9ac0435eb, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4665616352964844481, guid: f94e67b1f8188b441b93c2d9ac0435eb, type: 3}
-      propertyPath: m_AnchorMin.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4665616352964844481, guid: f94e67b1f8188b441b93c2d9ac0435eb, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4665616352964844481, guid: f94e67b1f8188b441b93c2d9ac0435eb, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4665616352964844481, guid: f94e67b1f8188b441b93c2d9ac0435eb, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4665616352964844481, guid: f94e67b1f8188b441b93c2d9ac0435eb, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4665616352964844481, guid: f94e67b1f8188b441b93c2d9ac0435eb, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4665616352964844481, guid: f94e67b1f8188b441b93c2d9ac0435eb, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4665616352964844481, guid: f94e67b1f8188b441b93c2d9ac0435eb, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4665616352964844481, guid: f94e67b1f8188b441b93c2d9ac0435eb, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4665616352964844481, guid: f94e67b1f8188b441b93c2d9ac0435eb, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4665616352964844481, guid: f94e67b1f8188b441b93c2d9ac0435eb, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4665616352964844481, guid: f94e67b1f8188b441b93c2d9ac0435eb, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4665616352964844481, guid: f94e67b1f8188b441b93c2d9ac0435eb, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4665616352964844481, guid: f94e67b1f8188b441b93c2d9ac0435eb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4665616352964844481, guid: f94e67b1f8188b441b93c2d9ac0435eb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4665616352964844481, guid: f94e67b1f8188b441b93c2d9ac0435eb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8245483605992596556, guid: f94e67b1f8188b441b93c2d9ac0435eb, type: 3}
-      propertyPath: m_Name
-      value: JoystickCanvas
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: f94e67b1f8188b441b93c2d9ac0435eb, type: 3}
 --- !u!1 &411892200
 GameObject:
   m_ObjectHideFlags: 0
@@ -3971,7 +3991,7 @@ MonoBehaviour:
           m_StringArgument: LogoSliderAnim_Close
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1715400249}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: DisableTouchJoysticks, Sample Viewer
         m_MethodName: ToggleCanvas
         m_Mode: 6
@@ -4454,7 +4474,7 @@ MonoBehaviour:
           m_StringArgument: LogoSliderAnim
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1715400249}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: DisableTouchJoysticks, Sample Viewer
         m_MethodName: ToggleCanvas
         m_Mode: 6
@@ -4817,7 +4837,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 1715400249}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: DisableTouchJoysticks, Sample Viewer
         m_MethodName: ToggleCanvas
         m_Mode: 6
@@ -5182,7 +5202,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1715400249}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: DisableTouchJoysticks, Sample Viewer
         m_MethodName: ToggleCanvas
         m_Mode: 6
@@ -5459,7 +5479,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 1715400249}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: DisableTouchJoysticks, Sample Viewer
         m_MethodName: ToggleCanvas
         m_Mode: 6
@@ -5938,7 +5958,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 1715400249}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: DisableTouchJoysticks, Sample Viewer
         m_MethodName: ToggleCanvas
         m_Mode: 6
@@ -6866,7 +6886,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 1715400249}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: DisableTouchJoysticks, Sample Viewer
         m_MethodName: ToggleCanvas
         m_Mode: 6
@@ -7095,7 +7115,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 1715400249}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: DisableTouchJoysticks, Sample Viewer
         m_MethodName: ToggleCanvas
         m_Mode: 6
@@ -7533,7 +7553,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 1715400249}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: DisableTouchJoysticks, Sample Viewer
         m_MethodName: ToggleCanvas
         m_Mode: 6
@@ -7932,7 +7952,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 1715400249}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: DisableTouchJoysticks, Sample Viewer
         m_MethodName: ToggleCanvas
         m_Mode: 6
@@ -8668,7 +8688,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 1715400249}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: DisableTouchJoysticks, Sample Viewer
         m_MethodName: ToggleCanvas
         m_Mode: 6
@@ -9578,7 +9598,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 1715400249}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: DisableTouchJoysticks, Sample Viewer
         m_MethodName: ToggleCanvas
         m_Mode: 6
@@ -9665,17 +9685,6 @@ RectTransform:
   m_AnchoredPosition: {x: -665.1999, y: -54.999817}
   m_SizeDelta: {x: 122.5, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1715400249 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3905403007578469900, guid: f94e67b1f8188b441b93c2d9ac0435eb, type: 3}
-  m_PrefabInstance: {fileID: 392942482}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 220c702c190e97c4e97c4c1e8a807b68, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1773401383
 GameObject:
   m_ObjectHideFlags: 0
@@ -10062,7 +10071,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 1715400249}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: DisableTouchJoysticks, Sample Viewer
         m_MethodName: ToggleCanvas
         m_Mode: 6
@@ -10458,6 +10467,103 @@ MonoBehaviour:
   m_ChildScaleWidth: 1
   m_ChildScaleHeight: 1
   m_ReverseArrangement: 0
+--- !u!1001 &1940101997
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4665616352964844481, guid: 1c54cdd9a14d96049a8d37d422bd0e17, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4665616352964844481, guid: 1c54cdd9a14d96049a8d37d422bd0e17, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4665616352964844481, guid: 1c54cdd9a14d96049a8d37d422bd0e17, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4665616352964844481, guid: 1c54cdd9a14d96049a8d37d422bd0e17, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4665616352964844481, guid: 1c54cdd9a14d96049a8d37d422bd0e17, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4665616352964844481, guid: 1c54cdd9a14d96049a8d37d422bd0e17, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4665616352964844481, guid: 1c54cdd9a14d96049a8d37d422bd0e17, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4665616352964844481, guid: 1c54cdd9a14d96049a8d37d422bd0e17, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4665616352964844481, guid: 1c54cdd9a14d96049a8d37d422bd0e17, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4665616352964844481, guid: 1c54cdd9a14d96049a8d37d422bd0e17, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4665616352964844481, guid: 1c54cdd9a14d96049a8d37d422bd0e17, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4665616352964844481, guid: 1c54cdd9a14d96049a8d37d422bd0e17, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4665616352964844481, guid: 1c54cdd9a14d96049a8d37d422bd0e17, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4665616352964844481, guid: 1c54cdd9a14d96049a8d37d422bd0e17, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4665616352964844481, guid: 1c54cdd9a14d96049a8d37d422bd0e17, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4665616352964844481, guid: 1c54cdd9a14d96049a8d37d422bd0e17, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4665616352964844481, guid: 1c54cdd9a14d96049a8d37d422bd0e17, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4665616352964844481, guid: 1c54cdd9a14d96049a8d37d422bd0e17, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4665616352964844481, guid: 1c54cdd9a14d96049a8d37d422bd0e17, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4665616352964844481, guid: 1c54cdd9a14d96049a8d37d422bd0e17, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8245483605992596556, guid: 1c54cdd9a14d96049a8d37d422bd0e17, type: 3}
+      propertyPath: m_Name
+      value: JoystickCanvas
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1c54cdd9a14d96049a8d37d422bd0e17, type: 3}
 --- !u!1 &1944864286
 GameObject:
   m_ObjectHideFlags: 0
@@ -11349,4 +11455,4 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1201840878}
-  - {fileID: 392942482}
+  - {fileID: 1940101997}
