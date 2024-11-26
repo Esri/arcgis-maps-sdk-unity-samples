@@ -4,19 +4,17 @@
 // You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
 //
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using Esri.ArcGISMapsSDK.Components;
 using Esri.GameEngine.Geometry;
 using Newtonsoft.Json.Linq;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
-using UnityEngine.InputSystem;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.Networking;
-using UnityEngine.UI;
 
 public class ArcGISRaycast : MonoBehaviour
 {
@@ -30,11 +28,16 @@ public class ArcGISRaycast : MonoBehaviour
     private List<string> outfields = new List<string> { "AREA_SQ_FT", "DISTRICT", "Height", "SUBDISTRIC", "ZONE_" };
     private string position;
     [SerializeField] private TextMeshProUGUI resultText;
+    private TouchControls touchControls;
     private string weblink;
 
     private void Awake()
     {
+#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
         inputActions = new InputActions();
+#else
+        touchControls = new TouchControls();
+#endif
     }
 
     private void CreateLink(string objectID)
@@ -61,7 +64,7 @@ public class ArcGISRaycast : MonoBehaviour
 
         resultText.text = "\n";
         resultText.text += "- FeatureID: " + featureId + "\n";
-        
+
         foreach (var outfield in outfields)
         {
             if (GetObjectIDs(Request.downloadHandler.text, outfield) != "")
@@ -90,18 +93,28 @@ public class ArcGISRaycast : MonoBehaviour
 
     private void OnEnable()
     {
+#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
         inputActions.Enable();
         inputActions.DrawingControls.LeftClick.started += OnLeftClickStart;
         inputActions.DrawingControls.LeftShift.performed += ctx => OnLeftShift(true);
         inputActions.DrawingControls.LeftShift.canceled += ctx => OnLeftShift(false);
+#else
+        touchControls.Enable();
+        touchControls.Touch.TouchPress.started += OnTouchInputStarted;
+#endif
     }
 
     private void OnDisable()
     {
+#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
         inputActions.Disable();
         inputActions.DrawingControls.LeftClick.started -= OnLeftClickStart;
         inputActions.DrawingControls.LeftShift.performed -= ctx => OnLeftShift(true);
         inputActions.DrawingControls.LeftShift.canceled -= ctx => OnLeftShift(false);
+#else
+        touchControls.Disable();
+        touchControls.Touch.TouchPress.started -= OnTouchInputStarted;
+#endif
     }
 
     private void OnLeftShift(bool isPressed)
@@ -135,6 +148,33 @@ public class ArcGISRaycast : MonoBehaviour
                     position =
                         $"Lat: {string.Format("{0:0.##}", point.Y)} Long: {string.Format("{0:0.##}", point.X)}";
                 }
+            }
+        }
+    }
+
+    private void OnTouchInputStarted(InputAction.CallbackContext ctx)
+    {
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(touchControls.Touch.TouchPosition.ReadValue<Vector2>());
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            var arcGISRaycastHit = arcGISMapComponent.GetArcGISRaycastHit(hit);
+            var layer = arcGISRaycastHit.layer;
+            featureId = arcGISRaycastHit.featureId;
+
+            if (layer != null && featureId != -1)
+            {
+                CreateLink(featureId.ToString());
+                var geoPosition = arcGISMapComponent.EngineToGeographic(hit.point);
+                var location = markerGO.GetComponent<ArcGISLocationComponent>();
+                location.Position = new ArcGISPoint(geoPosition.X, geoPosition.Y, geoPosition.Z,
+                    geoPosition.SpatialReference);
+
+                var point = ArcGISGeometryEngine.Project(geoPosition,
+                    ArcGISSpatialReference.WGS84()) as ArcGISPoint;
+                position =
+                    $"Lat: {string.Format("{0:0.##}", point.Y)} Long: {string.Format("{0:0.##}", point.X)}";
             }
         }
     }
