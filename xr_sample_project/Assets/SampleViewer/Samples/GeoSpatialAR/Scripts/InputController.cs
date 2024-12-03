@@ -43,6 +43,7 @@ public class InputController : MonoBehaviour
     [SerializeField] private TMP_InputField inputField;
     [SerializeField] private Button menuButton;
     [SerializeField] private TextMeshProUGUI propertiesText;
+    [SerializeField] private Slider scaleSlider;
     [SerializeField] private Button searchButton;
     [SerializeField] private Sprite upSprite;
 
@@ -217,6 +218,14 @@ public class InputController : MonoBehaviour
             }
         });
 
+        scaleSlider.onValueChanged.AddListener(delegate
+        {
+            foreach (var item in featureLayerQuery.FeatureItems)
+            {
+                item.transform.localScale = new Vector3(scaleSlider.value, scaleSlider.value, scaleSlider.value);
+            }
+        });
+        
         hideInfoButton.onClick.AddListener(delegate { infoAnim.Play("HideInstructions"); });
     }
 }
