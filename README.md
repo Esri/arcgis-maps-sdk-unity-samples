@@ -39,6 +39,7 @@ This repository is made up of two separate Unity projects. If you would like to 
 
 * [VRSample](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/xr_sample_project//Assets/SampleViewer/Samples/VRSample) - See how to configure the camera to visualize content on a VR device and move the camera with VR locomotion.
 * [XRTableTop](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/xr_sample_project/Assets/SampleViewer/Samples/XRTableTop) - See how to configure the camera to visualize a tabletop map on a VR device and control the map with VR controllers and hand tracking.
+* [ARFeatureLayer](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/xr_sample_project/Assets/SampleViewer/Samples/GeoSpatialAR/readme.md)
 
 ## Instructions
 
