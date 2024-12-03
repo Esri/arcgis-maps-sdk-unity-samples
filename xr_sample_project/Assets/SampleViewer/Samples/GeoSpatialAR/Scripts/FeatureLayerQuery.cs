@@ -1,3 +1,9 @@
+// Copyright 2024 Esri.
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+//
+
 using Esri.ArcGISMapsSDK.Components;
 using Esri.ArcGISMapsSDK.Utils.GeoCoord;
 using Esri.GameEngine.Geometry;
@@ -123,14 +129,8 @@ public class FeatureLayerQuery : MonoBehaviour
         }
         else
         {
-            if (jFeatures.Length < LastValue)
-            {
-                CreateFeatures(StartValue, jFeatures.Length);
-            }
-            else
-            {
-                CreateFeatures(StartValue, LastValue);
-            }
+            var lastValueToUse = jFeatures.Length < LastValue ? jFeatures.Length : LastValue;
+            CreateFeatures(StartValue, lastValueToUse);
         }
     }
 

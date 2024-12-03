@@ -1,3 +1,9 @@
+// Copyright 2024 Esri.
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+//
+
 using Esri.ArcGISMapsSDK.Components;
 using Esri.GameEngine.Geometry;
 using Esri.GameEngine.MapView;
@@ -12,23 +18,24 @@ public class InputController : MonoBehaviour
     private FeatureLayerQuery featureLayerQuery;
     private GameObject lastSelectedFeature;
     private bool menuVisible;
+    private bool onScreen;
     private ARTouchControls touchControls;
 
-    [Header("Animations")]
-    [SerializeField] private Animator anim;
+    [Header("Animations")] [SerializeField]
+    private Animator anim;
+
     [SerializeField] private Animator infoAnim;
 
-    [Header("Materials")]
-    [SerializeField] private Material highlightMaterial;
+    [Header("Materials")] [SerializeField] private Material highlightMaterial;
     [SerializeField] private Material outlineMaterial;
 
-    [Header("Mini Map")]
-    private Button expandButton;
+    [Header("Mini Map")] private Button expandButton;
     [SerializeField] private GameObject miniMap;
     [SerializeField] private RenderTexture miniMapTexture;
 
-    [Header("UI Components")]
-    [SerializeField] private Sprite downSprite;
+    [Header("UI Components")] [SerializeField]
+    private Sprite downSprite;
+
     [SerializeField] private Button clearButton;
     [SerializeField] private Button exitButton;
     [SerializeField] private Button hideInfoButton;
@@ -89,6 +96,7 @@ public class InputController : MonoBehaviour
                 lastSelectedFeature = hit.collider.gameObject;
                 var data = lastSelectedFeature.GetComponent<FeatureData>();
                 SetAdditionalMaterial(highlightMaterial, outlineMaterial, hit.collider);
+                propertiesText.text = "Properties: \n";
 
                 foreach (var property in data.Properties)
                 {
@@ -124,19 +132,24 @@ public class InputController : MonoBehaviour
         feature.GetComponent<Renderer>().materials = materialsArray;
     }
 
+    private void UpdateText(TextMeshProUGUI TextToSet, string Text)
+    {
+        TextToSet.text = Text;
+    }
+
     private void Start()
     {
         inputField.text = featureLayerQuery.WebLink.Link;
         menuButton.image.sprite = upSprite;
-        menuButton.GetComponentInChildren<TextMeshProUGUI>().text = "Touch to Hide Menu";
+        UpdateText(menuButton.GetComponentInChildren<TextMeshProUGUI>(), "Touch to Hide Menu");
         anim.Play("ShowMenu");
         menuVisible = true;
         exitButton.gameObject.SetActive(false);
 
-        inputField.onSubmit.AddListener(delegate (string weblink)
+        inputField.onSubmit.AddListener(delegate(string weblink)
         {
             menuButton.image.sprite = downSprite;
-            menuButton.GetComponentInChildren<TextMeshProUGUI>().text = "Touch to Show Menu";
+            UpdateText(menuButton.GetComponentInChildren<TextMeshProUGUI>(), "Touch to Show Menu");
             anim.Play("HideMenu");
             menuVisible = false;
             DestroyFeatures();
@@ -149,7 +162,7 @@ public class InputController : MonoBehaviour
         searchButton.onClick.AddListener(delegate
         {
             menuButton.image.sprite = downSprite;
-            menuButton.GetComponentInChildren<TextMeshProUGUI>().text = "Touch to Show Menu";
+            UpdateText(menuButton.GetComponentInChildren<TextMeshProUGUI>(), "Touch to Show Menu");
             anim.Play("HideMenu");
             menuVisible = false;
             DestroyFeatures();
@@ -161,14 +174,14 @@ public class InputController : MonoBehaviour
             if (menuVisible)
             {
                 menuButton.image.sprite = downSprite;
-                menuButton.GetComponentInChildren<TextMeshProUGUI>().text = "Touch to Show Menu";
+                UpdateText(menuButton.GetComponentInChildren<TextMeshProUGUI>(), "Touch to Show Menu");
                 anim.Play("HideMenu");
                 menuVisible = false;
             }
             else
             {
                 menuButton.image.sprite = upSprite;
-                menuButton.GetComponentInChildren<TextMeshProUGUI>().text = "Touch to Hide Menu";
+                UpdateText(menuButton.GetComponentInChildren<TextMeshProUGUI>(), "Touch to Hide Menu");
                 anim.Play("ShowMenu");
                 menuVisible = true;
             }
@@ -192,12 +205,18 @@ public class InputController : MonoBehaviour
 
         infoButton.onClick.AddListener(delegate
         {
-            infoAnim.Play("ShowInstructions");
+            if (onScreen)
+            {
+                infoAnim.Play("HideInstructions");
+                onScreen = false;
+            }
+            else
+            {
+                infoAnim.Play("ShowInstructions");
+                onScreen = true;
+            }
         });
 
-        hideInfoButton.onClick.AddListener(delegate
-        {
-            infoAnim.Play("HideInstructions");
-        });
+        hideInfoButton.onClick.AddListener(delegate { infoAnim.Play("HideInstructions"); });
     }
 }
