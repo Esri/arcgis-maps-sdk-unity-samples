@@ -13,7 +13,7 @@ using UnityEngine;
 public class LocationMarker : MonoBehaviour
 {
     [SerializeField] private ArcGISCameraComponent cameraComponent;
-    
+
     private ArcGISCameraControllerComponent cameraController;
     private ArcGISLocationComponent locationComponent;
     private float northOffset = 225.0f;
@@ -26,8 +26,16 @@ public class LocationMarker : MonoBehaviour
 
     private void Update()
     {
-        cameraComponent.GetComponent<ArcGISLocationComponent>().Position = new ArcGISPoint(cameraController.GetComponent<ArcGISLocationComponent>().Position.X, cameraController.GetComponent<ArcGISLocationComponent>().Position.Y, cameraComponent.GetComponent<ArcGISLocationComponent>().Position.Z, ArcGISSpatialReference.WGS84()); 
-        locationComponent.Position = new ArcGISPoint(cameraController.GetComponent<ArcGISLocationComponent>().Position.X, cameraController.GetComponent<ArcGISLocationComponent>().Position.Y, locationComponent.Position.Z, ArcGISSpatialReference.WGS84());
-        locationComponent.Rotation = new ArcGISRotation(cameraController.GetComponent<ArcGISLocationComponent>().Rotation.Heading + northOffset, locationComponent.Rotation.Pitch, locationComponent.Rotation.Roll);    
+        cameraComponent.GetComponent<ArcGISLocationComponent>().Position = new ArcGISPoint(
+            cameraController.GetComponent<ArcGISLocationComponent>().Position.X,
+            cameraController.GetComponent<ArcGISLocationComponent>().Position.Y,
+            cameraComponent.GetComponent<ArcGISLocationComponent>().Position.Z, ArcGISSpatialReference.WGS84());
+        locationComponent.Position = new ArcGISPoint(
+            cameraController.GetComponent<ArcGISLocationComponent>().Position.X,
+            cameraController.GetComponent<ArcGISLocationComponent>().Position.Y, locationComponent.Position.Z,
+            ArcGISSpatialReference.WGS84());
+        locationComponent.Rotation =
+            new ArcGISRotation(cameraController.GetComponent<ArcGISLocationComponent>().Rotation.Heading + northOffset,
+                locationComponent.Rotation.Pitch, locationComponent.Rotation.Roll);
     }
 }
