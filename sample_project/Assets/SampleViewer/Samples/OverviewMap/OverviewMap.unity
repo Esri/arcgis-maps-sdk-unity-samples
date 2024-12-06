@@ -202,6 +202,7 @@ GameObject:
   - component: {fileID: 91236775}
   - component: {fileID: 91236774}
   - component: {fileID: 91236773}
+  - component: {fileID: 91236776}
   m_Layer: 0
   m_Name: ArcGIS Overview
   m_TagString: Untagged
@@ -330,6 +331,22 @@ Transform:
   - {fileID: 827866507}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &91236776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 91236772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5b839ce43a8e443293e6cfef446acb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  camera: {fileID: 1043089812}
+  locationMarker: {fileID: 686407253}
+  scale: 3000
+  size: 500
 --- !u!1 &254627492
 GameObject:
   m_ObjectHideFlags: 0
@@ -381,7 +398,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.4965517, b: 0, a: 1}
+  m_Color: {r: 0.4245283, g: 0.4245283, b: 0.4245283, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -548,6 +565,17 @@ Transform:
   - {fileID: 712701876}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &686407253 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7293199334906835183, guid: 1cc93e393ab3940f19d28ac40124f1ee, type: 3}
+  m_PrefabInstance: {fileID: 1325328619125264931}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea4c056ecab070c43bf3f5e9fb15b826, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &712701875
 GameObject:
   m_ObjectHideFlags: 0
@@ -1718,7 +1746,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 240, y: 240}
+  m_SizeDelta: {x: 245, y: 245}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1803722613
 MonoBehaviour:
@@ -1886,15 +1914,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2015862225003004306, guid: 1cc93e393ab3940f19d28ac40124f1ee, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.000000042779437
+      value: -0.000000042080945
       objectReference: {fileID: 0}
     - target: {fileID: 2015862225003004306, guid: 1cc93e393ab3940f19d28ac40124f1ee, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 13.177867
+      value: 12.916973
       objectReference: {fileID: 0}
     - target: {fileID: 2015862225003004306, guid: 1cc93e393ab3940f19d28ac40124f1ee, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.0000008002389
+      value: -0.0000007872004
       objectReference: {fileID: 0}
     - target: {fileID: 2015862225003004306, guid: 1cc93e393ab3940f19d28ac40124f1ee, type: 3}
       propertyPath: m_LocalRotation.w
