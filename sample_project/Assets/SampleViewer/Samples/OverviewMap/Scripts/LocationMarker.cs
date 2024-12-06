@@ -17,6 +17,7 @@ public class LocationMarker : MonoBehaviour
     private ArcGISCameraControllerComponent cameraController;
     private ArcGISLocationComponent cameraLocationComponent;
     private ArcGISLocationComponent locationComponent;
+    private ArcGISMapComponent mapComponent;
     private float northOffset = 225.0f;
 
     private void Awake()
@@ -24,6 +25,7 @@ public class LocationMarker : MonoBehaviour
         cameraController = FindFirstObjectByType<ArcGISCameraControllerComponent>();
         cameraLocationComponent = cameraController.GetComponent<ArcGISLocationComponent>();
         locationComponent = GetComponent<ArcGISLocationComponent>();
+        mapComponent = GetComponentInParent<ArcGISMapComponent>();
     }
 
     private void Update()
@@ -31,11 +33,11 @@ public class LocationMarker : MonoBehaviour
         cameraComponent.GetComponent<ArcGISLocationComponent>().Position = new ArcGISPoint(
             cameraLocationComponent.Position.X,
             cameraLocationComponent.Position.Y,
-            cameraComponent.GetComponent<ArcGISLocationComponent>().Position.Z, ArcGISSpatialReference.WGS84());
+            cameraComponent.GetComponent<ArcGISLocationComponent>().Position.Z, mapComponent.OriginPosition.SpatialReference);
         locationComponent.Position = new ArcGISPoint(
             cameraLocationComponent.Position.X,
             cameraLocationComponent.Position.Y, locationComponent.Position.Z,
-            ArcGISSpatialReference.WGS84());
+            mapComponent.OriginPosition.SpatialReference);
         locationComponent.Rotation =
             new ArcGISRotation(cameraLocationComponent.Rotation.Heading + northOffset,
                 locationComponent.Rotation.Pitch, locationComponent.Rotation.Roll);

@@ -17,6 +17,10 @@ public class DisableExposure : MonoBehaviour
     {
         skyAndFog = GetComponent<Volume>();
         skyAndFog.profile.TryGet(out exposure);
-        exposure.active = false;
+
+        if (exposure)
+        {
+            exposure.active = false;   
+        }
     }
 }
