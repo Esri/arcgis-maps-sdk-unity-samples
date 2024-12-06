@@ -19,16 +19,16 @@
 
 ## How it works
 
-1. Create an ArcGIS Map and name is "ArcGIS Overview".
-2. Attach an [**ArcGIS Camera**](https://developers.arcgis.com/unity/maps/camera/#arcgis-camera) component to the active camera and set the rotation on the **ArcGISLocation Component** to be 0, 0, 0. This should have it facing down. Rename it "Overview Camera".
-3. Click on the **Output** drop down on the **ArcGIS Overview** and set the Target Texture to the **OverviewMap Render Texture** in the Project Directory.
+1. Create an ArcGIS Map and name it "ArcGIS Overview".
+2. Attach an [**ArcGIS Camera**](https://developers.arcgis.com/unity/maps/camera/#arcgis-camera) component to the active camera and set the rotation on the **ArcGISLocation Component** to be (0, 0, 0). This should have it facing down. Rename it "Overview Camera".
+3. Click on the **Output** drop down on the **ArcGIS Overview** and set the Target Texture to **OverviewMap Render Texture** in the Project Directory.
 4. Drag the **Location Marker** prefab into the scene as a child of the ArcGIS Map.
 5. Copy the ArcGIS Map you have in the scene and paste it into the scene. It should not be a child of any other game objects. Rename it to be "Main ArcGIS Map".
 6. Change the altitude of the **Main ArcGIS Map** to be -1000. This will position it above the **ArcGIS Overview** map.
 7. Remove the **Location Marker** from the **Main ArcGIS Map**.
 8. Click on the **Overview Camera** under **Main ArcGIS Map** and rename it to "ArcGIS Camera". Change the rotaiton to be facing forward.
-9. Right click in the Hierarchy and create a new **Raw Image**. Set the output of the raw image to the **OverviewMap Render Texture**
-10. Click play and move around the screen. Observe the **Overview Map** update as you move the camera around and rotate the heading of the camera controller
+9. Right click in the Hierarchy and create a new **Raw Image**. Set the output of the raw image to the **OverviewMap Render Texture**.
+10. Click play and move around the screen. Observe the **Overview Map** update as you move the camera around and rotate the heading of the camera controller.
 
 ## About the data
 
