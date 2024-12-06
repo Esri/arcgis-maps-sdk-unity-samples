@@ -15,27 +15,29 @@ public class LocationMarker : MonoBehaviour
     [SerializeField] private ArcGISCameraComponent cameraComponent;
 
     private ArcGISCameraControllerComponent cameraController;
+    private ArcGISLocationComponent cameraLocationComponent;
     private ArcGISLocationComponent locationComponent;
     private float northOffset = 225.0f;
 
     private void Awake()
     {
         cameraController = FindFirstObjectByType<ArcGISCameraControllerComponent>();
+        cameraLocationComponent = cameraController.GetComponent<ArcGISLocationComponent>();
         locationComponent = GetComponent<ArcGISLocationComponent>();
     }
 
     private void Update()
     {
         cameraComponent.GetComponent<ArcGISLocationComponent>().Position = new ArcGISPoint(
-            cameraController.GetComponent<ArcGISLocationComponent>().Position.X,
-            cameraController.GetComponent<ArcGISLocationComponent>().Position.Y,
+            cameraLocationComponent.Position.X,
+            cameraLocationComponent.Position.Y,
             cameraComponent.GetComponent<ArcGISLocationComponent>().Position.Z, ArcGISSpatialReference.WGS84());
         locationComponent.Position = new ArcGISPoint(
-            cameraController.GetComponent<ArcGISLocationComponent>().Position.X,
-            cameraController.GetComponent<ArcGISLocationComponent>().Position.Y, locationComponent.Position.Z,
+            cameraLocationComponent.Position.X,
+            cameraLocationComponent.Position.Y, locationComponent.Position.Z,
             ArcGISSpatialReference.WGS84());
         locationComponent.Rotation =
-            new ArcGISRotation(cameraController.GetComponent<ArcGISLocationComponent>().Rotation.Heading + northOffset,
+            new ArcGISRotation(cameraLocationComponent.Rotation.Heading + northOffset,
                 locationComponent.Rotation.Pitch, locationComponent.Rotation.Roll);
     }
 }
