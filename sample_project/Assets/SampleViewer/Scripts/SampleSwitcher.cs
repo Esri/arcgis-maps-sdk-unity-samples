@@ -80,11 +80,16 @@ public class SampleSwitcher : MonoBehaviour
             return;
         }
 
-        var mapComponent = FindObjectOfType<ArcGISMapComponent>();
-        if (mapComponent != null && mapComponent.APIKey == "")
+        var mapComponents = FindObjectsByType<ArcGISMapComponent>(FindObjectsSortMode.None);
+
+        foreach (var mapComponent in mapComponents)
         {
-            mapComponent.APIKey = apiKey;
+            if (mapComponent != null && mapComponent.APIKey == "")
+            {
+                mapComponent.APIKey = apiKey;
+            }    
         }
+        
         sceneLoadedCount = SceneManager.sceneCount;
     }
 
