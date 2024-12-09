@@ -207,7 +207,7 @@ GameObject:
   - component: {fileID: 91236774}
   - component: {fileID: 91236773}
   - component: {fileID: 91236776}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ArcGIS Overview
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -723,6 +723,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 254627492}
   m_CullTransparentMesh: 1
+--- !u!1 &319060358 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1008701132769291295, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
+  m_PrefabInstance: {fileID: 1953888161}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &319060361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 319060358}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66b258955a05f48cab7cfd5494398517, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &324205192
 GameObject:
   m_ObjectHideFlags: 0
@@ -2849,7 +2866,7 @@ GameObject:
   - component: {fileID: 1043089816}
   - component: {fileID: 1043089815}
   - component: {fileID: 1043089814}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: OverviewCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -4009,7 +4026,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 0.000089645, y: 0.00000026802}
+  m_AnchoredPosition: {x: 0.000091552734, y: 0.00000026802}
   m_SizeDelta: {x: 117.804, y: 23.614}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1580889690
@@ -4820,7 +4837,7 @@ PrefabInstance:
     - target: {fileID: 1008701132769291293, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
       propertyPath: HDRPLighting
       value: 
-      objectReference: {fileID: 2562447587922368155, guid: 507b6553f599d4b91a6b7e9371f1808d, type: 3}
+      objectReference: {fileID: 2562447587922368155, guid: cde713e9056e9bc4aaf457438ac4f76e, type: 3}
     - target: {fileID: 1008701132769291295, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
       propertyPath: m_Name
       value: LightingManager
@@ -4844,7 +4861,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1008701132769291295, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 319060361}
   m_SourcePrefab: {fileID: 100100000, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
 --- !u!1 &1999273616
 GameObject:
@@ -5260,17 +5280,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: LocationMarker
       objectReference: {fileID: 0}
+    - target: {fileID: 1203051193712941864, guid: 1cc93e393ab3940f19d28ac40124f1ee, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 2015862225003004306, guid: 1cc93e393ab3940f19d28ac40124f1ee, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.000000024152985
+      value: -0.00000002205751
       objectReference: {fileID: 0}
     - target: {fileID: 2015862225003004306, guid: 1cc93e393ab3940f19d28ac40124f1ee, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.402542
+      value: 6.788517
       objectReference: {fileID: 0}
     - target: {fileID: 2015862225003004306, guid: 1cc93e393ab3940f19d28ac40124f1ee, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.00000045145862
+      value: -0.00000041420572
       objectReference: {fileID: 0}
     - target: {fileID: 2015862225003004306, guid: 1cc93e393ab3940f19d28ac40124f1ee, type: 3}
       propertyPath: m_LocalRotation.w

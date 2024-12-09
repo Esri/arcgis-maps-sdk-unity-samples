@@ -73,7 +73,7 @@ public class ChangeOverviewScale : MonoBehaviour
             return;
         }
         
-        overviewCamera.orthographicSize = (float)cameraLocationComponent.Position.Z;  
+        overviewCamera.orthographicSize = (float)cameraLocationComponent.Position.Z;
         SetLocationMarkerScale();
     }
 }

@@ -15,7 +15,12 @@ public class DisableExposure : MonoBehaviour
     
     void Start()
     {
-        skyAndFog = GetComponent<Volume>();
+        Invoke(nameof(TurnOffExposure), 1.0f);
+    }
+
+    private void TurnOffExposure()
+    {
+        skyAndFog = GetComponentInChildren<Volume>();
         skyAndFog.profile.TryGet(out exposure);
 
         if (exposure)
