@@ -3,6 +3,8 @@ using Esri.GameEngine.Geometry;
 using Esri.HPFramework;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(ArcGISLocationComponent))]
 public class FeatureData : MonoBehaviour
@@ -15,8 +17,11 @@ public class FeatureData : MonoBehaviour
     
     public ArcGISCameraComponent ArcGISCamera;
     public List<double> Coordinates = new List<double>();
-    public Renderer FeatureRender;
     public List<string> Properties = new List<string>();
+
+    private bool isLeftShiftPressed;
+    private InputActions inputActions;
+    private TouchControls touchControls;
 
     private void Start()
     {
@@ -25,18 +30,5 @@ public class FeatureData : MonoBehaviour
         featureHP = transform.GetComponent<HPTransform>();
         featureHP = transform.GetComponent<HPTransform>();
         locationComponent.SurfacePlacementMode = ArcGISSurfacePlacementMode.OnTheGround;
-        InvokeRepeating("DynamicScale", 2.0f, 0.5f);
-    }
-
-    private void DynamicScale()
-    {
-        //Based on trial and error, it was deduced to use the following number so that the scale is a 
-        //nice size based on distance from the camera.
-        scale = cameraLocationComponent.Position.Z * 0.00125f;
-
-        if (scale > 0)
-        {
-            featureHP.LocalScale = new Vector3((float)scale, (float)scale, (float)scale);   
-        }
     }
 }
