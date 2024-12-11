@@ -1,29 +1,74 @@
+// Copyright 2024 Esri.
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+//
+
 using System.Collections;
 using System.Collections.Generic;
-using Esri.ArcGISMapsSDK.Components;
-using Esri.GameEngine.Geometry;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class FeatureLayerInputManager : MonoBehaviour
 {
-    [SerializeField] private ArcGISMapComponent mapcomponent;
-    private bool isLeftShiftPressed;
-    [SerializeField] private GameObject propertiesCanvas;
-    
+    public FeatureData FeatureData;
+
+    [SerializeField] private Transform container;
     private InputActions inputActions;
+    private bool isLeftShiftPressed;
+    private List<GameObject> items = new List<GameObject>();
+    [SerializeField] private Material outlineMat;
+    [SerializeField] private GameObject properties;
+    [SerializeField] private GameObject propertiesView;
     private TouchControls touchControls;
-    
+    private FeatureLayerUIManager uiManager;
+
+    private IEnumerator AddItemsToScrollView()
+    {
+        foreach (var item in items)
+        {
+            SetScrollViewItems(item);
+            yield return new WaitForSeconds(0.01f);
+        }
+
+        StopCoroutine("AddItemsToScrollView");
+    }
+
     private void Awake()
     {
-        propertiesCanvas.SetActive(false);
 #if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
         inputActions = new InputActions();
 #else
         touchControls = new TouchControls();
 #endif
+    }
+
+    public void ClearAdditionalMaterial(GameObject feature)
+    {
+        Material[] materialsArray = new Material[feature.GetComponentInChildren<Renderer>().materials.Length - 1];
+
+        for (int i = 0; i < feature.GetComponentInChildren<Renderer>().materials.Length - 1; i++)
+        {
+            materialsArray[i] = feature.GetComponentInChildren<Renderer>().materials[i];
+        }
+
+        feature.GetComponentInChildren<Renderer>().materials = materialsArray;
+    }
+
+    public void EmptyPropertiesDropdown()
+    {
+        if (items == null)
+        {
+            return;
+        }
+
+        foreach (var item in items)
+        {
+            Destroy(item.gameObject);
+        }
+
+        items.Clear();
     }
 
     private void OnEnable()
@@ -51,7 +96,7 @@ public class FeatureLayerInputManager : MonoBehaviour
         touchControls.Touch.TouchPress.started -= OnTouchInputStarted;
 #endif
     }
-    
+
     private void OnLeftShift(bool isPressed)
     {
         isLeftShiftPressed = isPressed;
@@ -63,55 +108,93 @@ public class FeatureLayerInputManager : MonoBehaviour
         {
             return;
         }
-        
+
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
 
         if (Physics.Raycast(ray, out hit))
         {
-            var featureData = hit.collider.gameObject.GetComponent<FeatureData>();
+            if (FeatureData)
+            {
+                ClearAdditionalMaterial(FeatureData.gameObject);
+            }
 
-            if (!featureData)
+            FindFirstObjectByType<FeatureLayerUIManager>().dropDownButton.isOn = false;
+            EmptyPropertiesDropdown();
+            FeatureData = hit.collider.gameObject.GetComponent<FeatureData>();
+
+            if (!FeatureData)
             {
                 return;
             }
 
-            if (!propertiesCanvas.activeInHierarchy)
+            var featureLayer = FindFirstObjectByType<FeatureLayer>();
+            featureLayer.RefreshProperties(FeatureData.gameObject);
+
+            foreach (var property in FeatureData.Properties)
             {
-                propertiesCanvas.SetActive(true);
+                var item = Instantiate(properties);
+                items.Add(item);
+                item.GetComponentInChildren<TextMeshProUGUI>().text = property;
             }
 
-            propertiesCanvas.GetComponent<ArcGISLocationComponent>().Position = new ArcGISPoint(featureData.Coordinates[0], featureData.Coordinates[1], 100, mapcomponent.OriginPosition.SpatialReference);
-            propertiesCanvas.GetComponentInChildren<TextMeshProUGUI>().text = "Properties: \n";
-            
-            foreach (var property in featureData.Properties)
-            {
-                propertiesCanvas.GetComponentInChildren<TextMeshProUGUI>().text += property + '\n';
-            }
+            StartCoroutine("AddItemsToScrollView");
+            SetAdditionalMaterial(outlineMat, hit.collider);
+            propertiesView.SetActive(true);
         }
     }
 
     private void OnTouchInputStarted(InputAction.CallbackContext ctx)
     {
-                
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(touchControls.Touch.TouchPosition.ReadValue<Vector2>());
 
         if (Physics.Raycast(ray, out hit))
         {
-            var featureData = hit.collider.gameObject.GetComponent<FeatureData>();
+            if (FeatureData)
+            {
+                ClearAdditionalMaterial(FeatureData.gameObject);
+            }
 
-            if (!featureData)
+            FindFirstObjectByType<FeatureLayerUIManager>().dropDownButton.isOn = false;
+            EmptyPropertiesDropdown();
+            FeatureData = hit.collider.gameObject.GetComponent<FeatureData>();
+
+            if (!FeatureData)
             {
                 return;
             }
 
-            var output = "";
-            foreach (var property in featureData.Properties)
+            if (!FindFirstObjectByType<FeatureLayer>().GetAllOutfields)
             {
-                output += property + '\n';
-                Debug.Log(output);
+                var featureLayer = FindFirstObjectByType<FeatureLayer>();
+                featureLayer.RefreshProperties(FeatureData.gameObject);
             }
+
+            foreach (var property in FeatureData.Properties)
+            {
+                var item = Instantiate(properties);
+                items.Add(item);
+                item.GetComponentInChildren<TextMeshProUGUI>().text = property;
+                StartCoroutine("AddItemsToScrollView");
+            }
+
+            SetAdditionalMaterial(outlineMat, hit.collider);
+            propertiesView.SetActive(true);
         }
+    }
+
+    private void SetAdditionalMaterial(Material outLine, Collider collider)
+    {
+        Material[] materialsArray = new Material[collider.GetComponentInChildren<Renderer>().materials.Length + 1];
+        collider.GetComponentInChildren<Renderer>().materials.CopyTo(materialsArray, 0);
+        materialsArray[materialsArray.Length - 1] = outLine;
+        collider.GetComponentInChildren<Renderer>().materials = materialsArray;
+    }
+
+    private void SetScrollViewItems(GameObject item)
+    {
+        item.transform.SetParent(container);
+        item.transform.localScale = Vector2.one;
     }
 }

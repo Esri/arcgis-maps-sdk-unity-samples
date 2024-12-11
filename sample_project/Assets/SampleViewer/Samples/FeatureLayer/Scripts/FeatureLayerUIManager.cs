@@ -1,3 +1,9 @@
+// Copyright 2022 Esri.
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+//
+
 using FeatureLayerData;
 using System;
 using TMPro;
@@ -8,22 +14,23 @@ using UnityEngine.UI;
 public class FeatureLayerUIManager : MonoBehaviour
 {
     [SerializeField] private Animator dropDownAnim;
-    [SerializeField] private Toggle dropDownButton;
+    public Toggle dropDownButton;
     private FeatureLayer featureLayer;
     [SerializeField] private Toggle getAllToggle;
     [SerializeField] private Button hideButton;
     [SerializeField] private Animator infoAnim;
     [SerializeField] private Toggle infoButton;
     [SerializeField] private TMP_InputField inputField;
-    [SerializeField] private TMP_InputField maxInputField;
-    [SerializeField] private TMP_InputField minInputField;
+    public TMP_InputField maxInputField;
+    public TMP_InputField minInputField;
     [SerializeField] private GameObject outfieldsList;
+    [SerializeField] private GameObject propertiesView;
     [SerializeField] private Button requestButton;
     [SerializeField] private Animator resetAnim;
     [SerializeField] private Button resetButton;
     [SerializeField] private TextMeshProUGUI textToDisplay;
     [SerializeField] private TextMeshProUGUI titleText;
-    
+
     public enum TextToDisplay
     {
         Information,
@@ -42,22 +49,25 @@ public class FeatureLayerUIManager : MonoBehaviour
         maxInputField.text = featureLayer.LastValue.ToString();
         minInputField.text = featureLayer.StartValue.ToString();
         getAllToggle.isOn = featureLayer.GetAllFeatures;
+        propertiesView.SetActive(false);
+        var inputManager = FindFirstObjectByType<FeatureLayerInputManager>();
 
         dropDownButton.onValueChanged.AddListener(delegate(bool value)
         {
+            if (featureLayer.FeatureItems.Count != 0)
+            {
+                propertiesView.SetActive(!value);
+            }
+
             outfieldsList.SetActive(value);
-            if (!value)
-            {
-                dropDownAnim.Play("ReverseDropDownArrow");
-            }
-            else
-            {
-                dropDownAnim.Play("DropDownArrow");
-            }
+            var animToPlay = value ? "DropDownArrow" : "ReverseDropDownArrow";
+            dropDownAnim.Play(animToPlay);
         });
 
         inputField.onSubmit.AddListener(delegate(string weblink)
         {
+            inputManager.EmptyPropertiesDropdown();
+            propertiesView.SetActive(false);
             featureLayer.NewLink = true;
             featureLayer.CreateLink(weblink);
             StartCoroutine(featureLayer.GetFeatures());
@@ -76,6 +86,14 @@ public class FeatureLayerUIManager : MonoBehaviour
                 featureLayer.Features.Clear();
             }
 
+            if (dropDownButton.isOn)
+            {
+                outfieldsList.SetActive(!dropDownButton.isOn);
+                dropDownAnim.Play("ReverseDropDownArrow");
+            }
+
+            inputManager.EmptyPropertiesDropdown();
+            propertiesView.SetActive(false);
             StartCoroutine(featureLayer.GetFeatures());
         });
 
@@ -87,13 +105,12 @@ public class FeatureLayerUIManager : MonoBehaviour
                 featureLayer.GetAllOutfields = false;
                 toggle.GetComponent<ScrollViewItem>().Data.enabled = false;
                 featureLayer.OutfieldsToGet.Clear();
+                inputManager.EmptyPropertiesDropdown();
+                propertiesView.SetActive(false);
             }
         });
 
-        getAllToggle.onValueChanged.AddListener(delegate(bool value)
-        {
-            featureLayer.GetAllFeatures = value;
-        });
+        getAllToggle.onValueChanged.AddListener(delegate(bool value) { featureLayer.GetAllFeatures = value; });
 
         maxInputField.onSubmit.AddListener(delegate(string value)
         {

@@ -1,5 +1,10 @@
+// Copyright 2023 Esri.
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+//
+
 using Esri.ArcGISMapsSDK.Components;
-using Esri.ArcGISMapsSDK.Samples.Components;
 using Esri.ArcGISMapsSDK.Utils.GeoCoord;
 using Esri.GameEngine.Geometry;
 using FeatureLayerData;
@@ -10,7 +15,6 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
@@ -160,8 +164,8 @@ public class FeatureLayer : MonoBehaviour
             UIManager.DisplayText = FeatureLayerUIManager.TextToDisplay.CoordinatesError;
         }
     }
-    
-     private void CreateFeatures(int min, int max)
+
+    private void CreateFeatures(int min, int max)
     {
         for (int i = min; i < max; i++)
         {
@@ -196,6 +200,7 @@ public class FeatureLayer : MonoBehaviour
                         currentFeature.properties.propertyNames.Add(props[0]);
                         currentFeature.properties.data.Add(props[1]);
                         featureInfo.Properties.Add(key);
+                        featureInfo.Index = j;
                     }
                 }
             }
@@ -231,7 +236,7 @@ public class FeatureLayer : MonoBehaviour
             ListItems.Clear();
         }
     }
-    
+
     private void PopulateOutfieldsDropdown(string response)
     {
         var jObject = JObject.Parse(response);
@@ -262,10 +267,56 @@ public class FeatureLayer : MonoBehaviour
         var index = GetAllFeatures ? 0 : StartValue;
         var cameraLocationComponent = arcGISCamera.gameObject.GetComponent<ArcGISLocationComponent>();
         var position = new ArcGISPoint(FeatureItems[index].GetComponent<ArcGISLocationComponent>().Position.X,
-            FeatureItems[index].GetComponent<ArcGISLocationComponent>().Position.Y, 10000, cameraLocationComponent.Position.SpatialReference);
+            FeatureItems[index].GetComponent<ArcGISLocationComponent>().Position.Y, 500,
+            cameraLocationComponent.Position.SpatialReference);
         cameraLocationComponent.Position = position;
         cameraLocationComponent.Rotation = new ArcGISRotation(cameraLocationComponent.Rotation.Heading, 0.0,
             cameraLocationComponent.Rotation.Roll);
+    }
+
+    public void RefreshProperties(GameObject featureItem)
+    {
+        FeatureQuery currentFeature = new FeatureQuery();
+        //Layer 7 because that is the index of the layer created specifically for feature layers so that they ignore themselves for raycasting.
+        featureItem.layer = 7;
+        featureInfo = featureItem.GetComponent<FeatureData>();
+        featureInfo.Properties.Clear();
+        featureInfo.Coordinates.Clear();
+        locationComponent = featureItem.GetComponent<ArcGISLocationComponent>();
+        var coordinates = jFeatures[featureInfo.Index].SelectToken("geometry").SelectToken("coordinates").ToArray();
+        var properties = jFeatures[featureInfo.Index].SelectToken("properties").ToArray();
+
+        if (GetAllOutfields)
+        {
+            foreach (var value in properties)
+            {
+                var key = value.ToString();
+                var props = key.Split(":");
+                currentFeature.properties.propertyNames.Add(props[0]);
+                currentFeature.properties.data.Add(props[1]);
+                featureInfo.Properties.Add(key);
+            }
+        }
+        else
+        {
+            for (var j = 0; j < outfields.Count; j++)
+            {
+                if (OutfieldsToGet.Contains(outfields[j]))
+                {
+                    var key = properties[j].ToString();
+                    var props = key.Split(":");
+                    currentFeature.properties.propertyNames.Add(props[0]);
+                    currentFeature.properties.data.Add(props[1]);
+                    featureInfo.Properties.Add(key);
+                }
+            }
+        }
+
+        foreach (var coordinate in coordinates)
+        {
+            currentFeature.geometry.coordinates.Add(Convert.ToDouble(coordinate));
+            featureInfo.Coordinates.Add(Convert.ToDouble(coordinate));
+        }
     }
 
     public void SelectItems()

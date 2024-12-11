@@ -1,10 +1,13 @@
+// Copyright 2023 Esri.
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+//
+
 using Esri.ArcGISMapsSDK.Components;
-using Esri.GameEngine.Geometry;
 using Esri.HPFramework;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(ArcGISLocationComponent))]
 public class FeatureData : MonoBehaviour
@@ -14,14 +17,11 @@ public class FeatureData : MonoBehaviour
     private HPTransform featureHP;
     private ArcGISLocationComponent locationComponent;
     private double scale;
-    
+
     public ArcGISCameraComponent ArcGISCamera;
     public List<double> Coordinates = new List<double>();
+    public int Index;
     public List<string> Properties = new List<string>();
-
-    private bool isLeftShiftPressed;
-    private InputActions inputActions;
-    private TouchControls touchControls;
 
     private void Start()
     {
