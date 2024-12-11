@@ -1,5 +1,16 @@
 {
   "dependencies": {
+    "com.google.ar.core.arfoundation.extensions": {
+      "version": "https://github.com/google-ar/arcore-unity-extensions.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.xr.arfoundation": "4.1.5",
+        "com.unity.xr.arcore": "4.1.5",
+        "com.unity.xr.arkit": "4.1.5"
+      },
+      "hash": "b2b7596ad224550d6a1d277194845a5f08e8fcd5"
+    },
     "com.unity.ai.navigation": {
       "version": "2.0.4",
       "depth": 0,
@@ -11,7 +22,7 @@
     },
     "com.unity.burst": {
       "version": "1.8.18",
-      "depth": 1,
+      "depth": 2,
       "source": "registry",
       "dependencies": {
         "com.unity.mathematics": "1.2.1",
@@ -287,6 +298,19 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.xr.arcore": {
+      "version": "6.0.3",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.xr.core-utils": "2.2.2",
+        "com.unity.xr.management": "4.4.0",
+        "com.unity.xr.arfoundation": "6.0.3",
+        "com.unity.modules.androidjni": "1.0.0",
+        "com.unity.modules.unitywebrequest": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.xr.arfoundation": {
       "version": "6.0.3",
       "depth": 0,
@@ -302,6 +326,18 @@
         "com.unity.modules.particlesystem": "1.0.0",
         "com.unity.modules.unityanalytics": "1.0.0",
         "com.unity.modules.unitywebrequest": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.xr.arkit": {
+      "version": "6.0.3",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.xr.core-utils": "2.2.2",
+        "com.unity.xr.management": "4.4.0",
+        "com.unity.xr.arfoundation": "6.0.3",
+        "com.unity.editorcoroutines": "1.0.0"
       },
       "url": "https://packages.unity.com"
     },
