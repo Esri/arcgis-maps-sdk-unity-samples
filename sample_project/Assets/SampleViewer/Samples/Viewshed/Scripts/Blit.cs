@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
+//using UnityEngine.Rendering.Universal;
 
 /*
  * Blit Renderer Feature                                                https://github.com/Cyanilux/URP_BlitRenderFeature
@@ -28,9 +28,9 @@ namespace Cyan
     as a workaround for 2D Renderer not supporting features (prior to 2021.2). Uncomment if needed.
     */
     //	[CreateAssetMenu(menuName = "Cyan/Blit")] 
-    public class Blit : ScriptableRendererFeature
+    public class Blit //: ScriptableRendererFeature
     {
-
+        /*
         public class BlitPass : ScriptableRenderPass
         {
 
@@ -257,5 +257,6 @@ namespace Cyan
             blitPass.Setup(renderer);
             renderer.EnqueuePass(blitPass);
         }
+        */
     }
 }
