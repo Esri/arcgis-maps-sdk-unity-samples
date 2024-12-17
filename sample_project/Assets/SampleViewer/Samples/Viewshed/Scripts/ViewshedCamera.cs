@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[ExecuteInEditMode]
+[ExecuteAlways]
 public class ViewshedCamera : MonoBehaviour
 {
     [SerializeField] private Camera viewshedCamera;
@@ -18,12 +18,7 @@ public class ViewshedCamera : MonoBehaviour
             viewshedCamera = GetComponent<Camera>();
         }
 
-        CreateObserverDepthTexture();
-    }
-
-    void CreateObserverDepthTexture()
-    {
-        RenderTextureDescriptor desc = new RenderTextureDescriptor
+        RenderTextureDescriptor renderTextureDescription = new RenderTextureDescriptor
         {
             width = pixelWidth,
             height = pixelHeight,
@@ -36,7 +31,7 @@ public class ViewshedCamera : MonoBehaviour
             volumeDepth = 1
         };
 
-        depthTexture = new RenderTexture(desc);
+        depthTexture = new RenderTexture(renderTextureDescription);
         depthTexture.filterMode = FilterMode.Bilinear;
 
         viewshedCamera.depthTextureMode = DepthTextureMode.Depth;
