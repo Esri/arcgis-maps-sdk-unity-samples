@@ -4,6 +4,7 @@
 // You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
 //
 
+using Esri.ArcGISMapsSDK.Samples.Components;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,12 +24,15 @@ public class FeatureLayerInputManager : MonoBehaviour
 
     private InputActions inputActions;
     private bool isLeftShiftPressed;
+    private bool isRunning;
     private List<GameObject> items = new List<GameObject>();
     private TouchControls touchControls;
     private FeatureLayerUIManager uiManager;
 
     private IEnumerator AddItemsToScrollView()
     {
+        isRunning = true;
+
         foreach (var item in items)
         {
             SetScrollViewItems(item);
@@ -104,6 +108,7 @@ public class FeatureLayerInputManager : MonoBehaviour
     private void OnLeftShift(bool isPressed)
     {
         isLeftShiftPressed = isPressed;
+        FindFirstObjectByType<ArcGISCameraControllerComponent>().enabled = !isPressed;
     }
 
     private void OnLeftClickStart(InputAction.CallbackContext obj)
@@ -125,6 +130,12 @@ public class FeatureLayerInputManager : MonoBehaviour
 
     private void HandleInput(Ray ray)
     {
+        if (isRunning)
+        {
+            StopCoroutine("AddItemsToScrollView");
+            isRunning = false;
+        }
+
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit))
