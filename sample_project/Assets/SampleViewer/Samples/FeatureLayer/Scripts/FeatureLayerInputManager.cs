@@ -60,7 +60,6 @@ public class FeatureLayerInputManager : MonoBehaviour
             return;
         }
 
-        Material[] materialsArray = new Material[renderer.materials.Length - 1];
         renderer.materials = renderer.materials.SkipLast(1).ToArray();
     }
 
