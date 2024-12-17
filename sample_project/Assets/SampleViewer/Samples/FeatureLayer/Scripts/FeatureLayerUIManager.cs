@@ -13,16 +13,14 @@ using UnityEngine.UI;
 
 public class FeatureLayerUIManager : MonoBehaviour
 {
-    [SerializeField] private Animator dropDownAnim;
-    public Toggle dropDownButton;
     private FeatureLayer featureLayer;
+
+    [SerializeField] private Animator dropDownAnim;
     [SerializeField] private Toggle getAllToggle;
     [SerializeField] private Button hideButton;
     [SerializeField] private Animator infoAnim;
     [SerializeField] private Toggle infoButton;
     [SerializeField] private TMP_InputField inputField;
-    public TMP_InputField maxInputField;
-    public TMP_InputField minInputField;
     [SerializeField] private GameObject outfieldsList;
     [SerializeField] private GameObject propertiesView;
     [SerializeField] private Button requestButton;
@@ -30,6 +28,10 @@ public class FeatureLayerUIManager : MonoBehaviour
     [SerializeField] private Button resetButton;
     [SerializeField] private TextMeshProUGUI textToDisplay;
     [SerializeField] private TextMeshProUGUI titleText;
+
+    public Toggle DropDownButton;
+    public TMP_InputField MaxInputField;
+    public TMP_InputField MinInputField;
 
     public enum TextToDisplay
     {
@@ -46,13 +48,13 @@ public class FeatureLayerUIManager : MonoBehaviour
         InvokeRepeating("ErrorCheck", 1.0f, 0.5f);
         featureLayer = GetComponent<FeatureLayer>();
         inputField.text = featureLayer.WebLink.Link;
-        maxInputField.text = featureLayer.LastValue.ToString();
-        minInputField.text = featureLayer.StartValue.ToString();
+        MaxInputField.text = featureLayer.LastValue.ToString();
+        MinInputField.text = featureLayer.StartValue.ToString();
         getAllToggle.isOn = featureLayer.GetAllFeatures;
         propertiesView.SetActive(false);
         var inputManager = FindFirstObjectByType<FeatureLayerInputManager>();
 
-        dropDownButton.onValueChanged.AddListener(delegate(bool value)
+        DropDownButton.onValueChanged.AddListener(delegate(bool value)
         {
             if (featureLayer.FeatureItems.Count != 0)
             {
@@ -86,9 +88,9 @@ public class FeatureLayerUIManager : MonoBehaviour
                 featureLayer.Features.Clear();
             }
 
-            if (dropDownButton.isOn)
+            if (DropDownButton.isOn)
             {
-                outfieldsList.SetActive(!dropDownButton.isOn);
+                outfieldsList.SetActive(!DropDownButton.isOn);
                 dropDownAnim.Play("ReverseDropDownArrow");
             }
 
@@ -112,7 +114,7 @@ public class FeatureLayerUIManager : MonoBehaviour
 
         getAllToggle.onValueChanged.AddListener(delegate(bool value) { featureLayer.GetAllFeatures = value; });
 
-        maxInputField.onSubmit.AddListener(delegate(string value)
+        MaxInputField.onSubmit.AddListener(delegate(string value)
         {
             if (Convert.ToInt32(value) > 0 && Convert.ToInt32(value) > featureLayer.StartValue)
             {
@@ -121,11 +123,11 @@ public class FeatureLayerUIManager : MonoBehaviour
             else
             {
                 featureLayer.LastValue = 10;
-                maxInputField.text = featureLayer.LastValue.ToString();
+                MaxInputField.text = featureLayer.LastValue.ToString();
             }
         });
 
-        minInputField.onSubmit.AddListener(delegate(string value)
+        MinInputField.onSubmit.AddListener(delegate(string value)
         {
             if (Convert.ToInt32(value) > 0 && Convert.ToInt32(value) < featureLayer.LastValue)
             {
@@ -134,7 +136,7 @@ public class FeatureLayerUIManager : MonoBehaviour
             else
             {
                 featureLayer.StartValue = 0;
-                minInputField.text = featureLayer.StartValue.ToString();
+                MinInputField.text = featureLayer.StartValue.ToString();
             }
         });
     }

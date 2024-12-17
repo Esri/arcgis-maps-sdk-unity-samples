@@ -6,6 +6,8 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -15,12 +17,13 @@ public class FeatureLayerInputManager : MonoBehaviour
     public FeatureData FeatureData;
 
     [SerializeField] private Transform container;
-    private InputActions inputActions;
-    private bool isLeftShiftPressed;
-    private List<GameObject> items = new List<GameObject>();
     [SerializeField] private Material outlineMat;
     [SerializeField] private GameObject properties;
     [SerializeField] private GameObject propertiesView;
+
+    private InputActions inputActions;
+    private bool isLeftShiftPressed;
+    private List<GameObject> items = new List<GameObject>();
     private TouchControls touchControls;
     private FeatureLayerUIManager uiManager;
 
@@ -46,14 +49,21 @@ public class FeatureLayerInputManager : MonoBehaviour
 
     public void ClearAdditionalMaterial(GameObject feature)
     {
-        Material[] materialsArray = new Material[feature.GetComponentInChildren<Renderer>().materials.Length - 1];
-
-        for (int i = 0; i < feature.GetComponentInChildren<Renderer>().materials.Length - 1; i++)
+        var renderer = feature.GetComponentInChildren<Renderer>();
+        
+        if (renderer == null)
         {
-            materialsArray[i] = feature.GetComponentInChildren<Renderer>().materials[i];
+            return;
         }
 
-        feature.GetComponentInChildren<Renderer>().materials = materialsArray;
+        Material[] materialsArray = new Material[renderer.materials.Length - 1];
+        
+        for (int i = 0; i < renderer.materials.Length - 1; i++)
+        {
+            materialsArray[i] = renderer.materials[i];
+        }
+
+        renderer.materials = renderer.materials.SkipLast(1).ToArray();
     }
 
     public void EmptyPropertiesDropdown()
@@ -109,45 +119,19 @@ public class FeatureLayerInputManager : MonoBehaviour
             return;
         }
 
-        RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-
-        if (Physics.Raycast(ray, out hit))
-        {
-            if (FeatureData)
-            {
-                ClearAdditionalMaterial(FeatureData.gameObject);
-            }
-
-            FindFirstObjectByType<FeatureLayerUIManager>().dropDownButton.isOn = false;
-            EmptyPropertiesDropdown();
-            FeatureData = hit.collider.gameObject.GetComponent<FeatureData>();
-
-            if (!FeatureData)
-            {
-                return;
-            }
-
-            var featureLayer = FindFirstObjectByType<FeatureLayer>();
-            featureLayer.RefreshProperties(FeatureData.gameObject);
-
-            foreach (var property in FeatureData.Properties)
-            {
-                var item = Instantiate(properties);
-                items.Add(item);
-                item.GetComponentInChildren<TextMeshProUGUI>().text = property;
-            }
-
-            StartCoroutine("AddItemsToScrollView");
-            SetAdditionalMaterial(outlineMat, hit.collider);
-            propertiesView.SetActive(true);
-        }
+        HandleInput(ray);
     }
 
     private void OnTouchInputStarted(InputAction.CallbackContext ctx)
     {
-        RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(touchControls.Touch.TouchPosition.ReadValue<Vector2>());
+        HandleInput(ray);
+    }
+
+    private void HandleInput(Ray ray)
+    {
+        RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit))
         {
@@ -156,7 +140,7 @@ public class FeatureLayerInputManager : MonoBehaviour
                 ClearAdditionalMaterial(FeatureData.gameObject);
             }
 
-            FindFirstObjectByType<FeatureLayerUIManager>().dropDownButton.isOn = false;
+            FindFirstObjectByType<FeatureLayerUIManager>().DropDownButton.isOn = false;
             EmptyPropertiesDropdown();
             FeatureData = hit.collider.gameObject.GetComponent<FeatureData>();
 
@@ -176,9 +160,9 @@ public class FeatureLayerInputManager : MonoBehaviour
                 var item = Instantiate(properties);
                 items.Add(item);
                 item.GetComponentInChildren<TextMeshProUGUI>().text = property;
-                StartCoroutine("AddItemsToScrollView");
             }
 
+            StartCoroutine("AddItemsToScrollView");
             SetAdditionalMaterial(outlineMat, hit.collider);
             propertiesView.SetActive(true);
         }
@@ -186,10 +170,16 @@ public class FeatureLayerInputManager : MonoBehaviour
 
     private void SetAdditionalMaterial(Material outLine, Collider collider)
     {
-        Material[] materialsArray = new Material[collider.GetComponentInChildren<Renderer>().materials.Length + 1];
-        collider.GetComponentInChildren<Renderer>().materials.CopyTo(materialsArray, 0);
+        var renderer = collider.GetComponentInChildren<Renderer>();
+        if (renderer == null)
+        {
+            return;
+        }
+
+        Material[] materialsArray = new Material[renderer.materials.Length + 1];
+        renderer.materials.CopyTo(materialsArray, 0);
         materialsArray[materialsArray.Length - 1] = outLine;
-        collider.GetComponentInChildren<Renderer>().materials = materialsArray;
+        renderer.materials = materialsArray;
     }
 
     private void SetScrollViewItems(GameObject item)

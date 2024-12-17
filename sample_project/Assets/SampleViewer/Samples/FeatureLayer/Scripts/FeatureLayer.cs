@@ -276,7 +276,7 @@ public class FeatureLayer : MonoBehaviour
 
     public void RefreshProperties(GameObject featureItem)
     {
-        FeatureQuery currentFeature = new FeatureQuery();
+        var currentFeature = new FeatureQuery();
         //Layer 7 because that is the index of the layer created specifically for feature layers so that they ignore themselves for raycasting.
         featureItem.layer = 7;
         featureInfo = featureItem.GetComponent<FeatureData>();
