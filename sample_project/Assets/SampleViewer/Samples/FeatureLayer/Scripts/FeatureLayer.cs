@@ -167,7 +167,7 @@ public class FeatureLayer : MonoBehaviour
 
     private void CreateFeatures(int min, int max)
     {
-        for (int i = min; i < max; i++)
+        for (int featureIndex = min; featureIndex < max; featureIndex++)
         {
             FeatureQuery currentFeature = new FeatureQuery();
             var featureItem = Instantiate(featurePrefab, this.transform);
@@ -175,8 +175,8 @@ public class FeatureLayer : MonoBehaviour
             featureItem.layer = 7;
             featureInfo = featureItem.GetComponent<FeatureData>();
             locationComponent = featureItem.GetComponent<ArcGISLocationComponent>();
-            var coordinates = jFeatures[i].SelectToken("geometry").SelectToken("coordinates").ToArray();
-            var properties = jFeatures[i].SelectToken("properties").ToArray();
+            var coordinates = jFeatures[featureIndex].SelectToken("geometry").SelectToken("coordinates").ToArray();
+            var properties = jFeatures[featureIndex].SelectToken("properties").ToArray();
 
             if (GetAllOutfields)
             {
@@ -191,16 +191,16 @@ public class FeatureLayer : MonoBehaviour
             }
             else
             {
-                for (var j = 0; j < outfields.Count; j++)
+                for (var outfieldIndex = 0; outfieldIndex < outfields.Count; outfieldIndex++)
                 {
-                    if (OutfieldsToGet.Contains(outfields[j]))
+                    if (OutfieldsToGet.Contains(outfields[outfieldIndex]))
                     {
-                        var key = properties[j].ToString();
+                        var key = properties[outfieldIndex].ToString();
                         var props = key.Split(":");
                         currentFeature.properties.propertyNames.Add(props[0]);
                         currentFeature.properties.data.Add(props[1]);
                         featureInfo.Properties.Add(key);
-                        featureInfo.Index = j;
+                        featureInfo.Index = outfieldIndex;
                     }
                 }
             }
