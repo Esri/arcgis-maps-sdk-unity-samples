@@ -24,7 +24,7 @@ RenderSettings:
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 0
+  m_AmbientMode: 4
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: 0.5
@@ -236,9 +236,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 270799174}
+  - component: {fileID: 270799176}
   - component: {fileID: 270799173}
   - component: {fileID: 270799171}
   - component: {fileID: 270799170}
+  - component: {fileID: 270799175}
   m_Layer: 0
   m_Name: ViewshedCamera
   m_TagString: Untagged
@@ -258,7 +260,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8e40d9f8262bdf418211659d6ea58e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewshedCamera: {fileID: 270799173}
+  viewshedMaterial: {fileID: 2100000, guid: 0146afcf702649440ab7f808ec1088b6, type: 2}
   pixelHeight: 512
   pixelWidth: 512
 --- !u!114 &270799171
@@ -423,15 +425,15 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 2000
-  field of view: 60
+  field of view: 30
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 1739031391}
+  m_TargetTexture: {fileID: 1049295276}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 0
@@ -449,13 +451,63 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 270799169}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.1870474, y: -0.58635664, z: 0.14145146, w: 0.7753649}
-  m_LocalPosition: {x: -1924.27, y: 385.17, z: -354.49}
+  m_LocalRotation: {x: 0.18704745, y: -0.58635676, z: 0.14145154, w: 0.77536476}
+  m_LocalPosition: {x: -2305.7, y: 182.2, z: -246.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1808036064}
   m_LocalEulerAnglesHint: {x: 27.126, y: -74.196, z: 0}
+--- !u!114 &270799175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 270799169}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e295d62bf65a7247bc772a43507fd4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  position:
+    x: -13625584.983231992
+    y: 4549555.583994829
+    z: 182.1999969482422
+    SRWkid: 3857
+  rotation:
+    Heading: 285.8044163420287
+    Pitch: 62.8744308083256
+    Roll: 359.99999992726924
+  surfacePlacementMode: 0
+  surfacePlacementOffset: 0
+--- !u!114 &270799176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 270799169}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea4c056ecab070c43bf3f5e9fb15b826, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsInitialized: 1
+  m_LocalPosition:
+    x: -13625584.983231992
+    y: 182.1999969482422
+    z: 4549555.583994829
+  m_LocalRotation:
+    value:
+      x: 0.18704745
+      y: -0.58635676
+      z: 0.14145154
+      w: 0.77536476
+  m_LocalScale:
+    x: 1
+    y: 1
+    z: 1
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -998,6 +1050,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6715ece696adb074bbe6b0103cdafcff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!84 &1049295276
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 5
+  m_Width: 512
+  m_Height: 512
+  m_AntiAliasing: 1
+  m_MipCount: -1
+  m_DepthStencilFormat: 94
+  m_ColorFormat: 49
+  m_MipMap: 0
+  m_GenerateMips: 0
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_BindMS: 0
+  m_EnableCompatibleFormat: 1
+  m_EnableRandomWrite: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1
+  m_ShadowSamplingMode: 0
 --- !u!1 &1501679273
 GameObject:
   m_ObjectHideFlags: 0
@@ -1062,44 +1152,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CameraComponent: {fileID: 963194230}
   arcGISMapComponent: {fileID: 1808036065}
---- !u!84 &1739031391
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 5
-  m_Width: 512
-  m_Height: 512
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthStencilFormat: 94
-  m_ColorFormat: 49
-  m_MipMap: 0
-  m_GenerateMips: 0
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_EnableRandomWrite: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
-  m_ShadowSamplingMode: 0
 --- !u!1 &1808036063
 GameObject:
   m_ObjectHideFlags: 0
@@ -1134,6 +1186,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 963194228}
+  - {fileID: 270799174}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1808036065
@@ -1164,7 +1217,13 @@ MonoBehaviour:
     Authentication:
       ConfigurationIndex: -1
   mapElevation:
-    ElevationSources: []
+    ElevationSources:
+    - Name: Terrain 3D
+      Type: 0
+      Source: https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer
+      IsEnabled: 0
+      Authentication:
+        ConfigurationIndex: -1
     MeshModifications:
       IsEnabled: 1
       MeshModifications: []
@@ -1243,6 +1302,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4df74e743c9c9b94ea994a2945bbea82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  viewshedMaterial: {fileID: 2100000, guid: 0146afcf702649440ab7f808ec1088b6, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1252,4 +1312,3 @@ SceneRoots:
   - {fileID: 1501679275}
   - {fileID: 69324442}
   - {fileID: 1808036064}
-  - {fileID: 270799174}

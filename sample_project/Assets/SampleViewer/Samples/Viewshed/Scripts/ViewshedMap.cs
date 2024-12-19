@@ -14,33 +14,37 @@ public class ViewshedMap : MonoBehaviour
 {
     [SerializeField] private Material viewshedMaterial;
 
-	private void Start()
-	{
-		var mapComponent = FindFirstObjectByType<ArcGISMapComponent>();
+    private void Start()
+    {
+        var mapComponent = FindFirstObjectByType<ArcGISMapComponent>();
 
         var apiKey = "";
 
-		if (string.IsNullOrEmpty(apiKey))
-		{
-			apiKey = ArcGISProjectSettingsAsset.Instance.APIKey;
-		}
+        if (string.IsNullOrEmpty(apiKey))
+        {
+            apiKey = ArcGISProjectSettingsAsset.Instance.APIKey;
+        }
 
-		if (string.IsNullOrEmpty(apiKey))
-		{
-			Debug.LogError("An API Key must be set on the SampleAPIMapCreator or in the project settings for content to load");
-		}
+        if (string.IsNullOrEmpty(apiKey))
+        {
+            Debug.LogError("An API Key must be set on the SampleAPIMapCreator or in the project settings for content to load");
+        }
 
-		var map = new Esri.GameEngine.Map.ArcGISMap(mapComponent.MapType);
+        var map = new Esri.GameEngine.Map.ArcGISMap(mapComponent.MapType);
 
         map.Basemap = new Esri.GameEngine.Map.ArcGISBasemap(Esri.GameEngine.Map.ArcGISBasemapStyle.ArcGISImagery, apiKey);
 
-		map.Elevation = new Esri.GameEngine.Map.ArcGISMapElevation(new Esri.GameEngine.Elevation.ArcGISImageElevationSource("https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer", "Terrain 3D", ""));
+        map.Elevation = new Esri.GameEngine.Map.ArcGISMapElevation(new Esri.GameEngine.Elevation.ArcGISImageElevationSource("https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer", "Terrain 3D", ""));
 
-		var buildingLayer = new Esri.GameEngine.Layers.ArcGIS3DObjectSceneLayer("https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/SanFrancisco_Bldgs/SceneServer", "Building Layer", 1.0f, true, "");
-        buildingLayer.MaterialReference = viewshedMaterial;
+        var buildingLayer = new Esri.GameEngine.Layers.ArcGIS3DObjectSceneLayer("https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/SanFrancisco_Bldgs/SceneServer", "Building Layer", 1.0f, true, "");
 
-		map.Layers.Add(buildingLayer);
+        if (viewshedMaterial != null)
+        {
+            buildingLayer.MaterialReference = viewshedMaterial;
+        }
 
-		mapComponent.View.Map = map;
-	}
+        map.Layers.Add(buildingLayer);
+
+        mapComponent.View.Map = map;
+    }
 }
