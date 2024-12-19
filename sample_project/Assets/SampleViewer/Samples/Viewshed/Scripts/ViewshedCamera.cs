@@ -32,6 +32,7 @@ public class ViewshedCamera : MonoBehaviour
         viewshedCamera.depthTextureMode = DepthTextureMode.Depth;
         viewshedCamera.targetTexture = depthTexture;
 
+        viewshedMaterial.SetTexture("_DepthMap", viewshedCamera.targetTexture);
         //viewshedCamera.SetTargetBuffers(colorTexture.colorBuffer, depthTexture.depthBuffer);
     }
 
@@ -70,7 +71,7 @@ public class ViewshedCamera : MonoBehaviour
             return;
         }
 
-        if (lastPosition == transform.position)
+        if (lastPosition == viewshedCamera.transform.position)
         {
             return;
         }
@@ -80,18 +81,19 @@ public class ViewshedCamera : MonoBehaviour
         var renderType = GraphicsSettings.defaultRenderPipeline.GetType().ToString();
 
         // WorldToCameraMatrix SceneView Camera Matrix position is (0 0 0) in HDRP shaders.
-        if (viewshedCamera.cameraType == CameraType.SceneView && renderType == "UnityEngine.Rendering.HighDefinition.HDRenderPipelineAsset")
+        if (renderType == "UnityEngine.Rendering.HighDefinition.HDRenderPipelineAsset")
         {
-            worldToCameraMatrix.SetColumn(3, new Vector4(0, 0, 0, 1));
+            //worldToCameraMatrix.SetColumn(3, new Vector4(0, 0, 0, 1));
         }
 
         //Shader.SetGlobalMatrix("_ArcGISGlobalTerrainOcclusionViewProjMatrix", GL.GetGPUProjectionMatrix(viewshedCamera.projectionMatrix, true) * worldToCameraMatrix);
 
+        viewshedMaterial.SetVector("_ViewshedCameraPosition", viewshedCamera.transform.position);
         viewshedMaterial.SetMatrix("_ViewProjectionMatrix", GL.GetGPUProjectionMatrix(viewshedCamera.projectionMatrix, true) * worldToCameraMatrix);
 
-        viewshedMaterial.SetTexture("_DepthMap", viewshedCamera.targetTexture);
+        //viewshedMaterial.SetTexture("_DepthMap", viewshedCamera.targetTexture);
 
-        lastPosition = transform.position;
+        lastPosition = viewshedCamera.transform.position;
 
         print("ViewshedCamera.Update() called");
     }
