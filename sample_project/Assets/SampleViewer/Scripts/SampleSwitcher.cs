@@ -187,19 +187,14 @@ public class SampleSwitcher : MonoBehaviour
         apiKey = value;
         apiKeyInputField.text = string.IsNullOrEmpty(apiKey) ? "Enter your API key here..." : apiKey;
 
-        if (warning != null)
-        {
-            return;
-        }
-
         if (string.IsNullOrEmpty(apiKey))
         {
-            warning.gameObject.SetActive(true);
+            warning?.gameObject?.SetActive(true);
             DisableSceneButtons();
         }
         else
         {
-            warning.gameObject.SetActive(false);
+            warning?.gameObject?.SetActive(false);
             EnableSceneButtons();
         }
     }
