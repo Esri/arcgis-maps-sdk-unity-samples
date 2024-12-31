@@ -3,6 +3,7 @@
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
 //
+//using System.Numerics;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -15,13 +16,23 @@ public class ViewshedCamera : MonoBehaviour
 
     private RenderTexture depthTexture;
     private Camera viewshedCamera;
-    private Vector3 lastPosition = Vector3.zero;
+    private Camera mainCamera;
+    private Vector3 lastViewshedCameraPosition = Vector3.zero;
+    private Vector3 lastMainCameraPosition = Vector3.zero;
+
+    private Vector3 lastViewshedCameraRotation = Vector3.zero;
+    private Vector3 lastMainCameraRotation = Vector3.zero;
 
     private void Start()
     {
-        if (viewshedCamera == null)
+        viewshedCamera = GetComponent<Camera>();
+
+        mainCamera = Camera.main;
+
+        if (mainCamera == null)
         {
-            viewshedCamera = GetComponent<Camera>();
+            Debug.LogError("Viewshed: Main Camera not found");
+            return;
         }
 
         if (depthTexture == null)
@@ -32,7 +43,7 @@ public class ViewshedCamera : MonoBehaviour
         viewshedCamera.depthTextureMode = DepthTextureMode.Depth;
         viewshedCamera.targetTexture = depthTexture;
 
-        viewshedMaterial.SetTexture("_DepthMap", viewshedCamera.targetTexture);
+        viewshedMaterial.SetTexture("_ViewshedDepthTex", viewshedCamera.targetTexture);
         //viewshedCamera.SetTargetBuffers(colorTexture.colorBuffer, depthTexture.depthBuffer);
     }
 
@@ -71,30 +82,52 @@ public class ViewshedCamera : MonoBehaviour
             return;
         }
 
-        if (lastPosition == viewshedCamera.transform.position)
+        if (lastViewshedCameraPosition == viewshedCamera.transform.position && lastMainCameraPosition == mainCamera.transform.position
+            && lastViewshedCameraRotation == viewshedCamera.transform.eulerAngles && lastMainCameraRotation == mainCamera.transform.eulerAngles)
         {
             return;
         }
 
-        var worldToCameraMatrix = viewshedCamera.worldToCameraMatrix;
+        var worldToCameraMatrix = mainCamera.worldToCameraMatrix;
 
         var renderType = GraphicsSettings.defaultRenderPipeline.GetType().ToString();
 
         // WorldToCameraMatrix SceneView Camera Matrix position is (0 0 0) in HDRP shaders.
         if (renderType == "UnityEngine.Rendering.HighDefinition.HDRenderPipelineAsset")
         {
-            //worldToCameraMatrix.SetColumn(3, new Vector4(0, 0, 0, 1));
+            worldToCameraMatrix.SetColumn(3, new Vector4(0, 0, 0, 1));
         }
 
         //Shader.SetGlobalMatrix("_ArcGISGlobalTerrainOcclusionViewProjMatrix", GL.GetGPUProjectionMatrix(viewshedCamera.projectionMatrix, true) * worldToCameraMatrix);
 
-        viewshedMaterial.SetVector("_ViewshedCameraPosition", viewshedCamera.transform.position);
-        viewshedMaterial.SetMatrix("_ViewProjectionMatrix", GL.GetGPUProjectionMatrix(viewshedCamera.projectionMatrix, true) * worldToCameraMatrix);
+        //viewshedMaterial.SetVector("_ViewshedCameraPosition", viewshedCamera.transform.position);
+        //viewshedMaterial.SetMatrix("_ViewProjectionMatrix", GL.GetGPUProjectionMatrix(viewshedCamera.projectionMatrix, true) * worldToCameraMatrix);
+        
+        print("Viewshed: Projection Matrix: " + viewshedCamera.projectionMatrix);
+        print("Viewshed: WorldToCamera Matrix: " + worldToCameraMatrix);
+
+        viewshedMaterial.SetMatrix("_ViewshedInverseProjection", viewshedCamera.projectionMatrix.inverse);
+        viewshedMaterial.SetMatrix("_ViewshedProjection", viewshedCamera.projectionMatrix);
+        viewshedMaterial.SetMatrix("_ViewshedWorldToCamera", viewshedCamera.worldToCameraMatrix);
+
+        viewshedMaterial.SetMatrix("_ViewshedViewProjectionMatrix", GL.GetGPUProjectionMatrix(viewshedCamera.projectionMatrix, true) * viewshedCamera.worldToCameraMatrix);
+        //viewshedMaterial.SetMatrix("_ViewshedViewProjectionMatrix", viewshedCamera.projectionMatrix * viewshedCamera.worldToCameraMatrix);
+
+        var mainViewProjectionMatrix = GL.GetGPUProjectionMatrix(mainCamera.projectionMatrix, true) * worldToCameraMatrix;
+        viewshedMaterial.SetMatrix("_MainCameraViewProjectionMatrix", mainViewProjectionMatrix);
+        //viewshedMaterial.SetMatrix
+
+        viewshedMaterial.SetFloat("_ViewshedFarPlane", viewshedCamera.farClipPlane);
+        viewshedMaterial.SetFloat("_ViewshedNearPlane", viewshedCamera.nearClipPlane);
 
         //viewshedMaterial.SetTexture("_DepthMap", viewshedCamera.targetTexture);
 
-        lastPosition = viewshedCamera.transform.position;
+        lastViewshedCameraPosition = viewshedCamera.transform.position;
+        lastMainCameraPosition = mainCamera.transform.position;
 
-        print("ViewshedCamera.Update() called");
+        lastViewshedCameraRotation = viewshedCamera.transform.eulerAngles;
+        lastMainCameraRotation = mainCamera.transform.eulerAngles;
+
+        print("Viewshed: ViewshedCamera.Update() called");
     }
 }
