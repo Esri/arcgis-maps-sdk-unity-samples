@@ -88,14 +88,14 @@ public class ViewshedCamera : MonoBehaviour
             return;
         }
 
-        var worldToCameraMatrix = mainCamera.worldToCameraMatrix;
+        //var worldToCameraMatrix = mainCamera.worldToCameraMatrix;
 
         var renderType = GraphicsSettings.defaultRenderPipeline.GetType().ToString();
 
         // WorldToCameraMatrix SceneView Camera Matrix position is (0 0 0) in HDRP shaders.
         if (renderType == "UnityEngine.Rendering.HighDefinition.HDRenderPipelineAsset")
         {
-            worldToCameraMatrix.SetColumn(3, new Vector4(0, 0, 0, 1));
+            //worldToCameraMatrix.SetColumn(3, new Vector4(0, 0, 0, 1));
         }
 
         //Shader.SetGlobalMatrix("_ArcGISGlobalTerrainOcclusionViewProjMatrix", GL.GetGPUProjectionMatrix(viewshedCamera.projectionMatrix, true) * worldToCameraMatrix);
@@ -103,24 +103,38 @@ public class ViewshedCamera : MonoBehaviour
         //viewshedMaterial.SetVector("_ViewshedCameraPosition", viewshedCamera.transform.position);
         //viewshedMaterial.SetMatrix("_ViewProjectionMatrix", GL.GetGPUProjectionMatrix(viewshedCamera.projectionMatrix, true) * worldToCameraMatrix);
         
-        print("Viewshed: Projection Matrix: " + viewshedCamera.projectionMatrix);
-        print("Viewshed: WorldToCamera Matrix: " + worldToCameraMatrix);
+        viewshedMaterial.SetTexture("_ViewshedDepthTex", viewshedCamera.targetTexture);
 
-        viewshedMaterial.SetMatrix("_ViewshedInverseProjection", viewshedCamera.projectionMatrix.inverse);
-        viewshedMaterial.SetMatrix("_ViewshedProjection", viewshedCamera.projectionMatrix);
-        viewshedMaterial.SetMatrix("_ViewshedWorldToCamera", viewshedCamera.worldToCameraMatrix);
+        //viewshedCamera.
+        //print("Viewshed: Projection Matrix: " + viewshedCamera.projectionMatrix);
+        //print("Viewshed: WorldToCamera Matrix: " + worldToCameraMatrix);
+
+        //viewshedMaterial.SetMatrix("_ViewshedInverseProjection", viewshedCamera.projectionMatrix.inverse);
+        //viewshedMaterial.SetMatrix("_ViewshedProjection", viewshedCamera.projectionMatrix);
+        //viewshedMaterial.SetMatrix("_ViewshedWorldToCamera", viewshedCamera.worldToCameraMatrix);
 
         viewshedMaterial.SetMatrix("_ViewshedViewProjectionMatrix", GL.GetGPUProjectionMatrix(viewshedCamera.projectionMatrix, true) * viewshedCamera.worldToCameraMatrix);
         //viewshedMaterial.SetMatrix("_ViewshedViewProjectionMatrix", viewshedCamera.projectionMatrix * viewshedCamera.worldToCameraMatrix);
 
-        var mainViewProjectionMatrix = GL.GetGPUProjectionMatrix(mainCamera.projectionMatrix, true) * worldToCameraMatrix;
-        viewshedMaterial.SetMatrix("_MainCameraViewProjectionMatrix", mainViewProjectionMatrix);
+        //var mainViewProjectionMatrix = GL.GetGPUProjectionMatrix(mainCamera.projectionMatrix, false) * worldToCameraMatrix;
+        //var mainViewProjectionMatrix = mainCamera.projectionMatrix * mainCamera.worldToCameraMatrix;
+        //viewshedMaterial.SetMatrix("_MainCameraViewProjectionMatrix", mainViewProjectionMatrix);
+
+        //viewshedMaterial.SetMatrix("_MainCameraInverseProjectionMatrix", mainCamera.projectionMatrix.inverse);
+        //worldToCameraMatrix.SetRow(2, -worldToCameraMatrix.GetRow(2));
+
+        //viewshedMaterial.SetMatrix("_MainCameraWorldToCameraMatrix", worldToCameraMatrix);
+        //viewshedMaterial.SetMatrix("_MainCameraProjectionMatrix", mainCamera.projectionMatrix);
+        
+        //viewshedMaterial.SetMatrix("_MainCameraCameraToWorldMatrix", mainCamera.cameraToWorldMatrix);
         //viewshedMaterial.SetMatrix
 
         viewshedMaterial.SetFloat("_ViewshedFarPlane", viewshedCamera.farClipPlane);
-        viewshedMaterial.SetFloat("_ViewshedNearPlane", viewshedCamera.nearClipPlane);
+        //viewshedMaterial.SetFloat("_ViewshedNearPlane", viewshedCamera.nearClipPlane);
 
         //viewshedMaterial.SetTexture("_DepthMap", viewshedCamera.targetTexture);
+
+        viewshedCamera.Render();
 
         lastViewshedCameraPosition = viewshedCamera.transform.position;
         lastMainCameraPosition = mainCamera.transform.position;
@@ -128,6 +142,6 @@ public class ViewshedCamera : MonoBehaviour
         lastViewshedCameraRotation = viewshedCamera.transform.eulerAngles;
         lastMainCameraRotation = mainCamera.transform.eulerAngles;
 
-        print("Viewshed: ViewshedCamera.Update() called");
+        //print("Viewshed: ViewshedCamera.Update() called");
     }
 }
