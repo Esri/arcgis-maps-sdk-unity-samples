@@ -17,17 +17,6 @@ public class SampleSwitcher : MonoBehaviour
     {
         var currentScene = SceneManager.GetActiveScene().name;
         SceneManager.LoadSceneAsync(NextScene);
-
-        var activeSceneCount = SceneManager.sceneCount;
-
-        if (activeSceneCount == 2)
-        {
-            var doneUnloadingOperation = SceneManager.UnloadSceneAsync(currentScene);
-            doneUnloadingOperation.completed += (AsyncOperation Operation) =>
-            {
-                RemoveArcGISMapView();
-            };
-        }
     }
 
     private void Start()
@@ -51,23 +40,5 @@ public class SampleSwitcher : MonoBehaviour
         {
             ChangeScene("XRTableTop");
         });
-    }
-
-    private void RemoveArcGISMapView()
-    {
-        var activeScene = SceneManager.GetActiveScene();
-        var rootGOs = activeScene.GetRootGameObjects();
-        
-        foreach (var rootGO in rootGOs)
-        {
-            var hpRoot = rootGO.GetComponent<HPRoot>();
-            
-            if (hpRoot == null)
-            {
-                return;
-            }
-
-            Destroy(rootGO);
-        }
     }
 }
