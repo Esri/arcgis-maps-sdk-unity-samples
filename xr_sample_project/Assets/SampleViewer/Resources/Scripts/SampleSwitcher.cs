@@ -20,7 +20,6 @@ public class SampleSwitcher : MonoBehaviour
 
     public void ChangeScene(string NextScene)
     {
-        var currentScene = SceneManager.GetActiveScene().name;
         SceneManager.LoadSceneAsync(NextScene);
     }
 
