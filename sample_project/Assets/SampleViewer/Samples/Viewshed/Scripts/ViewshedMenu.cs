@@ -75,17 +75,9 @@ public class ViewshedMenu : MonoBehaviour
             return;
         }
 
-        longitudeInputField.text = viewshedCameraLocationComponent.Position.X.ToString();
-        latitudeInputField.text = viewshedCameraLocationComponent.Position.Y.ToString();
-        altitudeInputField.text = viewshedCameraLocationComponent.Position.Z.ToString();
+        UpdateLocationInputFields();
 
-        headingSlider.value = Mathf.RoundToInt((float)viewshedCameraLocationComponent.Rotation.Heading);
-        pitchSlider.value = Mathf.RoundToInt((float)viewshedCameraLocationComponent.Rotation.Pitch);
-        heightSlider.value = Mathf.RoundToInt((float)viewshedCameraLocationComponent.Rotation.Roll);
-
-        headingCounter.text = Mathf.RoundToInt(headingSlider.value).ToString();
-        pitchCounter.text = Mathf.RoundToInt(pitchSlider.value).ToString();
-        heightCounter.text = Mathf.RoundToInt(heightSlider.value).ToString();
+        UpdateRotationSlidersAndCounters();
     }
 
     public void UpdateLocation()
@@ -100,6 +92,13 @@ public class ViewshedMenu : MonoBehaviour
         {
             Debug.LogWarning("Invalid input for location coordinates");
         }
+    }
+
+    private void UpdateLocationInputFields()
+    {
+        longitudeInputField.text = viewshedCameraLocationComponent.Position.X.ToString();
+        latitudeInputField.text = viewshedCameraLocationComponent.Position.Y.ToString();
+        altitudeInputField.text = viewshedCameraLocationComponent.Position.Z.ToString();
     }
 
     public void UpdateHeading(float value)
@@ -120,11 +119,6 @@ public class ViewshedMenu : MonoBehaviour
         UpdateCounter(heightSlider, heightCounter);
     }
 
-    private void UpdateCounter(Slider slider, TMP_Text counter)
-    {
-        counter.text = Mathf.RoundToInt(slider.value).ToString();
-    }
-
     public void AlignCameraToViewshed()
     {
         mainCameraLocationComponent.Position = viewshedCameraLocationComponent.Position;
@@ -135,5 +129,24 @@ public class ViewshedMenu : MonoBehaviour
     {
         viewshedCameraLocationComponent.Position = mainCameraLocationComponent.Position;
         viewshedCameraLocationComponent.Rotation = mainCameraLocationComponent.Rotation;
+
+        UpdateLocationInputFields();
+        UpdateRotationSlidersAndCounters();
+    }
+
+    private void UpdateCounter(Slider slider, TMP_Text counter)
+    {
+        counter.text = Mathf.RoundToInt(slider.value).ToString();
+    }
+
+    private void UpdateRotationSlidersAndCounters()
+    {
+        headingSlider.value = Mathf.RoundToInt((float)viewshedCameraLocationComponent.Rotation.Heading);
+        pitchSlider.value = Mathf.RoundToInt((float)viewshedCameraLocationComponent.Rotation.Pitch);
+        heightSlider.value = Mathf.RoundToInt((float)viewshedCameraLocationComponent.Rotation.Roll);
+
+        headingCounter.text = Mathf.RoundToInt(headingSlider.value).ToString();
+        pitchCounter.text = Mathf.RoundToInt(pitchSlider.value).ToString();
+        heightCounter.text = Mathf.RoundToInt(heightSlider.value).ToString();
     }
 }
