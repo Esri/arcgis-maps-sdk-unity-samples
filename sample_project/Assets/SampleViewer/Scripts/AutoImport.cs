@@ -7,7 +7,6 @@
 using UnityEditor;
 using UnityEditor.PackageManager;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.Rendering;
 
 [InitializeOnLoad]
