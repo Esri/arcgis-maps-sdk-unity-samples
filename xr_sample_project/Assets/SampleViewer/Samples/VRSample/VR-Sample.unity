@@ -177,7 +177,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: 'Copyright Nearmap, Source: Airbus,USGS,NGA,NASA,CGIAR,NLS,OS,NMA,Geodatastyrelsen,GSA,GSI
+    and the GIS User Community, Maxar, Microsoft, Earthstar Geographics'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: bddef65594ad58e40a214e2b4fd0e12f, type: 2}
   m_sharedMaterial: {fileID: 2942806592923211772, guid: bddef65594ad58e40a214e2b4fd0e12f, type: 2}
@@ -916,7 +917,18 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7674790538359957212, guid: 71c126e43990139498b8761c71893200, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1406080838}
+    - targetCorrespondingSourceObject: {fileID: 7674790537069970952, guid: 71c126e43990139498b8761c71893200, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1377037082}
+    - targetCorrespondingSourceObject: {fileID: 7674790537069970952, guid: 71c126e43990139498b8761c71893200, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1377037081}
   m_SourcePrefab: {fileID: 100100000, guid: 71c126e43990139498b8761c71893200, type: 3}
+--- !u!1 &416216339 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7674790537069970952, guid: 71c126e43990139498b8761c71893200, type: 3}
+  m_PrefabInstance: {fileID: 416216338}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &425022394 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7674790536996165079, guid: 71c126e43990139498b8761c71893200, type: 3}
@@ -2014,6 +2026,66 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 745328501}
   m_CullTransparentMesh: 1
+--- !u!1 &1154706330
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1154706333}
+  - component: {fileID: 1154706332}
+  - component: {fileID: 1154706331}
+  m_Layer: 0
+  m_Name: AR Session
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1154706331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1154706330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa850fbd5b8aded44846f96e35f1a9f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1154706332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1154706330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3859a92a05d4f5d418cb6ca605290e74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AttemptUpdate: 1
+  m_MatchFrameRate: 1
+  m_TrackingMode: 2
+--- !u!4 &1154706333
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1154706330}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.09559305, y: 1.2124423, z: 0.28476435}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1303795572 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1107792031, guid: 71c126e43990139498b8761c71893200, type: 3}
@@ -2041,6 +2113,39 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7674790537069970955, guid: 71c126e43990139498b8761c71893200, type: 3}
   m_PrefabInstance: {fileID: 416216338}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1377037081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 416216339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 816b289ef451e094f9ae174fb4cf8db0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UseCustomMaterial: 0
+  m_CustomMaterial: {fileID: 0}
+--- !u!114 &1377037082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 416216339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4966719baa26e4b0e8231a24d9bd491a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_FocusMode: 1
+  m_LightEstimationMode: 0
+  m_AutoFocus: 1
+  m_ImageStabilization: 0
+  m_LightEstimation: 0
+  m_FacingDirection: 1
+  m_RenderMode: 0
 --- !u!4 &1406080821 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7674790538359957214, guid: 71c126e43990139498b8761c71893200, type: 3}
@@ -3852,3 +3957,4 @@ SceneRoots:
   - {fileID: 6455011808731382214}
   - {fileID: 1629020560}
   - {fileID: 1592618384}
+  - {fileID: 1154706333}
