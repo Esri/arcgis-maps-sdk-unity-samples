@@ -55,11 +55,5 @@ public static class CallReImport
             AssetDatabase.ImportAsset(path, ImportAssetOptions.ImportRecursive);
         }
     }
-
-    [MenuItem("Tools/ArcGIS Maps SDK/Re-Import Samples Materials")]
-    public static void ManualCall()
-    {
-       reImport();
-    }
 }
 #endif
