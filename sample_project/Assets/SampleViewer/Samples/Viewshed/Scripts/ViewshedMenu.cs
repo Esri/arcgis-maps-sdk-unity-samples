@@ -13,6 +13,7 @@ using Esri.ArcGISMapsSDK.Utils.GeoCoord;
 
 public class ViewshedMenu : MonoBehaviour
 {
+    [SerializeField] private GameObject mainCamera;
     [SerializeField] private GameObject viewshedCamera;
 
     [SerializeField] private TMP_InputField longitudeInputField;
@@ -29,19 +30,37 @@ public class ViewshedMenu : MonoBehaviour
     [SerializeField] private TMP_Text pitchCounter;
     [SerializeField] private TMP_Text heightCounter;
 
-    private ArcGISLocationComponent locationComponent;
+    [SerializeField] private Button alignCameraToViewshedButton;
+    [SerializeField] private Button alignViewshedToCameraButton;
+
+    private ArcGISLocationComponent viewshedCameraLocationComponent;
+    private ArcGISLocationComponent mainCameraLocationComponent;
 
     private void Start()
     {
+        if (mainCamera == null)
+        {
+            Debug.LogWarning("Main Camera not set in Viewshed Menu");
+            return;
+        }
+
         if (viewshedCamera == null)
         {
             Debug.LogWarning("Viewshed Camera not set in Viewshed Menu");
             return;
         }
 
-        locationComponent = viewshedCamera.GetComponent<ArcGISLocationComponent>();
+        mainCameraLocationComponent = mainCamera.GetComponent<ArcGISLocationComponent>();
 
-        if (locationComponent == null)
+        if (mainCameraLocationComponent == null)
+        {
+            Debug.LogWarning("ArcGISLocationComponent not found on Main Camera");
+            return;
+        }
+
+        viewshedCameraLocationComponent = viewshedCamera.GetComponent<ArcGISLocationComponent>();
+
+        if (viewshedCameraLocationComponent == null)
         {
             Debug.LogWarning("ArcGISLocationComponent not found on Viewshed Camera");
             return;
@@ -49,19 +68,20 @@ public class ViewshedMenu : MonoBehaviour
 
         if (longitudeInputField == null || latitudeInputField == null || altitudeInputField == null ||
         headingSlider == null || pitchSlider == null || heightSlider == null ||
-        headingCounter == null || pitchCounter == null || heightCounter == null)
+        headingCounter == null || pitchCounter == null || heightCounter == null ||
+        updateLocationButton == null || alignCameraToViewshedButton == null || alignViewshedToCameraButton == null)
         {
             Debug.LogWarning("One or more UI components are not set in the inspector");
             return;
         }
 
-        longitudeInputField.text = locationComponent.Position.X.ToString();
-        latitudeInputField.text = locationComponent.Position.Y.ToString();
-        altitudeInputField.text = locationComponent.Position.Z.ToString();
+        longitudeInputField.text = viewshedCameraLocationComponent.Position.X.ToString();
+        latitudeInputField.text = viewshedCameraLocationComponent.Position.Y.ToString();
+        altitudeInputField.text = viewshedCameraLocationComponent.Position.Z.ToString();
 
-        headingSlider.value = Mathf.RoundToInt((float)locationComponent.Rotation.Heading);
-        pitchSlider.value = Mathf.RoundToInt((float)locationComponent.Rotation.Pitch);
-        heightSlider.value = Mathf.RoundToInt((float)locationComponent.Rotation.Roll);
+        headingSlider.value = Mathf.RoundToInt((float)viewshedCameraLocationComponent.Rotation.Heading);
+        pitchSlider.value = Mathf.RoundToInt((float)viewshedCameraLocationComponent.Rotation.Pitch);
+        heightSlider.value = Mathf.RoundToInt((float)viewshedCameraLocationComponent.Rotation.Roll);
 
         headingCounter.text = Mathf.RoundToInt(headingSlider.value).ToString();
         pitchCounter.text = Mathf.RoundToInt(pitchSlider.value).ToString();
@@ -74,7 +94,7 @@ public class ViewshedMenu : MonoBehaviour
             double.TryParse(latitudeInputField.text, out double latitude) &&
             double.TryParse(altitudeInputField.text, out double altitude))
         {
-            locationComponent.Position = new ArcGISPoint(longitude, latitude, altitude, locationComponent.Position.SpatialReference);
+            viewshedCameraLocationComponent.Position = new ArcGISPoint(longitude, latitude, altitude, viewshedCameraLocationComponent.Position.SpatialReference);
         }
         else
         {
@@ -84,24 +104,36 @@ public class ViewshedMenu : MonoBehaviour
 
     public void UpdateHeading(float value)
     {
-        locationComponent.Rotation = new ArcGISRotation(value, locationComponent.Rotation.Pitch, locationComponent.Rotation.Roll);
+        viewshedCameraLocationComponent.Rotation = new ArcGISRotation(value, viewshedCameraLocationComponent.Rotation.Pitch, viewshedCameraLocationComponent.Rotation.Roll);
         UpdateCounter(headingSlider, headingCounter);
     }
 
     public void UpdatePitch(float value)
     {
-        locationComponent.Rotation = new ArcGISRotation(locationComponent.Rotation.Heading, value, locationComponent.Rotation.Roll);
+        viewshedCameraLocationComponent.Rotation = new ArcGISRotation(viewshedCameraLocationComponent.Rotation.Heading, value, viewshedCameraLocationComponent.Rotation.Roll);
         UpdateCounter(pitchSlider, pitchCounter);
     }
 
     public void UpdateHeight(float value)
     {
-        locationComponent.Rotation = new ArcGISRotation(locationComponent.Rotation.Heading, locationComponent.Rotation.Pitch, value);
+        viewshedCameraLocationComponent.Rotation = new ArcGISRotation(viewshedCameraLocationComponent.Rotation.Heading, viewshedCameraLocationComponent.Rotation.Pitch, value);
         UpdateCounter(heightSlider, heightCounter);
     }
 
     private void UpdateCounter(Slider slider, TMP_Text counter)
     {
         counter.text = Mathf.RoundToInt(slider.value).ToString();
+    }
+
+    public void AlignCameraToViewshed()
+    {
+        mainCameraLocationComponent.Position = viewshedCameraLocationComponent.Position;
+        mainCameraLocationComponent.Rotation = viewshedCameraLocationComponent.Rotation;
+    }
+
+    public void AlignViewshedToCamera()
+    {
+        viewshedCameraLocationComponent.Position = mainCameraLocationComponent.Position;
+        viewshedCameraLocationComponent.Rotation = mainCameraLocationComponent.Rotation;
     }
 }
