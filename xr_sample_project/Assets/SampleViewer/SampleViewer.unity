@@ -151,6 +151,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.x
       value: 22
       objectReference: {fileID: 0}
+    - target: {fileID: 598358718672886320, guid: e906f8dcfaf8fdc4581c19ecb612c6c6, type: 3}
+      propertyPath: m_Name
+      value: VR Table Top
+      objectReference: {fileID: 0}
     - target: {fileID: 616911699444833612, guid: e906f8dcfaf8fdc4581c19ecb612c6c6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 22
@@ -373,6 +377,14 @@ PrefabInstance:
       propertyPath: isSampleViewer
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4368664301963379551, guid: e906f8dcfaf8fdc4581c19ecb612c6c6, type: 3}
+      propertyPath: arTableTopSceneButton
+      value: 
+      objectReference: {fileID: 145939605}
+    - target: {fileID: 4368664301963379551, guid: e906f8dcfaf8fdc4581c19ecb612c6c6, type: 3}
+      propertyPath: vrTableTopSceneButton
+      value: 
+      objectReference: {fileID: 1624266107}
     - target: {fileID: 4404231475424801221, guid: e906f8dcfaf8fdc4581c19ecb612c6c6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 22
@@ -725,8 +737,9 @@ GameObject:
   - component: {fileID: 145939604}
   - component: {fileID: 145939606}
   - component: {fileID: 145939605}
+  - component: {fileID: 145939607}
   m_Layer: 5
-  m_Name: XR Table Top (1)
+  m_Name: AR Table Top (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -804,6 +817,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 145939603}
   m_CullTransparentMesh: 1
+--- !u!114 &145939607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 145939603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a02721b30cd8a1140a7340c654fe6fe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &423901742
 GameObject:
   m_ObjectHideFlags: 0
@@ -1149,6 +1174,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1269094219}
   m_CullTransparentMesh: 1
+--- !u!114 &1624266107 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6000706781598980665, guid: e906f8dcfaf8fdc4581c19ecb612c6c6, type: 3}
+  m_PrefabInstance: {fileID: 120258279}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!20 &1743900289 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 8955645702413702306, guid: 4ca9104803b472d4294e184755496ca1, type: 3}

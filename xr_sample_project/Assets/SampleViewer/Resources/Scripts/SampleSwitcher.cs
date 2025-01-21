@@ -36,7 +36,7 @@ public class SampleSwitcher : MonoBehaviour
             return;
         }
 
-        vrTableTopSceneButton.onClick.AddListener(delegate
+        arTableTopSceneButton.onClick.AddListener(delegate
         {
             ChangeScene("ARTableTop");
         });
