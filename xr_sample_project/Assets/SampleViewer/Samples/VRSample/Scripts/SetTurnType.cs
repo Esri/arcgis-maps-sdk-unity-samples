@@ -5,14 +5,16 @@
 //
 
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Locomotion.Turning;
+using 
 
 public class SetTurnType : MonoBehaviour
 {
     [Header("--------Turn Scripts--------")]
-    [SerializeField] private ActionBasedContinuousTurnProvider continuousTurn;
+    [SerializeField] private Unity.XR.Interaction.Toolkit.Samples.StarterAssets.ControllerInputActionManager manager;
+    [SerializeField] private ContinuousTurnProvider continuousTurn;
 
-    [SerializeField] private ActionBasedSnapTurnProvider snapTurn;
+    [SerializeField] private SnapTurnProvider snapTurn;
 
     public delegate void ChangedTurnType(bool type);
 
