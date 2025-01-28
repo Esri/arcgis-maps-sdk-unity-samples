@@ -14,8 +14,9 @@ public class SampleSwitcher : MonoBehaviour
     [SerializeField] private bool isSampleViewer;
 
     [SerializeField] private Button homeButton;
+    [SerializeField] private Button arTableTopSceneButton;
     [SerializeField] private Button vrSceneButton;
-    [SerializeField] private Button xrTableTopSceneButton;
+    [SerializeField] private Button vrTableTopSceneButton;
 
 
     public void ChangeScene(string NextScene)
@@ -35,14 +36,19 @@ public class SampleSwitcher : MonoBehaviour
             return;
         }
 
+        arTableTopSceneButton.onClick.AddListener(delegate
+        {
+            ChangeScene("ARTableTop");
+        });
+
         vrSceneButton.onClick.AddListener(delegate
         {
             ChangeScene("VR-Sample");
         });
 
-        xrTableTopSceneButton.onClick.AddListener(delegate
+        vrTableTopSceneButton.onClick.AddListener(delegate
         {
-            ChangeScene("XRTableTop");
+            ChangeScene("VRTableTop");
         });
     }
 }
