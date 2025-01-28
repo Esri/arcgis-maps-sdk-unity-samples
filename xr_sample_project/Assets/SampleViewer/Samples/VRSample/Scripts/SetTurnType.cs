@@ -44,9 +44,7 @@ public class SetTurnType : MonoBehaviour
 
     private void SetTurnTypeFromIndex(bool isSmooth)
     {
-        manager.smoothMotionEnabled = isSmooth;
-        snapTurn.turnAmount = !isSmooth ? snapSpeed : 0f;
-        continuousTurn.turnSpeed = isSmooth ? continuousSpeed : 0f;
+        manager.smoothTurnEnabled = isSmooth;
     }
 
     private void Start()
