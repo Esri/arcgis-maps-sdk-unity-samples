@@ -6,12 +6,13 @@
 
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit.Locomotion.Turning;
-using 
+using UnityEngine.XR.Interaction.Toolkit.Samples.StarterAssets;
+
 
 public class SetTurnType : MonoBehaviour
 {
     [Header("--------Turn Scripts--------")]
-    [SerializeField] private Unity.XR.Interaction.Toolkit.Samples.StarterAssets.ControllerInputActionManager manager;
+    [SerializeField] private ControllerInputActionManager manager;
     [SerializeField] private ContinuousTurnProvider continuousTurn;
 
     [SerializeField] private SnapTurnProvider snapTurn;
@@ -43,6 +44,7 @@ public class SetTurnType : MonoBehaviour
 
     private void SetTurnTypeFromIndex(bool isSmooth)
     {
+        manager.smoothMotionEnabled = isSmooth;
         snapTurn.turnAmount = !isSmooth ? snapSpeed : 0f;
         continuousTurn.turnSpeed = isSmooth ? continuousSpeed : 0f;
     }
