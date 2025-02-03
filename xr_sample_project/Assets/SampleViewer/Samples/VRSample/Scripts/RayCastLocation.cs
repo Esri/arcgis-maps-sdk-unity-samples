@@ -35,11 +35,7 @@ public class RayCastLocation : MonoBehaviour
     private Camera mainCamera;
     [SerializeField] private GameObject predictionRay;
     private GameObject queryLocationGO;
-
-    //[SerializeField] private LayerMask raycastLayer;
     [SerializeField] private XRRayInteractor raycastHand;
-
-    //[SerializeField] private float maxRayDistance = 35;
     [SerializeField] private InputActionProperty raycastInput;
 
     private string responseAddress = "";
