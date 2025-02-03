@@ -183,7 +183,6 @@ public class RayCastLocation : MonoBehaviour
         if (raycastInput.action.WasPressedThisFrame())
         {
             GetAddress();
-            Debug.Log("Input Triggered");
         }
     }
 }
