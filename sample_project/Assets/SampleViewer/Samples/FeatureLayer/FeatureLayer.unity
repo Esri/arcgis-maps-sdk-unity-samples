@@ -2239,6 +2239,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: AttributionDisplay
       objectReference: {fileID: 0}
+    - target: {fileID: 4201127533798070740, guid: a2ad7d4c7933e094f982b0e83ad422e3, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4553,6 +4557,68 @@ MonoBehaviour:
   MaxInputField: {fileID: 986898831}
   MinInputField: {fileID: 1771965413}
   DisplayText: 0
+--- !u!1 &1733413189
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1733413191}
+  - component: {fileID: 1733413190}
+  m_Layer: 0
+  m_Name: InputManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1733413190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1733413189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2da0fe01070333e4ca2c9011e61ceb24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  InputTriggered:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 91838862}
+        m_TargetAssemblyTypeName: FeatureLayerInputManager, Sample Viewer
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  InputEnded:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!4 &1733413191
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1733413189}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1771965411
 GameObject:
   m_ObjectHideFlags: 0
@@ -6726,3 +6792,4 @@ SceneRoots:
   - {fileID: 400085891}
   - {fileID: 1808036064}
   - {fileID: 813470586}
+  - {fileID: 1733413191}

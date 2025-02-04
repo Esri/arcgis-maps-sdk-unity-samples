@@ -22,11 +22,9 @@ public class FeatureLayerInputManager : MonoBehaviour
     [SerializeField] private GameObject properties;
     [SerializeField] private GameObject propertiesView;
 
-    private InputActions inputActions;
-    private bool isLeftShiftPressed;
+    private InputManager inputManager;
     private bool isRunning;
     private List<GameObject> items = new List<GameObject>();
-    private TouchControls touchControls;
     private FeatureLayerUIManager uiManager;
 
     private IEnumerator AddItemsToScrollView()
@@ -44,11 +42,7 @@ public class FeatureLayerInputManager : MonoBehaviour
 
     private void Awake()
     {
-#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
-        inputActions = new InputActions();
-#else
-        touchControls = new TouchControls();
-#endif
+        inputManager = FindFirstObjectByType<InputManager>();
     }
 
     public void ClearAdditionalMaterial(GameObject feature)
@@ -78,52 +72,13 @@ public class FeatureLayerInputManager : MonoBehaviour
         items.Clear();
     }
 
-    private void OnEnable()
+    public void OnClick()
     {
 #if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
-        inputActions.Enable();
-        inputActions.DrawingControls.LeftClick.started += OnLeftClickStart;
-        inputActions.DrawingControls.LeftShift.performed += ctx => OnLeftShift(true);
-        inputActions.DrawingControls.LeftShift.canceled += ctx => OnLeftShift(false);
-#else
-        touchControls.Enable();
-        touchControls.Touch.TouchPress.started += OnTouchInputStarted;
-#endif
-    }
-
-    private void OnDisable()
-    {
-#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
-        inputActions.Disable();
-        inputActions.DrawingControls.LeftClick.started -= OnLeftClickStart;
-        inputActions.DrawingControls.LeftShift.performed -= ctx => OnLeftShift(true);
-        inputActions.DrawingControls.LeftShift.canceled -= ctx => OnLeftShift(false);
-#else
-        touchControls.Disable();
-        touchControls.Touch.TouchPress.started -= OnTouchInputStarted;
-#endif
-    }
-
-    private void OnLeftShift(bool isPressed)
-    {
-        isLeftShiftPressed = isPressed;
-        FindFirstObjectByType<ArcGISCameraControllerComponent>().enabled = !isPressed;
-    }
-
-    private void OnLeftClickStart(InputAction.CallbackContext obj)
-    {
-        if (!isLeftShiftPressed)
-        {
-            return;
-        }
-
         Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-        HandleInput(ray);
-    }
-
-    private void OnTouchInputStarted(InputAction.CallbackContext ctx)
-    {
-        Ray ray = Camera.main.ScreenPointToRay(touchControls.Touch.TouchPosition.ReadValue<Vector2>());
+#else
+        Ray ray = inputManager.TouchRay;
+#endif
         HandleInput(ray);
     }
 

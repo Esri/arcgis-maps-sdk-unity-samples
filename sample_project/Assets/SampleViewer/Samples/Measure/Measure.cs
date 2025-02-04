@@ -15,124 +15,45 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.InputSystem;
-using Esri.ArcGISMapsSDK.Samples.Components;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem.EnhancedTouch;
 
 public class Measure : MonoBehaviour
 {
-    private const float RaycastHeight = 5000f;
     private const float LineWidth = 5f;
 
-    public GameObject Line;
-    public TMP_Text GeodeticDistanceText;
-    public GameObject LineMarker;
-    public GameObject InterpolationMarker;
-    public float InterpolationInterval = 100;
-    public Button[] UnitButtons;
     public Button ClearButton;
+    public TMP_Text GeodeticDistanceText;
+    public float InterpolationInterval = 100;
+    public GameObject InterpolationMarker;
+    public GameObject Line;
+    public GameObject LineMarker;
     [SerializeField] float MarkerHeight = 200f;
+    public Button[] UnitButtons;
 
     private ArcGISMapComponent arcGISMapComponent;
-    private List<GameObject> featurePoints = new List<GameObject>();
-    private Stack<GameObject> stops = new Stack<GameObject>();
-    private double3 lastRootPosition;
-    private double geodeticDistance = 0;
-    private LineRenderer lineRenderer;
     private ArcGISLinearUnit currentUnit = new ArcGISLinearUnit(ArcGISLinearUnitId.Miles);
+    private List<GameObject> featurePoints = new List<GameObject>();
+    private double geodeticDistance = 0;
+    private InputManager inputManager;
+    private double3 lastRootPosition;
+    private LineRenderer lineRenderer;
+    private Stack<GameObject> stops = new Stack<GameObject>();
     private string unitText;
-    private InputActions inputActions;
-    private bool isLeftShiftPressed;
-    private TouchControls touchControls;
 
     private void Awake()
     {
-#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
-        inputActions = new InputActions();
-#else
-        touchControls = new TouchControls();
-#endif
+        inputManager = FindFirstObjectByType<InputManager>();
     }
 
-    private void OnEnable()
-    {
-#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
-        inputActions.Enable();
-        inputActions.DrawingControls.LeftClick.started += OnLeftClickStart;
-        inputActions.DrawingControls.LeftShift.performed += ctx => OnLeftShift(true);
-        inputActions.DrawingControls.LeftShift.canceled += ctx => OnLeftShift(false);
-#else
-        TouchSimulation.Enable();
-        touchControls.Enable();
-        touchControls.Touch.TouchPress.started += OnTouchInputStarted;
-#endif
-    }
-
-    private void OnDisable()
-    {
-#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
-        inputActions.Disable();
-        inputActions.DrawingControls.LeftClick.started -= OnLeftClickStart;
-        inputActions.DrawingControls.LeftShift.performed -= ctx => OnLeftShift(true);
-        inputActions.DrawingControls.LeftShift.canceled -= ctx => OnLeftShift(false);
-#else
-        touchControls.Disable();
-        touchControls.Touch.TouchPress.started -= OnTouchInputStarted;
-#endif
-    }
-
-    private void OnLeftShift(bool isPressed)
-    {
-        isLeftShiftPressed = isPressed;
-        FindObjectOfType<ArcGISCameraControllerComponent>().enabled = !isPressed;
-    }
-
-    private void OnLeftClickStart(InputAction.CallbackContext context)
-    { 
-        if (isLeftShiftPressed && !EventSystem.current.IsPointerOverGameObject())
-        {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-
-            if (Physics.Raycast(ray, out hit))
-            {
-                hit.point += new Vector3(0, MarkerHeight, 0);
-                var lineMarker = Instantiate(LineMarker, hit.point, Quaternion.identity, arcGISMapComponent.transform);
-                var thisPoint = arcGISMapComponent.EngineToGeographic(hit.point);
-
-                var location = lineMarker.GetComponent<ArcGISLocationComponent>();
-                location.enabled = true;
-                location.Position = thisPoint;
-                location.Rotation = new ArcGISRotation(0, 90, 0);
-
-                if (stops.Count > 0)
-                {
-                    GameObject lastStop = stops.Peek();
-                    var lastPoint = lastStop.GetComponent<ArcGISLocationComponent>().Position;
-
-                    // Calculate distance from last point to this point.
-                    geodeticDistance += ArcGISGeometryEngine.DistanceGeodetic(lastPoint, thisPoint, currentUnit, new ArcGISAngularUnit(ArcGISAngularUnitId.Degrees), ArcGISGeodeticCurveType.Geodesic).Distance;
-                    UpdateDisplay();
-
-                    featurePoints.Add(lastStop);
-
-                    // Interpolate middle points between last point and this point.
-                    Interpolate(lastStop, lineMarker, featurePoints);
-                    featurePoints.Add(lineMarker);
-                }
-
-                // Add this point to stops and also to feature points where stop is user-drawed, and feature points is a collection of user-drawed and interpolated.
-                stops.Push(lineMarker);
-                RenderLine(ref featurePoints);
-                RebaseLine();
-            }
-        }
-    }
-
-    private void OnTouchInputStarted(InputAction.CallbackContext ctx)
+    public void StartMeasure()
     {
         RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(touchControls.Touch.TouchPosition.ReadValue<Vector2>());
+
+#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
+        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+#else
+        Ray ray = inputManager.TouchRay;
+#endif
 
         if (Physics.Raycast(ray, out hit))
         {
@@ -216,12 +137,6 @@ public class Measure : MonoBehaviour
             featurePoints.Add(nextInterpolation);
             previousInterpolation = nextInterpolation.transform.position;
         }
-    }
-
-    // Set height for point transform and location component.
-    private void SetElevation(GameObject stop)
-    {
-        stop.GetComponent<ArcGISLocationComponent>().SurfacePlacementMode = ArcGISSurfacePlacementMode.OnTheGround;
     }
 
     private void RenderLine(ref List<GameObject> featurePoints)
