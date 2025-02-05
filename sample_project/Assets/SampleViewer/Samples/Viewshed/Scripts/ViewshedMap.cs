@@ -14,6 +14,7 @@ using System.Collections;
 public class ViewshedMap : MonoBehaviour
 {
     [SerializeField] private Material viewshedMaterial;
+    public string APIKey = "";
 
     private IEnumerator Start()
     {
@@ -21,21 +22,19 @@ public class ViewshedMap : MonoBehaviour
 
         var mapComponent = FindFirstObjectByType<ArcGISMapComponent>();
 
-        var apiKey = "";
-
-        if (string.IsNullOrEmpty(apiKey))
+        if (string.IsNullOrEmpty(APIKey))
         {
-            apiKey = ArcGISProjectSettingsAsset.Instance.APIKey;
+            APIKey = ArcGISProjectSettingsAsset.Instance.APIKey;
         }
 
-        if (string.IsNullOrEmpty(apiKey))
+        if (string.IsNullOrEmpty(APIKey))
         {
             Debug.LogError("An API Key must be set on the SampleAPIMapCreator or in the project settings for content to load");
         }
 
         var map = new Esri.GameEngine.Map.ArcGISMap(mapComponent.MapType);
 
-        map.Basemap = new Esri.GameEngine.Map.ArcGISBasemap(Esri.GameEngine.Map.ArcGISBasemapStyle.ArcGISImagery, apiKey);
+        map.Basemap = new Esri.GameEngine.Map.ArcGISBasemap(Esri.GameEngine.Map.ArcGISBasemapStyle.ArcGISImagery, APIKey);
 
         map.Elevation = new Esri.GameEngine.Map.ArcGISMapElevation(new Esri.GameEngine.Elevation.ArcGISImageElevationSource("https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer", "Terrain 3D", ""));
 
