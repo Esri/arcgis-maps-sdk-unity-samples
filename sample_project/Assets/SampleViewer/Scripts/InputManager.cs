@@ -7,10 +7,9 @@ public class InputManager : MonoBehaviour
 {
     public UnityEvent InputTriggered;
     public UnityEvent InputEnded;
-    public Ray TouchRay;
+    public TouchControls touchControls;
 
     private InputActions inputActions;
-    private TouchControls touchControls;
     private bool isLeftShiftPressed;
 
     private void Awake()
@@ -19,7 +18,6 @@ public class InputManager : MonoBehaviour
         inputActions = new InputActions();
 #else
         touchControls = new TouchControls();
-        TouchRay = Camera.main.ScreenPointToRay(touchControls.Touch.TouchPosition.ReadValue<Vector2>());
 #endif
     }
 

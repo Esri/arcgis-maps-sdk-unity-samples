@@ -66,7 +66,7 @@ public class Geocoder : MonoBehaviour
 #if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
         Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
 #else
-        Ray ray = inputManager.TouchRay;
+        Ray ray = Camera.main.ScreenPointToRay(inputManager.touchControls.Touch.TouchPosition.ReadValue<Vector2>());
 #endif
 
         if (Physics.Raycast(ray, out RaycastHit hit))

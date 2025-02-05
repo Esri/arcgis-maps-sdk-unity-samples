@@ -48,7 +48,7 @@ public class FeatureLayerInputManager : MonoBehaviour
     public void ClearAdditionalMaterial(GameObject feature)
     {
         var renderer = feature.GetComponentInChildren<Renderer>();
-        
+
         if (renderer == null)
         {
             return;
@@ -75,11 +75,10 @@ public class FeatureLayerInputManager : MonoBehaviour
     public void OnClick()
     {
 #if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
-        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+        HandleInput(Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue()));
 #else
-        Ray ray = inputManager.TouchRay;
+        HandleInput(Camera.main.ScreenPointToRay(inputManager.touchControls.Touch.TouchPosition.ReadValue<Vector2>()));
 #endif
-        HandleInput(ray);
     }
 
     private void HandleInput(Ray ray)
