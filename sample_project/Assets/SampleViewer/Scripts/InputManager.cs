@@ -1,3 +1,9 @@
+// Copyright 2025 Esri.
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+//
+
 using Esri.ArcGISMapsSDK.Samples.Components;
 using UnityEngine;
 using UnityEngine.Events;
@@ -27,8 +33,8 @@ public class InputManager : MonoBehaviour
         inputActions.Enable();
         inputActions.DrawingControls.LeftClick.started += OnClick;
         inputActions.DrawingControls.LeftClick.canceled += OnClickEnd;
-        inputActions.DrawingControls.LeftShift.performed += ctx => OnLeftShift(true);
-        inputActions.DrawingControls.LeftShift.canceled += ctx => OnLeftShift(false);
+        inputActions.DrawingControls.LeftShift.performed += OnLeftShiftStarted;
+        inputActions.DrawingControls.LeftShift.canceled += OnLeftShiftCanceled;
 #else
         touchControls.Enable();
         touchControls.Touch.TouchPress.started += OnTouchStarted;
@@ -42,8 +48,8 @@ public class InputManager : MonoBehaviour
         inputActions.Disable();
         inputActions.DrawingControls.LeftClick.started -= OnClick; 
         inputActions.DrawingControls.LeftClick.canceled -= OnClickEnd;
-        inputActions.DrawingControls.LeftShift.performed -= ctx => OnLeftShift(true);
-        inputActions.DrawingControls.LeftShift.canceled -= ctx => OnLeftShift(false);
+        inputActions.DrawingControls.LeftShift.performed -= OnLeftShiftStarted;
+        inputActions.DrawingControls.LeftShift.canceled -= OnLeftShiftCanceled;
 #else
         touchControls.Disable();
         touchControls.Touch.TouchPress.started -= OnTouchStarted;
@@ -67,10 +73,16 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    private void OnLeftShift(bool isPressed)
+    private void OnLeftShiftStarted(InputAction.CallbackContext context)
     {
-        isLeftShiftPressed = isPressed;
-        FindFirstObjectByType<ArcGISCameraControllerComponent>().enabled = !isPressed;
+        isLeftShiftPressed = true;
+        FindFirstObjectByType<ArcGISCameraControllerComponent>().enabled = false;
+    }
+
+    private void OnLeftShiftCanceled(InputAction.CallbackContext context)
+    {
+        isLeftShiftPressed = false;
+        FindFirstObjectByType<ArcGISCameraControllerComponent>().enabled = true;
     }
 
     private void OnTouchStarted(InputAction.CallbackContext obj)
