@@ -70,14 +70,18 @@ public class SampleSwitcher : MonoBehaviour
 
     private void ApplyApiKey()
     {
-        // API Script handles api key differently than the mapcomponent
-        var api = FindObjectOfType<APIMapCreator>();
-        if (api != null)
+        // API scripts handle api key differently than mapcomponent.
+        var apiMapCreator = FindObjectOfType<APIMapCreator>();
+        var viewShedMapCreator = FindObjectOfType<ViewshedMap>();
+
+        if (apiMapCreator != null && string.IsNullOrEmpty(apiMapCreator.APIKey))
         {
-            if (api.APIKey == "")
-            {
-                api.APIKey = apiKey;
-            }
+            apiMapCreator.APIKey = apiKey;
+            return;
+        }
+        else if (viewShedMapCreator != null && string.IsNullOrEmpty(viewShedMapCreator.APIKey))
+        {
+            viewShedMapCreator.APIKey = apiKey;
             return;
         }
 
