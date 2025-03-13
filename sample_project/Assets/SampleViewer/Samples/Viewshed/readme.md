@@ -28,7 +28,7 @@ The test scene uses the San Francisco 3D Object Scene Layer available from the p
 
 ## Notes
 
-- Currently, only 3D Object Scene Layers and Integrated Mesh Objects will work. They are supported by the API call to `layer.MaterialReference()`, which sets a custom material to those layer types. We plan to add a call to apply a custom material to a tiled layer in a future release.
+- Currently, only 3D Object Scene Layers are supported by the API call to `layer.MaterialReference()`, which sets a custom material to those layer types. We plan to add a call to apply a custom material to tiled layer and integrated mesh layers in a future release.
 - Due to floating point precision issues, there might be some minor artifacts in small, detailed areas. You can adjust the depth texture size in the `ViewshedCamera` component at an extra computation cost.
 - Objects that are behind the main ArcGIS or Scene camera will be unloaded and culled for unrelated performance reasons. This is expected behaviour and might result in the Viewshed Camera marking an area as visible until the occluded objects are loaded and rendered again.
 
