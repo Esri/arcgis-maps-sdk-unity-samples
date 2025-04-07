@@ -711,6 +711,10 @@ MonoBehaviour:
     y: 5215074.23966349
     z: -2532
     SRWkid: 3857
+    spatialReference:
+      wkid: 3857
+      verticalWKID: 0
+    version: 1
   rotation:
     Heading: 0
     Pitch: 90
@@ -1739,6 +1743,10 @@ MonoBehaviour:
     y: 5213648.100991615
     z: 735.8309936523438
     SRWkid: 3857
+    spatialReference:
+      wkid: 3857
+      verticalWKID: 0
+    version: 1
   rotation:
     Heading: 288.358535868816
     Pitch: 62.63441918793552
@@ -3070,16 +3078,7 @@ MonoBehaviour:
   basemapType: 0
   basemapAuthentication:
     ConfigurationIndex: -1
-  elevation: 
-  elevationAuthentication:
-    ConfigurationIndex: -1
-  elevationSources:
-  - Name: Terrain 3D
-    Type: 0
-    Source: https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer
-    IsEnabled: 1
-    Authentication:
-      ConfigurationIndex: -1
+  basemapAuthenticationType: 1
   mapElevation:
     ElevationSources:
     - Name: Terrain 3D
@@ -3088,6 +3087,8 @@ MonoBehaviour:
       IsEnabled: 1
       Authentication:
         ConfigurationIndex: -1
+      AuthenticationType: 1
+    ExaggerationFactor: 1
     MeshModifications:
       IsEnabled: 1
       MeshModifications: []
@@ -3098,6 +3099,10 @@ MonoBehaviour:
       y: 5215074.23966349
       z: 0
       SRWkid: 3857
+      spatialReference:
+        wkid: 4326
+        verticalWKID: 0
+      version: 1
     ExtentShape: 2
     ShapeDimensions:
       x: 5000
@@ -3111,6 +3116,7 @@ MonoBehaviour:
     IsVisible: 1
     Authentication:
       ConfigurationIndex: 0
+    AuthenticationType: 1
     BuildingSceneLayerFilter:
       ActiveBuildingAttributeFilterIndex: 0
       BuildingAttributeFilters: []
@@ -3129,17 +3135,26 @@ MonoBehaviour:
     x: -7910240.564330148
     y: 5215074.23966349
     z: 0
-    SRWkid: 3857
+    SRWkid: 4326
+    spatialReference:
+      wkid: 3857
+      verticalWKID: 0
+    version: 1
   mapType: 1
+  useCustomMapSpatialReference: 0
+  customMapSpatialReference:
+    wkid: 3857
+    verticalWKID: 0
   editorModeEnabled: 1
   dataFetchWithSceneView: 1
   rebaseWithSceneView: 0
   meshCollidersEnabled: 1
   configurations: []
+  oauthUserConfigurations: []
   RootChanged:
     m_PersistentCalls:
       m_Calls: []
-  version: 2
+  version: 3
 --- !u!114 &1808036066
 MonoBehaviour:
   m_ObjectHideFlags: 0
