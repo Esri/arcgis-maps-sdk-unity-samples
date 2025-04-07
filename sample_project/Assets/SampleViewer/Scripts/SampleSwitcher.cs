@@ -13,7 +13,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Esri.ArcGISMapsSDK.Utils;
 using TMPro;
-
+using System;
 
 public class SampleSwitcher : MonoBehaviour
 {
@@ -26,15 +26,14 @@ public class SampleSwitcher : MonoBehaviour
     private string currentSceneName;
     private string nextSceneName;
     private string projectAPIKey;
-    private string pipelineModeText;
-    private string PipelineType;
-    private int sceneLoadedCount;
+    private bool isHDRP = true;
 
     public GameObject MenuVideo;
     public Button ExitButton;
     public Camera cam;
     public Button[] sceneButtons;
-    public Button[] pipelineButtons;
+    public Button HDRPButton;
+    public Button URPButton;
 
     private void Start()
     {
@@ -58,39 +57,39 @@ public class SampleSwitcher : MonoBehaviour
             DoExitGame();
         });
 
+        SceneManager.sceneLoaded += (s, e) =>
+        {
+            ApplyApiKey();
+        };
+
 #if (UNITY_ANDROID || UNITY_IOS || UNITY_WSA)
-        SetPipeline("URP");
-        SetPipelineColor(1, pipelineButtons[1].colors.selectedColor, false);
-#else
-        SetPipeline("HDRP");
-        SetPipelineColor(0, pipelineButtons[0].colors.selectedColor, false);
+        isHDRP = false;
 #endif
+        SetPipeline();
     }
 
-    private void Update()
+    private void ApplyApiKey()
     {
-        // API Script handles api key differently than the mapcomponent
-        var api = FindObjectOfType<APIMapCreator>();
-        if (api != null)
+        // API scripts handle api key differently than mapcomponent.
+        var apiMapCreator = FindObjectOfType<APIMapCreator>();
+        var viewShedMapCreator = FindObjectOfType<ViewshedMap>();
+
+        if (apiMapCreator != null && string.IsNullOrEmpty(apiMapCreator.APIKey))
         {
-            if (api.APIKey == "")
-            {
-                api.APIKey = apiKey;
-            }
+            apiMapCreator.APIKey = apiKey;
+            return;
+        }
+        else if (viewShedMapCreator != null && string.IsNullOrEmpty(viewShedMapCreator.APIKey))
+        {
+            viewShedMapCreator.APIKey = apiKey;
             return;
         }
 
-        var mapComponents = FindObjectsByType<ArcGISMapComponent>(FindObjectsSortMode.None);
-
-        foreach (var mapComponent in mapComponents)
+        var mapComponent = FindObjectOfType<ArcGISMapComponent>();
+        if (mapComponent != null && mapComponent.APIKey == "")
         {
-            if (mapComponent != null && mapComponent.APIKey == "")
-            {
-                mapComponent.APIKey = apiKey;
-            }    
+            mapComponent.APIKey = apiKey;
         }
-        
-        sceneLoadedCount = SceneManager.sceneCount;
     }
 
     private void AddScene()
@@ -105,46 +104,16 @@ public class SampleSwitcher : MonoBehaviour
     //not the scene we loaded. To work around this we need to remove it before loading the next scene
     private void RemoveArcGISMapView()
     {
-        var ActiveScene = SceneManager.GetActiveScene();
-        var RootGOs = ActiveScene.GetRootGameObjects();
-        foreach (var RootGO in RootGOs)
+        var activeScene = SceneManager.GetActiveScene();
+        var rootGOs = activeScene.GetRootGameObjects();
+        foreach (var rootGO in rootGOs)
         {
-            var HP = RootGO.GetComponent<HPRoot>();
-            if (HP != null)
+            var hpRoot = rootGO.GetComponent<HPRoot>();
+            if (hpRoot != null)
             {
-                Destroy(RootGO);
+                Destroy(rootGO);
             }
         }
-    }
-
-    private void StopVideo()
-    {
-        MenuVideo.GetComponent<UnityEngine.Video.VideoPlayer>().Stop();
-        MenuVideo.gameObject.SetActive(false);
-    }
-
-    // pipelineType must be HDRP or URP
-    private void SetPipeline(string pipelineType)
-    {
-        PipelineType = pipelineType;
-        RenderPipelineAsset pipeline = Resources.Load<RenderPipelineAsset>("SampleGraphicSettings/Sample" + PipelineType + "ipeline");
-        GraphicsSettings.renderPipelineAsset = pipeline;
-    }
-
-    private IEnumerator PipelineChanged()
-    {
-        var Sky = FindObjectOfType<ArcGISSkyRepositionComponent>();
-        if (Sky != null)
-        {
-            DestroyImmediate(Sky.gameObject);
-        }
-
-        yield return null;
-
-        // Set the Pipeline based on what Pipeline button is clicked
-        SetPipeline(pipelineModeText);
-
-        SceneButtonOnClick();
     }
 
     // Delay pop-up notification
@@ -154,11 +123,11 @@ public class SampleSwitcher : MonoBehaviour
         animator.Play("NotificationAnim");
     }
 
-    private void EnableSceneButtons()
+    private void EnableDisableSceneButtons(bool enable)
     {
         foreach (Button btn in sceneButtons)
         {
-            btn.interactable = true;
+            btn.interactable = enable;
 
 #if !USE_HDRP_PACKAGE || UNITY_ANDROID || UNITY_IOS
             if (btn.gameObject.GetComponent<DisableSampleButtonsForURP>() || btn.gameObject.GetComponent<DisableSampleButtonForMobile>())
@@ -166,14 +135,6 @@ public class SampleSwitcher : MonoBehaviour
                 btn.interactable = false;
             }
 #endif
-        }
-    }
-
-    private void DisableSceneButtons()
-    {
-        foreach (Button btn in sceneButtons)
-        {
-            btn.interactable = false;
         }
     }
 
@@ -190,28 +151,10 @@ public class SampleSwitcher : MonoBehaviour
     public void CheckAPIKey(string value)
     {
         apiKey = value;
-        apiKeyInputField.text = string.IsNullOrEmpty(apiKey) ? "Enter your API key here..." : apiKey;
-
-        if (warning != null)
-        {
-            return;
-        }
-
-        if (string.IsNullOrEmpty(apiKey))
-        {
-            warning.gameObject.SetActive(true);
-            DisableSceneButtons();
-        }
-        else
-        {
-            warning.gameObject.SetActive(false);
-            EnableSceneButtons();
-        }
-    }
-
-    public void SetPipelineText(string text)
-    {
-        pipelineModeText = text;
+        var keyEmpty = string.IsNullOrEmpty(apiKey);
+        apiKeyInputField.text = keyEmpty ? "Enter your API key here..." : apiKey;
+        warning?.gameObject?.SetActive(keyEmpty);
+        EnableDisableSceneButtons(!keyEmpty);
     }
 
     public void SetNextSceneName(string text)
@@ -220,13 +163,9 @@ public class SampleSwitcher : MonoBehaviour
     }
 
     // Switch scenes with button click
-    public void SceneButtonOnClick()
+    private void LoadNextScene()
     {
-        StopVideo();
-
-        cam.enabled = false;
-
-        animator.Play("NotificationAnim_Close");
+        var sceneLoadedCount = SceneManager.sceneCount;
 
         // If no async scene is running, then just load an async scene
         if (sceneLoadedCount == 1)
@@ -236,8 +175,8 @@ public class SampleSwitcher : MonoBehaviour
         else if (sceneLoadedCount == 2)
         {
             // Change scene
-            var DoneUnloadingOperation = SceneManager.UnloadSceneAsync(currentSceneName);
-            DoneUnloadingOperation.completed += (AsyncOperation Operation) =>
+            var doneUnloadingOperation = SceneManager.UnloadSceneAsync(currentSceneName);
+            doneUnloadingOperation.completed += (AsyncOperation Operation) =>
             {
                 RemoveArcGISMapView();
 
@@ -246,71 +185,79 @@ public class SampleSwitcher : MonoBehaviour
         }
     }
 
-    public void PipelineButtonOnClick()
-    {
-        StartCoroutine(PipelineChanged());
-    }
-
     // Keep scene buttons pressed after selection
     public void OnSceneButtonClicked(Button clickedButton)
     {
-        int btnIndex = System.Array.IndexOf(sceneButtons, clickedButton);
+        int btnIndex = Array.IndexOf(sceneButtons, clickedButton);
 
         if (btnIndex == -1)
         {
             return;
         }
 
-        EnableSceneButtons();
+        EnableDisableSceneButtons(true);
 
         clickedButton.interactable = false;
+
+        HDRPButton.gameObject.SetActive(true);
+        URPButton.gameObject.SetActive(true);
+
+        if (clickedButton.gameObject.GetComponent<DisableSampleButtonsForURP>())
+        {
+            URPButton.gameObject.SetActive(false);
+            isHDRP = true;
+            SetPipeline();
+        }
+
+        MenuVideo.GetComponent<UnityEngine.Video.VideoPlayer>().Stop();
+        MenuVideo.gameObject.SetActive(false);
+
+        cam.enabled = false;
+
+        animator.Play("NotificationAnim_Close");
+
+        LoadNextScene();
     }
+
+    #region RenderingPipeline
 
     // Keep pipeline buttons pressed after selection
     public void OnPipelineButtonClicked(Button clickedButton)
     {
-        int btnIndex = System.Array.IndexOf(pipelineButtons, clickedButton);
+        isHDRP = clickedButton.Equals(HDRPButton);
+        StartCoroutine(PipelineChanged());
+    }
 
-        if (btnIndex == -1)
+    private IEnumerator PipelineChanged()
+    {
+        var sky = FindObjectOfType<ArcGISSkyRepositionComponent>();
+        if (sky != null)
         {
-            return;
+            DestroyImmediate(sky.gameObject);
         }
 
-        foreach (Button btn in pipelineButtons)
-        {
-            btn.interactable = true;
-        }
+        yield return null;
 
-        clickedButton.interactable = false;
+        SetPipeline();
+
+        LoadNextScene();
+
+        EnableDisablePipelineButtons();
     }
 
-    // Set HDRP/URP button color
-    public void SetPipelineColor(int index, Color color, bool active)
+    private void SetPipeline()
     {
-        var colors = pipelineButtons[index].colors;
-        colors.normalColor = color;
-        pipelineButtons[index].colors = colors;
-        pipelineButtons[index].interactable = active;
+        var pipelineString = isHDRP ? "HDRP" : "URP";
+        var assetPath = $"SampleGraphicSettings/Sample{pipelineString}ipeline";
+        RenderPipelineAsset pipeline = Resources.Load<RenderPipelineAsset>(assetPath);
+        GraphicsSettings.renderPipelineAsset = pipeline;
     }
 
-    // Unload HDRP/URP button color
-    public void UnloadPipelineColor(int index, Color color, bool active)
+    private void EnableDisablePipelineButtons()
     {
-        var colors = pipelineButtons[index].colors;
-        colors.normalColor = new Color(0.498f, 0.459f, 0.588f, 1.0f);
-        pipelineButtons[index].colors = colors;
-        pipelineButtons[index].interactable = active;
+        HDRPButton.interactable = !isHDRP;
+        URPButton.interactable = isHDRP;
     }
 
-    // Unload HDRP button color
-    public void UnloadHDRPColor()
-    {
-        UnloadPipelineColor(0, pipelineButtons[0].colors.normalColor, true);
-    }
-
-    // Unload URP button color
-    public void UnloadURPColor()
-    {
-        UnloadPipelineColor(1, pipelineButtons[1].colors.normalColor, true);
-    }
+    #endregion RenderingPipeline
 }

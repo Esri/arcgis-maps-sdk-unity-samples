@@ -10,6 +10,7 @@ using Esri.HPFramework;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.XR;
 
 using CommonUsages = UnityEngine.XR.CommonUsages;
@@ -77,13 +78,13 @@ public class XRTableTopInteractor : MonoBehaviour
 
     private void Start()
     {
-#if UNITY_EDITOR
-        camera.clearFlags = CameraClearFlags.Skybox;
-#elif UNITY_STANDALONE_WIN
-        camera.clearFlags = CameraClearFlags.Skybox;
-#else
+        if (SceneManager.GetActiveScene().name == "VRTableTop")
+        {
+            camera.clearFlags = CameraClearFlags.Skybox;
+            return;
+        }
+
         camera.clearFlags = CameraClearFlags.Color;
-#endif
     }
 
     public void StartPointDrag()

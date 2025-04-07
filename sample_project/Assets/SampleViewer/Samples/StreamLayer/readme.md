@@ -36,7 +36,7 @@ To make the connection, this sample uses [`ClientWebSocket`](https://learn.micro
 
 ### Parsing the response
 
-Every time the stream server has an update for a new plane or an existing one, it is necessary to parse the JSON response to update the information on the map. Apply the Unity's [`[Serializable]`](https://docs.unity3d.com/ScriptReference/Serializable.html) attribute to classes to enable serialization and parse the JSON response.
+Every time the stream server has an update for a new plane or an existing one, it is necessary to parse the JSON response to update the information on the map. Apply the Unity's [`[Serializable]`](https://docs.unity3d.com/2022.3/Documentation/ScriptReference/Serializable.html) attribute to classes to enable serialization and parse the JSON response.
 
 We grab the location (`x`, `y`, `z`), speed (`speed`), heading (`heading`), time the update was sent (`dateTimeStamp`), and the plane name (`name`). All of this information is used to display the plane in the correct location as well as inputs for a [dead reckoning](https://en.wikipedia.org/wiki/Dead_reckoning) system (`DeadReckoning.cs`) that updates each plane's location every frame so that the plane has a smooth animation instead of jumping from place to place every time we receive a new signal.
 

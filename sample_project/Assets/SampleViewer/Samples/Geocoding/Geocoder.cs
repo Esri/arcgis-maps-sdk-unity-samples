@@ -30,6 +30,7 @@ using UnityEngine.UI;
 using Esri.ArcGISMapsSDK.Samples.Components;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
+using Esri.ArcGISMapsSDK.Utils;
 
 public class Geocoder : MonoBehaviour
 {
@@ -52,73 +53,22 @@ public class Geocoder : MonoBehaviour
     private readonly string AddressQueryURL = "https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates";
     private readonly string LocationQueryURL = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode";
 
-    private InputActions inputActions;
-    private bool isLeftShiftPressed;
-    private TouchControls touchControls;
+    private InputManager inputManager;
+    private string apiKey;
 
     private void Awake()
     {
-#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
-        inputActions = new InputActions();
-#else
-        touchControls = new TouchControls();
-#endif
+        inputManager = FindFirstObjectByType<InputManager>();
     }
 
-    private void OnEnable()
+    public void Geocode()
     {
 #if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
-        inputActions.Enable();
-        inputActions.DrawingControls.LeftClick.started += OnLeftClickStart;
-        inputActions.DrawingControls.LeftShift.performed += ctx => OnLeftShift(true);
-        inputActions.DrawingControls.LeftShift.canceled += ctx => OnLeftShift(false);
+        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
 #else
-        TouchSimulation.Enable();
-        touchControls.Enable();
-        touchControls.Touch.TouchPress.started += OnTouchInputStarted;
+        Ray ray = Camera.main.ScreenPointToRay(inputManager.touchControls.Touch.TouchPosition.ReadValue<Vector2>());
 #endif
-    }
 
-    private void OnDisable()
-    {
-#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
-        inputActions.Disable();
-        inputActions.DrawingControls.LeftClick.started -= OnLeftClickStart;
-        inputActions.DrawingControls.LeftShift.performed -= ctx => OnLeftShift(true);
-        inputActions.DrawingControls.LeftShift.canceled -= ctx => OnLeftShift(false);
-#else
-        touchControls.Disable();
-        touchControls.Touch.TouchPress.started -= OnTouchInputStarted;
-#endif
-    }
-
-    private void OnLeftShift(bool isPressed)
-    {
-        isLeftShiftPressed = isPressed;
-    }
-
-    private void OnLeftClickStart(InputAction.CallbackContext context)
-    {
-        if (isLeftShiftPressed && !EventSystem.current.IsPointerOverGameObject())
-        {
-            Ray ray = MainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
-            if (Physics.Raycast(ray, out RaycastHit hit))
-            {
-                Vector3 direction = (hit.point - MainCamera.transform.position);
-                DistanceFromCamera = Vector3.Distance(MainCamera.transform.position, hit.point);
-                float scale = DistanceFromCamera * LocationMarkerScale / 400000; // Scale the marker based on its distance from camera 
-                Quaternion markerRotationPerpendicular = Quaternion.FromToRotation(Vector3.up, hit.normal);
-                Quaternion markerRotationFacingCamera = MainCamera.transform.rotation;
-                Quaternion markerRotation = markerRotationPerpendicular * markerRotationFacingCamera;
-                SetupQueryLocationGameObject(LocationMarkerTemplate, hit.point, markerRotation, new Vector3(scale, scale, scale));
-                ReverseGeocode(HitToGeoPosition(hit));
-            }
-        }
-    }
-
-    private void OnTouchInputStarted(InputAction.CallbackContext ctx)
-    {
-        Ray ray = MainCamera.ScreenPointToRay(touchControls.Touch.TouchPosition.ReadValue<Vector2>());
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             Vector3 direction = (hit.point - MainCamera.transform.position);
@@ -282,10 +232,17 @@ public class Geocoder : MonoBehaviour
     private async Task<string> SendAddressQuery(string address)
     {
 
+        apiKey = arcGISMapComponent.APIKey;
+
+        if (apiKey == "")
+        {
+            apiKey = ArcGISProjectSettingsAsset.Instance.APIKey;
+        }
+
         IEnumerable<KeyValuePair<string, string>> payload = new List<KeyValuePair<string, string>>()
         {
             new KeyValuePair<string, string>("address", address),
-            new KeyValuePair<string, string>("token", arcGISMapComponent.APIKey),
+            new KeyValuePair<string, string>("token", apiKey),
             new KeyValuePair<string, string>("f", "json"),
         };
 

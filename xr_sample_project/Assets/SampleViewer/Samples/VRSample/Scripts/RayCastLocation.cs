@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine.InputSystem;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 public class RayCastLocation : MonoBehaviour
 {
@@ -34,11 +35,7 @@ public class RayCastLocation : MonoBehaviour
     private Camera mainCamera;
     [SerializeField] private GameObject predictionRay;
     private GameObject queryLocationGO;
-
-    //[SerializeField] private LayerMask raycastLayer;
-    private Transform raycastHand;
-
-    //[SerializeField] private float maxRayDistance = 35;
+    [SerializeField] private XRRayInteractor raycastHand;
     [SerializeField] private InputActionProperty raycastInput;
 
     private string responseAddress = "";
@@ -112,7 +109,7 @@ public class RayCastLocation : MonoBehaviour
 
     private async void GetAddress()
     {
-        if (Physics.Raycast(raycastHand.position, raycastHand.forward, out RaycastHit hit))
+        if (Physics.Raycast(raycastHand.rayOriginTransform.position, raycastHand.rayOriginTransform.forward, out RaycastHit hit))
         {
             Vector3 direction = (hit.point - mainCamera.transform.position);
             float distanceFromCamera = Vector3.Distance(mainCamera.transform.position, hit.point);
@@ -174,15 +171,14 @@ public class RayCastLocation : MonoBehaviour
 
     private void Start()
     {
-        arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
+        arcGISMapComponent = FindFirstObjectByType<ArcGISMapComponent>();
         mainCamera = Camera.main;
-        raycastHand = this.transform;
     }
 
     private void Update()
     {
         // Set Ray to only be visible when you are able to raycast
-        predictionRay.SetActive(Physics.Raycast(raycastHand.position, raycastHand.forward, out RaycastHit hit));
+        predictionRay.SetActive(Physics.Raycast(raycastHand.rayOriginTransform.position, raycastHand.rayOriginTransform.forward, out RaycastHit hit));
 
         if (raycastInput.action.WasPressedThisFrame())
         {
