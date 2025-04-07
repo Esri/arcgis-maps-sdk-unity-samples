@@ -1,6 +1,6 @@
 # Explore the world in tabletop XR
 
-Move around in an ArcGIS World using Virtual Reality to move and fly through different cities
+Control a Virtual Table Top in Virtual Reality or Augmented Reality
 ![Image of XR Table Top](XRTableTop.png)
 
 ## How to use the sample
