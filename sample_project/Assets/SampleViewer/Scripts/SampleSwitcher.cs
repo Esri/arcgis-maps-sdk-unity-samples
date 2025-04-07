@@ -14,6 +14,7 @@ using UnityEngine.UI;
 using Esri.ArcGISMapsSDK.Utils;
 using TMPro;
 using System;
+using System.Linq;
 
 public class SampleSwitcher : MonoBehaviour
 {
@@ -85,10 +86,24 @@ public class SampleSwitcher : MonoBehaviour
             return;
         }
 
-        var mapComponent = FindObjectOfType<ArcGISMapComponent>();
-        if (mapComponent != null && mapComponent.APIKey == "")
+        var mapComponents = FindObjectsOfType<ArcGISMapComponent>();
+
+        if (mapComponents.Count() == 1)
         {
-            mapComponent.APIKey = apiKey;
+            if (mapComponents[0].APIKey == "")
+            {
+                mapComponents[0].APIKey = apiKey;
+            }
+        }
+        else
+        {
+            foreach (var mapComponent in mapComponents) 
+            {
+                if (mapComponent.APIKey == "")
+                {
+                    mapComponent.APIKey = apiKey;
+                }
+            }
         }
     }
 
