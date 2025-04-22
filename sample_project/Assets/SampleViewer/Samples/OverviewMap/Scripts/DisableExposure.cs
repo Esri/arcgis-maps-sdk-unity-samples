@@ -13,7 +13,7 @@ public class DisableExposure : MonoBehaviour
     private Volume skyAndFog;
     private Exposure exposure;
     
-    void Start()
+    private void Start()
     {
         Invoke(nameof(TurnOffExposure), 1.0f);
     }

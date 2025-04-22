@@ -15,6 +15,8 @@ public class ChangeOverviewScale : MonoBehaviour
     [SerializeField] private ArcGISLocationComponent cameraLocationComponent;
     [SerializeField] private HPTransform locationMarker;
     [SerializeField] private TMP_InputField mapSizeInput;
+    [SerializeField] private int maxSize;
+    [SerializeField] private int minSize;
     [SerializeField] private Camera overviewCamera;
     [SerializeField] private int scalar = 6;
     [SerializeField] private Toggle toggle;
@@ -73,7 +75,7 @@ public class ChangeOverviewScale : MonoBehaviour
             return;
         }
         
-        overviewCamera.orthographicSize = (float)cameraLocationComponent.Position.Z;
+        overviewCamera.orthographicSize = Mathf.Clamp((float)cameraLocationComponent.Position.Z, minSize, maxSize);
         SetLocationMarkerScale();
     }
 }

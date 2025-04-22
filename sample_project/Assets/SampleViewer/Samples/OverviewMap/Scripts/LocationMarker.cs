@@ -20,7 +20,7 @@ public class LocationMarker : MonoBehaviour
     private ArcGISLocationComponent locationComponent;
     private ArcGISMapComponent mapComponent;
     [SerializeField] private GameObject northMarker;
-    private float northOffset = 225.0f;
+    const float northOffset = 225.0f;
     [SerializeField] private RawImage overviewMap;
     [SerializeField] private Toggle rotationToggle;
 
@@ -40,34 +40,34 @@ public class LocationMarker : MonoBehaviour
 
     private void Update()
     {
-        if (!rotationToggle.isOn)
+        if (cameraLocationComponent == null || locationComponent == null || mapComponent == null)
         {
-            cameraComponent.GetComponent<ArcGISLocationComponent>().Position = new ArcGISPoint(
-                cameraLocationComponent.Position.X,
-                cameraLocationComponent.Position.Y,
-                cameraComponent.GetComponent<ArcGISLocationComponent>().Position.Z, mapComponent.OriginPosition.SpatialReference);
-            locationComponent.Position = new ArcGISPoint(
-                cameraLocationComponent.Position.X,
-                cameraLocationComponent.Position.Y, locationComponent.Position.Z,
-                mapComponent.OriginPosition.SpatialReference);
-            locationComponent.Rotation =
-                new ArcGISRotation(cameraLocationComponent.Rotation.Heading + northOffset,
-                    locationComponent.Rotation.Pitch, locationComponent.Rotation.Roll);   
+            return;
         }
-        else
+
+        UpdateLocationAndRotation();
+
+        if (rotationToggle.isOn)
         {
-            locationComponent.Rotation =
-                new ArcGISRotation(cameraLocationComponent.Rotation.Heading + northOffset,
-                    locationComponent.Rotation.Pitch, locationComponent.Rotation.Roll);   
             overviewMap.transform.localEulerAngles = new Vector3(0, 0, (float)cameraLocationComponent.Rotation.Heading);
-            cameraComponent.GetComponent<ArcGISLocationComponent>().Position = new ArcGISPoint(
-                cameraLocationComponent.Position.X,
-                cameraLocationComponent.Position.Y,
-                cameraComponent.GetComponent<ArcGISLocationComponent>().Position.Z, mapComponent.OriginPosition.SpatialReference);
-            locationComponent.Position = new ArcGISPoint(
-                cameraLocationComponent.Position.X,
-                cameraLocationComponent.Position.Y, locationComponent.Position.Z,
-                mapComponent.OriginPosition.SpatialReference);
+        }
+    }
+
+    private void UpdateLocationAndRotation()
+    {
+        var cameraPosition = cameraLocationComponent.Position;
+        var cameraRotation = cameraLocationComponent.Rotation;
+
+        var newPosition = new ArcGISPoint(cameraPosition.X, cameraPosition.Y, locationComponent.Position.Z, mapComponent.OriginPosition.SpatialReference);
+        locationComponent.Position = newPosition;
+
+        var newRotation = new ArcGISRotation(cameraRotation.Heading + northOffset, locationComponent.Rotation.Pitch, locationComponent.Rotation.Roll);
+        locationComponent.Rotation = newRotation;
+
+        var cameraComponentLocation = cameraComponent.GetComponent<ArcGISLocationComponent>();
+        if (cameraComponentLocation != null)
+        {
+            cameraComponentLocation.Position = new ArcGISPoint(cameraPosition.X, cameraPosition.Y, cameraComponentLocation.Position.Z, mapComponent.OriginPosition.SpatialReference);
         }
     }
 }

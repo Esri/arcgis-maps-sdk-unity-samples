@@ -231,10 +231,7 @@ MonoBehaviour:
   basemapType: 0
   basemapAuthentication:
     ConfigurationIndex: -1
-  elevation: 
-  elevationAuthentication:
-    ConfigurationIndex: -1
-  elevationSources: []
+  basemapAuthenticationType: 1
   mapElevation:
     ElevationSources:
     - Name: 
@@ -243,6 +240,8 @@ MonoBehaviour:
       IsEnabled: 1
       Authentication:
         ConfigurationIndex: -1
+      AuthenticationType: 1
+    ExaggerationFactor: 1
     MeshModifications:
       IsEnabled: 1
       MeshModifications: []
@@ -253,6 +252,10 @@ MonoBehaviour:
       y: 0
       z: 0
       SRWkid: 4326
+      spatialReference:
+        wkid: 4326
+        verticalWKID: 0
+      version: 1
     ExtentShape: 0
     ShapeDimensions:
       x: 0
@@ -266,6 +269,7 @@ MonoBehaviour:
     IsVisible: 0
     Authentication:
       ConfigurationIndex: 0
+    AuthenticationType: 1
     BuildingSceneLayerFilter:
       ActiveBuildingAttributeFilterIndex: 0
       BuildingAttributeFilters: []
@@ -285,16 +289,25 @@ MonoBehaviour:
     y: 40.71280000000003
     z: -0.0000000023108934478868823
     SRWkid: 4326
+    spatialReference:
+      wkid: 4326
+      verticalWKID: 0
+    version: 1
   mapType: 0
+  useCustomMapSpatialReference: 0
+  customMapSpatialReference:
+    wkid: 3857
+    verticalWKID: 0
   editorModeEnabled: 1
   dataFetchWithSceneView: 1
   rebaseWithSceneView: 0
   meshCollidersEnabled: 0
   configurations: []
+  oauthUserConfigurations: []
   RootChanged:
     m_PersistentCalls:
       m_Calls: []
-  version: 2
+  version: 3
 --- !u!114 &91236774
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -350,6 +363,8 @@ MonoBehaviour:
   cameraLocationComponent: {fileID: 712701879}
   locationMarker: {fileID: 686407253}
   mapSizeInput: {fileID: 1051773930}
+  maxSize: 25000
+  minSize: 10
   overviewCamera: {fileID: 1043089812}
   scalar: 4
   toggle: {fileID: 324205194}
@@ -1000,10 +1015,7 @@ MonoBehaviour:
   basemapType: 0
   basemapAuthentication:
     ConfigurationIndex: -1
-  elevation: 
-  elevationAuthentication:
-    ConfigurationIndex: -1
-  elevationSources: []
+  basemapAuthenticationType: 1
   mapElevation:
     ElevationSources:
     - Name: 
@@ -1012,6 +1024,8 @@ MonoBehaviour:
       IsEnabled: 1
       Authentication:
         ConfigurationIndex: -1
+      AuthenticationType: 1
+    ExaggerationFactor: 1
     MeshModifications:
       IsEnabled: 1
       MeshModifications: []
@@ -1022,6 +1036,10 @@ MonoBehaviour:
       y: 0
       z: 0
       SRWkid: 4326
+      spatialReference:
+        wkid: 4326
+        verticalWKID: 0
+      version: 1
     ExtentShape: 0
     ShapeDimensions:
       x: 0
@@ -1035,6 +1053,7 @@ MonoBehaviour:
     IsVisible: 1
     Authentication:
       ConfigurationIndex: 0
+    AuthenticationType: 1
     BuildingSceneLayerFilter:
       ActiveBuildingAttributeFilterIndex: 0
       BuildingAttributeFilters: []
@@ -1054,16 +1073,25 @@ MonoBehaviour:
     y: 40.71280000000001
     z: -1000.0000000015332
     SRWkid: 4326
+    spatialReference:
+      wkid: 4326
+      verticalWKID: 0
+    version: 1
   mapType: 0
+  useCustomMapSpatialReference: 0
+  customMapSpatialReference:
+    wkid: 3857
+    verticalWKID: 0
   editorModeEnabled: 1
   dataFetchWithSceneView: 1
   rebaseWithSceneView: 0
   meshCollidersEnabled: 1
   configurations: []
+  oauthUserConfigurations: []
   RootChanged:
     m_PersistentCalls:
       m_Calls: []
-  version: 2
+  version: 3
 --- !u!114 &474542306
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1078,7 +1106,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_LocalPosition:
     x: 1333789.602468212
-    y: 4137647.9709388833
+    y: 4137647.9709388823
     z: -4653316.195415743
   m_LocalRotation:
     value:
@@ -1434,7 +1462,7 @@ Transform:
   m_GameObject: {fileID: 712701875}
   serializedVersion: 2
   m_LocalRotation: {x: 0.041314494, y: -0.109620556, z: 0.004509889, w: 0.9931043}
-  m_LocalPosition: {x: -0.000007146189, y: 1500, z: 0.00046223955}
+  m_LocalPosition: {x: -0.000007146189, y: 1500, z: 0.00046224002}
   m_LocalScale: {x: 1, y: 0.9999998, z: 0.99999976}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1603,6 +1631,10 @@ MonoBehaviour:
     y: 40.71279999796847
     z: 500
     SRWkid: 4326
+    spatialReference:
+      wkid: 4326
+      verticalWKID: 0
+    version: 1
   rotation:
     Heading: 347.40194677325786
     Pitch: 85.23625666211274
@@ -1702,7 +1734,7 @@ MonoBehaviour:
   m_IsInitialized: 1
   m_LocalPosition:
     x: 1334102.8830336824
-    y: 4138626.372402458
+    y: 4138626.3724024575
     z: -4654409.1665331
   m_LocalRotation:
     value:
@@ -3085,6 +3117,10 @@ MonoBehaviour:
     y: 40.712799999080765
     z: 316.0000054937535
     SRWkid: 4326
+    spatialReference:
+      wkid: 4326
+      verticalWKID: 0
+    version: 1
   rotation:
     Heading: 359.99999841480565
     Pitch: 0
@@ -4205,7 +4241,6 @@ MonoBehaviour:
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
-  m_ScrollDeltaPerTick: 6
 --- !u!114 &1649823343
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5286,15 +5321,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2015862225003004306, guid: 1cc93e393ab3940f19d28ac40124f1ee, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.00000002205751
+      value: -0.000000042080945
       objectReference: {fileID: 0}
     - target: {fileID: 2015862225003004306, guid: 1cc93e393ab3940f19d28ac40124f1ee, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.788517
+      value: 12.992103
       objectReference: {fileID: 0}
     - target: {fileID: 2015862225003004306, guid: 1cc93e393ab3940f19d28ac40124f1ee, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.00000041420572
+      value: -0.0000007899944
       objectReference: {fileID: 0}
     - target: {fileID: 2015862225003004306, guid: 1cc93e393ab3940f19d28ac40124f1ee, type: 3}
       propertyPath: m_LocalRotation.w
