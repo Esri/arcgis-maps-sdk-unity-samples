@@ -289,7 +289,7 @@ public class SkyControllerComponent : MonoBehaviour
 
         stopTimeIncrease.onClick.AddListener(delegate
         {
-            if (stopTime < 24) 
+            if (stopTime < 24)
             {
                 stopTime += 1.0;
             }
@@ -354,7 +354,7 @@ public class SkyControllerComponent : MonoBehaviour
                         }
                         else
                         {
-                            transform.eulerAngles = new Vector3(transform.rotation.x, transform.rotation.y, (float) RotateSky());
+                            transform.eulerAngles = new Vector3(transform.rotation.x, transform.rotation.y, (float)RotateSky());
                         }
                     }
 
@@ -370,7 +370,7 @@ public class SkyControllerComponent : MonoBehaviour
                     }
                     else
                     {
-                        transform.eulerAngles = new Vector3(transform.rotation.x, transform.rotation.y, (float) RotateSky());
+                        transform.eulerAngles = new Vector3(transform.rotation.x, transform.rotation.y, (float)RotateSky());
                     }
 
                     break;
