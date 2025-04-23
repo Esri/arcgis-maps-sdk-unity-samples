@@ -77,69 +77,38 @@ public class SkyControllerComponent : MonoBehaviour
         if (timeMode == TimeMode.MilitaryTime)
         {
             TimeSpan timeSpan = TimeSpan.FromHours(InTime);
-            var hours = timeSpan.Hours < 10 ? string.Format("0" + timeSpan.Hours) : timeSpan.Hours.ToString();
-            var minutes = timeSpan.Minutes < 10 ? string.Format("0" + timeSpan.Minutes) : timeSpan.Minutes.ToString();
-            Text.text = string.Format(hours + ":" + minutes);
+            var hours = timeSpan.Hours < 10 ? "0" + timeSpan.Hours : timeSpan.Hours.ToString();
+            var minutes = timeSpan.Minutes < 10 ? "0" + timeSpan.Minutes : timeSpan.Minutes.ToString();
+            Text.text = hours + ":" + minutes;
         }
         else
         {
-            if (InTime <= 0)
+            var newTime = InTime;
+
+            if (InTime < 1)
             {
-                var newTime = InTime + 12;
-                TimeSpan timeSpan = TimeSpan.FromHours(newTime);
-                var minutes = timeSpan.Minutes < 10 ? string.Format("0" + timeSpan.Minutes) : timeSpan.Minutes.ToString();
-                Text.text = Text.text = string.Format(timeSpan.Hours + ":" + minutes + " am");
+                newTime = InTime + 12;
             }
-            else if (InTime >= 12)
+            else if (InTime >= 13)
             {
-                if (InTime >= 13)
-                {
-                    var newTime = InTime - 12;
-                    TimeSpan timeSpan = TimeSpan.FromHours(newTime);
-                    var minutes = timeSpan.Minutes < 10 ? string.Format("0" + timeSpan.Minutes) : timeSpan.Minutes.ToString();
-                    Text.text = Text.text = string.Format(timeSpan.Hours + ":" + minutes + " pm");
-                }
-                else
-                {
-                    TimeSpan timeSpan = TimeSpan.FromHours(InTime);
-                    var minutes = timeSpan.Minutes < 10 ? string.Format("0" + timeSpan.Minutes) : timeSpan.Minutes.ToString();
-                    Text.text = Text.text = string.Format(timeSpan.Hours + ":" + minutes + " pm");
-                }
+                newTime = InTime - 12;
             }
-            else if (InTime >= 0 && InTime < 1)
-            {
-                var newTime = InTime + 12;
-                TimeSpan timeSpan = TimeSpan.FromHours(newTime);
-                var minutes = timeSpan.Minutes < 10 ? string.Format("0" + timeSpan.Minutes) : timeSpan.Minutes.ToString();
-                Text.text = Text.text = string.Format(timeSpan.Hours + ":" + minutes + " am");
-            }
-            else
-            {
-                TimeSpan timeSpan = TimeSpan.FromHours(InTime);
-                var minutes = timeSpan.Minutes < 10 ? string.Format("0" + timeSpan.Minutes) : timeSpan.Minutes.ToString();
-                Text.text = Text.text = string.Format(timeSpan.Hours + ":" + minutes + " am");
-            }
+
+            string meridiem = InTime >= 12 && InTime < 24 ? "pm" : "am";
+
+            TimeSpan timeSpan = TimeSpan.FromHours(newTime);
+            var minutes = timeSpan.Minutes < 10 ? "0" + timeSpan.Minutes : timeSpan.Minutes.ToString();
+            Text.text = timeSpan.Hours + ":" + minutes + " " + meridiem;
         }
 
-        if (time > sunSet || time < sunRise)
-        {
-            var lampPosts = FindObjectsOfType<LampPostItem>();
+        var lampPosts = FindObjectsOfType<LampPostItem>();
 
-            foreach (var lampPost in lampPosts)
-            {
-                lampPost.GetComponentInChildren<Light>().enabled = true;
-            }
-        }
-        else
+        foreach (var lampPost in lampPosts)
         {
-            var lampPosts = FindObjectsOfType<LampPostItem>();
-
-            foreach (var lampPost in lampPosts)
-            {
-                lampPost.GetComponentInChildren<Light>().enabled = false;
-            }
+            lampPost.GetComponentInChildren<Light>().enabled = time > sunSet || time < sunRise;
         }
     }
+
     private double RotateSky()
     {
         return time / 24 * 360 + offset;
