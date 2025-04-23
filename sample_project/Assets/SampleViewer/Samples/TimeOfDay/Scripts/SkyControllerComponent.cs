@@ -109,6 +109,25 @@ public class SkyControllerComponent : MonoBehaviour
         }
     }
 
+    private void ChangeIconColor()
+    {
+
+        if ((animateToggle.isOn || simulateToggle.isOn) && skyMode != SkyMode.None)
+        {
+            moonIcon.color = Color.gray;
+            moonText.color = Color.gray;
+            sunIcon.color = Color.gray;
+            sunText.color = Color.gray;
+        }
+        else
+        {
+            moonIcon.color = Color.white;
+            moonText.color = Color.white;
+            sunIcon.color = Color.white;
+            sunText.color = Color.white;
+        }
+    }
+
     private double RotateSky()
     {
         return time / 24 * 360 + offset;
@@ -193,10 +212,6 @@ public class SkyControllerComponent : MonoBehaviour
                 simulateToggle.interactable = false;
                 animateToggle.interactable = false;
                 timeSlider.interactable = false;
-                moonIcon.color = Color.gray;
-                sunIcon.color = Color.gray;
-                sunIcon.color = Color.gray;
-                sunText.color = Color.gray;
             }
             else if (simulateToggle.isOn && skyMode == SkyMode.None)
             {
@@ -205,10 +220,6 @@ public class SkyControllerComponent : MonoBehaviour
                 simulateToggle.interactable = false;
                 animateToggle.interactable = false;
                 timeSlider.interactable = false;
-                moonIcon.color = Color.gray;
-                sunIcon.color = Color.gray;
-                sunIcon.color = Color.gray;
-                sunText.color = Color.gray;
             }
             else if (skyMode == SkyMode.Animated)
             {
@@ -217,10 +228,6 @@ public class SkyControllerComponent : MonoBehaviour
                 startButton.GetComponentInChildren<TextMeshProUGUI>().text = "Start";
                 skyMode = SkyMode.None;
                 timeSlider.interactable = true;
-                moonIcon.color = Color.white;
-                moonText.color = Color.white;
-                sunIcon.color = Color.white;
-                sunText.color = Color.white;
             }
             else if (skyMode == SkyMode.Simulated)
             {
@@ -229,11 +236,9 @@ public class SkyControllerComponent : MonoBehaviour
                 startButton.GetComponentInChildren<TextMeshProUGUI>().text = "Start";
                 skyMode = SkyMode.None;
                 timeSlider.interactable = true;
-                moonIcon.color = Color.white;
-                sunIcon.color = Color.white;
-                sunIcon.color = Color.white;
-                sunText.color = Color.white;
             }
+
+            ChangeIconColor();
         });
 
         startTimeIncrease.onClick.AddListener(delegate
@@ -319,6 +324,9 @@ public class SkyControllerComponent : MonoBehaviour
                         if (time >= stopTime)
                         {
                             startButton.GetComponentInChildren<TextMeshProUGUI>().text = "Start";
+                            timeSlider.value = (float)time;
+                            simulateToggle.interactable = true;
+                            timeSlider.interactable = true;
                             skyMode = SkyMode.None;
                         }
                         else
