@@ -331,6 +331,10 @@ MonoBehaviour:
     y: 40.7812
     z: 6000
     SRWkid: 4326
+    spatialReference:
+      wkid: 4326
+      verticalWKID: 0
+    version: 1
   rotation:
     Heading: 28
     Pitch: 0
@@ -888,6 +892,10 @@ MonoBehaviour:
     y: 40.7128
     z: 100
     SRWkid: 4326
+    spatialReference:
+      wkid: 4326
+      verticalWKID: 0
+    version: 1
   rotation:
     Heading: 0
     Pitch: 0
@@ -1081,16 +1089,7 @@ MonoBehaviour:
   basemapType: 0
   basemapAuthentication:
     ConfigurationIndex: -1
-  elevation: https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer
-  elevationAuthentication:
-    ConfigurationIndex: -1
-  elevationSources:
-  - Name: 
-    Type: 0
-    Source: https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer
-    IsEnabled: 1
-    Authentication:
-      ConfigurationIndex: -1
+  basemapAuthenticationType: 1
   mapElevation:
     ElevationSources:
     - Name: 
@@ -1099,6 +1098,8 @@ MonoBehaviour:
       IsEnabled: 1
       Authentication:
         ConfigurationIndex: -1
+      AuthenticationType: 1
+    ExaggerationFactor: 1
     MeshModifications:
       IsEnabled: 1
       MeshModifications: []
@@ -1109,6 +1110,10 @@ MonoBehaviour:
       y: 0
       z: 0
       SRWkid: 4326
+      spatialReference:
+        wkid: 4326
+        verticalWKID: 0
+      version: 1
     ExtentShape: 0
     ShapeDimensions:
       x: 0
@@ -1120,16 +1125,25 @@ MonoBehaviour:
     y: 40.7128
     z: 100
     SRWkid: 4326
+    spatialReference:
+      wkid: 4326
+      verticalWKID: 0
+    version: 1
   mapType: 1
+  useCustomMapSpatialReference: 0
+  customMapSpatialReference:
+    wkid: 3857
+    verticalWKID: 0
   editorModeEnabled: 1
   dataFetchWithSceneView: 1
   rebaseWithSceneView: 0
   meshCollidersEnabled: 1
   configurations: []
+  oauthUserConfigurations: []
   RootChanged:
     m_PersistentCalls:
       m_Calls: []
-  version: 2
+  version: 3
 --- !u!114 &1808036066
 MonoBehaviour:
   m_ObjectHideFlags: 0
