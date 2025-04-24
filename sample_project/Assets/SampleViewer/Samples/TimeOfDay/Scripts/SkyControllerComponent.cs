@@ -5,6 +5,7 @@
 //
 
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -52,6 +53,7 @@ public class SkyControllerComponent : MonoBehaviour
     [SerializeField] private TextMeshProUGUI timeText;
 
     private double offset = -90;
+    public List<GameObject> lampPosts;
 
     [Header("Time Variables")]
     [Range(0f, 0.1f)]
@@ -100,13 +102,6 @@ public class SkyControllerComponent : MonoBehaviour
             var minutes = timeSpan.Minutes < 10 ? "0" + timeSpan.Minutes : timeSpan.Minutes.ToString();
             Text.text = timeSpan.Hours + ":" + minutes + " " + meridiem;
         }
-
-        var lampPosts = FindObjectsOfType<LampPostItem>();
-
-        foreach (var lampPost in lampPosts)
-        {
-            lampPost.GetComponentInChildren<Light>().enabled = time > sunSet || time < sunRise;
-        }
     }
 
     private void ChangeIconColor()
@@ -130,9 +125,59 @@ public class SkyControllerComponent : MonoBehaviour
         }
     }
 
-    private double RotateSky()
+    private void ChangeMode()
     {
-        return time / 24 * 360 + offset;
+        CalculateTime(time, timeText);
+
+        switch (skyMode)
+        {
+            case SkyMode.None:
+                {
+                    break;
+                }
+            case SkyMode.Animated:
+                {
+                    RotateSky();
+
+                    if (stopTime >= startTime)
+                    {
+                        if (time >= stopTime)
+                        {
+                            StopAnimation();
+                        }
+                    }
+                    else if (startTime >= stopTime)
+                    {
+                        if (time >= stopTime && time <= startTime)
+                        {
+                            StopAnimation();
+                        }
+                    }
+
+                    break;
+                }
+            case SkyMode.Simulated:
+                {
+                    RotateSky();
+                    break;
+                }
+        }
+    }
+
+    private void RotateSky()
+    {
+        var rotationCalculation = time / 24 * 360 + offset;
+        time += speed;
+
+        if (time >= 24.0)
+        {
+            time = 0.0f;
+        }
+        else
+        {
+
+            transform.eulerAngles = new Vector3(transform.rotation.x, transform.rotation.y, (float)rotationCalculation);
+        }
     }
 
     private void Start()
@@ -141,12 +186,20 @@ public class SkyControllerComponent : MonoBehaviour
         timeRange.SetActive(animateToggle.isOn);
         backgroundImage.rectTransform.sizeDelta = animateToggle.isOn ? new Vector2(backgroundImage.rectTransform.sizeDelta.x, 500) : new Vector2(backgroundImage.rectTransform.sizeDelta.x, 430);
         backgroundImage.rectTransform.anchoredPosition = animateToggle.isOn ? new Vector2(backgroundImage.rectTransform.anchoredPosition.x, -321.02f) : new Vector2(backgroundImage.rectTransform.anchoredPosition.x, -286.07f);
+        CalculateTime(time, timeText);
         CalculateTime(startTime, startTimeText);
         CalculateTime(stopTime, stopTimeText);
         speedSlider.value = speed * 100;
         var speedValue = speed * 100;
         speedText.text = String.Format("{0:0.#}", speedValue);
-        transform.eulerAngles = new Vector3(transform.rotation.x, transform.rotation.y, (float)RotateSky());
+        RotateSky();
+
+        lampPosts = FindObjectOfType<LampPostFeatureQuery>().FeatureItems;
+
+        foreach (var lampPost in lampPosts)
+        {
+            lampPost.GetComponentInChildren<Light>().enabled = time > sunSet || time < sunRise;
+        }
 
         if (militaryTimeToggle.isOn)
         {
@@ -160,7 +213,9 @@ public class SkyControllerComponent : MonoBehaviour
         timeSlider.onValueChanged.AddListener(delegate
         {
             time = timeSlider.value;
-            transform.eulerAngles = new Vector3(transform.rotation.x, transform.rotation.y, (float)RotateSky());
+            RotateSky();
+            CalculateTime(time, timeText);
+            ToggleLampPosts();
         });
 
         militaryTimeToggle.onValueChanged.AddListener(delegate
@@ -174,6 +229,7 @@ public class SkyControllerComponent : MonoBehaviour
                 timeMode = TimeMode.AMPM;
             }
 
+            CalculateTime(time, timeText);
             CalculateTime(startTime, startTimeText);
             CalculateTime(stopTime, stopTimeText);
         });
@@ -214,6 +270,8 @@ public class SkyControllerComponent : MonoBehaviour
                 simulateToggle.interactable = false;
                 animateToggle.interactable = false;
                 timeSlider.interactable = false;
+                InvokeRepeating(nameof(ChangeMode), 0, 0.01f);
+                InvokeRepeating(nameof(ToggleLampPosts), 0, 1f);
             }
             else if (simulateToggle.isOn && skyMode == SkyMode.None)
             {
@@ -222,6 +280,8 @@ public class SkyControllerComponent : MonoBehaviour
                 simulateToggle.interactable = false;
                 animateToggle.interactable = false;
                 timeSlider.interactable = false;
+                InvokeRepeating(nameof(ChangeMode), 0, 0.01f);
+                InvokeRepeating(nameof(ToggleLampPosts), 0, 1f);
             }
             else if (skyMode == SkyMode.Animated)
             {
@@ -230,6 +290,8 @@ public class SkyControllerComponent : MonoBehaviour
                 startButton.GetComponentInChildren<TextMeshProUGUI>().text = "Start";
                 skyMode = SkyMode.None;
                 timeSlider.interactable = true;
+                CancelInvoke(nameof(ChangeMode));
+                CancelInvoke(nameof(ToggleLampPosts));
             }
             else if (skyMode == SkyMode.Simulated)
             {
@@ -238,6 +300,8 @@ public class SkyControllerComponent : MonoBehaviour
                 startButton.GetComponentInChildren<TextMeshProUGUI>().text = "Start";
                 skyMode = SkyMode.None;
                 timeSlider.interactable = true;
+                CancelInvoke(nameof(ChangeMode));
+                CancelInvoke(nameof(ToggleLampPosts));
             }
 
             ChangeIconColor();
@@ -303,57 +367,21 @@ public class SkyControllerComponent : MonoBehaviour
         });
     }
 
-    private void Update()
+    private void StopAnimation()
     {
-        CalculateTime(time, timeText);
+        startButton.GetComponentInChildren<TextMeshProUGUI>().text = "Start";
+        timeSlider.value = (float)time;
+        simulateToggle.interactable = true;
+        timeSlider.interactable = true;
+        skyMode = SkyMode.None;
+        ChangeIconColor();
+    }
 
-        switch (skyMode)
+    private void ToggleLampPosts()
+    {
+        foreach (var lampPost in lampPosts)
         {
-            case SkyMode.None:
-                {
-                    break;
-                }
-            case SkyMode.Animated:
-                {
-                    time += speed;
-
-                    if (time >= 24.0)
-                    {
-                        time = 0.0f;
-                    }
-                    else
-                    {
-                        if (time >= stopTime)
-                        {
-                            startButton.GetComponentInChildren<TextMeshProUGUI>().text = "Start";
-                            timeSlider.value = (float)time;
-                            simulateToggle.interactable = true;
-                            timeSlider.interactable = true;
-                            skyMode = SkyMode.None;
-                        }
-                        else
-                        {
-                            transform.eulerAngles = new Vector3(transform.rotation.x, transform.rotation.y, (float)RotateSky());
-                        }
-                    }
-
-                    break;
-                }
-            case SkyMode.Simulated:
-                {
-                    time += speed;
-
-                    if (time >= 24.0)
-                    {
-                        time = 0.0f;
-                    }
-                    else
-                    {
-                        transform.eulerAngles = new Vector3(transform.rotation.x, transform.rotation.y, (float)RotateSky());
-                    }
-
-                    break;
-                }
+            lampPost.GetComponentInChildren<Light>().enabled = time > sunSet || time < sunRise;
         }
     }
 }

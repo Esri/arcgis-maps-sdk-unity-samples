@@ -21,7 +21,7 @@ Control the Time of Day manually, simulate it at a given speed, or animate it fr
 
 1. Create a new C# script and make an HTTP request to [query a feature layer](https://developers.arcgis.com/rest/services-reference/enterprise/query-feature-service-.htm). 
 2. Create a new C# script
-   - Create a function that will data returned from the Feature Query.
+   - Create a function that will store data returned from the Feature Query.
    - Create a function to spawn the Feature gameobjects according to the data received in the query.
    - Attach the [**ArcGIS Location Component**](https://developers.arcgis.com/unreal-engine/maps/location-component/) to the Feature data gameobject.
    - Add point lights to the feature items and set them to **off** by default.
@@ -38,6 +38,7 @@ Note: You can use `Debug.Log()` to print log messages in the **Console** window 
 ## About the data
 
 Data for Boston Lamp Posts is fetched from a [Feature Layer](https://services.arcgis.com/V6ZHFr6zdgNZuVG0/ArcGIS/rest/services/Boston_Street_Light_Locations/FeatureServer/0/query?f=geojson&where=1=1&outfields=*)hosted by Esri.
+Data for [Esri Global 3D Buildings Layer](https://basemaps3d.arcgis.com/arcgis/rest/services/OpenStreetMap3D_Buildings_v1/SceneServer)
 Elevation data is loaded from the [Terrain 3D elevation layer](https://www.arcgis.com/home/item.html?id=7029fb60158543ad845c7e1527af11e4) hosted by Esri.
 
 ## Tags
