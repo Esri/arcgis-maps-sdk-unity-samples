@@ -4,7 +4,7 @@
 
 ## How to use the sample (SampleViewer)
 
-1. The SampleViewer Scene should open by default, if it is not open, click the **SampleViewer** scene to open it.
+1. The SampleViewer Scene should open by default. If it is not open, click the **SampleViewer** scene to open it.
 2. Click play.
 3. Using the UI, enter an APIKey in the input field to the top left. 
 4. Open the **Samples** drop down, and click **Overviw Map** to open the level.
