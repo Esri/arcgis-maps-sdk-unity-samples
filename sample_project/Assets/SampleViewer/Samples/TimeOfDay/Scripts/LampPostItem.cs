@@ -11,7 +11,7 @@ using UnityEngine;
 public class LampPostItem : FeatureData
 {
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         locationComponent = transform.GetComponent<ArcGISLocationComponent>();
         featureHP = transform.GetComponent<HPTransform>();

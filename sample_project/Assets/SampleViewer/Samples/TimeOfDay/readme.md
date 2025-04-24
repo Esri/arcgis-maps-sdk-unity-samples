@@ -1,6 +1,6 @@
 # Visualize Time of Day
 
-Control the Time of Day manually, simulate it at a given speed, or animate it from one time to anoter.
+Control the Time of Day manually, simulate it at a given speed, or animate it from one time to another.
 
 ![Image of Time of Day Sample](TimeOfDay.png)
 
@@ -21,7 +21,7 @@ Control the Time of Day manually, simulate it at a given speed, or animate it fr
 
 1. Create a new C# script and make an HTTP request to [query a feature layer](https://developers.arcgis.com/rest/services-reference/enterprise/query-feature-service-.htm). 
 2. Create a new C# script
-   - Create the function to place the data returned from the Feature Query.
+   - Create a function that will data returned from the Feature Query.
    - Create a function to spawn the Feature gameobjects according to the data received in the query.
    - Attach the [**ArcGIS Location Component**](https://developers.arcgis.com/unreal-engine/maps/location-component/) to the Feature data gameobject.
    - Add point lights to the feature items and set them to **off** by default.

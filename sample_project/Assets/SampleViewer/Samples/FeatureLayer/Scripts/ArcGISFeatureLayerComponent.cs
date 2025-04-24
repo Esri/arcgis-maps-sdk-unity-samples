@@ -25,10 +25,9 @@ public class ArcGISFeatureLayerComponent : MonoBehaviour
     }
 
     [System.Serializable]
-    public class FeatureQueryData
+    public class GeometryData
     {
-        public GeometryData geometry = new GeometryData();
-        public PropertyData properties = new PropertyData();
+        public List<double> coordinates = new List<double>();
     }
 
     [System.Serializable]
@@ -39,12 +38,13 @@ public class ArcGISFeatureLayerComponent : MonoBehaviour
     }
 
     [System.Serializable]
-    public class GeometryData
+    public class FeatureQueryData
     {
-        public List<double> coordinates = new List<double>();
+        public GeometryData geometry = new GeometryData();
+        public PropertyData properties = new PropertyData();
     }
 
-    public List<FeatureQueryData> Features = new List<FeatureQueryData>();
+    private List<FeatureQueryData> Features = new List<FeatureQueryData>();
     private FeatureData featureInfo;
     public List<GameObject> FeatureItems = new List<GameObject>();
     [SerializeField] private GameObject featurePrefab;
@@ -105,7 +105,7 @@ public class ArcGISFeatureLayerComponent : MonoBehaviour
     {
         foreach (var feature in jFeatures)
         {
-            FeatureQueryData currentFeature = new FeatureQueryData();
+            var currentFeature = new FeatureQueryData();
             var featureItem = Instantiate(featurePrefab, this.transform);
             //Layer 7 because that is the index of the layer created specifically for feature layers so that they ignore themselves for raycasting.
             featureItem.layer = 7;

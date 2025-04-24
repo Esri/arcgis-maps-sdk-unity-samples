@@ -118,6 +118,7 @@ public class SkyControllerComponent : MonoBehaviour
             moonText.color = Color.gray;
             sunIcon.color = Color.gray;
             sunText.color = Color.gray;
+            timeSlider.GetComponentInChildren<Image>().color = Color.gray;
         }
         else
         {
@@ -125,6 +126,7 @@ public class SkyControllerComponent : MonoBehaviour
             moonText.color = Color.white;
             sunIcon.color = Color.white;
             sunText.color = Color.white;
+            timeSlider.GetComponentInChildren<Image>().color = Color.white;
         }
     }
 

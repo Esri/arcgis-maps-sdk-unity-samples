@@ -6,7 +6,7 @@
 
 public class LampPostFeatureQuery : ArcGISFeatureLayerComponent
 {
-    void Start()
+    private void Start()
     {
         CreateLink(webLink.Link);
         StartCoroutine(GetFeatures());
