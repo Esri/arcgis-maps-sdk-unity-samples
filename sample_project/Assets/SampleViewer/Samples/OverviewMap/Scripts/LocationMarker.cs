@@ -35,6 +35,11 @@ public class LocationMarker : MonoBehaviour
         rotationToggle.onValueChanged.AddListener(delegate
         {
             northMarker.SetActive(rotationToggle.isOn);
+
+            if (!rotationToggle.isOn)
+            {
+                overviewMap.transform.rotation = new Quaternion(0,0,0,0);
+            }
         });
     }
 
@@ -65,6 +70,7 @@ public class LocationMarker : MonoBehaviour
         locationComponent.Rotation = newRotation;
 
         var cameraComponentLocation = cameraComponent.GetComponent<ArcGISLocationComponent>();
+
         if (cameraComponentLocation != null)
         {
             cameraComponentLocation.Position = new ArcGISPoint(cameraPosition.X, cameraPosition.Y, cameraComponentLocation.Position.Z, mapComponent.OriginPosition.SpatialReference);
