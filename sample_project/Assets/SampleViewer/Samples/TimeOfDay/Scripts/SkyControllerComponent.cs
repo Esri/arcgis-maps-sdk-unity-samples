@@ -106,7 +106,6 @@ public class SkyControllerComponent : MonoBehaviour
 
     private void ChangeIconColor()
     {
-
         if ((animateToggle.isOn || simulateToggle.isOn) && skyMode != SkyMode.None)
         {
             moonIcon.color = Color.gray;
@@ -132,35 +131,25 @@ public class SkyControllerComponent : MonoBehaviour
         switch (skyMode)
         {
             case SkyMode.None:
-                {
-                    break;
-                }
+            {
+                break;
+            }
             case SkyMode.Animated:
+            {
+                RotateSky();
+
+                if (time >= stopTime && (stopTime >= startTime || time <= startTime))
                 {
-                    RotateSky();
-
-                    if (stopTime >= startTime)
-                    {
-                        if (time >= stopTime)
-                        {
-                            StopAnimation();
-                        }
-                    }
-                    else if (startTime >= stopTime)
-                    {
-                        if (time >= stopTime && time <= startTime)
-                        {
-                            StopAnimation();
-                        }
-                    }
-
-                    break;
+                    StopAnimation();
                 }
+         
+                break;
+            }
             case SkyMode.Simulated:
-                {
-                    RotateSky();
-                    break;
-                }
+            {
+                RotateSky();
+                break;
+            }
         }
     }
 
@@ -175,7 +164,6 @@ public class SkyControllerComponent : MonoBehaviour
         }
         else
         {
-
             transform.eulerAngles = new Vector3(transform.rotation.x, transform.rotation.y, (float)rotationCalculation);
         }
     }
@@ -369,19 +357,27 @@ public class SkyControllerComponent : MonoBehaviour
 
     private void StopAnimation()
     {
+        CancelInvoke(nameof(ChangeMode));
+        CancelInvoke(nameof(ToggleLampPosts));
+        time = stopTime;
         startButton.GetComponentInChildren<TextMeshProUGUI>().text = "Start";
         timeSlider.value = (float)time;
         simulateToggle.interactable = true;
         timeSlider.interactable = true;
         skyMode = SkyMode.None;
         ChangeIconColor();
+        CalculateTime(stopTime, timeText);
     }
 
     private void ToggleLampPosts()
     {
-        foreach (var lampPost in lampPosts)
+        var lightIsOn = time > sunSet || time < sunRise;
+        if (lampPosts[0].GetComponentInChildren<Light>().enabled != lightIsOn)
         {
-            lampPost.GetComponentInChildren<Light>().enabled = time > sunSet || time < sunRise;
+            foreach (var lampPost in lampPosts)
+            {
+                lampPost.GetComponentInChildren<Light>().enabled = lightIsOn;
+            }
         }
     }
 }
