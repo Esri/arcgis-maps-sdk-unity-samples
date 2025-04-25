@@ -372,6 +372,7 @@ public class SkyControllerComponent : MonoBehaviour
     private void ToggleLampPosts()
     {
         var lightIsOn = time > sunSet || time < sunRise;
+
         if (lampPosts[0].GetComponentInChildren<Light>().enabled != lightIsOn)
         {
             foreach (var lampPost in lampPosts)
