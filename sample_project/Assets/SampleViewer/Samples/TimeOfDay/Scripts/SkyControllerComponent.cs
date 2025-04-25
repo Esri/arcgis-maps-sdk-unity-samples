@@ -258,8 +258,8 @@ public class SkyControllerComponent : MonoBehaviour
                 simulateToggle.interactable = false;
                 animateToggle.interactable = false;
                 timeSlider.interactable = false;
-                InvokeRepeating(nameof(ChangeMode), 0, 0.01f);
-                InvokeRepeating(nameof(ToggleLampPosts), 0, 1f);
+                InvokeRepeating(nameof(ChangeMode), 0, 0.05f);
+                InvokeRepeating(nameof(ToggleLampPosts), 0, 0.01f / speed);
             }
             else if (simulateToggle.isOn && skyMode == SkyMode.None)
             {
@@ -268,8 +268,8 @@ public class SkyControllerComponent : MonoBehaviour
                 simulateToggle.interactable = false;
                 animateToggle.interactable = false;
                 timeSlider.interactable = false;
-                InvokeRepeating(nameof(ChangeMode), 0, 0.01f);
-                InvokeRepeating(nameof(ToggleLampPosts), 0, 1f);
+                InvokeRepeating(nameof(ChangeMode), 0, 0.05f);
+                InvokeRepeating(nameof(ToggleLampPosts), 0, 0.01f / speed);
             }
             else if (skyMode == SkyMode.Animated)
             {
