@@ -237,6 +237,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 441482e8936e35048a1dffac814e3ef8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Profile: {fileID: 0}
+  m_StaticLightingSkyUniqueID: 0
+  m_StaticLightingCloudsUniqueID: 0
+  m_StaticLightingVolumetricClouds: 0
 --- !u!4 &69324442
 Transform:
   m_ObjectHideFlags: 1
@@ -1767,6 +1771,10 @@ MonoBehaviour:
     y: 40.691242
     z: 3000
     SRWkid: 4326
+    spatialReference:
+      wkid: 4326
+      verticalWKID: 0
+    version: 1
   rotation:
     Heading: 65
     Pitch: 68
@@ -1860,7 +1868,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b7511ad6dd4a23469c6b1d94255a41f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  JoystickCanvas: {fileID: 8245483605992596556, guid: f94e67b1f8188b441b93c2d9ac0435eb, type: 3}
 --- !u!114 &963194236
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2094,10 +2101,7 @@ MonoBehaviour:
   basemapType: 0
   basemapAuthentication:
     ConfigurationIndex: -1
-  elevation: 
-  elevationAuthentication:
-    ConfigurationIndex: -1
-  elevationSources: []
+  basemapAuthenticationType: 1
   mapElevation:
     ElevationSources:
     - Name: Terrain 3D
@@ -2106,6 +2110,8 @@ MonoBehaviour:
       IsEnabled: 0
       Authentication:
         ConfigurationIndex: -1
+      AuthenticationType: 1
+    ExaggerationFactor: 1
     MeshModifications:
       IsEnabled: 1
       MeshModifications: []
@@ -2116,6 +2122,10 @@ MonoBehaviour:
       y: 0
       z: 0
       SRWkid: 4326
+      spatialReference:
+        wkid: 4326
+        verticalWKID: 0
+      version: 1
     ExtentShape: 0
     ShapeDimensions:
       x: 0
@@ -2127,16 +2137,25 @@ MonoBehaviour:
     y: 40.691242
     z: 3000
     SRWkid: 4326
+    spatialReference:
+      wkid: 4326
+      verticalWKID: 0
+    version: 1
   mapType: 1
+  useCustomMapSpatialReference: 0
+  customMapSpatialReference:
+    wkid: 3857
+    verticalWKID: 0
   editorModeEnabled: 1
   dataFetchWithSceneView: 1
   rebaseWithSceneView: 0
   meshCollidersEnabled: 0
   configurations: []
+  oauthUserConfigurations: []
   RootChanged:
     m_PersistentCalls:
       m_Calls: []
-  version: 2
+  version: 3
 --- !u!114 &1068604540
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -788,6 +788,10 @@ MonoBehaviour:
     y: 40.69653162346824
     z: 1500.2566193412556
     SRWkid: 4326
+    spatialReference:
+      wkid: 4326
+      verticalWKID: 0
+    version: 1
   rotation:
     Heading: 0.00000011233469114868042
     Pitch: 76.88160063110143
@@ -2771,10 +2775,7 @@ MonoBehaviour:
   basemapType: 0
   basemapAuthentication:
     ConfigurationIndex: -1
-  elevation: 
-  elevationAuthentication:
-    ConfigurationIndex: -1
-  elevationSources: []
+  basemapAuthenticationType: 1
   mapElevation:
     ElevationSources:
     - Name: 
@@ -2783,6 +2784,8 @@ MonoBehaviour:
       IsEnabled: 1
       Authentication:
         ConfigurationIndex: -1
+      AuthenticationType: 1
+    ExaggerationFactor: 1
     MeshModifications:
       IsEnabled: 1
       MeshModifications: []
@@ -2793,6 +2796,10 @@ MonoBehaviour:
       y: 0
       z: 0
       SRWkid: 4326
+      spatialReference:
+        wkid: 4326
+        verticalWKID: 0
+      version: 1
     ExtentShape: 0
     ShapeDimensions:
       x: 0
@@ -2804,16 +2811,25 @@ MonoBehaviour:
     y: 40.7128
     z: 0
     SRWkid: 4326
+    spatialReference:
+      wkid: 4326
+      verticalWKID: 0
+    version: 1
   mapType: 1
+  useCustomMapSpatialReference: 0
+  customMapSpatialReference:
+    wkid: 3857
+    verticalWKID: 0
   editorModeEnabled: 1
   dataFetchWithSceneView: 1
   rebaseWithSceneView: 0
   meshCollidersEnabled: 1
   configurations: []
+  oauthUserConfigurations: []
   RootChanged:
     m_PersistentCalls:
       m_Calls: []
-  version: 2
+  version: 3
 --- !u!114 &1152496014
 MonoBehaviour:
   m_ObjectHideFlags: 0
