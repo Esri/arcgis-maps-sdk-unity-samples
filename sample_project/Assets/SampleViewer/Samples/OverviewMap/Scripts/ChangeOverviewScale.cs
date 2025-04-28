@@ -5,6 +5,7 @@
 //
 
 using Esri.ArcGISMapsSDK.Components;
+using Esri.GameEngine.Geometry;
 using Esri.HPFramework;
 using TMPro;
 using UnityEngine;
@@ -75,7 +76,10 @@ public class ChangeOverviewScale : MonoBehaviour
             return;
         }
         
-        overviewCamera.orthographicSize = Mathf.Clamp((float)cameraLocationComponent.Position.Z, minSize, maxSize);
+        var maxZ = Mathf.Clamp((float)cameraLocationComponent.Position.Z, minSize, maxSize);
+        overviewCamera.orthographicSize = maxZ;
+        var clampedPoint = new ArcGISPoint(cameraLocationComponent.Position.X, cameraLocationComponent.Position.Y, maxZ);
+        cameraLocationComponent.Position = clampedPoint;
         SetLocationMarkerScale();
     }
 }
