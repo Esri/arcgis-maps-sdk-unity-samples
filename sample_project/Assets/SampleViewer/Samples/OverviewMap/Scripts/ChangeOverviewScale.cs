@@ -75,11 +75,8 @@ public class ChangeOverviewScale : MonoBehaviour
         {
             return;
         }
-        
-        var maxZ = Mathf.Clamp((float)cameraLocationComponent.Position.Z, minSize, maxSize);
-        overviewCamera.orthographicSize = maxZ;
-        var clampedPoint = new ArcGISPoint(cameraLocationComponent.Position.X, cameraLocationComponent.Position.Y, maxZ);
-        cameraLocationComponent.Position = clampedPoint;
+
+        overviewCamera.orthographicSize = Mathf.Clamp((float)cameraLocationComponent.Position.Z, minSize, maxSize);
         SetLocationMarkerScale();
     }
 }
