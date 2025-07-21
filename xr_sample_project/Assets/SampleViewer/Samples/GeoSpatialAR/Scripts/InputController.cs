@@ -12,220 +12,224 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class InputController : MonoBehaviour
+
+namespace SampleViewer.Samples.GeoSpatialAR.Scripts
 {
-    private Camera arcGISCamera;
-    private FeatureLayerQuery featureLayerQuery;
-    private GameObject lastSelectedFeature;
-    private bool menuVisible;
-    private bool onScreen;
-    private ARTouchControls touchControls;
-
-    [Header("Animations")] [SerializeField]
-    private Animator anim;
-
-    [SerializeField] private Animator infoAnim;
-
-    [Header("Materials")] [SerializeField] private Material highlightMaterial;
-    [SerializeField] private Material outlineMaterial;
-
-    [Header("Mini Map")] private Button expandButton;
-    [SerializeField] private GameObject miniMap;
-    [SerializeField] private RenderTexture miniMapTexture;
-
-    [Header("UI Components")] [SerializeField]
-    private Sprite downSprite;
-
-    [SerializeField] private Button clearButton;
-    [SerializeField] private Button exitButton;
-    [SerializeField] private Button hideInfoButton;
-    [SerializeField] private Button infoButton;
-    [SerializeField] private TMP_InputField inputField;
-    [SerializeField] private Button menuButton;
-    [SerializeField] private TextMeshProUGUI propertiesText;
-    [SerializeField] private Slider scaleSlider;
-    [SerializeField] private Button searchButton;
-    [SerializeField] private Sprite upSprite;
-
-    private void Awake()
+    public class InputController : MonoBehaviour
     {
-        touchControls = new ARTouchControls();
-        arcGISCamera = FindFirstObjectByType<ArcGISCameraComponent>().GetComponent<Camera>();
-        featureLayerQuery = FindFirstObjectByType<FeatureLayerQuery>();
-        expandButton = miniMap.GetComponent<Button>();
-    }
+        private Camera arcGISCamera;
+        private FeatureLayerQuery featureLayerQuery;
+        private GameObject lastSelectedFeature;
+        private bool menuVisible;
+        private bool onScreen;
+        private ARTouchControls touchControls;
 
-    private void DestroyFeatures()
-    {
-        if (featureLayerQuery.FeatureItems.Count == 0)
+        [Header("Animations")] [SerializeField]
+        private Animator anim;
+
+        [SerializeField] private Animator infoAnim;
+
+        [Header("Materials")] [SerializeField] private Material highlightMaterial;
+        [SerializeField] private Material outlineMaterial;
+
+        [Header("Mini Map")] private Button expandButton;
+        [SerializeField] private GameObject miniMap;
+        [SerializeField] private RenderTexture miniMapTexture;
+
+        [Header("UI Components")] [SerializeField]
+        private Sprite downSprite;
+
+        [SerializeField] private Button clearButton;
+        [SerializeField] private Button exitButton;
+        [SerializeField] private Button hideInfoButton;
+        [SerializeField] private Button infoButton;
+        [SerializeField] private TMP_InputField inputField;
+        [SerializeField] private Button menuButton;
+        [SerializeField] private TextMeshProUGUI propertiesText;
+        [SerializeField] private Slider scaleSlider;
+        [SerializeField] private Button searchButton;
+        [SerializeField] private Sprite upSprite;
+
+        private void Awake()
         {
-            return;
+            touchControls = new ARTouchControls();
+            arcGISCamera = FindFirstObjectByType<ArcGISCameraComponent>().GetComponent<Camera>();
+            featureLayerQuery = FindFirstObjectByType<FeatureLayerQuery>();
+            expandButton = miniMap.GetComponent<Button>();
         }
 
-        foreach (var feature in featureLayerQuery.FeatureItems)
+        private void DestroyFeatures()
         {
-            Destroy(feature);
-        }
-    }
-
-    private void OnEnable()
-    {
-        touchControls.Enable();
-        touchControls.TouchControls.Touched.started += OnTouchStarted;
-    }
-
-    private void OnDisable()
-    {
-        touchControls.Disable();
-        touchControls.TouchControls.Touched.started -= OnTouchStarted;
-    }
-
-    private void OnTouchStarted(InputAction.CallbackContext context)
-    {
-        RaycastHit hit;
-        var ray = Camera.main.ScreenPointToRay(touchControls.TouchControls.TouchPosition.ReadValue<Vector2>());
-
-        if (Physics.Raycast(ray, out hit))
-        {
-            try
+            if (featureLayerQuery.FeatureItems.Count == 0)
             {
-                if (lastSelectedFeature)
-                {
-                    ClearAdditionalMaterial(lastSelectedFeature);
-                }
-
-                lastSelectedFeature = hit.collider.gameObject;
-                var data = lastSelectedFeature.GetComponent<FeatureData>();
-                SetAdditionalMaterial(highlightMaterial, outlineMaterial, hit.collider);
-                propertiesText.text = "Properties: \n";
-
-                foreach (var property in data.Properties)
-                {
-                    propertiesText.text += "- " + property + "\n";
-                }
+                return;
             }
-            catch (UnityException ex)
+
+            foreach (var feature in featureLayerQuery.FeatureItems)
             {
-                Debug.LogWarning(ex);
+                Destroy(feature);
             }
         }
-    }
 
-    private void SetAdditionalMaterial(Material highlight, Material outLine, Collider collider)
-    {
-        Material[] materialsArray = new Material[collider.GetComponent<Renderer>().materials.Length + 2];
-        collider.GetComponent<Renderer>().materials.CopyTo(materialsArray, 0);
-        collider.GetComponent<Renderer>().materials.CopyTo(materialsArray, 1);
-        materialsArray[materialsArray.Length - 1] = highlight;
-        materialsArray[materialsArray.Length - 2] = outLine;
-        collider.GetComponent<Renderer>().materials = materialsArray;
-    }
-
-    private void ClearAdditionalMaterial(GameObject feature)
-    {
-        Material[] materialsArray = new Material[feature.GetComponent<Renderer>().materials.Length - 2];
-
-        for (int i = 0; i < feature.GetComponent<Renderer>().materials.Length - 2; i++)
+        private void OnEnable()
         {
-            materialsArray[i] = feature.GetComponent<Renderer>().materials[i];
+            touchControls.Enable();
+            touchControls.TouchControls.Touched.started += OnTouchStarted;
         }
 
-        feature.GetComponent<Renderer>().materials = materialsArray;
-    }
-
-    private void UpdateText(TextMeshProUGUI TextToSet, string Text)
-    {
-        TextToSet.text = Text;
-    }
-
-    private void Start()
-    {
-        inputField.text = featureLayerQuery.WebLink.Link;
-        menuButton.image.sprite = upSprite;
-        UpdateText(menuButton.GetComponentInChildren<TextMeshProUGUI>(), "Touch to Hide Menu");
-        anim.Play("ShowMenu");
-        menuVisible = true;
-        exitButton.gameObject.SetActive(false);
-
-        inputField.onSubmit.AddListener(delegate(string weblink)
+        private void OnDisable()
         {
-            menuButton.image.sprite = downSprite;
-            UpdateText(menuButton.GetComponentInChildren<TextMeshProUGUI>(), "Touch to Show Menu");
-            anim.Play("HideMenu");
-            menuVisible = false;
-            DestroyFeatures();
-            featureLayerQuery.CreateLink(weblink);
-            StartCoroutine(featureLayerQuery.GetFeatures());
-        });
+            touchControls.Disable();
+            touchControls.TouchControls.Touched.started -= OnTouchStarted;
+        }
 
-        clearButton.onClick.AddListener(delegate { DestroyFeatures(); });
-
-        searchButton.onClick.AddListener(delegate
+        private void OnTouchStarted(InputAction.CallbackContext context)
         {
-            menuButton.image.sprite = downSprite;
-            UpdateText(menuButton.GetComponentInChildren<TextMeshProUGUI>(), "Touch to Show Menu");
-            anim.Play("HideMenu");
-            menuVisible = false;
-            DestroyFeatures();
-            StartCoroutine(featureLayerQuery.GetFeatures());
-        });
+            RaycastHit hit;
+            var ray = Camera.main.ScreenPointToRay(touchControls.TouchControls.TouchPosition.ReadValue<Vector2>());
 
-        menuButton.onClick.AddListener(delegate
+            if (Physics.Raycast(ray, out hit))
+            {
+                try
+                {
+                    if (lastSelectedFeature)
+                    {
+                        ClearAdditionalMaterial(lastSelectedFeature);
+                    }
+
+                    lastSelectedFeature = hit.collider.gameObject;
+                    var data = lastSelectedFeature.GetComponent<FeatureData>();
+                    SetAdditionalMaterial(highlightMaterial, outlineMaterial, hit.collider);
+                    propertiesText.text = "Properties: \n";
+
+                    foreach (var property in data.Properties)
+                    {
+                        propertiesText.text += "- " + property + "\n";
+                    }
+                }
+                catch (UnityException ex)
+                {
+                    Debug.LogWarning(ex);
+                }
+            }
+        }
+
+        private void SetAdditionalMaterial(Material highlight, Material outLine, Collider collider)
         {
-            if (menuVisible)
+            Material[] materialsArray = new Material[collider.GetComponent<Renderer>().materials.Length + 2];
+            collider.GetComponent<Renderer>().materials.CopyTo(materialsArray, 0);
+            collider.GetComponent<Renderer>().materials.CopyTo(materialsArray, 1);
+            materialsArray[materialsArray.Length - 1] = highlight;
+            materialsArray[materialsArray.Length - 2] = outLine;
+            collider.GetComponent<Renderer>().materials = materialsArray;
+        }
+
+        private void ClearAdditionalMaterial(GameObject feature)
+        {
+            Material[] materialsArray = new Material[feature.GetComponent<Renderer>().materials.Length - 2];
+
+            for (int i = 0; i < feature.GetComponent<Renderer>().materials.Length - 2; i++)
+            {
+                materialsArray[i] = feature.GetComponent<Renderer>().materials[i];
+            }
+
+            feature.GetComponent<Renderer>().materials = materialsArray;
+        }
+
+        private void UpdateText(TextMeshProUGUI TextToSet, string Text)
+        {
+            TextToSet.text = Text;
+        }
+
+        private void Start()
+        {
+            inputField.text = featureLayerQuery.WebLink.Link;
+            menuButton.image.sprite = upSprite;
+            UpdateText(menuButton.GetComponentInChildren<TextMeshProUGUI>(), "Touch to Hide Menu");
+            anim.Play("ShowMenu");
+            menuVisible = true;
+            exitButton.gameObject.SetActive(false);
+
+            inputField.onSubmit.AddListener(delegate(string weblink)
             {
                 menuButton.image.sprite = downSprite;
                 UpdateText(menuButton.GetComponentInChildren<TextMeshProUGUI>(), "Touch to Show Menu");
                 anim.Play("HideMenu");
                 menuVisible = false;
-            }
-            else
-            {
-                menuButton.image.sprite = upSprite;
-                UpdateText(menuButton.GetComponentInChildren<TextMeshProUGUI>(), "Touch to Hide Menu");
-                anim.Play("ShowMenu");
-                menuVisible = true;
-            }
-        });
+                DestroyFeatures();
+                featureLayerQuery.CreateLink(weblink);
+                StartCoroutine(featureLayerQuery.GetFeatures());
+            });
 
-        expandButton.onClick.AddListener(delegate
-        {
-            miniMap.SetActive(false);
-            propertiesText.gameObject.SetActive(false);
-            arcGISCamera.targetTexture = null;
-            exitButton.gameObject.SetActive(true);
-        });
+            clearButton.onClick.AddListener(delegate { DestroyFeatures(); });
 
-        exitButton.onClick.AddListener(delegate
-        {
-            miniMap.SetActive(true);
-            propertiesText.gameObject.SetActive(true);
-            arcGISCamera.targetTexture = miniMapTexture;
-            exitButton.gameObject.SetActive(false);
-        });
+            searchButton.onClick.AddListener(delegate
+            {
+                menuButton.image.sprite = downSprite;
+                UpdateText(menuButton.GetComponentInChildren<TextMeshProUGUI>(), "Touch to Show Menu");
+                anim.Play("HideMenu");
+                menuVisible = false;
+                DestroyFeatures();
+                StartCoroutine(featureLayerQuery.GetFeatures());
+            });
 
-        infoButton.onClick.AddListener(delegate
-        {
-            if (onScreen)
+            menuButton.onClick.AddListener(delegate
             {
-                infoAnim.Play("HideInstructions");
-                onScreen = false;
-            }
-            else
-            {
-                infoAnim.Play("ShowInstructions");
-                onScreen = true;
-            }
-        });
+                if (menuVisible)
+                {
+                    menuButton.image.sprite = downSprite;
+                    UpdateText(menuButton.GetComponentInChildren<TextMeshProUGUI>(), "Touch to Show Menu");
+                    anim.Play("HideMenu");
+                    menuVisible = false;
+                }
+                else
+                {
+                    menuButton.image.sprite = upSprite;
+                    UpdateText(menuButton.GetComponentInChildren<TextMeshProUGUI>(), "Touch to Hide Menu");
+                    anim.Play("ShowMenu");
+                    menuVisible = true;
+                }
+            });
 
-        scaleSlider.onValueChanged.AddListener(delegate
-        {
-            foreach (var item in featureLayerQuery.FeatureItems)
+            expandButton.onClick.AddListener(delegate
             {
-                item.transform.localScale = new Vector3(scaleSlider.value, scaleSlider.value, scaleSlider.value);
-            }
-        });
-        
-        hideInfoButton.onClick.AddListener(delegate { infoAnim.Play("HideInstructions"); });
+                miniMap.SetActive(false);
+                propertiesText.gameObject.SetActive(false);
+                arcGISCamera.targetTexture = null;
+                exitButton.gameObject.SetActive(true);
+            });
+
+            exitButton.onClick.AddListener(delegate
+            {
+                miniMap.SetActive(true);
+                propertiesText.gameObject.SetActive(true);
+                arcGISCamera.targetTexture = miniMapTexture;
+                exitButton.gameObject.SetActive(false);
+            });
+
+            infoButton.onClick.AddListener(delegate
+            {
+                if (onScreen)
+                {
+                    infoAnim.Play("HideInstructions");
+                    onScreen = false;
+                }
+                else
+                {
+                    infoAnim.Play("ShowInstructions");
+                    onScreen = true;
+                }
+            });
+
+            scaleSlider.onValueChanged.AddListener(delegate
+            {
+                foreach (var item in featureLayerQuery.FeatureItems)
+                {
+                    item.transform.localScale = new Vector3(scaleSlider.value, scaleSlider.value, scaleSlider.value);
+                }
+            });
+
+            hideInfoButton.onClick.AddListener(delegate { infoAnim.Play("HideInstructions"); });
+        }
     }
 }

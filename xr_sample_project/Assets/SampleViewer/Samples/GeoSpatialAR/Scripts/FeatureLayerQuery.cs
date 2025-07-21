@@ -45,164 +45,167 @@ public class Geometry
     public List<double> coordinates = new List<double>();
 }
 
-public class FeatureLayerQuery : MonoBehaviour
+namespace SampleViewer.Samples.GeoSpatialAR.Scripts
 {
-    [SerializeField] private ArcGISCameraComponent arcGISCamera;
-    [SerializeField] private GameObject featurePrefab;
-    private int featureSRWKID = 4326;
-    private FeatureData featureInfo;
-    private ArcGISGeospatialController geospatialController;
-    private ArcGISLocationComponent locationComponent;
-    [SerializeField] private List<string> outfields = new List<string>();
-
-    public List<FeatureQuery> Features = new List<FeatureQuery>();
-    private bool GetAllFeatures = true;
-    private bool GetAllOutfields = true;
-    private JToken[] jFeatures;
-    private int LastValue = 1;
-    public List<GameObject> FeatureItems = new List<GameObject>();
-    public List<Toggle> ListItems = new List<Toggle>();
-    public List<string> OutfieldsToGet = new List<string>();
-    private int StartValue;
-    public WebLink WebLink;
-
-    private void Awake()
+    public class FeatureLayerQuery : MonoBehaviour
     {
-        geospatialController = GetComponentInParent<ArcGISGeospatialController>();
-    }
+        [SerializeField] private ArcGISCameraComponent arcGISCamera;
+        [SerializeField] private GameObject featurePrefab;
+        private int featureSRWKID = 4326;
+        private FeatureData featureInfo;
+        private ArcGISGeospatialController geospatialController;
+        private ArcGISLocationComponent locationComponent;
+        [SerializeField] private List<string> outfields = new List<string>();
 
-    private void Start()
-    {
-        CreateLink(WebLink.Link);
-    }
+        public List<FeatureQuery> Features = new List<FeatureQuery>();
+        private bool GetAllFeatures = true;
+        private bool GetAllOutfields = true;
+        private JToken[] jFeatures;
+        private int LastValue = 1;
+        public List<GameObject> FeatureItems = new List<GameObject>();
+        public List<Toggle> ListItems = new List<Toggle>();
+        public List<string> OutfieldsToGet = new List<string>();
+        private int StartValue;
+        public WebLink WebLink;
 
-    public void CreateLink(string link)
-    {
-        EmptyOutfieldsDropdown();
-
-        if (link != null)
+        private void Awake()
         {
-            foreach (var header in WebLink.RequestHeaders)
+            geospatialController = GetComponentInParent<ArcGISGeospatialController>();
+        }
+
+        private void Start()
+        {
+            CreateLink(WebLink.Link);
+        }
+
+        public void CreateLink(string link)
+        {
+            EmptyOutfieldsDropdown();
+
+            if (link != null)
             {
-                if (!link.ToLower().Contains(header))
+                foreach (var header in WebLink.RequestHeaders)
                 {
-                    link += header;
+                    if (!link.ToLower().Contains(header))
+                    {
+                        link += header;
+                    }
                 }
+
+                WebLink.Link = link;
             }
-
-            WebLink.Link = link;
-        }
-    }
-
-    public IEnumerator GetFeatures()
-    {
-        // To learn more about the Feature Layer rest API and all the things that are possible checkout
-        // https://developers.arcgis.com/rest/services-reference/enterprise/query-feature-service-layer-.htm
-
-        UnityWebRequest Request = UnityWebRequest.Get(WebLink.Link);
-        yield return Request.SendWebRequest();
-
-        if (Request.result != UnityWebRequest.Result.Success)
-        {
-            Debug.Log(Request.error);
-        }
-        else
-        {
-            CreateGameObjectsFromResponse(Request.downloadHandler.text);
-        }
-    }
-
-    private void CreateGameObjectsFromResponse(string response)
-    {
-        // Deserialize the JSON response from the query.
-        var jObject = JObject.Parse(response);
-        jFeatures = jObject.SelectToken("features").ToArray();
-
-        if (jFeatures[0].SelectToken("geometry").SelectToken("type").ToString().ToLower() != "point")
-        {
-            return;
         }
 
-        if (GetAllFeatures)
+        public IEnumerator GetFeatures()
         {
-            CreateFeatures(0, jFeatures.Length);
-        }
-        else
-        {
-            var lastValueToUse = jFeatures.Length < LastValue ? jFeatures.Length : LastValue;
-            CreateFeatures(StartValue, lastValueToUse);
-        }
-    }
+            // To learn more about the Feature Layer rest API and all the things that are possible checkout
+            // https://developers.arcgis.com/rest/services-reference/enterprise/query-feature-service-layer-.htm
 
-    private void CreateFeatures(int min, int max)
-    {
-        for (int i = min; i < max; i++)
-        {
-            FeatureQuery currentFeature = new FeatureQuery();
-            var featureItem = Instantiate(featurePrefab, this.transform);
-            //Layer 7 because that is the index of the layer created specifically for feature layers so that they ignore themselves for raycasting.
-            featureItem.layer = 7;
-            featureInfo = featureItem.GetComponent<FeatureData>();
-            locationComponent = featureItem.GetComponent<ArcGISLocationComponent>();
-            var coordinates = jFeatures[i].SelectToken("geometry").SelectToken("coordinates").ToArray();
-            var properties = jFeatures[i].SelectToken("properties").ToArray();
+            UnityWebRequest Request = UnityWebRequest.Get(WebLink.Link);
+            yield return Request.SendWebRequest();
 
-            if (GetAllOutfields)
+            if (Request.result != UnityWebRequest.Result.Success)
             {
-                foreach (var value in properties)
-                {
-                    var key = value.ToString();
-                    var props = key.Split(":");
-                    currentFeature.properties.propertyNames.Add(props[0]);
-                    currentFeature.properties.data.Add(props[1]);
-                    featureInfo.Properties.Add(key);
-                }
+                Debug.Log(Request.error);
             }
             else
             {
-                for (var j = 0; j < outfields.Count; j++)
+                CreateGameObjectsFromResponse(Request.downloadHandler.text);
+            }
+        }
+
+        private void CreateGameObjectsFromResponse(string response)
+        {
+            // Deserialize the JSON response from the query.
+            var jObject = JObject.Parse(response);
+            jFeatures = jObject.SelectToken("features").ToArray();
+
+            if (jFeatures[0].SelectToken("geometry").SelectToken("type").ToString().ToLower() != "point")
+            {
+                return;
+            }
+
+            if (GetAllFeatures)
+            {
+                CreateFeatures(0, jFeatures.Length);
+            }
+            else
+            {
+                var lastValueToUse = jFeatures.Length < LastValue ? jFeatures.Length : LastValue;
+                CreateFeatures(StartValue, lastValueToUse);
+            }
+        }
+
+        private void CreateFeatures(int min, int max)
+        {
+            for (int i = min; i < max; i++)
+            {
+                FeatureQuery currentFeature = new FeatureQuery();
+                var featureItem = Instantiate(featurePrefab, this.transform);
+                //Layer 7 because that is the index of the layer created specifically for feature layers so that they ignore themselves for raycasting.
+                featureItem.layer = 7;
+                featureInfo = featureItem.GetComponent<FeatureData>();
+                locationComponent = featureItem.GetComponent<ArcGISLocationComponent>();
+                var coordinates = jFeatures[i].SelectToken("geometry").SelectToken("coordinates").ToArray();
+                var properties = jFeatures[i].SelectToken("properties").ToArray();
+
+                if (GetAllOutfields)
                 {
-                    if (OutfieldsToGet.Contains(outfields[j]))
+                    foreach (var value in properties)
                     {
-                        var key = properties[j].ToString();
+                        var key = value.ToString();
                         var props = key.Split(":");
                         currentFeature.properties.propertyNames.Add(props[0]);
                         currentFeature.properties.data.Add(props[1]);
                         featureInfo.Properties.Add(key);
                     }
                 }
+                else
+                {
+                    for (var j = 0; j < outfields.Count; j++)
+                    {
+                        if (OutfieldsToGet.Contains(outfields[j]))
+                        {
+                            var key = properties[j].ToString();
+                            var props = key.Split(":");
+                            currentFeature.properties.propertyNames.Add(props[0]);
+                            currentFeature.properties.data.Add(props[1]);
+                            featureInfo.Properties.Add(key);
+                        }
+                    }
+                }
+
+                foreach (var coordinate in coordinates)
+                {
+                    currentFeature.geometry.coordinates.Add(Convert.ToDouble(coordinate));
+                    featureInfo.Coordinates.Add(Convert.ToDouble(coordinate));
+                }
+
+
+                featureInfo.ArcGISCamera = arcGISCamera;
+                var position = new ArcGISPoint(featureInfo.Coordinates[0], featureInfo.Coordinates[1],
+                    0, new ArcGISSpatialReference(featureSRWKID));
+                var rotation = new ArcGISRotation(0.0, 90.0, 0.0);
+                locationComponent.enabled = true;
+                locationComponent.Position = position;
+                locationComponent.Rotation = rotation;
+                Features.Add(currentFeature);
+                FeatureItems.Add(featureItem);
             }
-
-            foreach (var coordinate in coordinates)
-            {
-                currentFeature.geometry.coordinates.Add(Convert.ToDouble(coordinate));
-                featureInfo.Coordinates.Add(Convert.ToDouble(coordinate));
-            }
-
-
-            featureInfo.ArcGISCamera = arcGISCamera;
-            var position = new ArcGISPoint(featureInfo.Coordinates[0], featureInfo.Coordinates[1],
-                0, new ArcGISSpatialReference(featureSRWKID));
-            var rotation = new ArcGISRotation(0.0, 90.0, 0.0);
-            locationComponent.enabled = true;
-            locationComponent.Position = position;
-            locationComponent.Rotation = rotation;
-            Features.Add(currentFeature);
-            FeatureItems.Add(featureItem);
         }
-    }
 
-    private void EmptyOutfieldsDropdown()
-    {
-        if (ListItems != null)
+        private void EmptyOutfieldsDropdown()
         {
-            outfields.Clear();
-            foreach (var item in ListItems)
+            if (ListItems != null)
             {
-                Destroy(item.gameObject);
-            }
+                outfields.Clear();
+                foreach (var item in ListItems)
+                {
+                    Destroy(item.gameObject);
+                }
 
-            ListItems.Clear();
+                ListItems.Clear();
+            }
         }
     }
 }
