@@ -14,6 +14,7 @@ using UnityEngine.UI;
 using Esri.ArcGISMapsSDK.Utils;
 using TMPro;
 using System;
+using System.Linq;
 
 public class SampleSwitcher : MonoBehaviour
 {
@@ -70,21 +71,39 @@ public class SampleSwitcher : MonoBehaviour
 
     private void ApplyApiKey()
     {
-        // API Script handles api key differently than the mapcomponent
-        var api = FindObjectOfType<APIMapCreator>();
-        if (api != null)
+        // API scripts handle api key differently than mapcomponent.
+        var apiMapCreator = FindObjectOfType<APIMapCreator>();
+        var viewShedMapCreator = FindObjectOfType<ViewshedMap>();
+
+        if (apiMapCreator != null && string.IsNullOrEmpty(apiMapCreator.APIKey))
         {
-            if (api.APIKey == "")
-            {
-                api.APIKey = apiKey;
-            }
+            apiMapCreator.APIKey = apiKey;
+            return;
+        }
+        else if (viewShedMapCreator != null && string.IsNullOrEmpty(viewShedMapCreator.APIKey))
+        {
+            viewShedMapCreator.APIKey = apiKey;
             return;
         }
 
-        var mapComponent = FindObjectOfType<ArcGISMapComponent>();
-        if (mapComponent != null && mapComponent.APIKey == "")
+        var mapComponents = FindObjectsOfType<ArcGISMapComponent>();
+
+        if (mapComponents.Count() == 1)
         {
-            mapComponent.APIKey = apiKey;
+            if (mapComponents[0].APIKey == "")
+            {
+                mapComponents[0].APIKey = apiKey;
+            }
+        }
+        else
+        {
+            foreach (var mapComponent in mapComponents) 
+            {
+                if (mapComponent.APIKey == "")
+                {
+                    mapComponent.APIKey = apiKey;
+                }
+            }
         }
     }
 

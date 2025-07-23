@@ -20,24 +20,18 @@ public class ArcGISRaycast : MonoBehaviour
 {
     public ArcGISMapComponent arcGISMapComponent;
     private int featureId;
-    private InputActions inputActions;
-    private bool isLeftShiftPressed;
+    private InputManager inputManager;
     private JToken[] jFeatures;
     [SerializeField] private TextMeshProUGUI locationText;
     [SerializeField] private GameObject markerGO;
     private List<string> outfields = new List<string> { "AREA_SQ_FT", "DISTRICT", "Height", "SUBDISTRIC", "ZONE_" };
     private string position;
     [SerializeField] private TextMeshProUGUI resultText;
-    private TouchControls touchControls;
     private string weblink;
 
     private void Awake()
     {
-#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
-        inputActions = new InputActions();
-#else
-        touchControls = new TouchControls();
-#endif
+        inputManager = FindFirstObjectByType<InputManager>();
     }
 
     private void CreateLink(string objectID)
@@ -91,72 +85,15 @@ public class ArcGISRaycast : MonoBehaviour
         return propertyValue;
     }
 
-    private void OnEnable()
-    {
-#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
-        inputActions.Enable();
-        inputActions.DrawingControls.LeftClick.started += OnLeftClickStart;
-        inputActions.DrawingControls.LeftShift.performed += ctx => OnLeftShift(true);
-        inputActions.DrawingControls.LeftShift.canceled += ctx => OnLeftShift(false);
-#else
-        touchControls.Enable();
-        touchControls.Touch.TouchPress.started += OnTouchInputStarted;
-#endif
-    }
-
-    private void OnDisable()
-    {
-#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
-        inputActions.Disable();
-        inputActions.DrawingControls.LeftClick.started -= OnLeftClickStart;
-        inputActions.DrawingControls.LeftShift.performed -= ctx => OnLeftShift(true);
-        inputActions.DrawingControls.LeftShift.canceled -= ctx => OnLeftShift(false);
-#else
-        touchControls.Disable();
-        touchControls.Touch.TouchPress.started -= OnTouchInputStarted;
-#endif
-    }
-
-    private void OnLeftShift(bool isPressed)
-    {
-        isLeftShiftPressed = isPressed;
-    }
-
-    private void OnLeftClickStart(InputAction.CallbackContext context)
-    {
-        if (isLeftShiftPressed && !EventSystem.current.IsPointerOverGameObject())
-        {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-
-            if (Physics.Raycast(ray, out hit))
-            {
-                var arcGISRaycastHit = arcGISMapComponent.GetArcGISRaycastHit(hit);
-                var layer = arcGISRaycastHit.layer;
-                featureId = arcGISRaycastHit.featureId;
-
-                if (layer != null && featureId != -1)
-                {
-                    CreateLink(featureId.ToString());
-                    var geoPosition = arcGISMapComponent.EngineToGeographic(hit.point);
-                    var location = markerGO.GetComponent<ArcGISLocationComponent>();
-                    location.Position = new ArcGISPoint(geoPosition.X, geoPosition.Y, geoPosition.Z,
-                        geoPosition.SpatialReference);
-
-                    var point = ArcGISGeometryEngine.Project(geoPosition,
-                        ArcGISSpatialReference.WGS84()) as ArcGISPoint;
-                    position =
-                        $"Lat: {string.Format("{0:0.##}", point.Y)} Long: {string.Format("{0:0.##}", point.X)}";
-                }
-            }
-        }
-    }
-
-    private void OnTouchInputStarted(InputAction.CallbackContext ctx)
+    public void StartRaycast()
     {
         RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(touchControls.Touch.TouchPosition.ReadValue<Vector2>());
 
+#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
+        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+#else
+        Ray ray = Camera.main.ScreenPointToRay(inputManager.touchControls.Touch.TouchPosition.ReadValue<Vector2>());
+#endif
         if (Physics.Raycast(ray, out hit))
         {
             var arcGISRaycastHit = arcGISMapComponent.GetArcGISRaycastHit(hit);

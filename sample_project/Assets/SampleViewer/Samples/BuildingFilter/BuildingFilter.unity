@@ -5305,6 +5305,10 @@ MonoBehaviour:
     y: 34.058088281085446
     z: 427.18145751953125
     SRWkid: 4326
+    spatialReference:
+      wkid: 4326
+      verticalWKID: 0
+    version: 1
   rotation:
     Heading: 34.78037420451341
     Pitch: 59.92151398448675
@@ -5386,7 +5390,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b7511ad6dd4a23469c6b1d94255a41f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  JoystickCanvas: {fileID: 8245483605992596556, guid: f94e67b1f8188b441b93c2d9ac0435eb, type: 3}
 --- !u!114 &1823688474
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6121,10 +6124,7 @@ MonoBehaviour:
   basemapType: 0
   basemapAuthentication:
     ConfigurationIndex: -1
-  elevation: 
-  elevationAuthentication:
-    ConfigurationIndex: -1
-  elevationSources: []
+  basemapAuthenticationType: 1
   mapElevation:
     ElevationSources:
     - Name: Terrain 3D
@@ -6133,6 +6133,8 @@ MonoBehaviour:
       IsEnabled: 1
       Authentication:
         ConfigurationIndex: -1
+      AuthenticationType: 1
+    ExaggerationFactor: 1
     MeshModifications:
       IsEnabled: 1
       MeshModifications:
@@ -6142,34 +6144,66 @@ MonoBehaviour:
             y: 4036636.6656449568
             z: 391.7311706542969
             SRWkid: 3857
+            spatialReference:
+              wkid: 3857
+              verticalWKID: 0
+            version: 1
           - x: -13046327.517307766
             y: 4036636.0105851423
             z: 391.7311706542969
             SRWkid: 3857
+            spatialReference:
+              wkid: 3857
+              verticalWKID: 0
+            version: 1
           - x: -13046327.695393093
             y: 4036659.973079039
             z: 391.7311706542969
             SRWkid: 3857
+            spatialReference:
+              wkid: 3857
+              verticalWKID: 0
+            version: 1
           - x: -13046271.930485256
             y: 4036658.5742142927
             z: 391.7311706542969
             SRWkid: 3857
+            spatialReference:
+              wkid: 3857
+              verticalWKID: 0
+            version: 1
           - x: -13046272.083973415
             y: 4036732.9932206403
             z: 391.7311706542969
             SRWkid: 3857
+            spatialReference:
+              wkid: 3857
+              verticalWKID: 0
+            version: 1
           - x: -13046327.475056179
             y: 4036733.283107115
             z: 391.7311706542969
             SRWkid: 3857
+            spatialReference:
+              wkid: 3857
+              verticalWKID: 0
+            version: 1
           - x: -13046327.463810451
             y: 4036736.616999937
             z: 391.7311706542969
             SRWkid: 3857
+            spatialReference:
+              wkid: 3857
+              verticalWKID: 0
+            version: 1
           - x: -13046356.5307355
             y: 4036737.325343443
             z: 391.7311706542969
             SRWkid: 3857
+            spatialReference:
+              wkid: 3857
+              verticalWKID: 0
+            version: 1
         Type: 0
   enableExtent: 0
   extent:
@@ -6178,6 +6212,10 @@ MonoBehaviour:
       y: 0
       z: 0
       SRWkid: 4326
+      spatialReference:
+        wkid: 4326
+        verticalWKID: 0
+      version: 1
     ExtentShape: 2
     ShapeDimensions:
       x: 1000
@@ -6191,6 +6229,7 @@ MonoBehaviour:
     IsVisible: 1
     Authentication:
       ConfigurationIndex: 0
+    AuthenticationType: 1
     BuildingSceneLayerFilter:
       ActiveBuildingAttributeFilterIndex: 0
       BuildingAttributeFilters:
@@ -6216,50 +6255,91 @@ MonoBehaviour:
           y: 4036734.215113951
           z: 393.287841796875
           SRWkid: 3857
+          spatialReference:
+            wkid: 3857
+            verticalWKID: 0
+          version: 1
         - x: -13046326.480106838
           y: 4036734.44320233
           z: 393.287841796875
           SRWkid: 3857
+          spatialReference:
+            wkid: 3857
+            verticalWKID: 0
+          version: 1
         - x: -13046326.455524929
           y: 4036738.2457535993
           z: 393.287841796875
           SRWkid: 3857
+          spatialReference:
+            wkid: 3857
+            verticalWKID: 0
+          version: 1
         - x: -13046357.361179836
           y: 4036738.1581986677
           z: 393.287841796875
           SRWkid: 3857
+          spatialReference:
+            wkid: 3857
+            verticalWKID: 0
+          version: 1
         - x: -13046359.551167019
           y: 4036635.593592955
           z: 393.287841796875
           SRWkid: 3857
+          spatialReference:
+            wkid: 3857
+            verticalWKID: 0
+          version: 1
         - x: -13046326.327824123
           y: 4036634.5288651716
           z: 393.287841796875
           SRWkid: 3857
+          spatialReference:
+            wkid: 3857
+            verticalWKID: 0
+          version: 1
         - x: -13046326.600101955
           y: 4036656.24889691
           z: 393.287841796875
           SRWkid: 3857
+          spatialReference:
+            wkid: 3857
+            verticalWKID: 0
+          version: 1
         - x: -13046270.922649868
           y: 4036656.9407609235
           z: 393.287841796875
           SRWkid: 3857
+          spatialReference:
+            wkid: 3857
+            verticalWKID: 0
+          version: 1
       Type: 1
   originPosition:
     x: -117.195686
     y: 34.056077
     z: 0
     SRWkid: 4326
+    spatialReference:
+      wkid: 4326
+      verticalWKID: 0
+    version: 1
   mapType: 1
+  useCustomMapSpatialReference: 0
+  customMapSpatialReference:
+    wkid: 3857
+    verticalWKID: 0
   editorModeEnabled: 1
   dataFetchWithSceneView: 1
   rebaseWithSceneView: 0
   meshCollidersEnabled: 0
   configurations: []
+  oauthUserConfigurations: []
   RootChanged:
     m_PersistentCalls:
       m_Calls: []
-  version: 2
+  version: 3
 --- !u!114 &2092662932
 MonoBehaviour:
   m_ObjectHideFlags: 0

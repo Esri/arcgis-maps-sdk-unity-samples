@@ -21,6 +21,7 @@ using Newtonsoft.Json.Linq;
 using Unity.Mathematics;
 using Esri.ArcGISMapsSDK.Samples.Components;
 using UnityEngine.InputSystem;
+using Esri.ArcGISMapsSDK.Utils;
 
 public class RouteManager : MonoBehaviour
 {
@@ -44,113 +45,16 @@ public class RouteManager : MonoBehaviour
     private List<GameObject> routeMarkers = new List<GameObject>();
     private LineRenderer lineRenderer;
     private HttpClient client = new HttpClient();
+    private InputManager inputManager;
 
     double3 lastRootPosition;
 
-    private InputActions inputActions;
-    private bool isLeftShiftPressed;
-    private TouchControls touchControls;
-
     private void Awake()
     {
-#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
-        inputActions = new InputActions();
-#else
-        touchControls = new TouchControls();
-#endif
+        inputManager = FindFirstObjectByType<InputManager>();
     }
 
-    private void OnEnable()
-    {
-#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
-        inputActions.Enable();
-        inputActions.DrawingControls.LeftClick.started += OnLeftClickStart;
-        inputActions.DrawingControls.LeftShift.performed += ctx => OnLeftShift(true);
-        inputActions.DrawingControls.LeftShift.canceled += ctx => OnLeftShift(false);
-#else
-        touchControls.Enable();
-        touchControls.Touch.TouchPress.started += OnTouchInputStarted;
-#endif
-    }
-
-    private void OnDisable()
-    {
-#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
-        inputActions.Disable();
-        inputActions.DrawingControls.LeftClick.started -= OnLeftClickStart;
-        inputActions.DrawingControls.LeftShift.performed -= ctx => OnLeftShift(true);
-        inputActions.DrawingControls.LeftShift.canceled -= ctx => OnLeftShift(false);
-#else
-        touchControls.Disable();
-        touchControls.Touch.TouchPress.started -= OnTouchInputStarted;
-#endif
-
-        if (arcGISMapComponent != null)
-        {
-            arcGISMapComponent.RootChanged.RemoveListener(RebaseRoute);
-        }
-    }
-
-    private void OnLeftShift(bool isPressed)
-    {
-        isLeftShiftPressed = isPressed;
-    }
-
-    private async void OnLeftClickStart(InputAction.CallbackContext context)
-    {
-        if (isLeftShiftPressed) 
-        {
-            if (routing)
-            {
-                DisplayNoteText("Please wait for the routing to finish.");
-                animator.Play("NotificationAnim");
-             
-                return;
-            }
-            animator.Play("NotificationAnim_Close");
-            DisplayNoteText("Hold Left Shift + Left Click on the map to begin routing.");
-
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-
-            if (Physics.Raycast(ray, out hit))
-            {
-                var routeMarker = Instantiate(RouteMarker, hit.point, Quaternion.identity, arcGISMapComponent.transform);
-
-                var geoPosition = HitToGeoPosition(hit);
-
-                var locationComponent = routeMarker.GetComponent<ArcGISLocationComponent>();
-                locationComponent.enabled = true;
-                locationComponent.Position = geoPosition;
-                locationComponent.Rotation = new ArcGISRotation(0, 90, 0);
-
-                stops.Enqueue(routeMarker);
-
-                routeMarkers.Add(routeMarker);
-
-                if (stops.Count > StopCount)
-                    Destroy(stops.Dequeue());
-
-                if (stops.Count == StopCount)
-                {
-                    string results = await FetchRoute(stops.ToArray());
-
-                    if (results.Contains("error"))
-                    {
-                        DisplayError(results);
-                        animator.Play("NotificationAnim");
-                    }
-                    else
-                    {
-                        routing = true;
-                        StartCoroutine(DrawRoute(results));
-                    }
-                }
-            }
-        }
-    }
-
-    private async void OnTouchInputStarted(InputAction.CallbackContext ctx)
+    public async void StartRouting()
     {
         if (routing)
         {
@@ -163,7 +67,12 @@ public class RouteManager : MonoBehaviour
         DisplayNoteText("Hold Left Shift + Left Click on the map to begin routing.");
 
         RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(touchControls.Touch.TouchPosition.ReadValue<Vector2>());
+
+#if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
+        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+#else
+        Ray ray = Camera.main.ScreenPointToRay(inputManager.touchControls.Touch.TouchPosition.ReadValue<Vector2>());
+#endif
 
         if (Physics.Raycast(ray, out hit))
         {
@@ -181,9 +90,7 @@ public class RouteManager : MonoBehaviour
             routeMarkers.Add(routeMarker);
 
             if (stops.Count > StopCount)
-            {
-                Destroy(stops.Dequeue());   
-            }
+                Destroy(stops.Dequeue());
 
             if (stops.Count == StopCount)
             {
@@ -256,11 +163,18 @@ public class RouteManager : MonoBehaviour
         if (stops.Length != StopCount)
             return "";
 
+        apiKey = arcGISMapComponent.APIKey;
+
+        if (apiKey == "")
+        {
+            apiKey = ArcGISProjectSettingsAsset.Instance.APIKey;
+        }
+
         IEnumerable<KeyValuePair<string, string>> payload = new List<KeyValuePair<string, string>>()
         {
             new KeyValuePair<string, string>("stops", GetRouteString(stops)),
             new KeyValuePair<string, string>("returnRoutes", "true"),
-            new KeyValuePair<string, string>("token", arcGISMapComponent.APIKey),
+            new KeyValuePair<string, string>("token", apiKey),
             new KeyValuePair<string, string>("f", "json"),
         };
 

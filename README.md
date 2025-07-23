@@ -2,7 +2,7 @@
 
 ![image](arcgis-maps-sdk-unity-samples.png)
 
-Here is a Unity project containing a set of samples showing you how to accomplish various things using the combined features of Unity and the ArcGIS Maps SDK for Unity. The `main` branch is configured to work with our most recent release (1.6.0) if you want to use the sample repo with an older release check out the corresponding tag of the sample repo, `git checkout 1.0.0` for the sample repo that worked with our 1.0.0 release.
+Here is a Unity project containing a set of samples showing you how to accomplish various things using the combined features of Unity and the ArcGIS Maps SDK for Unity. The `main` branch is configured to work with our most recent release. If you want to use the sample repo with an older release, check out the corresponding tag of the sample repo, `git checkout 1.0.0` for the sample repo that worked with our 1.0.0 SDK release.
 
 ### Note
 
@@ -30,16 +30,19 @@ This repository is made up of two separate Unity projects. If you would like to 
 * [Line of sight](https://github.com/Esri/arcgis-maps-sdk-unreal-engine-samples/tree/main/sample_project/Content/SampleViewer/Samples/LineOfSight) - See how to check line of sight between two objects in Unity.
 * [Material By Attribute](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/sample_project/Assets/SampleViewer/Samples/MaterialByAttribute) - Apply materials to 3DObject Scene layer based on specific attributes.
 * [Measure](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/sample_project/Assets/SampleViewer/Samples/Measure) - Click on the map to get real-world distances between points.
+* [Overview Map](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/sample_project/Assets/SampleViewer/Samples/OverviewMap/readme.md) - Use an overview map to better understand where you are in the world.
+* [Real Time Weather Query](https://github.com/Esri/arcgis-maps-sdk-unity-samples/blob/main/sample_project/Assets/SampleViewer/Samples/WeatherQuery/readme.md) - Query the current weather in a city using the feature layer query work flow.
 * [Routing](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/sample_project/Assets/SampleViewer/Samples/Routing) - See how to query Esri's routing service to get the shortest path between two points and visualize that route in Unity.
 * [Stream Layer](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/sample_project/Assets/SampleViewer/Samples/StreamLayer) - See how to use web sockets to connect to an Esri real-time service to update game objects locations in real-time.
 * [Third Person Controller](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/sample_project/Assets/SampleViewer/Samples/ThirdPerson) - Explore from the perspective of a third person camera following a controllable character.
-* [Real Time Weather Query](https://github.com/Esri/arcgis-maps-sdk-unity-samples/blob/main/sample_project/Assets/SampleViewer/Samples/WeatherQuery/readme.md) - Query the current weather in a city using the feature layer query work flow.
+* [Time of Day](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/sample_project/Assets/SampleViewer/Samples/TimeOfDay/readme.md) - Visualize and control the time of day in a scene. Use a feature layer for geographically accurate street lamps
+* [Viewshed](https://github.com/Esri/arcgis-maps-sdk-unity-samples/blob/main/sample_project/Assets/SampleViewer/Samples/Viewshed/readme.md) - See how to visualize a viewshed effect.
 
 ## Features in XR Sample Project
 
+* [ARTableTop](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/xr_sample_project/Assets/SampleViewer/Samples/XRTableTop) - See how to configure the camera to visualize a tabletop map on an AR/VR device and control the map with AR/VR controllers and hand tracking.
 * [VRSample](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/xr_sample_project//Assets/SampleViewer/Samples/VRSample) - See how to configure the camera to visualize content on a VR device and move the camera with VR locomotion.
-* [XRTableTop](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/xr_sample_project/Assets/SampleViewer/Samples/XRTableTop) - See how to configure the camera to visualize a tabletop map on a VR device and control the map with VR controllers and hand tracking.
-* [ARFeatureLayer](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/xr_sample_project/Assets/SampleViewer/Samples/GeoSpatialAR/readme.md)
+* [VRTableTop](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/xr_sample_project/Assets/SampleViewer/Samples/XRTableTop) - See how to configure the camera to visualize a tabletop map on a VR device and control the map with VR controllers and hand tracking.
 
 ## Instructions
 
@@ -54,7 +57,7 @@ This repository is made up of two separate Unity projects. If you would like to 
 
 6. Launch Unity and open the `SampleViewer` level (it should open by default).
 
-7. In the hierarchy select the `SampleSwitcher` Game Object and then in the inspector set your [API key](https://developers.arcgis.com/documentation/security-and-authentication/api-key-authentication/). For the detailed steps to create an API key, see [Create and manage an API key tutorials](https://developers.arcgis.com/documentation/security-and-authentication/api-key-authentication/tutorials/create-an-api-key/) in the _Security and authentication guide_. If you don't have the API keys page in your dashboard, upgrade your account to an [ArcGIS Location Platform account](https://location.arcgis.com/sign-up/).
+7. In the hierarchy select the `SampleSwitcher` Game Object and then in the inspector set your [API key](https://developers.arcgis.com/documentation/security-and-authentication/api-key-authentication/). For the detailed steps to create an API key, see [Create and manage an API key tutorials](https://developers.arcgis.com/documentation/security-and-authentication/api-key-authentication/tutorials/create-an-api-key/) in the _Security and authentication guide_.
 
 8. (Optional) If you want to be able to open the `.cs` files in this project and have IntelliSense recognize variable correctly, in Unity navigate to `Edit -> Preferences -> External Tools -> Generate .csproj files for 'local tarball`
 
