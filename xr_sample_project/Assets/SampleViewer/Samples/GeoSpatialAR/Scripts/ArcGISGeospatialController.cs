@@ -35,6 +35,8 @@ namespace SampleViewer.Samples.GeoSpatialAR.Scripts
         public XROrigin XROrigin;
         [SerializeField] private GameObject precisionMarker;
         [SerializeField] private Image VPSStatus;
+        [SerializeField] private GameObject welcomeScreen;
+        [SerializeField] private Slider progressBar;
 
         private void Awake()
         {
@@ -68,17 +70,24 @@ namespace SampleViewer.Samples.GeoSpatialAR.Scripts
                 SetCamera(new ArcGISPoint(cameraGeospatialPose.Longitude, cameraGeospatialPose.Latitude, 5000,
                     ArcGISSpatialReference.WGS84()));
 
-                if (cameraGeospatialPose.OrientationYawAccuracy < _headingAccuracyThreshold &&
-                    Math.Round(cameraGeospatialPose.OrientationYawAccuracy, 1) < yawAccuracy)
-                {
-                    Vector3 originRotation = XROrigin.transform.rotation.eulerAngles;
-                    originRotation.y = cameraGeospatialPose.EunRotation.eulerAngles.y -
-                                       Camera.main.transform.localEulerAngles.y;
-                    XROrigin.transform.rotation = Quaternion.Euler(originRotation);
-
-                    yawAccuracy = Math.Round(cameraGeospatialPose.OrientationYawAccuracy, 1);
-                }
+                SetInitialRotation();
             }
+        }
+
+        public void SetInitialRotation()
+        {
+            if (cameraGeospatialPose.OrientationYawAccuracy < _headingAccuracyThreshold && Math.Round(cameraGeospatialPose.OrientationYawAccuracy, 1) < yawAccuracy)
+            {
+                Vector3 originRotation = XROrigin.transform.rotation.eulerAngles;
+                originRotation.y = cameraGeospatialPose.EunRotation.eulerAngles.y -
+                                   Camera.main.transform.localEulerAngles.y;
+                XROrigin.transform.rotation = Quaternion.Euler(originRotation);
+
+                yawAccuracy = Math.Round(cameraGeospatialPose.OrientationYawAccuracy, 1);
+            }
+
+            progressBar.value = 1.0f;
+            welcomeScreen.SetActive(false);
         }
 
         private void SetLocation()
@@ -91,6 +100,7 @@ namespace SampleViewer.Samples.GeoSpatialAR.Scripts
         private void SetOriginLocation()
         {
             var earthTrackingState = EarthManager.EarthTrackingState;
+            progressBar.value += 0.1f;
 
             if (earthTrackingState == TrackingState.Tracking)
             {
@@ -172,13 +182,14 @@ namespace SampleViewer.Samples.GeoSpatialAR.Scripts
 
             //var latitude = 34.05921;
             //var longitude = -117.19581;
-            
+            progressBar.value = 0.5f;
             var vpsAvailabilityPromise =
                 AREarthManager.CheckVpsAvailabilityAsync(location.latitude, location.longitude); ;
             yield return vpsAvailabilityPromise;
 
             Debug.LogFormat("VPS Availability at ({0}, {1}): {2}",
                 location.latitude, location.longitude, vpsAvailabilityPromise.Result);
+
             precisionMarker.SetActive(vpsAvailabilityPromise.Result != VpsAvailability.Available);
             VPSStatus.color = vpsAvailabilityPromise.Result != VpsAvailability.Available ? Color.red : Color.green;
         }

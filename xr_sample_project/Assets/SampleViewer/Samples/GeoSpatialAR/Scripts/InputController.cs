@@ -24,9 +24,7 @@ namespace SampleViewer.Samples.GeoSpatialAR.Scripts
         private bool onScreen;
         private ARTouchControls touchControls;
 
-        [Header("Animations")] [SerializeField]
-        private Animator anim;
-
+        [Header("Animations")]
         [SerializeField] private Animator infoAnim;
 
         [Header("Materials")] [SerializeField] private Material highlightMaterial;
@@ -39,15 +37,11 @@ namespace SampleViewer.Samples.GeoSpatialAR.Scripts
         [Header("UI Components")] [SerializeField]
         private Sprite downSprite;
 
-        [SerializeField] private Button clearButton;
         [SerializeField] private Button exitButton;
         [SerializeField] private Button hideInfoButton;
         [SerializeField] private Button infoButton;
-        [SerializeField] private TMP_InputField inputField;
-        [SerializeField] private Button menuButton;
         [SerializeField] private TextMeshProUGUI propertiesText;
         [SerializeField] private Slider scaleSlider;
-        [SerializeField] private Button searchButton;
         [SerializeField] private Sprite upSprite;
 
         private void Awake()
@@ -136,60 +130,10 @@ namespace SampleViewer.Samples.GeoSpatialAR.Scripts
             feature.GetComponent<Renderer>().materials = materialsArray;
         }
 
-        private void UpdateText(TextMeshProUGUI TextToSet, string Text)
-        {
-            TextToSet.text = Text;
-        }
-
         private void Start()
         {
-            inputField.text = featureLayerQuery.WebLink.Link;
-            menuButton.image.sprite = upSprite;
-            UpdateText(menuButton.GetComponentInChildren<TextMeshProUGUI>(), "Touch to Hide Menu");
-            anim.Play("ShowMenu");
             menuVisible = true;
             exitButton.gameObject.SetActive(false);
-
-            inputField.onSubmit.AddListener(delegate(string weblink)
-            {
-                menuButton.image.sprite = downSprite;
-                UpdateText(menuButton.GetComponentInChildren<TextMeshProUGUI>(), "Touch to Show Menu");
-                anim.Play("HideMenu");
-                menuVisible = false;
-                DestroyFeatures();
-                featureLayerQuery.CreateLink(weblink);
-                StartCoroutine(featureLayerQuery.GetFeatures());
-            });
-
-            clearButton.onClick.AddListener(delegate { DestroyFeatures(); });
-
-            searchButton.onClick.AddListener(delegate
-            {
-                menuButton.image.sprite = downSprite;
-                UpdateText(menuButton.GetComponentInChildren<TextMeshProUGUI>(), "Touch to Show Menu");
-                anim.Play("HideMenu");
-                menuVisible = false;
-                DestroyFeatures();
-                StartCoroutine(featureLayerQuery.GetFeatures());
-            });
-
-            menuButton.onClick.AddListener(delegate
-            {
-                if (menuVisible)
-                {
-                    menuButton.image.sprite = downSprite;
-                    UpdateText(menuButton.GetComponentInChildren<TextMeshProUGUI>(), "Touch to Show Menu");
-                    anim.Play("HideMenu");
-                    menuVisible = false;
-                }
-                else
-                {
-                    menuButton.image.sprite = upSprite;
-                    UpdateText(menuButton.GetComponentInChildren<TextMeshProUGUI>(), "Touch to Hide Menu");
-                    anim.Play("ShowMenu");
-                    menuVisible = true;
-                }
-            });
 
             expandButton.onClick.AddListener(delegate
             {
