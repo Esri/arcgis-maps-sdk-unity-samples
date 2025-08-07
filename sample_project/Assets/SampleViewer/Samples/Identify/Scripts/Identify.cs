@@ -5,33 +5,55 @@
 //
 
 using Esri.ArcGISMapsSDK.Components;
-using Esri.GameEngine.Geometry;
 using Esri.GameEngine.Layers;
 using Esri.Unity;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Identify : MonoBehaviour
 {
-    public ArcGISMapComponent arcGISMapComponent;
+    [SerializeField] private ArcGISMapComponent arcGISMapComponent;
+    private ArcGIS3DObjectSceneLayer buildingLayer;
     [SerializeField] private Transform contentContainer;
-    private InputManager inputManager;
-    public List<GameObject> ListItems = new List<GameObject>();
-    [SerializeField] private TextMeshProUGUI locationText;
+    private List<GameObject> ListItems = new List<GameObject>();
     [SerializeField] private GameObject markerGO;
     [SerializeField] private TextMeshProUGUI resultText;
     [SerializeField] private GameObject scrollViewItem;
+    [SerializeField] private Color selectColor;
     [SerializeField] private Material selectMaterial;
-    [SerializeField] private float selectedID;
-    [SerializeField] private ArcGIS3DObjectSceneLayer buildingLayer;
+    private float selectedID;
 
-    private void Awake()
+    private void EmptyPropertiesDropdown()
     {
-        inputManager = FindFirstObjectByType<InputManager>();
+        if (ListItems != null)
+        {
+            foreach (var item in ListItems)
+            {
+                Destroy(item.gameObject);
+            }
+
+            ListItems.Clear();
+        }
+    }
+
+    private void Start()
+    {
+        if (arcGISMapComponent)
+        {
+            buildingLayer = new ArcGIS3DObjectSceneLayer("https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_NewYork_17/SceneServer", "Building Layer", 1.0f, true, "");
+            arcGISMapComponent.Map.Layers.Add(buildingLayer);
+
+            if (buildingLayer)
+            {
+                Setup3DAttributesFloatAndIntegerType(buildingLayer);
+            }
+        }
+
+        Shader.SetGlobalFloat("_SelectedObjectID", 0);
+        Shader.SetGlobalColor("_HighlightColor", selectColor);
     }
 
     public void StartRaycast()
@@ -96,35 +118,6 @@ public class Identify : MonoBehaviour
                 }
             }
         }
-    }
-
-    private void EmptyPropertiesDropdown()
-    {
-        if (ListItems != null)
-        {
-            foreach (var item in ListItems)
-            {
-                Destroy(item.gameObject);
-            }
-
-            ListItems.Clear();
-        }
-    }
-
-    private void Start()
-    {
-        if (arcGISMapComponent)
-        {
-            buildingLayer = new ArcGIS3DObjectSceneLayer("https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_NewYork_17/SceneServer", "Building Layer", 1.0f, true, "");
-            arcGISMapComponent.Map.Layers.Add(buildingLayer);
-
-            if (buildingLayer)
-            {
-                Setup3DAttributesFloatAndIntegerType(buildingLayer);
-            }
-        }
-
-        Shader.SetGlobalFloat("_SelectedObjectID", 0);
     }
 
     private void Setup3DAttributesFloatAndIntegerType(ArcGIS3DObjectSceneLayer layer)
