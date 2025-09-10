@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 9
+  serializedVersion: 10
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -42,8 +42,8 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 12
-  m_GIWorkflowMode: 1
+  serializedVersion: 13
+  m_BakeOnSceneLoad: 0
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -66,9 +66,6 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
-    m_FinalGather: 0
-    m_FinalGatherFiltering: 1
-    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 1
@@ -201,6 +198,7 @@ MonoBehaviour:
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
+  m_ScrollDeltaPerTick: 6
 --- !u!114 &58888360
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -529,15 +527,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 0
+  m_TextWrappingMode: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 00000000
   m_enableExtraPadding: 1
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -791,15 +791,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 00000000
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -1203,15 +1205,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 00000000
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -1337,15 +1341,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 00000000
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -1471,15 +1477,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -2076,15 +2084,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -2210,15 +2220,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 0
+  m_TextWrappingMode: 3
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 00000000
   m_enableExtraPadding: 1
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -2775,15 +2787,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 00000000
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -3030,15 +3044,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 00000000
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -3352,7 +3368,7 @@ RectTransform:
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &1172695271
 Animator:
-  serializedVersion: 5
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -3366,6 +3382,7 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
@@ -3740,15 +3757,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -4216,15 +4235,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 00000000
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -4488,15 +4509,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 00000000
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -4655,10 +4678,13 @@ MonoBehaviour:
   m_GlobalFontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_OnFocusSelectAll: 1
   m_ResetOnDeActivation: 1
+  m_KeepTextSelectionVisible: 0
   m_RestoreOriginalTextOnEscape: 1
   m_isRichTextEditingAllowed: 0
   m_LineLimit: 0
+  isAlert: 0
   m_InputValidator: {fileID: 0}
+  m_ShouldActivateOnSelect: 1
 --- !u!114 &1748205095
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4800,15 +4826,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 00000000
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -5026,15 +5054,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 00000000
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -5078,6 +5108,7 @@ GameObject:
   - component: {fileID: 1823688472}
   - component: {fileID: 1823688474}
   - component: {fileID: 1823688473}
+  - component: {fileID: 1823688475}
   m_Layer: 0
   m_Name: ArcGISCamera
   m_TagString: MainCamera
@@ -5184,6 +5215,8 @@ MonoBehaviour:
   stopNaNs: 0
   taaSharpenStrength: 0.5
   TAAQuality: 1
+  taaSharpenMode: 0
+  taaRingingReduction: 0
   taaHistorySharpening: 0.35
   taaAntiFlicker: 0.5
   taaMotionVectorRejection: 0
@@ -5217,6 +5250,13 @@ MonoBehaviour:
   deepLearningSuperSamplingUseCustomAttributes: 0
   deepLearningSuperSamplingUseOptimalSettings: 1
   deepLearningSuperSamplingSharpening: 0
+  allowFidelityFX2SuperResolution: 1
+  fidelityFX2SuperResolutionUseCustomQualitySettings: 0
+  fidelityFX2SuperResolutionQuality: 0
+  fidelityFX2SuperResolutionUseCustomAttributes: 0
+  fidelityFX2SuperResolutionUseOptimalSettings: 1
+  fidelityFX2SuperResolutionEnableSharpening: 0
+  fidelityFX2SuperResolutionSharpening: 0
   fsrOverrideSharpness: 0
   fsrSharpness: 0.92
   exposureTarget: {fileID: 0}
@@ -5234,6 +5274,7 @@ MonoBehaviour:
     sssQualityMode: 0
     sssQualityLevel: 0
     sssCustomSampleBudget: 20
+    sssCustomDownsampleSteps: 0
     msaaMode: 9
     materialQuality: 0
   renderingPathCustomFrameSettingsOverrideMask:
@@ -5301,13 +5342,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position:
-    x: -117.19750279331622
-    y: 34.058088281085446
-    z: 427.18145751953125
+    X: -117.19750279331622
+    Y: 34.058088281085446
+    Z: 427.18145751953125
     SRWkid: 4326
-    spatialReference:
-      wkid: 4326
-      verticalWKID: 0
+    SpatialReference:
+      WKID: 4326
+      VerticalWKID: 0
     version: 1
   rotation:
     Heading: 34.78037420451341
@@ -5315,6 +5356,8 @@ MonoBehaviour:
     Roll: 359.9918967179902
   surfacePlacementMode: 0
   surfacePlacementOffset: 0
+  version: 1
+  isInitialized: 1
 --- !u!114 &1823688470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5434,6 +5477,18 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &1823688475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1823688464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2aa7e41b614b9b74ebcef63507938d43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1828440934
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5747,15 +5802,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 00000000
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -5940,6 +5997,7 @@ MonoBehaviour:
   m_StaticLightingSkyUniqueID: 0
   m_StaticLightingCloudsUniqueID: 0
   m_StaticLightingVolumetricClouds: 0
+  bounces: 1
 --- !u!4 &2013410475
 Transform:
   m_ObjectHideFlags: 1
@@ -6055,15 +6113,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 00000000
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -6140,81 +6200,81 @@ MonoBehaviour:
       MeshModifications:
       - Polygon:
           Points:
-          - x: -13046357.983662136
-            y: 4036636.6656449568
-            z: 391.7311706542969
+          - X: -13046357.983662136
+            Y: 4036636.6656449568
+            Z: 391.7311706542969
             SRWkid: 3857
-            spatialReference:
-              wkid: 3857
-              verticalWKID: 0
+            SpatialReference:
+              WKID: 3857
+              VerticalWKID: 0
             version: 1
-          - x: -13046327.517307766
-            y: 4036636.0105851423
-            z: 391.7311706542969
+          - X: -13046327.517307766
+            Y: 4036636.0105851423
+            Z: 391.7311706542969
             SRWkid: 3857
-            spatialReference:
-              wkid: 3857
-              verticalWKID: 0
+            SpatialReference:
+              WKID: 3857
+              VerticalWKID: 0
             version: 1
-          - x: -13046327.695393093
-            y: 4036659.973079039
-            z: 391.7311706542969
+          - X: -13046327.695393093
+            Y: 4036659.973079039
+            Z: 391.7311706542969
             SRWkid: 3857
-            spatialReference:
-              wkid: 3857
-              verticalWKID: 0
+            SpatialReference:
+              WKID: 3857
+              VerticalWKID: 0
             version: 1
-          - x: -13046271.930485256
-            y: 4036658.5742142927
-            z: 391.7311706542969
+          - X: -13046271.930485256
+            Y: 4036658.5742142927
+            Z: 391.7311706542969
             SRWkid: 3857
-            spatialReference:
-              wkid: 3857
-              verticalWKID: 0
+            SpatialReference:
+              WKID: 3857
+              VerticalWKID: 0
             version: 1
-          - x: -13046272.083973415
-            y: 4036732.9932206403
-            z: 391.7311706542969
+          - X: -13046272.083973415
+            Y: 4036732.9932206403
+            Z: 391.7311706542969
             SRWkid: 3857
-            spatialReference:
-              wkid: 3857
-              verticalWKID: 0
+            SpatialReference:
+              WKID: 3857
+              VerticalWKID: 0
             version: 1
-          - x: -13046327.475056179
-            y: 4036733.283107115
-            z: 391.7311706542969
+          - X: -13046327.475056179
+            Y: 4036733.283107115
+            Z: 391.7311706542969
             SRWkid: 3857
-            spatialReference:
-              wkid: 3857
-              verticalWKID: 0
+            SpatialReference:
+              WKID: 3857
+              VerticalWKID: 0
             version: 1
-          - x: -13046327.463810451
-            y: 4036736.616999937
-            z: 391.7311706542969
+          - X: -13046327.463810451
+            Y: 4036736.616999937
+            Z: 391.7311706542969
             SRWkid: 3857
-            spatialReference:
-              wkid: 3857
-              verticalWKID: 0
+            SpatialReference:
+              WKID: 3857
+              VerticalWKID: 0
             version: 1
-          - x: -13046356.5307355
-            y: 4036737.325343443
-            z: 391.7311706542969
+          - X: -13046356.5307355
+            Y: 4036737.325343443
+            Z: 391.7311706542969
             SRWkid: 3857
-            spatialReference:
-              wkid: 3857
-              verticalWKID: 0
+            SpatialReference:
+              WKID: 3857
+              VerticalWKID: 0
             version: 1
         Type: 0
   enableExtent: 0
   extent:
     GeographicCenter:
-      x: 0
-      y: 0
-      z: 0
+      X: 0
+      Y: 0
+      Z: 0
       SRWkid: 4326
-      spatialReference:
-        wkid: 4326
-        verticalWKID: 0
+      SpatialReference:
+        WKID: 4326
+        VerticalWKID: 0
       version: 1
     ExtentShape: 2
     ShapeDimensions:
@@ -6251,95 +6311,96 @@ MonoBehaviour:
       IsEnabled: 1
       Polygons:
       - Points:
-        - x: -13046270.94567538
-          y: 4036734.215113951
-          z: 393.287841796875
+        - X: -13046270.94567538
+          Y: 4036734.215113951
+          Z: 393.287841796875
           SRWkid: 3857
-          spatialReference:
-            wkid: 3857
-            verticalWKID: 0
+          SpatialReference:
+            WKID: 3857
+            VerticalWKID: 0
           version: 1
-        - x: -13046326.480106838
-          y: 4036734.44320233
-          z: 393.287841796875
+        - X: -13046326.480106838
+          Y: 4036734.44320233
+          Z: 393.287841796875
           SRWkid: 3857
-          spatialReference:
-            wkid: 3857
-            verticalWKID: 0
+          SpatialReference:
+            WKID: 3857
+            VerticalWKID: 0
           version: 1
-        - x: -13046326.455524929
-          y: 4036738.2457535993
-          z: 393.287841796875
+        - X: -13046326.455524929
+          Y: 4036738.2457535993
+          Z: 393.287841796875
           SRWkid: 3857
-          spatialReference:
-            wkid: 3857
-            verticalWKID: 0
+          SpatialReference:
+            WKID: 3857
+            VerticalWKID: 0
           version: 1
-        - x: -13046357.361179836
-          y: 4036738.1581986677
-          z: 393.287841796875
+        - X: -13046357.361179836
+          Y: 4036738.1581986677
+          Z: 393.287841796875
           SRWkid: 3857
-          spatialReference:
-            wkid: 3857
-            verticalWKID: 0
+          SpatialReference:
+            WKID: 3857
+            VerticalWKID: 0
           version: 1
-        - x: -13046359.551167019
-          y: 4036635.593592955
-          z: 393.287841796875
+        - X: -13046359.551167019
+          Y: 4036635.593592955
+          Z: 393.287841796875
           SRWkid: 3857
-          spatialReference:
-            wkid: 3857
-            verticalWKID: 0
+          SpatialReference:
+            WKID: 3857
+            VerticalWKID: 0
           version: 1
-        - x: -13046326.327824123
-          y: 4036634.5288651716
-          z: 393.287841796875
+        - X: -13046326.327824123
+          Y: 4036634.5288651716
+          Z: 393.287841796875
           SRWkid: 3857
-          spatialReference:
-            wkid: 3857
-            verticalWKID: 0
+          SpatialReference:
+            WKID: 3857
+            VerticalWKID: 0
           version: 1
-        - x: -13046326.600101955
-          y: 4036656.24889691
-          z: 393.287841796875
+        - X: -13046326.600101955
+          Y: 4036656.24889691
+          Z: 393.287841796875
           SRWkid: 3857
-          spatialReference:
-            wkid: 3857
-            verticalWKID: 0
+          SpatialReference:
+            WKID: 3857
+            VerticalWKID: 0
           version: 1
-        - x: -13046270.922649868
-          y: 4036656.9407609235
-          z: 393.287841796875
+        - X: -13046270.922649868
+          Y: 4036656.9407609235
+          Z: 393.287841796875
           SRWkid: 3857
-          spatialReference:
-            wkid: 3857
-            verticalWKID: 0
+          SpatialReference:
+            WKID: 3857
+            VerticalWKID: 0
           version: 1
       Type: 1
   originPosition:
-    x: -117.195686
-    y: 34.056077
-    z: 0
+    X: -117.195686
+    Y: 34.056077
+    Z: 0
     SRWkid: 4326
-    spatialReference:
-      wkid: 4326
-      verticalWKID: 0
+    SpatialReference:
+      WKID: 4326
+      VerticalWKID: 0
     version: 1
   mapType: 1
   useCustomMapSpatialReference: 0
   customMapSpatialReference:
-    wkid: 3857
-    verticalWKID: 0
-  editorModeEnabled: 1
-  dataFetchWithSceneView: 1
-  rebaseWithSceneView: 0
+    WKID: 3857
+    VerticalWKID: 0
   meshCollidersEnabled: 0
   configurations: []
   oauthUserConfigurations: []
+  version: 4
+  dataFetchWithSceneView: 1
+  editorModeEnabled: 1
+  rebaseWithSceneView: 0
   RootChanged:
     m_PersistentCalls:
       m_Calls: []
-  version: 3
+  isInitialized: 1
 --- !u!114 &2092662932
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6478,15 +6539,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 00000000
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
