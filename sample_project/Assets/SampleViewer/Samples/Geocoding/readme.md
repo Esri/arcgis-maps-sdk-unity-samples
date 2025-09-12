@@ -15,7 +15,7 @@ This sample demonstrates the capability of the [Geocoding service](https://devel
 5. To find a place, put a place name or address in the search bar and press Enter. For information about the type of locations that are supported by the Geocoding service, see the [ArcGIS REST APIs documentation](https://developers.arcgis.com/rest/geocode/api-reference/geocoding-find-address-candidates.htm).
 6. To find an address of a place, drop the marker to your point of interest by clicking in the viewport while holding Shift, and you will see the address displayed above the marker.
 
-**Note:** This sample is only set up to work with a mouse and a keyboard.
+Note: This sample is only set up to work with a mouse and a keyboard.
 
 ## How it works
 

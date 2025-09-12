@@ -1,4 +1,4 @@
-# Visualize Time of Day
+# Visualize and control the time of day
 
 Control the Time of Day manually, simulate it at a given speed, or animate it from one time to another.
 
