@@ -4,14 +4,14 @@ Query Weather Data from the Weather Stations feature layer provided in order to 
 
 ![Image of Weather Sample](Weather.png)
 
-## How to Setup (Weather Sample Level)
+## How to setup (Weather Sample Level)
 
 1. Open the **RealTimeWeather** level.
 2. Click on the **ArcGISMap** in the Hierarchy panel.
 3. Set your API key under the Authentication section in the Inspector Window.
 4. Click Play and select a city from the list.
 
-## How to Setup (Sample Viewer)
+## How to setup (Sample Viewer)
 
 1. Click Play in Unity Editor.
 2. Input your API key under the **API Key Drop-down**.

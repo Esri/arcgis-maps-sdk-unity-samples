@@ -1,4 +1,4 @@
-# Subscribe to a stream service
+# Subscribe to an ArcGIS stream service
 
 Subscribe to the stream service's WebSocket and receive information through to update information in real-time.
 

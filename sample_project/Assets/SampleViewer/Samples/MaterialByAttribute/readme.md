@@ -1,4 +1,4 @@
-# Visualize different attributes through render filtering
+# Render a 3D object scene layer by attribute values
 
 Apply shaders to 3DObject Scene layer based on different attributes.
 
