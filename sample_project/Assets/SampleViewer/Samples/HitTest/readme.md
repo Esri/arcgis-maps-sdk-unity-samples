@@ -1,4 +1,4 @@
-# Visualize 3DObject IDs
+# Identify 3D object scene layer feature object IDs
 
 Get the ID for individual buildings in a scene.
 

@@ -1,17 +1,17 @@
-# Visualize Time of Day
+# Visualize and control the time of day
 
-Control the Time of Day manually, simulate it at a given speed, or animate it from one time to another.
+Control the time of day manually, simulate it at a given speed, or animate it from one time to another.
 
 ![Image of Time of Day Sample](TimeOfDay.png)
 
-## How to Setup (Time of Day Sample Level)
+## How to setup (Time of Day Sample Level)
 
 1. Open the **TimeOfDay** level.
 2. Click on the **ArcGISMap Gameobject** in the Hierarchy panel.
 3. Set your API key under the Authentication section in the Inspector panel.
 4. Click Play and change the time of day using the settings panel.
 
-## How to Setup (Sample Viewer)
+## How to setup (Sample Viewer)
 
 1. Click Play in Unity Editor.
 2. Input your API key under the **API Key Drop-down**.
