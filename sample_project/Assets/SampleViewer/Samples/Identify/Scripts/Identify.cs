@@ -6,12 +6,14 @@
 
 using Esri.ArcGISMapsSDK.Components;
 using Esri.GameEngine.Layers;
+using Esri.GameEngine.View;
 using Esri.Unity;
 using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class Identify : MonoBehaviour
 {
@@ -20,13 +22,21 @@ public class Identify : MonoBehaviour
     [SerializeField] private Transform contentContainer;
     private List<GameObject> ListItems = new List<GameObject>();
     [SerializeField] private GameObject markerGO;
+    [SerializeField] private TextMeshProUGUI resultAmount;
     [SerializeField] private TextMeshProUGUI resultText;
     [SerializeField] private GameObject scrollViewItem;
     [SerializeField] private Color selectColor;
     [SerializeField] private Material selectMaterial;
-    private float selectedID;
 
-    private void EmptyPropertiesDropdown()
+    [SerializeField] private Button increaseResult;
+    [SerializeField] private Button decreaseResult;
+
+    private ArcGISIdentifyLayerResultImmutableCollection resultValue;
+    public ulong resultsLength;
+    private float selectedID;
+    public ulong selectedResult = 0;
+
+    private void EmptyIdentifyResults()
     {
         if (ListItems != null)
         {
@@ -52,6 +62,28 @@ public class Identify : MonoBehaviour
             }
         }
 
+        resultAmount.text = "";
+
+        increaseResult.onClick.AddListener(delegate
+        {
+            if (selectedResult < resultsLength - 1)
+            {
+                ++selectedResult;
+                resultAmount.text = $"{selectedResult + 1} of {resultsLength}";
+                ParseResults(selectedResult, resultValue);
+            }
+        });
+
+        decreaseResult.onClick.AddListener(delegate
+        {
+            if (selectedResult > 0)
+            {
+                --selectedResult;
+                resultAmount.text = $"{selectedResult + 1} of {resultsLength}";
+                ParseResults(selectedResult, resultValue);
+            }
+        });
+
         Shader.SetGlobalFloat("_SelectedObjectID", 0);
         Shader.SetGlobalColor("_HighlightColor", selectColor);
     }
@@ -71,50 +103,55 @@ public class Identify : MonoBehaviour
             var cameraGeoPosition = arcGISMapComponent.EngineToGeographic(Camera.main.transform.position);
             var result = arcGISMapComponent.View.IdentifyLayersAsync(geoPosition, cameraGeoPosition, -1);
             result.Wait();
-            selectedID = 0;
-            EmptyPropertiesDropdown();
 
             if (!result.IsCanceled())
             {
-                var resultValue = result.Get();
+                resultValue = result.Get();
+                resultsLength = resultValue.Size;
 
-                for (ulong i = 0; i < resultValue.Size; i++)
+                resultAmount.text = $"{selectedResult + 1} of {resultsLength}";
+                ParseResults(selectedResult, resultValue);
+            }
+        }
+    }
+
+    private void ParseResults(ulong NumberOfResults, ArcGISIdentifyLayerResultImmutableCollection ResultValue)
+    {
+        EmptyIdentifyResults();
+        var elements = ResultValue.At(NumberOfResults).GeoElementsImmutableCollection;
+
+        for (ulong j = 0; j < elements.GetSize(); j++)
+        {
+            var attributes = elements.At(j).Attributes;
+            var keys = attributes.Keys;
+
+            try
+            {
+                var id = attributes["OBJECTID"];
+                selectedID = Convert.ToInt32(id.ToString());
+                Shader.SetGlobalFloat("_SelectedObjectID", selectedID);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError(ex.ToString());
+            }
+
+            for (ulong k = 0; k < keys.Size; k++)
+            {
+                try
                 {
-                    var elements = resultValue.At(i).GeoElements;
-
-                    for (ulong j = 0; j < elements.GetSize(); j++)
-                    {
-                        var attributes = elements.At(j).Attributes;
-                        var keys = attributes.Keys;
-
-                        try
-                        {
-                            var id = attributes["OBJECTID"];
-                            selectedID = Convert.ToInt32(id.ToString());
-                            Shader.SetGlobalFloat("_SelectedObjectID", selectedID);
-                        }
-                        catch (Exception ex) 
-                        {
-                            Debug.LogError(ex.ToString());
-                        }
-
-                        for (ulong k = 0; k < keys.Size; k++)
-                        {
-                            try
-                            {
-                                var value = attributes[keys.At(k)];
-                                var item = Instantiate(scrollViewItem);
-                                item.GetComponentInChildren<TextMeshProUGUI>().text = $"- <b>{keys.At(k)}</b>:" + value.ToString(); ;
-                                item.transform.SetParent(contentContainer);
-                                item.transform.localScale = Vector2.one;
-                                ListItems.Add(item);
-                            }
-                            catch
-                            {
-                                Debug.Log(keys.At(k) + ": <no conversion available>");
-                            }
-                        }
-                    }
+                    var value = attributes[keys.At(k)];
+                    var item = Instantiate(scrollViewItem);
+                    var tmpObjects = item.GetComponentsInChildren<TextMeshProUGUI>();
+                    tmpObjects[0].text = $"<b>{keys.At(k)}</b>";
+                    tmpObjects[1].text = value.ToString();
+                    item.transform.SetParent(contentContainer);
+                    item.transform.localScale = Vector2.one;
+                    ListItems.Add(item);
+                }
+                catch
+                {
+                    Debug.Log(keys.At(k) + ": <no conversion available>");
                 }
             }
         }
