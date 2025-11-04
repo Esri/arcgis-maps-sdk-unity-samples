@@ -4,6 +4,7 @@
 // You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
 //
 
+#if USE_HDRP_PACKAGE
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -21,3 +22,4 @@ public class DisableMultipleLights : MonoBehaviour
         directionalLight.enabled = GraphicsSettings.defaultRenderPipeline.GetType() == typeof(UnityEngine.Rendering.HighDefinition.HDRenderPipelineAsset);
     }
 }
+#endif

@@ -4,6 +4,7 @@
 // You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
 //
 
+#if USE_HDRP_PACKAGE
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
@@ -35,3 +36,4 @@ public class DisableExposure : MonoBehaviour
         }
     }
 }
+#endif
