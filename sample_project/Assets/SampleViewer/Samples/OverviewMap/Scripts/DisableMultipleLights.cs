@@ -17,7 +17,9 @@ public class DisableMultipleLights : MonoBehaviour
             return;
         }
 
+#if USE_HDRP_PACKAGE
         var directionalLight = GetComponent<Light>();
         directionalLight.enabled = GraphicsSettings.defaultRenderPipeline.GetType() == typeof(UnityEngine.Rendering.HighDefinition.HDRenderPipelineAsset);
+#endif
     }
 }
