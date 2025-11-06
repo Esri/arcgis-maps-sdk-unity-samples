@@ -1,4 +1,4 @@
-// Copyright 2022 Esri.
+// Copyright 2025 Esri.
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
@@ -19,14 +19,22 @@ public class Identify : MonoBehaviour
 {
     [SerializeField] private ArcGISMapComponent arcGISMapComponent;
     private ArcGIS3DObjectSceneLayer buildingLayer;
+    [SerializeField] private GameObject buildingToggle;
+    [SerializeField] private Transform buildingListContentContainer;
     [SerializeField] private Transform contentContainer;
+    private List<GameObject> buildingListItems = new List<GameObject>();
     private List<GameObject> ListItems = new List<GameObject>();
     [SerializeField] private GameObject markerGO;
     [SerializeField] private TextMeshProUGUI resultAmount;
-    [SerializeField] private TextMeshProUGUI resultText;
     [SerializeField] private GameObject scrollViewItem;
     [SerializeField] private Color selectColor;
     [SerializeField] private Material selectMaterial;
+    [SerializeField] private TextMeshProUGUI totalNumberOfBuildingsText;
+
+    [SerializeField] private Button changeViewButton;
+    [SerializeField] private Button showResultsButton;
+    [SerializeField] private GameObject results;
+    [SerializeField] private GameObject buildingsView;
 
     [SerializeField] private Button increaseResult;
     [SerializeField] private Button decreaseResult;
@@ -34,9 +42,23 @@ public class Identify : MonoBehaviour
     private ArcGISIdentifyLayerResultImmutableCollection resultValue;
     public ulong resultsLength;
     private float selectedID;
-    public ulong selectedResult = 0;
+    [HideInInspector] public ulong SelectedResult = 0;
 
-    private void EmptyIdentifyResults()
+    private void DisableButtons(bool enabled)
+    {
+        increaseResult.interactable = enabled;
+        decreaseResult.interactable = enabled;
+    }
+
+    public void ResetButton()
+    {
+        Shader.SetGlobalFloat("_SelectedObjectID", 0);
+        resultValue = null;
+        resultAmount.text = "";
+        DisableButtons(false);
+    }
+
+    public void EmptyIdentifyResults()
     {
         if (ListItems != null)
         {
@@ -46,6 +68,46 @@ public class Identify : MonoBehaviour
             }
 
             ListItems.Clear();
+            results.SetActive(false);
+        }
+    }
+
+    public void EmptyBuildingListResults()
+    {
+        if (buildingListItems != null)
+        {
+            foreach (var item in buildingListItems)
+            {
+                Destroy(item.gameObject);
+            }
+
+            buildingListItems.Clear();
+            buildingsView.SetActive(false);
+        }
+    }
+
+    private void PopulateBuildingList()
+    {
+        for (int i = 0; i < (int)resultsLength; i++)
+        {
+            var item = Instantiate(buildingToggle);
+            var tmpObject = item.GetComponentInChildren<TextMeshProUGUI>();
+            item.GetComponent<BuildingToggleItem>().BuildingNumber = (ulong)i;
+            item.GetComponent<BuildingToggleItem>().ResultValue = resultValue;
+            tmpObject.text = $"Building {i + 1}";
+
+            if (i == 0)
+            {
+                item.GetComponent<BuildingToggleItem>().toggleImage.sprite = item.GetComponent<BuildingToggleItem>().isOn;
+            }
+            else
+            {
+                item.GetComponentInChildren<Image>().sprite = item.GetComponent<BuildingToggleItem>().isOff;
+            }
+
+            item.transform.SetParent(buildingListContentContainer);
+            item.transform.localScale = Vector2.one;
+            buildingListItems.Add(item);
         }
     }
 
@@ -63,24 +125,71 @@ public class Identify : MonoBehaviour
         }
 
         resultAmount.text = "";
+        totalNumberOfBuildingsText.text = "";
+        buildingsView.SetActive(false);
+        results.SetActive(false);
+        DisableButtons(false);
+
+        changeViewButton.onClick.AddListener(delegate
+        {
+            if (buildingsView.activeInHierarchy)
+            {
+                buildingsView.SetActive(false);
+                results.SetActive(true);
+            }
+            else
+            {
+                buildingsView.SetActive(true);
+                results.SetActive(false);
+            }
+        });
+
+        showResultsButton.onClick.AddListener(delegate
+        {
+            buildingsView.SetActive(false);
+            results.SetActive(true);
+        });
 
         increaseResult.onClick.AddListener(delegate
         {
-            if (selectedResult < resultsLength - 1)
+            if (SelectedResult < resultsLength - 1)
             {
-                ++selectedResult;
-                resultAmount.text = $"{selectedResult + 1} of {resultsLength}";
-                ParseResults(selectedResult, resultValue);
+                EmptyIdentifyResults();
+                ++SelectedResult;
+                resultAmount.text = $"{SelectedResult + 1} of {resultsLength}";
+                ParseResults(SelectedResult, resultValue);
+
+                if (SelectedResult == resultsLength - 1)
+                {
+                    increaseResult.interactable = false;
+                    decreaseResult.interactable = true;
+                }
+                else
+                {
+                    DisableButtons(true);
+                }
             }
         });
 
         decreaseResult.onClick.AddListener(delegate
         {
-            if (selectedResult > 0)
+            if (SelectedResult > 0)
             {
-                --selectedResult;
-                resultAmount.text = $"{selectedResult + 1} of {resultsLength}";
-                ParseResults(selectedResult, resultValue);
+                EmptyIdentifyResults();
+                EmptyBuildingListResults();
+                --SelectedResult;
+                resultAmount.text = $"{SelectedResult + 1} of {resultsLength}";
+                ParseResults(SelectedResult, resultValue);
+
+                if (SelectedResult == 0)
+                {
+                    increaseResult.interactable = true;
+                    decreaseResult.interactable = false;
+                }
+                else
+                {
+                    DisableButtons(true);
+                }
             }
         });
 
@@ -98,63 +207,88 @@ public class Identify : MonoBehaviour
 
         if (Physics.Raycast(ray, out var hit))
         {
+            EmptyIdentifyResults();
+            EmptyBuildingListResults();
+            SelectedResult = 0;
             var arcGISRaycastHit = arcGISMapComponent.GetArcGISRaycastHit(hit);
             var geoPosition = arcGISMapComponent.EngineToGeographic(hit.point);
             var cameraGeoPosition = arcGISMapComponent.EngineToGeographic(Camera.main.transform.position);
             var result = arcGISMapComponent.View.IdentifyLayersAsync(geoPosition, cameraGeoPosition, -1);
             result.Wait();
 
-            if (!result.IsCanceled())
+            if (!result.IsCanceled() && result.GetError() == null)
             {
                 resultValue = result.Get();
-                resultsLength = resultValue.Size;
-
-                resultAmount.text = $"{selectedResult + 1} of {resultsLength}";
-                ParseResults(selectedResult, resultValue);
+                ParseResults(SelectedResult, resultValue);
+                PopulateBuildingList();
             }
         }
     }
 
-    private void ParseResults(ulong NumberOfResults, ArcGISIdentifyLayerResultImmutableCollection ResultValue)
+    public void ParseResults(ulong NumberOfResults, ArcGISIdentifyLayerResultImmutableCollection ResultValue)
     {
-        EmptyIdentifyResults();
-        var elements = ResultValue.At(NumberOfResults).GeoElementsImmutableCollection;
-
-        for (ulong j = 0; j < elements.GetSize(); j++)
+        if (ResultValue.IsEmpty())
         {
-            var attributes = elements.At(j).Attributes;
-            var keys = attributes.Keys;
+            Debug.LogWarning("No Results Found");
+            return;
+        }
 
+        var elements = ResultValue.At(0).GeoElementsImmutableCollection;
+        resultsLength = elements.GetSize();
+
+        if (resultsLength == 0)
+        {
+            Debug.LogWarning("No Results Found");
+            return;
+        }
+        else if (resultsLength == 1)
+        {
+            DisableButtons(false);
+        }
+        else if (resultsLength > 1)
+        {
+
+            increaseResult.interactable = true;
+            decreaseResult.interactable = false;
+        }
+
+        totalNumberOfBuildingsText.text = $"total: {resultsLength}";
+        resultAmount.text = $"{SelectedResult + 1} of {resultsLength}";
+        var attributes = elements.At(NumberOfResults).Attributes;
+        var keys = attributes.Keys;
+        buildingsView.SetActive(false);
+        results.SetActive(true);
+
+        try
+        {
+            var id = attributes["OBJECTID"];
+            selectedID = Convert.ToInt32(id.ToString());
+            Shader.SetGlobalFloat("_SelectedObjectID", selectedID);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError(ex.ToString());
+        }
+
+        for (ulong k = 0; k < keys.Size; k++)
+        {
             try
             {
-                var id = attributes["OBJECTID"];
-                selectedID = Convert.ToInt32(id.ToString());
-                Shader.SetGlobalFloat("_SelectedObjectID", selectedID);
+                var value = attributes[keys.At(k)];
+                var item = Instantiate(scrollViewItem);
+                var tmpObjects = item.GetComponentsInChildren<TextMeshProUGUI>();
+                tmpObjects[0].text = $"<b>{keys.At(k)}</b>";
+                tmpObjects[1].text = value.ToString();
+                item.transform.SetParent(contentContainer);
+                item.transform.localScale = Vector2.one;
+                ListItems.Add(item);
             }
-            catch (Exception ex)
+            catch
             {
-                Debug.LogError(ex.ToString());
-            }
-
-            for (ulong k = 0; k < keys.Size; k++)
-            {
-                try
-                {
-                    var value = attributes[keys.At(k)];
-                    var item = Instantiate(scrollViewItem);
-                    var tmpObjects = item.GetComponentsInChildren<TextMeshProUGUI>();
-                    tmpObjects[0].text = $"<b>{keys.At(k)}</b>";
-                    tmpObjects[1].text = value.ToString();
-                    item.transform.SetParent(contentContainer);
-                    item.transform.localScale = Vector2.one;
-                    ListItems.Add(item);
-                }
-                catch
-                {
-                    Debug.Log(keys.At(k) + ": <no conversion available>");
-                }
+                Debug.Log(keys.At(k) + ": <no conversion available>");
             }
         }
+
     }
 
     private void Setup3DAttributesFloatAndIntegerType(ArcGIS3DObjectSceneLayer layer)
