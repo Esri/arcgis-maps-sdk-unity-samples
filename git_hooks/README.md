@@ -1,0 +1,1 @@
+All dependencies for using git hooks are installed in `install_dependencies.sh`. Simply run `./git_hooks/git-hooks --install` to install
