@@ -1,0 +1,21 @@
+#!/bin/bash
+# Pre-commit hook to block API keys in Unity asset files
+
+NEW_API_KEY_REGEX='AAPT[!-~]+AT[12]_[[:alnum:]]{8,}'
+LEGACY_API_KEY_REGEX='AAPK\.?[[:alnum:]]{32}[[:alnum:]!$*+-.=@^|~]*'
+
+# Get staged files (Added, Copied, Modified)
+IFS=$'\n' read -d '' -r -a STAGED_FILES < <(git diff --cached --name-only --diff-filter=ACM)
+
+if [ ${#STAGED_FILES[@]} -gt 0 ]; then
+    echo "🔍 Scanning staged files for API keys..."
+    for file in "${STAGED_FILES[@]}"; do
+        if strings "$file" | grep -Eq "$NEW_API_KEY_REGEX|$LEGACY_API_KEY_REGEX"; then
+            echo "❌ ERROR: API key detected in $file"
+            echo "🚫 Commit aborted. Please remove the key before committing."
+            exit 1
+        fi
+    done
+fi
+
+exit 0

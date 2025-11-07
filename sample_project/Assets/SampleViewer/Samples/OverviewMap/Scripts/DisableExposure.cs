@@ -6,13 +6,17 @@
 
 using UnityEngine;
 using UnityEngine.Rendering;
+#if USE_HDRP_PACKAGE
 using UnityEngine.Rendering.HighDefinition;
+#endif
 
 public class DisableExposure : MonoBehaviour
 {
     private Volume skyAndFog;
+#if USE_HDRP_PACKAGE
     private Exposure exposure;
-    
+#endif
+
     private void Start()
     {
         Invoke(nameof(TurnOffExposure), 1.0f);
@@ -26,12 +30,13 @@ public class DisableExposure : MonoBehaviour
         {
             return;
         }
-
+#if USE_HDRP_PACKAGE
         skyAndFog.profile.TryGet(out exposure);
 
         if (exposure)
         {
-            exposure.active = false;   
+            exposure.active = false;
         }
+#endif
     }
 }

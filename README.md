@@ -11,13 +11,13 @@ This repository is made up of two separate Unity projects. If you would like to 
 ### Requirements for Sample Project
 
 * Computer running Windows or macOS
-* The Unity project requires a minimum of Unity `2022.3.35f1`
+* The Unity project requires a minimum of Unity `2022.3.62f2`
 * ArcGISMaps SDK for Unity
 
 ### Requirements for XR Sample Project
 
 * Computer running Windows (OpenXR is not supported on macOS)
-* The Unity project requires a minimum of Unity `2022.3.35f1`
+* The Unity project requires a minimum of Unity `2022.3.62f2`
 * ArcGISMaps SDK for Unity
 * A VR Headset and the necessary software to run through Desktop Mode
 
@@ -84,7 +84,7 @@ Esri welcomes contributions from anyone and everyone. Please see our [guidelines
 
 ## Licensing
 
-Copyright 2022 - 2024 Esri.
+Copyright 2022 - 2025 Esri.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

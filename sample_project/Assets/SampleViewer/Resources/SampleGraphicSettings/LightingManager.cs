@@ -9,7 +9,8 @@ public class LightingManager : MonoBehaviour
 
     private bool ActivePipelineIsHDRP()
     {
-        return GraphicsSettings.renderPipelineAsset.name.Contains("HDRP");
+        var asset = GraphicsSettings.renderPipelineAsset;
+        return asset != null && asset.name.Contains("HDRP");
     }
 
     void Start()

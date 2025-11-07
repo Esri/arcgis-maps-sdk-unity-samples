@@ -1,4 +1,4 @@
-# Visualize your position in an Overview Map
+# Visualize your position in an overview map
 
 ![Image of Overview Map](OverviewMap.png)
 
