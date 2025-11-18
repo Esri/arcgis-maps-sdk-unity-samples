@@ -6,6 +6,7 @@
 
 using Esri.ArcGISMapsSDK.Components;
 using Esri.GameEngine.Layers;
+using Esri.GameEngine.MapView;
 using Esri.GameEngine.View;
 using Esri.Unity;
 using System;
@@ -39,7 +40,7 @@ public class Identify : MonoBehaviour
     [SerializeField] private Button increaseResult;
     [SerializeField] private Button decreaseResult;
 
-    private ArcGISIdentifyLayerResultImmutableCollection resultValue;
+    private ArcGISImmutableCollection<ArcGISIdentifyLayerResult> resultValue;
     public ulong resultsLength;
     private float selectedID;
     [HideInInspector] public ulong SelectedResult = 0;
@@ -225,7 +226,7 @@ public class Identify : MonoBehaviour
         }
     }
 
-    public void ParseResults(ulong NumberOfResults, ArcGISIdentifyLayerResultImmutableCollection ResultValue)
+    public void ParseResults(ulong NumberOfResults, ArcGISImmutableCollection<ArcGISIdentifyLayerResult> ResultValue)
     {
         if (ResultValue.IsEmpty())
         {
@@ -233,7 +234,7 @@ public class Identify : MonoBehaviour
             return;
         }
 
-        var elements = ResultValue.At(0).GeoElementsImmutableCollection;
+        var elements = ResultValue.At(0).GeoElements;
         resultsLength = elements.GetSize();
 
         if (resultsLength == 0)
