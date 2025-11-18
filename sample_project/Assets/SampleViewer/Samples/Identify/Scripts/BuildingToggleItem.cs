@@ -4,7 +4,9 @@
 // You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
 //
 
+using Esri.GameEngine.MapView;
 using Esri.GameEngine.View;
+using Esri.Unity;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,7 +20,7 @@ public class BuildingToggleItem : MonoBehaviour
     public Image toggleImage;
     public Sprite isOn;
     public Sprite isOff;
-    public ArcGISIdentifyLayerResultImmutableCollection ResultValue;
+    public ArcGISImmutableCollection<ArcGISIdentifyLayerResult> ResultValue;
 
     private void Awake()
     {
