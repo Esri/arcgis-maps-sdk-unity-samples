@@ -7,9 +7,9 @@
 using Esri.ArcGISMapsSDK.Components;
 using Esri.GameEngine.Layers;
 using Esri.GameEngine.MapView;
-using Esri.GameEngine.View;
 using Esri.Unity;
 using System;
+using System.Collections; // For IEnumerator
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -44,6 +44,19 @@ public class Identify : MonoBehaviour
     public ulong resultsLength;
     private float selectedID;
     [HideInInspector] public ulong SelectedResult = 0;
+
+    // New non-blocking Identify controls
+    [Header("Identify Async Settings")]
+    [SerializeField] private bool useCallbackMode = false; // If true use future callback path instead of coroutine polling.
+    [SerializeField] private float identifyLayersTimeoutSeconds = 5f; // <= 0 means no timeout.
+    [SerializeField] private bool cancelOnTimeout = true; // If true call Cancel() on the future when timing out.
+    [SerializeField] private bool logProgressWhileWaiting = true; // Coroutine only: log elapsed waiting time.
+    [SerializeField] private float progressLogIntervalSeconds = 1f; // Interval between progress logs.
+    [SerializeField] private bool cancelPreviousIdentify = true; // Stop previous coroutine before starting new one.
+
+    // Internal state for async handling
+    private Coroutine activeIdentifyLayersCoroutine;
+    private readonly Queue<Action> mainThreadActions = new(); // Actions queued from future callbacks to run on main thread
 
     private void DisableButtons(bool enabled)
     {
@@ -198,6 +211,21 @@ public class Identify : MonoBehaviour
         Shader.SetGlobalColor("_HighlightColor", selectColor);
     }
 
+    private void Update()
+    {
+        // Drain queued callback actions (only in callback mode but cheap to always check)
+        if (mainThreadActions.Count > 0)
+        {
+            var pendingCount = mainThreadActions.Count;
+            for (var i = 0; i < pendingCount; i++)
+            {
+                var action = mainThreadActions.Dequeue();
+                try { action?.Invoke(); }
+                catch (Exception ex) { Debug.LogError($"Identify callback action error: {ex}"); }
+            }
+        }
+    }
+
     public void StartRaycast()
     {
 #if !UNITY_IOS && !UNITY_ANDROID && !UNITY_VISIONOS
@@ -211,19 +239,158 @@ public class Identify : MonoBehaviour
             EmptyIdentifyResults();
             EmptyBuildingListResults();
             SelectedResult = 0;
-            var arcGISRaycastHit = arcGISMapComponent.GetArcGISRaycastHit(hit);
             var geoPosition = arcGISMapComponent.EngineToGeographic(hit.point);
             var cameraGeoPosition = arcGISMapComponent.EngineToGeographic(Camera.main.transform.position);
-            var result = arcGISMapComponent.View.IdentifyLayersAsync(geoPosition, cameraGeoPosition, -1);
-            result.Wait();
 
-            if (!result.IsCanceled() && result.GetError() == null)
+            if (useCallbackMode)
             {
-                resultValue = result.Get();
-                ParseResults(SelectedResult, resultValue);
-                PopulateBuildingList();
+                StartIdentifyLayersCallback(geoPosition, cameraGeoPosition);
+            }
+            else
+            {
+                StartIdentifyLayersCoroutine(geoPosition, cameraGeoPosition);
             }
         }
+    }
+
+    private void StartIdentifyLayersCoroutine(Esri.GameEngine.Geometry.ArcGISPoint start, Esri.GameEngine.Geometry.ArcGISPoint end)
+    {
+        if (cancelPreviousIdentify && activeIdentifyLayersCoroutine != null)
+        {
+            StopCoroutine(activeIdentifyLayersCoroutine);
+            activeIdentifyLayersCoroutine = null;
+        }
+        activeIdentifyLayersCoroutine = StartCoroutine(IdentifyLayersRoutine(start, end));
+    }
+
+    private void StartIdentifyLayersCallback(Esri.GameEngine.Geometry.ArcGISPoint start, Esri.GameEngine.Geometry.ArcGISPoint end)
+    {
+        if (activeIdentifyLayersCoroutine != null)
+        {
+            StopCoroutine(activeIdentifyLayersCoroutine);
+            activeIdentifyLayersCoroutine = null;
+        }
+
+        var future = arcGISMapComponent.View.IdentifyLayersAsync(start, end, -1);
+        var startTime = Time.realtimeSinceStartup;
+        var timedOut = false;
+
+        if (identifyLayersTimeoutSeconds > 0)
+        {
+            StartCoroutine(CallbackTimeoutWatcher(future, startTime, () => timedOut = true));
+        }
+
+        future.TaskCompleted = () =>
+        {
+            // Queue processing for main thread
+            mainThreadActions.Enqueue(() =>
+            {
+                if (timedOut)
+                {
+                    Debug.LogWarning("IdentifyLayersAsync (callback) completed after timeout; ignoring.");
+                    return;
+                }
+
+                if (future.GetError() is Exception err)
+                {
+                    Debug.LogError($"IdentifyLayersAsync (callback) error: {err.Message}\n{err}");
+                    return;
+                }
+
+                if (future.IsCanceled())
+                {
+                    Debug.LogWarning("IdentifyLayersAsync (callback) was canceled.");
+                    return;
+                }
+
+                var layerResults = future.Get();
+                if (layerResults == null || layerResults.IsEmpty())
+                {
+                    Debug.LogWarning("IdentifyLayersAsync (callback) returned no results.");
+                    return;
+                }
+
+                resultValue = layerResults;
+                ParseResults(SelectedResult, resultValue);
+                PopulateBuildingList();
+                Debug.Log($"IdentifyLayersAsync (callback) completed in {(Time.realtimeSinceStartup - startTime):F2}s; results={resultValue.At(0).GeoElements.GetSize()}");
+            });
+        };
+    }
+
+    private IEnumerator CallbackTimeoutWatcher(ArcGISFuture<ArcGISImmutableCollection<ArcGISIdentifyLayerResult>> future, float start, Action onTimeout)
+    {
+        while (!future.IsDone())
+        {
+            if (identifyLayersTimeoutSeconds > 0 && (Time.realtimeSinceStartup - start) > identifyLayersTimeoutSeconds)
+            {
+                Debug.LogWarning("IdentifyLayersAsync (callback) timed out.");
+                if (cancelOnTimeout)
+                {
+                    future.Cancel();
+                }
+                onTimeout?.Invoke();
+                yield break;
+            }
+            yield return null;
+        }
+    }
+
+    private IEnumerator IdentifyLayersRoutine(Esri.GameEngine.Geometry.ArcGISPoint start, Esri.GameEngine.Geometry.ArcGISPoint end)
+    {
+    var future = arcGISMapComponent.View.IdentifyLayersAsync(start, end, -1);
+        var identifyStartTime = Time.realtimeSinceStartup;
+        var lastProgressLogTime = identifyStartTime;
+
+        while (!future.IsDone())
+        {
+            if (identifyLayersTimeoutSeconds > 0 && (Time.realtimeSinceStartup - identifyStartTime) > identifyLayersTimeoutSeconds)
+            {
+                Debug.LogWarning("IdentifyLayersAsync (coroutine) timed out.");
+                if (cancelOnTimeout)
+                {
+                    future.Cancel();
+                }
+                activeIdentifyLayersCoroutine = null;
+                yield break;
+            }
+
+            if (logProgressWhileWaiting && (Time.realtimeSinceStartup - lastProgressLogTime) >= progressLogIntervalSeconds)
+            {
+                lastProgressLogTime = Time.realtimeSinceStartup;
+                Debug.Log($"IdentifyLayersAsync (coroutine) waiting... elapsed={(lastProgressLogTime - identifyStartTime):F2}s");
+            }
+
+            yield return null;
+        }
+
+        if (future.GetError() is Exception error)
+        {
+            Debug.LogError($"IdentifyLayersAsync (coroutine) error: {error.Message}\n{error}");
+            activeIdentifyLayersCoroutine = null;
+            yield break;
+        }
+
+        if (future.IsCanceled())
+        {
+            Debug.LogWarning("IdentifyLayersAsync (coroutine) was canceled.");
+            activeIdentifyLayersCoroutine = null;
+            yield break;
+        }
+
+        var layerResults = future.Get();
+        if (layerResults == null || layerResults.IsEmpty())
+        {
+            Debug.LogWarning("IdentifyLayersAsync (coroutine) returned no results.");
+            activeIdentifyLayersCoroutine = null;
+            yield break;
+        }
+
+        resultValue = layerResults;
+        ParseResults(SelectedResult, resultValue);
+        PopulateBuildingList();
+        Debug.Log($"IdentifyLayersAsync (coroutine) completed in {(Time.realtimeSinceStartup - identifyStartTime):F2}s; results={resultValue.At(0).GeoElements.GetSize()}");
+        activeIdentifyLayersCoroutine = null;
     }
 
     public void ParseResults(ulong NumberOfResults, ArcGISImmutableCollection<ArcGISIdentifyLayerResult> ResultValue)
