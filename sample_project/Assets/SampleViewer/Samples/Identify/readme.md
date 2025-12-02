@@ -1,23 +1,23 @@
-# Visualize 3DObject ID's
+# Visualize Identify Results
 
-Get the ID for individual buildings in a scene.
+Get the Identify Results for individual/multiple buildings in a scene.
 
-![Image of HitTest](HitTest.png)
+![Image of Identify](Identify.png)
 
 ## How to use the sample (SampleViewer)
 
 1. The SampleViewer Scene should open by default, if it is not open, click the **SampleViewer** scene to open it.
 2. Click play.
 3. Using the UI, enter an APIKey in the input field to the top left. 
-4. Open the **Samples** drop down, and click **HitTest** to open the level.
-5. While holding shift, click a building. The building's ID's will show up on a 3D UI Component.
+4. Open the **Samples** drop down, and click **Identify** to open the level.
+5. While holding shift, click a building. The building's Identify Results will populate the table.
 
-## How to use the sample (HitTest Scene)
+## How to use the sample (Identify Scene)
 
-1. Open the **HitTest** scene.
+1. Open the **Identify** scene.
 2. Click on the **ArcGISMap** GameObject and set your API key in the **Inspector** window. 
 3. Click play.
-4. While holding shift, click a building. The building's ID's will show up on a 3D UI Component.
+4. While holding shift, click a building. The building's Identify Results will populate the table.
 
 ## How it works
 
@@ -26,7 +26,7 @@ Get the ID for individual buildings in a scene.
 3. Create a new Gameobject and call it **SampleArcGISRaycast**.
 4. Attach the **ArcGISRaycast** script to the **SampleArcGISRaycast** GameObject.
 5. Enter your **APIKey** in the **APIMapCreator**.
-5. Hit play. Once the scene is running hold shift and click a building. The building's ID's will show up on a 3D UI Component.
+5. Hit play. Once the scene is running hold shift and click a building. The building's Identify Results will populate the table.
 
 ## About the data
 
@@ -36,4 +36,4 @@ Elevation data is loaded from the [Terrain 3D elevation layer](https://www.arcgi
 
 ## Tags
 
-raycast, visibility
+identify, raycast, visibility
