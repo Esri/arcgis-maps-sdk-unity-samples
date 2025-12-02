@@ -43,7 +43,7 @@ public class Identify : MonoBehaviour
     [SerializeField] private Button decreaseResult;
 
     private ArcGISImmutableCollection<ArcGISIdentifyLayerResult> identifyLayerResults;
-    public ulong resultsLength;
+    private ulong resultsLength;
     private float selectedID;
     [HideInInspector] public ulong SelectedResult = 0;
 
@@ -170,6 +170,8 @@ public class Identify : MonoBehaviour
 
         try
         {
+            // Grabs objectID and sends it to shader to allow for Highlighting of the buildings.
+            // Only one building can be highlighted at a time
             var id = attributes["OBJECTID"];
             selectedID = Convert.ToInt32(id.ToString());
             Shader.SetGlobalFloat("_SelectedObjectID", selectedID);
@@ -226,17 +228,20 @@ public class Identify : MonoBehaviour
 
     private void Start()
     {
-        if (arcGISMapComponent)
+        if (!arcGISMapComponent)
         {
-            buildingLayer = new ArcGIS3DObjectSceneLayer("https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_NewYork_17/SceneServer", "Building Layer", 1.0f, true, "");
-            arcGISMapComponent.Map.Layers.Add(buildingLayer);
-
-            if (buildingLayer)
-            {
-                Setup3DAttributesFloatAndIntegerType(buildingLayer);
-            }
+            return;
         }
 
+        buildingLayer = new ArcGIS3DObjectSceneLayer("https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_NewYork_17/SceneServer", "Building Layer", 1.0f, true, "");
+        arcGISMapComponent.Map.Layers.Add(buildingLayer);
+
+        if (!buildingLayer)
+        {
+            return;
+        }
+
+        Setup3DAttributesFloatAndIntegerType(buildingLayer);
         resultAmount.text = "";
         totalNumberOfBuildingsText.text = "";
         buildingsView.SetActive(false);
