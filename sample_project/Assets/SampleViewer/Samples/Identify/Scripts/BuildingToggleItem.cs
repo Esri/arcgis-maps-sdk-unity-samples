@@ -20,7 +20,7 @@ public class BuildingToggleItem : MonoBehaviour
     public Image toggleImage;
     public Sprite isOn;
     public Sprite isOff;
-    public ArcGISImmutableCollection<ArcGISIdentifyLayerResult> ResultValue;
+    public ArcGISImmutableCollection<ArcGISIdentifyLayerResult> IdentifyLayerResults;
 
     private void Awake()
     {
@@ -32,7 +32,7 @@ public class BuildingToggleItem : MonoBehaviour
     {
         toggle.onClick.AddListener(delegate
         {
-            foreach (var item in FindObjectsOfType<BuildingToggleItem>())
+            foreach (var item in FindObjectsByType<BuildingToggleItem>(FindObjectsSortMode.None))
             {
                 item.toggleImage.sprite = isOff;
             }
@@ -45,7 +45,7 @@ public class BuildingToggleItem : MonoBehaviour
     {
         identify.SelectedResult = BuildingNumber;
         identify.EmptyIdentifyResults();
-        identify.ParseResults(BuildingNumber, ResultValue);
+        identify.ParseResults(BuildingNumber, IdentifyLayerResults);
         toggleImage.sprite = isOn;
     }
 }
