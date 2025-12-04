@@ -1,6 +1,6 @@
 # Visualize Identify Results
 
-Get the Identify Results for individual/multiple buildings in a scene.
+Get the identify results for individual/multiple buildings in a scene.
 
 ![Image of Identify](Identify.png)
 
@@ -10,7 +10,7 @@ Get the Identify Results for individual/multiple buildings in a scene.
 2. Click play.
 3. Using the UI, enter an APIKey in the input field to the top left. 
 4. Open the **Samples** drop down, and click **Identify** to open the level.
-5. While holding shift, click a building. The building's Identify Results will populate the table.
+5. While holding shift, click a building. The building's identify results will populate the table.
 
 ## How to use the sample (Identify Scene)
 
@@ -36,4 +36,4 @@ Elevation data is loaded from the [Terrain 3D elevation layer](https://www.arcgi
 
 ## Tags
 
-identify, raycast, visibility
+identify, raycast

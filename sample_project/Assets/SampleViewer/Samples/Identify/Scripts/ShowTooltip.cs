@@ -13,19 +13,14 @@ public class ShowTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     [SerializeField] private TextMeshProUGUI text;
     [SerializeField] private GameObject toolTipPrefab;
     private GameObject toolTip;
+    private float offset = -25;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (toolTip != null)
-        {
-            toolTip.GetComponent<RectTransform>().position = Mouse.current.position.ReadValue();
-            return;
-        }
-
         toolTip = Instantiate(toolTipPrefab);
         toolTip.transform.SetParent(text.gameObject.GetComponentInParent<Canvas>().transform);
         toolTip.GetComponentInChildren<TextMeshProUGUI>().text = text.text;
-        toolTip.GetComponent<RectTransform>().position = Mouse.current.position.ReadValue();
+        toolTip.GetComponent<RectTransform>().position = new Vector2(Mouse.current.position.ReadValue().x, Mouse.current.position.ReadValue().y + offset);
     }
 
     public void OnPointerExit(PointerEventData eventData)

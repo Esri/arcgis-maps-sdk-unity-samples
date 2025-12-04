@@ -49,12 +49,8 @@ public class Identify : MonoBehaviour
 
     [Header ("Thread Saftey")]
     [SerializeField] private float identifyLayersTimeoutSeconds = 5f;
-    [SerializeField] private bool cancelPreviousIdentify = true;
-    [SerializeField] private bool logProgressWhileWaiting = true;
-    [SerializeField] private float progressLogIntervalSeconds = 1f;
     [SerializeField] private bool cancelOnTimeout = true; // If true, call Cancel() on the future when timing out.
     [SerializeField] private bool verboseResultLogging = true; // Dump full attribute JSON-ish payload; disable for brevity.
-    [SerializeField] private bool useCallbackMode = false; // Toggle between coroutine polling and Future callback path.
     private readonly Queue<System.Action> mainThreadActions = new(); // Actions queued from callback
     private Coroutine activeIdentifyLayersCoroutine;
 
