@@ -27,6 +27,7 @@ This repository is made up of two separate Unity projects. If you would like to 
 * [Geocoding](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/sample_project/Assets/SampleViewer/Samples/Geocoding) - Search for an address or click on the surface to get the address of that location.
 * [Geometry](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/sample_project/Assets/SampleViewer/Samples/Geometry) - Draw polylines, polygons and envelopes on the map and get their lengths or areas.
 * [HitTest](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/sample_project/Assets/SampleViewer/Samples/HitTest) - Visualize individual Buildings ID's from a 3D Object Scene Layer.
+* [Identify](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/sample_project/Assets/SampleViewer/Samples/Identify/readme.md) - Identify individual or multiple buildings feature ID's.
 * [Line of sight](https://github.com/Esri/arcgis-maps-sdk-unreal-engine-samples/tree/main/sample_project/Content/SampleViewer/Samples/LineOfSight) - See how to check line of sight between two objects in Unity.
 * [Material By Attribute](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/sample_project/Assets/SampleViewer/Samples/MaterialByAttribute) - Apply materials to 3DObject Scene layer based on specific attributes.
 * [Measure](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/sample_project/Assets/SampleViewer/Samples/Measure) - Click on the map to get real-world distances between points.
