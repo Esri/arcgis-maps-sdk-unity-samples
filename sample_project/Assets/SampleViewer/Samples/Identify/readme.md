@@ -8,7 +8,7 @@ Get the identify results for individual/multiple buildings in a scene.
 
 1. The SampleViewer Scene should open by default, if it is not open, click the **SampleViewer** scene to open it.
 2. Click play.
-3. Using the UI, enter an APIKey in the input field to the top left. 
+3. Using the UI, enter an API key in the input field to the top left. 
 4. Open the **Samples** drop down, and click **Identify** to open the level.
 5. While holding shift, click a building. The building's identify results will populate the table.
 
