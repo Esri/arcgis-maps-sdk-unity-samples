@@ -47,7 +47,7 @@ public class Identify : MonoBehaviour
     private float selectedID;
     [HideInInspector] public ulong SelectedResult = 0;
 
-    [Header ("Thread Saftey")]
+    [Header ("Thread Safety")]
     [SerializeField] private float identifyLayersTimeoutSeconds = 5f;
     [SerializeField] private bool cancelOnTimeout = true; // If true, call Cancel() on the future when timing out.
     [SerializeField] private bool verboseResultLogging = true; // Dump full attribute JSON-ish payload; disable for brevity.
