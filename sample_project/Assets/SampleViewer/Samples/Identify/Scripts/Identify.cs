@@ -182,6 +182,19 @@ public class Identify : MonoBehaviour
             try
             {
                 var value = attributes[keys.At(k)];
+
+                if (value.GetType() == typeof(DateTime))
+                {
+                    var dateTimeItem = Instantiate(scrollViewItem);
+                    var dateTimeText = dateTimeItem.GetComponentsInChildren<TextMeshProUGUI>();
+                    dateTimeText[0].text = $"<b>{keys.At(k)}</b>";
+                    dateTimeText[1].text = "";
+                    dateTimeItem.transform.SetParent(contentContainer);
+                    dateTimeItem.transform.localScale = Vector2.one;
+                    ListItems.Add(dateTimeItem);
+                    continue;
+                }
+
                 var item = Instantiate(scrollViewItem);
                 var tmpObjects = item.GetComponentsInChildren<TextMeshProUGUI>();
                 tmpObjects[0].text = $"<b>{keys.At(k)}</b>";
