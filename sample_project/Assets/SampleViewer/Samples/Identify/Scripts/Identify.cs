@@ -77,6 +77,19 @@ public class Identify : MonoBehaviour
         }
     }
 
+    //Filter out incorrect date format. See known issue (BUG-000181006): https://developers.arcgis.com/unity/release-notes/release-notes-2-2-0/.
+    private bool DateTimeCheck(object AttributeValue)
+    {
+        if (AttributeValue.GetType() != typeof(DateTime))
+        {
+            return false;
+        }
+
+        var DateTime = (DateTime)AttributeValue;
+        Int32 year =  DateTime.Year;
+        return (year < 1800);
+    }
+
     private void DisableButtons(bool enabled)
     {
         increaseResult.interactable = enabled;
@@ -182,23 +195,16 @@ public class Identify : MonoBehaviour
             try
             {
                 var value = attributes[keys.At(k)];
-
-                if (value.GetType() == typeof(DateTime))
-                {
-                    var dateTimeItem = Instantiate(scrollViewItem);
-                    var dateTimeText = dateTimeItem.GetComponentsInChildren<TextMeshProUGUI>();
-                    dateTimeText[0].text = $"<b>{keys.At(k)}</b>";
-                    dateTimeText[1].text = "";
-                    dateTimeItem.transform.SetParent(contentContainer);
-                    dateTimeItem.transform.localScale = Vector2.one;
-                    ListItems.Add(dateTimeItem);
-                    continue;
-                }
-
                 var item = Instantiate(scrollViewItem);
                 var tmpObjects = item.GetComponentsInChildren<TextMeshProUGUI>();
                 tmpObjects[0].text = $"<b>{keys.At(k)}</b>";
                 tmpObjects[1].text = value.ToString();
+
+                if (DateTimeCheck(value))
+                {
+                    tmpObjects[1].text = "";
+                }
+
                 item.transform.SetParent(contentContainer);
                 item.transform.localScale = Vector2.one;
                 ListItems.Add(item);
