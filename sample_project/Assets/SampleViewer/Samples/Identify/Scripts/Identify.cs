@@ -261,6 +261,7 @@ public class Identify : MonoBehaviour
         totalNumberOfBuildingsText.text = "";
         buildingsView.SetActive(false);
         results.SetActive(false);
+        menuBar.SetActive(false);
         DisableButtons(false);
 
         changeViewButton.onClick.AddListener(delegate
