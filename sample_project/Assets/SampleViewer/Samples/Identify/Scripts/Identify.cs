@@ -148,6 +148,7 @@ public class Identify : MonoBehaviour
         if (identifyLayerResults.IsEmpty())
         {
             Debug.LogWarning("No Results Found");
+            Shader.SetGlobalFloat("_SelectedObjectID", 0);
             return;
         }
 
@@ -157,6 +158,7 @@ public class Identify : MonoBehaviour
         if (resultsLength == 0)
         {
             Debug.LogWarning("No Results Found");
+            Shader.SetGlobalFloat("_SelectedObjectID", 0);
             return;
         }
         else if (resultsLength == 1)
