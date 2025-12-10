@@ -18,30 +18,32 @@ using UnityEngine.UI;
 
 public class Identify : MonoBehaviour
 {
+    [Header("Identify Variables")]
     [SerializeField] private ArcGISMapComponent arcGISMapComponent;
     private ArcGIS3DObjectSceneLayer buildingLayer;
-    [SerializeField] private GameObject buildingToggle;
     [SerializeField] private Transform buildingListContentContainer;
-    [SerializeField] private Transform contentContainer;
     private List<GameObject> buildingListItems = new List<GameObject>();
-    [SerializeField] private InputManager inputManager;
+    [SerializeField] private GameObject buildingToggle;
+    [SerializeField] private Transform contentContainer;
     private List<GameObject> ListItems = new List<GameObject>();
     [SerializeField] private GameObject markerGO;
     [SerializeField] private float maxRayLength = 10000000;
-    [SerializeField] private TextMeshProUGUI resultAmount;
     [SerializeField] private GameObject scrollViewItem;
     [SerializeField] private Color selectColor;
     [SerializeField] private Material selectMaterial;
+
+    [Header("UI Elements")]
+    [SerializeField] private GameObject buildingsView;
+    [SerializeField] private Button changeViewButton;
+    [SerializeField] private Button decreaseResult;
+    [SerializeField] private Button increaseResult;
+    [SerializeField] private GameObject menuBar;
+    [SerializeField] private TextMeshProUGUI resultAmount;
+    [SerializeField] private GameObject results;
+    [SerializeField] private Button showResultsButton;
     [SerializeField] private TextMeshProUGUI totalNumberOfBuildingsText;
 
-    [SerializeField] private Button changeViewButton;
-    [SerializeField] private Button showResultsButton;
-    [SerializeField] private GameObject results;
-    [SerializeField] private GameObject buildingsView;
-
-    [SerializeField] private Button increaseResult;
-    [SerializeField] private Button decreaseResult;
-
+    // Select Variables
     private ArcGISImmutableCollection<ArcGISIdentifyLayerResult> identifyLayerResults;
     private ulong resultsLength;
     private float selectedID;
@@ -53,11 +55,6 @@ public class Identify : MonoBehaviour
     [SerializeField] private bool verboseResultLogging = true; // Dump full attribute JSON-ish payload; disable for brevity.
     private readonly Queue<System.Action> mainThreadActions = new(); // Actions queued from callback
     private Coroutine activeIdentifyLayersCoroutine;
-
-    private void Awake()
-    {
-        inputManager = FindFirstObjectByType<InputManager>();
-    }
 
     private IEnumerator CallbackTimeoutWatcher(ArcGISFuture<ArcGISImmutableCollection<ArcGISIdentifyLayerResult>> future, float start, System.Action onTimeout)
     {
@@ -176,6 +173,7 @@ public class Identify : MonoBehaviour
         resultAmount.text = $"{SelectedResult + 1} of {resultsLength}";
         var attributes = elements.At(NumberOfResults).Attributes;
         var keys = attributes.Keys;
+        menuBar.SetActive(true);
         buildingsView.SetActive(false);
         results.SetActive(true);
 
