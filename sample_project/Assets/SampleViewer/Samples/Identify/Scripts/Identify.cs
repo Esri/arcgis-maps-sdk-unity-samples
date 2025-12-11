@@ -112,6 +112,7 @@ public class Identify : MonoBehaviour
 
             ListItems.Clear();
             results.SetActive(false);
+            menuBar.SetActive(false);
         }
     }
 
@@ -126,6 +127,7 @@ public class Identify : MonoBehaviour
 
             buildingListItems.Clear();
             buildingsView.SetActive(false);
+            menuBar.SetActive(false);
         }
     }
 
