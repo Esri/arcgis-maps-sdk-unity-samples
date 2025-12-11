@@ -171,7 +171,7 @@ public class Identify : MonoBehaviour
             decreaseResult.interactable = false;
         }
 
-        totalNumberOfBuildingsText.text = $"total: {resultsLength}";
+        totalNumberOfBuildingsText.text = $"Total: {resultsLength}";
         resultAmount.text = $"{SelectedResult + 1} of {resultsLength}";
         var attributes = elements.At(NumberOfResults).Attributes;
         var keys = attributes.Keys;
