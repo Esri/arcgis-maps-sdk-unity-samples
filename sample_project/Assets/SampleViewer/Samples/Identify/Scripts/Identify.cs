@@ -49,7 +49,7 @@ public class Identify : MonoBehaviour
     private float selectedID;
     [HideInInspector] public ulong SelectedResult = 0;
 
-    [Header ("Thread Safety")]
+    [Header("Thread Safety")]
     [SerializeField] private float identifyLayersTimeoutSeconds = 5f;
     [SerializeField] private bool cancelOnTimeout = true; // If true, call Cancel() on the future when timing out.
     [SerializeField] private bool verboseResultLogging = true; // Dump full attribute JSON-ish payload; disable for brevity.
@@ -83,7 +83,7 @@ public class Identify : MonoBehaviour
         }
 
         var DateTime = (DateTime)AttributeValue;
-        Int32 year =  DateTime.Year;
+        Int32 year = DateTime.Year;
         return (year < 1800);
     }
 
@@ -95,10 +95,9 @@ public class Identify : MonoBehaviour
 
     public void ResetButton()
     {
-        Shader.SetGlobalFloat("_SelectedObjectID", 0);
+        Shader.SetGlobalFloat("_SelectedObjectID", -1);
         identifyLayerResults = null;
         resultAmount.text = "";
-        DisableButtons(false);
     }
 
     public void EmptyIdentifyResults()
@@ -147,7 +146,7 @@ public class Identify : MonoBehaviour
         if (identifyLayerResults.IsEmpty())
         {
             Debug.LogWarning("No Results Found");
-            Shader.SetGlobalFloat("_SelectedObjectID", 0);
+            Shader.SetGlobalFloat("_SelectedObjectID", -1);
             return;
         }
 
@@ -157,7 +156,7 @@ public class Identify : MonoBehaviour
         if (resultsLength == 0)
         {
             Debug.LogWarning("No Results Found");
-            Shader.SetGlobalFloat("_SelectedObjectID", 0);
+            Shader.SetGlobalFloat("_SelectedObjectID", -1);
             return;
         }
         else if (resultsLength == 1)
@@ -166,9 +165,7 @@ public class Identify : MonoBehaviour
         }
         else if (resultsLength > 1)
         {
-
-            increaseResult.interactable = true;
-            decreaseResult.interactable = false;
+            DisableButtons(true);
         }
 
         totalNumberOfBuildingsText.text = $"Total: {resultsLength}";
@@ -277,6 +274,18 @@ public class Identify : MonoBehaviour
             {
                 buildingsView.SetActive(true);
                 results.SetActive(false);
+
+                foreach (var item in FindObjectsByType<BuildingToggleItem>(FindObjectsSortMode.None))
+                {
+                    if (item.BuildingNumber == SelectedResult)
+                    {
+                        item.toggleImage.sprite = item.isOn;
+                    }
+                    else
+                    {
+                        item.toggleImage.sprite = item.isOff;
+                    }
+                }
             }
         });
 
@@ -290,20 +299,17 @@ public class Identify : MonoBehaviour
         {
             if (SelectedResult < resultsLength - 1)
             {
-                EmptyIdentifyResults();
                 ++SelectedResult;
+                EmptyIdentifyResults();
                 resultAmount.text = $"{SelectedResult + 1} of {resultsLength}";
                 ParseResults(SelectedResult, identifyLayerResults);
-
-                if (SelectedResult == resultsLength - 1)
-                {
-                    increaseResult.interactable = false;
-                    decreaseResult.interactable = true;
-                }
-                else
-                {
-                    DisableButtons(true);
-                }
+            }
+            else if (SelectedResult == resultsLength - 1)
+            {
+                EmptyIdentifyResults();
+                SelectedResult = 0;
+                resultAmount.text = $"{SelectedResult + 1} of {resultsLength}";
+                ParseResults(SelectedResult, identifyLayerResults);
             }
         });
 
@@ -312,24 +318,20 @@ public class Identify : MonoBehaviour
             if (SelectedResult > 0)
             {
                 EmptyIdentifyResults();
-                EmptyBuildingListResults();
                 --SelectedResult;
                 resultAmount.text = $"{SelectedResult + 1} of {resultsLength}";
                 ParseResults(SelectedResult, identifyLayerResults);
-
-                if (SelectedResult == 0)
-                {
-                    increaseResult.interactable = true;
-                    decreaseResult.interactable = false;
-                }
-                else
-                {
-                    DisableButtons(true);
-                }
+            }
+            else if (SelectedResult == 0)
+            {
+                EmptyIdentifyResults();
+                SelectedResult = resultsLength - 1;
+                resultAmount.text = $"{SelectedResult + 1} of {resultsLength}";
+                ParseResults(SelectedResult, identifyLayerResults);
             }
         });
 
-        Shader.SetGlobalFloat("_SelectedObjectID", 0);
+        Shader.SetGlobalFloat("_SelectedObjectID", -1);
         Shader.SetGlobalColor("_HighlightColor", selectColor);
     }
 
@@ -340,63 +342,59 @@ public class Identify : MonoBehaviour
 #else
         Ray ray = Camera.main.ScreenPointToRay(inputManager.touchControls.Touch.TouchPosition.ReadValue<Vector2>());
 #endif
+        EmptyIdentifyResults();
+        EmptyBuildingListResults();
+        SelectedResult = 0;
 
-        if (Physics.Raycast(ray, out var hit))
+        if (activeIdentifyLayersCoroutine != null)
         {
-            EmptyIdentifyResults();
-            EmptyBuildingListResults();
-            SelectedResult = 0;
-
-            if (activeIdentifyLayersCoroutine != null)
-            {
-                StopCoroutine(activeIdentifyLayersCoroutine);
-                activeIdentifyLayersCoroutine = null;
-            }
-
-            var startGeoPosition = arcGISMapComponent.EngineToGeographic(ray.origin);
-            var endPoint = ray.GetPoint(maxRayLength);
-            var endGeoPosition = arcGISMapComponent.EngineToGeographic(endPoint);
-
-            var future = arcGISMapComponent.View.IdentifyLayersAsync(startGeoPosition, endGeoPosition, -1);
-            var startTime = Time.realtimeSinceStartup;
-            var timedOut = false;
-
-            if (identifyLayersTimeoutSeconds > 0)
-            {
-                StartCoroutine(CallbackTimeoutWatcher(future, startTime, () => timedOut = true));
-            }
-
-
-            future.TaskCompleted = () =>
-            {
-                mainThreadActions.Enqueue(() =>
-                {
-                    if (timedOut)
-                    {
-                        Debug.LogWarning("IdentifyLayersAsync (callback) completed after timeout; ignoring.");
-                        return;
-                    }
-
-                    if (future.GetError() is System.Exception futureError)
-                    {
-                        Debug.LogError($"IdentifyLayersAsync (callback) error: {futureError.Message}\n{futureError}");
-                        return;
-                    }
-
-                    var layerResults = future.Get();
-
-                    if (layerResults == null)
-                    {
-                        Debug.Log("IdentifyLayersAsync (callback) null results");
-                        return;
-                    }
-
-                    identifyLayerResults = future.Get();
-                    ParseResults(SelectedResult, identifyLayerResults);
-                    PopulateBuildingList();
-                });
-            };
+            StopCoroutine(activeIdentifyLayersCoroutine);
+            activeIdentifyLayersCoroutine = null;
         }
+
+        var startGeoPosition = arcGISMapComponent.EngineToGeographic(ray.origin);
+        var endPoint = ray.GetPoint(maxRayLength);
+        var endGeoPosition = arcGISMapComponent.EngineToGeographic(endPoint);
+
+        var future = arcGISMapComponent.View.IdentifyLayersAsync(startGeoPosition, endGeoPosition, -1);
+        var startTime = Time.realtimeSinceStartup;
+        var timedOut = false;
+
+        if (identifyLayersTimeoutSeconds > 0)
+        {
+            StartCoroutine(CallbackTimeoutWatcher(future, startTime, () => timedOut = true));
+        }
+
+
+        future.TaskCompleted = () =>
+        {
+            mainThreadActions.Enqueue(() =>
+            {
+                if (timedOut)
+                {
+                    Debug.LogWarning("IdentifyLayersAsync (callback) completed after timeout; ignoring.");
+                    return;
+                }
+
+                if (future.GetError() is System.Exception futureError)
+                {
+                    Debug.LogError($"IdentifyLayersAsync (callback) error: {futureError.Message}\n{futureError}");
+                    return;
+                }
+
+                var layerResults = future.Get();
+
+                if (layerResults == null)
+                {
+                    Debug.Log("IdentifyLayersAsync (callback) null results");
+                    return;
+                }
+
+                identifyLayerResults = future.Get();
+                ParseResults(SelectedResult, identifyLayerResults);
+                PopulateBuildingList();
+            });
+        };
     }
 
     private void Setup3DAttributesFloatAndIntegerType(ArcGIS3DObjectSceneLayer layer)
