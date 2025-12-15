@@ -84,7 +84,7 @@ public class Geocoder : MonoBehaviour
 
     void Start()
     {
-        arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
+        arcGISMapComponent = FindFirstObjectByType<ArcGISMapComponent>();
         MainCamera = Camera.main;
         animator = GameObject.Find("InfoMenu").GetComponent<Animator>();
         SearchButton.onClick.AddListener(delegate { HandleTextInput(textInput); });
@@ -117,7 +117,7 @@ public class Geocoder : MonoBehaviour
         CreateAddressCard(true);
         MainCamera.GetComponent<Camera>().cullingMask = -1;
     }
-    
+
     /// <summary>
     /// Perform a geocoding query (address lookup) and parse the response. If the server returned an error, the message is shown to the user.
     /// </summary>

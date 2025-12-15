@@ -30,7 +30,7 @@ public class ScrollItem : MonoBehaviour, IPointerClickHandler
     {
         CheckDataValues();
         StartCoroutine(weatherQuery.SendCityQuery(longitude, latitude));
-        var weatherDataGameObject = FindObjectOfType<WeatherData>();
+        var weatherDataGameObject = FindFirstObjectByType<WeatherData>();
         if (!weatherDataGameObject)
         {
             if (weatherQuery.notFound)
@@ -106,7 +106,7 @@ public class ScrollItem : MonoBehaviour, IPointerClickHandler
 
     private void Start()
     {
-        weatherQuery = FindObjectOfType<WeatherQuery>();
-        mapComponent = FindObjectOfType<ArcGISMapComponent>();
+        weatherQuery = FindFirstObjectByType<WeatherQuery>();
+        mapComponent = FindFirstObjectByType<ArcGISMapComponent>();
     }
 }

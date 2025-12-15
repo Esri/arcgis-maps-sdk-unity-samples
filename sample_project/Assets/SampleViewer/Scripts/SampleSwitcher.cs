@@ -72,8 +72,8 @@ public class SampleSwitcher : MonoBehaviour
     private void ApplyApiKey()
     {
         // API scripts handle api key differently than mapcomponent.
-        var apiMapCreator = FindObjectOfType<APIMapCreator>();
-        var viewShedMapCreator = FindObjectOfType<ViewshedMap>();
+        var apiMapCreator = FindFirstObjectByType<APIMapCreator>();
+        var viewShedMapCreator = FindFirstObjectByType<ViewshedMap>();
 
         if (apiMapCreator != null && string.IsNullOrEmpty(apiMapCreator.APIKey))
         {
@@ -86,7 +86,7 @@ public class SampleSwitcher : MonoBehaviour
             return;
         }
 
-        var mapComponents = FindObjectsOfType<ArcGISMapComponent>();
+        var mapComponents = FindObjectsByType<ArcGISMapComponent>(FindObjectsSortMode.None);
 
         if (mapComponents.Count() == 1)
         {
@@ -97,7 +97,7 @@ public class SampleSwitcher : MonoBehaviour
         }
         else
         {
-            foreach (var mapComponent in mapComponents) 
+            foreach (var mapComponent in mapComponents)
             {
                 if (mapComponent.APIKey == "")
                 {
@@ -245,7 +245,7 @@ public class SampleSwitcher : MonoBehaviour
 
     private IEnumerator PipelineChanged()
     {
-        var sky = FindObjectOfType<ArcGISSkyRepositionComponent>();
+        var sky = FindFirstObjectByType<ArcGISSkyRepositionComponent>();
         if (sky != null)
         {
             DestroyImmediate(sky.gameObject);
@@ -265,7 +265,7 @@ public class SampleSwitcher : MonoBehaviour
         var pipelineString = isHDRP ? "HDRP" : "URP";
         var assetPath = $"SampleGraphicSettings/Sample{pipelineString}ipeline";
         RenderPipelineAsset pipeline = Resources.Load<RenderPipelineAsset>(assetPath);
-        GraphicsSettings.renderPipelineAsset = pipeline;
+        GraphicsSettings.defaultRenderPipeline = pipeline;
     }
 
     private void EnableDisablePipelineButtons()

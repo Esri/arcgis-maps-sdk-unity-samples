@@ -25,8 +25,8 @@ public class DisciplineButton : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        filter = FindObjectOfType<BuildingFilter>();
-        contentBoxes = FindObjectOfType<ContentBoxes>();
+        filter = FindFirstObjectByType<BuildingFilter>();
+        contentBoxes = FindFirstObjectByType<ContentBoxes>();
         string text = GetComponentInChildren<TextMeshProUGUI>().text;
 
         if (categoryToggle != null)

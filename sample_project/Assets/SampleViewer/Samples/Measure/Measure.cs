@@ -91,7 +91,7 @@ public class Measure : MonoBehaviour
 
     private void Start()
     {
-        arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
+        arcGISMapComponent = FindFirstObjectByType<ArcGISMapComponent>();
 
         lineRenderer = Line.GetComponent<LineRenderer>();
         lineRenderer.widthMultiplier = LineWidth;
@@ -109,7 +109,7 @@ public class Measure : MonoBehaviour
     {
 
         float lengthOfLine = Vector3.Distance(start.transform.position, end.transform.position);
-        float n = Mathf.Floor(lengthOfLine / InterpolationInterval) ;
+        float n = Mathf.Floor(lengthOfLine / InterpolationInterval);
         double dx = (end.transform.position.x - start.transform.position.x) / n;
         double dy = (end.transform.position.y - start.transform.position.y) / n;
         double dz = (end.transform.position.z - start.transform.position.z) / n;

@@ -20,7 +20,7 @@ public class ChangeMaterial : MonoBehaviour
         {
             mapManMat = Resources.Load<Material>("MapmanForUnity/HDRP_Metallic_Standard/MapmanMaterialHDRP");
         }
-        else if (GraphicsSettings.renderPipelineAsset.name.Contains("URP"))
+        else if (GraphicsSettings.defaultRenderPipeline.name.Contains("URP"))
         {
             mapManMat = Resources.Load<Material>("MapmanForUnity/URP_Metallic_Standard/MapmanMaterialURP");
         }

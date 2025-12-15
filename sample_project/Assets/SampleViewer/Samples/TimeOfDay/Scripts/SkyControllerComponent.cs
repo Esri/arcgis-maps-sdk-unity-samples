@@ -131,25 +131,25 @@ public class SkyControllerComponent : MonoBehaviour
         switch (skyMode)
         {
             case SkyMode.None:
-            {
-                break;
-            }
-            case SkyMode.Animated:
-            {
-                RotateSky();
-
-                if (time >= stopTime && (stopTime >= startTime || time <= startTime))
                 {
-                    StopAnimation();
+                    break;
                 }
-         
-                break;
-            }
+            case SkyMode.Animated:
+                {
+                    RotateSky();
+
+                    if (time >= stopTime && (stopTime >= startTime || time <= startTime))
+                    {
+                        StopAnimation();
+                    }
+
+                    break;
+                }
             case SkyMode.Simulated:
-            {
-                RotateSky();
-                break;
-            }
+                {
+                    RotateSky();
+                    break;
+                }
         }
     }
 
@@ -182,7 +182,7 @@ public class SkyControllerComponent : MonoBehaviour
         speedText.text = String.Format("{0:0.#}", speedValue);
         RotateSky();
 
-        lampPosts = FindObjectOfType<LampPostFeatureQuery>().FeatureItems;
+        lampPosts = FindFirstObjectByType<LampPostFeatureQuery>().FeatureItems;
 
         foreach (var lampPost in lampPosts)
         {

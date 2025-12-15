@@ -9,7 +9,7 @@ public class LightingManager : MonoBehaviour
 
     private bool ActivePipelineIsHDRP()
     {
-        var asset = GraphicsSettings.renderPipelineAsset;
+        var asset = GraphicsSettings.defaultRenderPipeline;
         return asset != null && asset.name.Contains("HDRP");
     }
 
@@ -20,8 +20,8 @@ public class LightingManager : MonoBehaviour
 #if USE_HDRP_PACKAGE
             var HDRPLightingObject = Instantiate(HDRPLighting, transform);
             var Sky = HDRPLightingObject.GetComponentInChildren<ArcGISSkyRepositionComponent>();
-            Sky.CameraComponent = FindObjectOfType<ArcGISCameraComponent>();
-            Sky.arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
+            Sky.CameraComponent = FindFirstObjectByType<ArcGISCameraComponent>();
+            Sky.arcGISMapComponent = FindFirstObjectByType<ArcGISMapComponent>();
             HDRPLightingObject.SetActive(true);
 #endif
         }
