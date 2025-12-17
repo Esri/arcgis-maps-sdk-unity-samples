@@ -25,6 +25,7 @@ public class Identify : MonoBehaviour
     private List<GameObject> buildingListItems = new List<GameObject>();
     [SerializeField] private GameObject buildingToggle;
     [SerializeField] private Transform contentContainer;
+    [SerializeField] private string idToGet = "OBJECTID";
     private List<GameObject> ListItems = new List<GameObject>();
     [SerializeField] private GameObject markerGO;
     [SerializeField] private float maxRayLength = 10000000;
@@ -75,7 +76,7 @@ public class Identify : MonoBehaviour
     }
 
     //Filter out incorrect date format. See known issue (BUG-000181006): https://developers.arcgis.com/unity/release-notes/release-notes-2-2-0/.
-    private bool DateTimeCheck(object AttributeValue)
+    private bool DateTimeIsInvalid(object AttributeValue)
     {
         if (AttributeValue.GetType() != typeof(DateTime))
         {
@@ -87,7 +88,7 @@ public class Identify : MonoBehaviour
         return (year < 1800);
     }
 
-    private void DisableButtons(bool enabled)
+    private void SetButtonInteractable(bool enabled)
     {
         increaseResult.interactable = enabled;
         decreaseResult.interactable = enabled;
@@ -159,28 +160,26 @@ public class Identify : MonoBehaviour
             Shader.SetGlobalFloat("_SelectedObjectID", -1);
             return;
         }
-        else if (resultsLength == 1)
-        {
-            DisableButtons(false);
-        }
-        else if (resultsLength > 1)
-        {
-            DisableButtons(true);
-        }
+
+        SetButtonInteractable(resultsLength > 1);
 
         totalNumberOfBuildingsText.text = $"Total: {resultsLength}";
         resultAmount.text = $"{SelectedResult + 1} of {resultsLength}";
         var attributes = elements.At(NumberOfResults).Attributes;
         var keys = attributes.Keys;
+
+        if (!buildingsView.activeInHierarchy)
+        {
+            results.SetActive(true);
+        }
+
         menuBar.SetActive(true);
-        buildingsView.SetActive(false);
-        results.SetActive(true);
 
         try
         {
             // Grabs objectID and sends it to shader to allow for Highlighting of the buildings.
             // Only one building can be highlighted at a time
-            var id = attributes["OBJECTID"];
+            var id = attributes[idToGet];
             selectedID = Convert.ToInt32(id.ToString());
             Shader.SetGlobalFloat("_SelectedObjectID", selectedID);
         }
@@ -199,7 +198,7 @@ public class Identify : MonoBehaviour
                 tmpObjects[0].text = $"<b>{keys.At(k)}</b>";
                 tmpObjects[1].text = value.ToString();
 
-                if (DateTimeCheck(value))
+                if (DateTimeIsInvalid(value))
                 {
                     tmpObjects[1].text = "";
                 }
@@ -261,7 +260,7 @@ public class Identify : MonoBehaviour
         buildingsView.SetActive(false);
         results.SetActive(false);
         menuBar.SetActive(false);
-        DisableButtons(false);
+        SetButtonInteractable(false);
 
         changeViewButton.onClick.AddListener(delegate
         {
@@ -311,6 +310,21 @@ public class Identify : MonoBehaviour
                 resultAmount.text = $"{SelectedResult + 1} of {resultsLength}";
                 ParseResults(SelectedResult, identifyLayerResults);
             }
+
+            if (buildingsView.activeInHierarchy)
+            {
+                foreach (var item in FindObjectsByType<BuildingToggleItem>(FindObjectsSortMode.None))
+                {
+                    if (item.BuildingNumber == SelectedResult)
+                    {
+                        item.toggleImage.sprite = item.isOn;
+                    }
+                    else
+                    {
+                        item.toggleImage.sprite = item.isOff;
+                    }
+                }
+            }
         });
 
         decreaseResult.onClick.AddListener(delegate
@@ -328,6 +342,21 @@ public class Identify : MonoBehaviour
                 SelectedResult = resultsLength - 1;
                 resultAmount.text = $"{SelectedResult + 1} of {resultsLength}";
                 ParseResults(SelectedResult, identifyLayerResults);
+            }
+
+            if (buildingsView.activeInHierarchy)
+            {
+                foreach (var item in FindObjectsByType<BuildingToggleItem>(FindObjectsSortMode.None))
+                {
+                    if (item.BuildingNumber == SelectedResult)
+                    {
+                        item.toggleImage.sprite = item.isOn;
+                    }
+                    else
+                    {
+                        item.toggleImage.sprite = item.isOff;
+                    }
+                }
             }
         });
 
