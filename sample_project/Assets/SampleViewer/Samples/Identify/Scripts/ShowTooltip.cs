@@ -17,6 +17,11 @@ public class ShowTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if (text.text.Length < 18)
+        {
+            return;
+        }
+
         toolTip = Instantiate(toolTipPrefab);
         toolTip.transform.SetParent(text.gameObject.GetComponentInParent<Canvas>().transform);
         toolTip.GetComponentInChildren<TextMeshProUGUI>().text = text.text;
