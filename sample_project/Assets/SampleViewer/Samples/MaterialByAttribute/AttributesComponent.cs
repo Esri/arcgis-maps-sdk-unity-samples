@@ -42,11 +42,11 @@ public class AttributesComponent : MonoBehaviour
 	private AttributeType lastLayerAttribute;
 	private Esri.GameEngine.Attributes.ArcGISAttributeProcessor attributeProcessor;
 	private APIMapCreator sampleMapCreator;
-	
+
 	[SerializeField] private Toggle building;
 	[SerializeField] private Toggle construction;
 	[SerializeField] private Toggle none;
-	
+
 	private void Awake()
 	{
 		sampleMapCreator = GetComponent<APIMapCreator>();
@@ -74,8 +74,8 @@ public class AttributesComponent : MonoBehaviour
 		{
 			building.isOn = true;
 		}
-		
-		building.onValueChanged.AddListener(delegate(bool active)
+
+		building.onValueChanged.AddListener(delegate (bool active)
 		{
 			if (active)
 			{
@@ -84,8 +84,8 @@ public class AttributesComponent : MonoBehaviour
 				none.isOn = false;
 			}
 		});
-		
-		construction.onValueChanged.AddListener(delegate(bool active)
+
+		construction.onValueChanged.AddListener(delegate (bool active)
 		{
 			if (active)
 			{
@@ -94,8 +94,8 @@ public class AttributesComponent : MonoBehaviour
 				none.isOn = false;
 			}
 		});
-		
-		none.onValueChanged.AddListener(delegate(bool active)
+
+		none.onValueChanged.AddListener(delegate (bool active)
 		{
 			if (active)
 			{
@@ -113,7 +113,7 @@ public class AttributesComponent : MonoBehaviour
 			sampleMapCreator.CreateArcGISMap();
 			lastLayerAttribute = layerAttribute;
 		}
-		
+
 		if (layerAttribute == AttributeType.None)
 		{
 			none.isOn = true;
@@ -266,9 +266,9 @@ public class AttributesComponent : MonoBehaviour
 	// This function detects the rendering pipeline used by the project to choose from the pre-defined materials made for HDRP or URP
 	private string DetectRenderPipeline()
 	{
-		if (GraphicsSettings.renderPipelineAsset != null)
+		if (GraphicsSettings.defaultRenderPipeline != null)
 		{
-			var renderType = GraphicsSettings.renderPipelineAsset.GetType().ToString();
+			var renderType = GraphicsSettings.defaultRenderPipeline.GetType().ToString();
 
 			if (renderType == "UnityEngine.Rendering.Universal.UniversalRenderPipelineAsset")
 			{

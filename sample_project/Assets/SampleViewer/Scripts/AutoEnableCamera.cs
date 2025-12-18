@@ -5,8 +5,8 @@ public class AutoEnableCamera : MonoBehaviour
 {
     private void Awake()
     {
-        var cameraComponent = FindObjectOfType<ArcGISCameraComponent>();
-        var rebaseComponent = FindObjectOfType<ArcGISRebaseComponent>();
+        var cameraComponent = FindFirstObjectByType<ArcGISCameraComponent>();
+        var rebaseComponent = FindFirstObjectByType<ArcGISRebaseComponent>();
 
         if (cameraComponent != null) cameraComponent.enabled = true;
         if (rebaseComponent != null) rebaseComponent.enabled = true;

@@ -18,10 +18,10 @@ public static class CallReImport
         {
 #if USE_HDRP_PACKAGE
             RenderPipelineAsset HDRPasset = AssetDatabase.LoadAssetAtPath<RenderPipelineAsset>("Assets/SampleViewer/Resources/SampleGraphicSettings/SampleHDRPipeline.asset");
-            GraphicsSettings.renderPipelineAsset = HDRPasset;
+            GraphicsSettings.defaultRenderPipeline = HDRPasset;
 #elif USE_URP_PACKAGE
             RenderPipelineAsset URPasset = AssetDatabase.LoadAssetAtPath<RenderPipelineAsset>("Assets/SampleViewer/Resources/SampleGraphicSettings/SampleURPipeline.asset");
-            GraphicsSettings.renderPipelineAsset = URPasset;
+            GraphicsSettings.defaultRenderPipeline = URPasset;
 #endif
             EditorBuildSettingsScene[] scenes = EditorBuildSettings.scenes;
 

@@ -66,8 +66,8 @@ public class Geometries : MonoBehaviour
 
     private void Start()
     {
-        arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
-        arcGISCameraControllerComponent = FindObjectOfType<ArcGISCameraControllerComponent>();
+        arcGISMapComponent = FindFirstObjectByType<ArcGISMapComponent>();
+        arcGISCameraControllerComponent = FindFirstObjectByType<ArcGISCameraControllerComponent>();
 
         lineRenderer = Line.GetComponent<LineRenderer>();
         lineRenderer.widthMultiplier = LineWidth;

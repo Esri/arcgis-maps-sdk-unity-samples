@@ -63,7 +63,7 @@ public class BuildingFilter : MonoBehaviour
             {
                 disciplineToggle.isOn = active;
                 interfaceObject.SetActive(active);
-                contentBoxes = FindObjectOfType<ContentBoxes>();
+                contentBoxes = FindFirstObjectByType<ContentBoxes>();
                 GetStatistics();
                 AddDisciplineCategoryData();
                 if (disciplineToggle.isOn)
@@ -181,7 +181,7 @@ public class BuildingFilter : MonoBehaviour
 
     private void InitializeBuildingSceneLayer()
     {
-        arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
+        arcGISMapComponent = FindFirstObjectByType<ArcGISMapComponent>();
         if (arcGISMapComponent == null)
         {
             return;

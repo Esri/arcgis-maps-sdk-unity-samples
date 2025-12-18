@@ -12,7 +12,7 @@ public class DisableMultipleEventSystems : MonoBehaviour
     void Start()
     {
         // If there are multiple EventSystems after we add the new scene disable them
-        var EventSystems = FindObjectsOfType<EventSystem>();
+        var EventSystems = FindObjectsByType<EventSystem>(FindObjectsSortMode.None);
         if (EventSystems.Length > 1)
         {
             foreach (var EventSystem in EventSystems)

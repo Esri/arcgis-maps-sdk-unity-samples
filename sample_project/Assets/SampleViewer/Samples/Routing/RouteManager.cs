@@ -113,11 +113,11 @@ public class RouteManager : MonoBehaviour
     void Start()
     {
         // We need HPRoot for the HitToGeoPosition Method
-        hpRoot = FindObjectOfType<HPRoot>();
+        hpRoot = FindFirstObjectByType<HPRoot>();
 
         // We need this ArcGISMapComponent for the FromCartesianPosition Method
         // defined on the ArcGISMapComponent.View
-        arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
+        arcGISMapComponent = FindFirstObjectByType<ArcGISMapComponent>();
 
         animator = GameObject.Find("InfoMenu").GetComponent<Animator>();
 
@@ -194,7 +194,7 @@ public class RouteManager : MonoBehaviour
 
         string startString = $"{startGP.X}, {startGP.Y}";
         string endString = $"{endGP.X}, {endGP.Y}";
-        
+
         return $"{startString};{endString}";
     }
 
@@ -227,7 +227,7 @@ public class RouteManager : MonoBehaviour
             var geometry = feature.SelectToken("geometry");
             var paths = geometry.SelectToken("paths")[0];
 
-            foreach(var path in paths)
+            foreach (var path in paths)
             {
                 var lat = (float)path[0];
                 var lon = (float)path[1];
@@ -238,8 +238,8 @@ public class RouteManager : MonoBehaviour
                 yield return null;
             }
         }
-        if(breadcrumbs!=null)
-		{
+        if (breadcrumbs != null)
+        {
             SetBreadcrumbHeight();
 
             // need a frame for location component updates to occur
@@ -267,14 +267,14 @@ public class RouteManager : MonoBehaviour
     {
         // start the raycast in the air at an arbitrary to ensure it is above the ground
         var raycastHeight = 5000;
- 
+
         var position = breadcrumb.transform.position;
         var raycastStart = new Vector3(position.x, position.y + raycastHeight, position.z);
         if (Physics.Raycast(raycastStart, Vector3.down, out RaycastHit hitInfo))
         {
             var location = breadcrumb.GetComponent<ArcGISLocationComponent>();
             location.Position = HitToGeoPosition(hitInfo, elevationOffset);
-        }      
+        }
     }
 
     private void UpdateRouteInfo(JToken features)
@@ -305,7 +305,7 @@ public class RouteManager : MonoBehaviour
         }
     }
 
-    private void RenderLine() 
+    private void RenderLine()
     {
         if (breadcrumbs.Count < 1)
             return;

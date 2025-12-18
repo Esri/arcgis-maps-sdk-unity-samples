@@ -40,14 +40,14 @@ public class WeatherData : MonoBehaviour
 
     private void Awake()
     {
-        ArcGISMap = FindObjectOfType<ArcGISMapComponent>();
-        ArcGISCamera = FindObjectOfType<ArcGISCameraComponent>();
+        ArcGISMap = FindFirstObjectByType<ArcGISMapComponent>();
+        ArcGISCamera = FindFirstObjectByType<ArcGISCameraComponent>();
         cameraLocationComponent = ArcGISCamera.gameObject.GetComponent<ArcGISLocationComponent>();
         locationComponent = GetComponent<ArcGISLocationComponent>();
-        directionalLight = FindObjectOfType<Light>();
-        volume = FindObjectOfType<Volume>();
+        directionalLight = FindFirstObjectByType<Light>();
+        volume = FindFirstObjectByType<Volume>();
         volumeProfile = volume.profile;
-        weatherQuery = FindObjectOfType<WeatherQuery>();
+        weatherQuery = FindFirstObjectByType<WeatherQuery>();
         lightningAnim = directionalLight.GetComponent<Animation>();
         lightningAudio = lightning.GetComponent<AudioSource>();
     }
@@ -176,7 +176,7 @@ public class WeatherData : MonoBehaviour
 
         weatherQuery.TempuratureToggle.onValueChanged.AddListener(delegate (bool value)
         {
-            weatherQuery.TempText.text = ConvertTemp(tempurature, value).ToString() + "°";
+            weatherQuery.TempText.text = ConvertTemp(tempurature, value).ToString() + "ï¿½";
         });
     }
 

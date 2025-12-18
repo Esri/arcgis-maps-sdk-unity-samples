@@ -167,7 +167,7 @@ public class WeatherQuery : MonoBehaviour
     {
         string APIToken;
         string query;
-        ArcGISMapComponent mapComponent = GameObject.FindObjectOfType<ArcGISMapComponent>();
+        ArcGISMapComponent mapComponent = GameObject.FindFirstObjectByType<ArcGISMapComponent>();
 
         if (mapComponent.APIKey != "")
         {
@@ -193,8 +193,8 @@ public class WeatherQuery : MonoBehaviour
             var deserialized = JsonUtility.FromJson<CityData>(Request.downloadHandler.text);
 
             if (deserialized.address.City != "")
-            { 
-                cityText.text = deserialized.address.City + ", " + deserialized.address.Region; 
+            {
+                cityText.text = deserialized.address.City + ", " + deserialized.address.Region;
                 notFound = false;
             }
             else
