@@ -1,8 +1,6 @@
-# arcgis-maps-sdk-unity-samples
+# Unity XR Sample Project Setup
 
 ![image](../arcgis-maps-sdk-unity-samples.png)
-
-Here is a Unity project containing a set of samples showing you how to accomplish various things using the combined features of Unity and the ArcGIS Maps SDK for Unity. The `main` branch is configured to work with our most recent release. If you want to use the sample repo with an older release, check out the corresponding tag of the sample repo, `git checkout 1.0.0` for the sample repo that worked with our 1.0.0 SDK release.
 
 ### Note
 
@@ -23,6 +21,12 @@ This repository is made up of two separate Unity projects. If you would like to 
 - Valve Index
 - Galaxy XR
 - *Apple Vision Pro
+
+## Instructions
+
+### Prerequisite: 
+1. please follow the instructions [here](../README.md#instructions) for cloning the project and adding it to Unity
+2. Refer to the [ArcGIS Maps SDK for Unity's documentation on getting started](https://developers.arcgis.com/unity/get-started/) on how to download `Unity` and the `ArcGIS Maps SDK for Unity`.
 
 ### Setting up the Project 
 
