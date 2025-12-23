@@ -20,7 +20,7 @@ public class XRTableTopInteractor : MonoBehaviour
 {
     [SerializeField] private Animation anim;
     [SerializeField] private ArcGISMapComponent arcGISMapComponent;
-    private Camera camera;
+    private Camera cam;
     private Vector3 dragStartPoint = Vector3.zero;
     private double4x4 dragStartWorldMatrix;
     private bool handTrackingEnabled = false;
@@ -54,7 +54,7 @@ public class XRTableTopInteractor : MonoBehaviour
 
     private void Awake()
     {
-        camera = GetComponentInChildren<Camera>();
+        cam = GetComponentInChildren<Camera>();
         mat.SetColor("_Color", color);
         if (useTexture)
         {
@@ -80,11 +80,11 @@ public class XRTableTopInteractor : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().name == "VRTableTop")
         {
-            camera.clearFlags = CameraClearFlags.Skybox;
+            cam.clearFlags = CameraClearFlags.Skybox;
             return;
         }
 
-        camera.clearFlags = CameraClearFlags.Color;
+        cam.clearFlags = CameraClearFlags.Color;
     }
 
     public void StartPointDrag()

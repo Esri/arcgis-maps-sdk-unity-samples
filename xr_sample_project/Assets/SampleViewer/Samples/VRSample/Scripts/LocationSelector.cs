@@ -114,7 +114,7 @@ public class LocationSelector : MonoBehaviour
     private void SetNewArcGISMapOrigin(float longitude, float latitude)
     {
         // Confirm reference to map component before calling method within it
-        arcGISMapComponent = arcGISMapComponent ? arcGISMapComponent : FindObjectOfType<ArcGISMapComponent>();
+        arcGISMapComponent = arcGISMapComponent ? arcGISMapComponent : FindFirstObjectByType<ArcGISMapComponent>();
         arcGISMapComponent.OriginPosition = new ArcGISPoint(longitude, latitude, 0, ArcGISSpatialReference.WGS84());
     }
 
@@ -123,7 +123,7 @@ public class LocationSelector : MonoBehaviour
         SetNewArcGISMapOrigin(longitude, latitude);
 
         // Confirm reference to XROrigin before calling method within it
-        XROrigin = XROrigin ? XROrigin : FindObjectOfType<XROrigin>().gameObject;
+        XROrigin = XROrigin ? XROrigin : FindFirstObjectByType<XROrigin>().gameObject;
 
         ArcGISLocationComponent playerLocation = XROrigin.GetComponent<ArcGISLocationComponent>();
 
@@ -136,11 +136,11 @@ public class LocationSelector : MonoBehaviour
     private void Start()
     {
         // Cache private variables
-        XROrigin = FindObjectOfType<XROrigin>().gameObject;
-        arcGISMapComponent = FindObjectOfType<ArcGISMapComponent>();
+        XROrigin = FindFirstObjectByType<XROrigin>().gameObject;
+        arcGISMapComponent = FindFirstObjectByType<ArcGISMapComponent>();
         continuousMovement = XROrigin.GetComponent<ContinuousMovement>();
 
-        menuManager = FindObjectOfType<VRMenuManager>().gameObject;
+        menuManager = FindFirstObjectByType<VRMenuManager>().gameObject;
     }
 
     private void ToggleSlot(CanvasGroup slot, bool state)
