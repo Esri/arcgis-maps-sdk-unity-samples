@@ -50,24 +50,6 @@ This repository is made up of two separate Unity projects. If you would like to 
 
 7. (Optional) If you want to be able to open the `.cs` files in this project and have IntelliSense recognize variable correctly, in Unity navigate to `Edit -> Preferences -> External Tools -> Generate .csproj files for 'local tarball`
 
-## Requirements
-
-* Refer to the [ArcGIS Maps SDK for Unity's documentation on system requirements](https://developers.arcgis.com/unity/system-requirements/)
-
-## Resources
-
-* [ArcGIS Maps SDK for Unity's documentation](https://developers.arcgis.com/unity/)
-* [Unity's documentation](https://docs.unity.com/)
-* [Esri Community forum](https://community.esri.com/t5/arcgis-maps-sdks-for-unity-questions/bd-p/arcgis-maps-sdks-unity-questions)
-
-## Issues
-
-Find a bug or want to request a new feature?  Please let us know by submitting an issue.
-
-## Contributing
-
-Esri welcomes contributions from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing).
-
 ## Licensing
 
 Copyright 2022 - 2025 Esri.
