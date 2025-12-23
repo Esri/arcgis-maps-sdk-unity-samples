@@ -48,7 +48,9 @@ This repository is made up of two separate Unity projects. If you would like to 
 ## Instructions
 
 1. Clone this repo.
-2. Follow individual instructions for each sample project (sample_project or xr_sample_project) as desired.
+2. Follow individual instructions for each sample project (sample_project or xr_sample_project) as desired:
+   - [sample_project](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/sample_project/readme.md)
+   - [xr_sample_project](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/xr_sample_project/readme.md)
 
 
 ## Requirements
