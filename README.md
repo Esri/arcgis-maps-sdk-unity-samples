@@ -48,13 +48,16 @@ This repository is made up of two separate Unity projects. If you would like to 
 ## Instructions
 
 1. Clone this repo.
-2. Refer to the [ArcGIS Maps SDK for Unity's documentation on getting started](https://developers.arcgis.com/unity/get-started/) on how to download `Unity` and the `ArcGIS Maps SDK for Unity`.
+
+2. Refer to the [ArcGIS Maps SDK for Unity's documentation on getting started](https://developers.arcgis.com/unity/get-started/) on how to download `Unity` and get the API key.
+
 3. Open the project in Unity ignoring the errors when prompted to enter `Safe Mode`.
-4. Use the package manager to import the `.tarball` downloaded in step 2.
 
-   ![image](package-manager.png)
+4. Download and install the `ArcGIS Maps SDK for Unity` from the [Asset Store](https://developers.arcgis.com/unity/install-and-set-up/#download-from-the-unity-asset-store) or [Downloads page](https://developers.arcgis.com/unity/install-and-set-up/#download-from-the-downloads-page).
 
-5. Import the samples. These samples include some components necessary for this repo to function including the `ArcGIS Camera Controller` component.
+5. Import the SDK Sample Content. These samples include essential components required for this repo to function, such as the `ArcGIS Camera Controller` component.
+
+   ![image](unity6asset.png)
 
 6. Launch Unity and open the `SampleViewer` level (it should open by default).
 
@@ -85,7 +88,7 @@ Esri welcomes contributions from anyone and everyone. Please see our [guidelines
 
 ## Licensing
 
-Copyright 2022 - 2025 Esri.
+Copyright 2022 - 2026 Esri.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
