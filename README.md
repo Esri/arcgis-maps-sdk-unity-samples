@@ -6,7 +6,7 @@ Here is a Unity project containing a set of samples showing you how to accomplis
 
 ### Note
 
-This repository is made up of two separate Unity projects. If you would like to see the samples made for regular use such as Feature Layer and Routing, please use and set up the [**sample_project**](sample_project/readme.md). If you are interested in XR Samples such as the Virtual Reality Sample and the XR version of our Table Top Sample, please use and set up the [**sample_xr**](xr_sample_project/readme.md). Both projects may be used and set up simultaneously, but they do not contain the same samples.
+This repository is made up of two separate Unity projects. If you would like to see the samples made for regular use such as Feature Layer and Routing, please use and set up the [**sample_project**](sample_project/README.md). If you are interested in XR Samples such as the Virtual Reality Sample and the XR version of our Table Top Sample, please use and set up the [**sample_xr**](xr_sample_project/README.md). Both projects may be used and set up simultaneously, but they do not contain the same samples.
 
 ### Requirements for Sample Project
 

@@ -15,7 +15,7 @@ This repository is made up of two separate Unity projects. If you would like to 
 ## Instructions
 
 ### Prerequisite: 
-1. please follow the instructions [here](../README.md#instructions) for cloning the project and adding it to Unity
+1. Please follow the instructions [here](../README.md#instructions) for cloning the project and adding it to Unity
 2. Refer to the [ArcGIS Maps SDK for Unity's documentation on getting started](https://developers.arcgis.com/unity/get-started/) on how to download `Unity` and the `ArcGIS Maps SDK for Unity`.
 
 ### Setting up the Project 
