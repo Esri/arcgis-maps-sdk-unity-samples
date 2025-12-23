@@ -35,7 +35,7 @@ public class ContinuousMovement : MonoBehaviour
     private VRMenuManager menuManager;
     [SerializeField] private bool moveInLookDirection = true;
     private XROrigin rig;
-    [SerializeField] private ActionBasedController rightController;
+    [SerializeField] private Transform rightController;
     private Vector2 rightInputAxis;
     [SerializeField] private XRNode rightInputSource;
 
@@ -66,7 +66,7 @@ public class ContinuousMovement : MonoBehaviour
     {
         FollowHeadset();
 
-        var yawYValue = moveInLookDirection ? rig.Camera.transform.eulerAngles.y : rightController.transform.eulerAngles.y;
+        var yawYValue = moveInLookDirection ? rig.Camera.transform.eulerAngles.y : rightController.eulerAngles.y;
         var yaw = Quaternion.Euler(0, yawYValue, 0);
         var direction = yaw * new Vector3(leftInputAxis.x, 0, leftInputAxis.y);
 
