@@ -112,7 +112,12 @@ public class FeatureLayerUIManager : MonoBehaviour
             }
         });
 
-        getAllToggle.onValueChanged.AddListener(delegate(bool value) { featureLayer.GetAllFeatures = value; });
+        getAllToggle.onValueChanged.AddListener(delegate (bool value)
+        {
+            featureLayer.GetAllFeatures = value;
+            MaxInputField.interactable = !value;
+            MinInputField.interactable = !value;
+        });
 
         MaxInputField.onSubmit.AddListener(delegate(string value)
         {
