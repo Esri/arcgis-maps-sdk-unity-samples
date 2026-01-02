@@ -54,7 +54,7 @@ public class FeatureLayer : MonoBehaviour
     private int featureSRWKID = 4326;
     private ArcGISLocationComponent locationComponent;
     [SerializeField] private List<string> outfields = new List<string>();
-    private float stadiumSpawnHeight = 10000.0f;
+    private float objectSpawnHeight = 10000.0f;
     private FeatureLayerUIManager UIManager;
 
     public List<FeatureQuery> Features = new List<FeatureQuery>();
@@ -213,7 +213,7 @@ public class FeatureLayer : MonoBehaviour
 
             featureInfo.ArcGISCamera = arcGISCamera;
             var position = new ArcGISPoint(featureInfo.Coordinates[0], featureInfo.Coordinates[1],
-                stadiumSpawnHeight, new ArcGISSpatialReference(featureSRWKID));
+                objectSpawnHeight, new ArcGISSpatialReference(featureSRWKID));
             var rotation = new ArcGISRotation(0.0, 90.0, 0.0);
             locationComponent.enabled = true;
             locationComponent.Position = position;
