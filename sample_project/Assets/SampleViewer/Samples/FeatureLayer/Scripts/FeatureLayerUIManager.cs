@@ -21,6 +21,7 @@ public class FeatureLayerUIManager : MonoBehaviour
     [SerializeField] private Animator infoAnim;
     [SerializeField] private Toggle infoButton;
     [SerializeField] private TMP_InputField inputField;
+    [SerializeField] private GameObject minMaxArea;
     [SerializeField] private GameObject outfieldsList;
     [SerializeField] private GameObject propertiesView;
     [SerializeField] private Button requestButton;
@@ -116,8 +117,7 @@ public class FeatureLayerUIManager : MonoBehaviour
         getAllToggle.onValueChanged.AddListener(delegate (bool value)
         {
             featureLayer.GetAllFeatures = value;
-            MaxInputField.interactable = !value;
-            MinInputField.interactable = !value;
+            minMaxArea.SetActive(!value);
         });
 
         MaxInputField.onValueChanged.AddListener(delegate (string value)
