@@ -5,10 +5,8 @@
 //
 
 using FeatureLayerData;
-using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class FeatureLayerUIManager : MonoBehaviour
@@ -55,7 +53,7 @@ public class FeatureLayerUIManager : MonoBehaviour
         propertiesView.SetActive(false);
         var inputManager = FindFirstObjectByType<FeatureLayerInputManager>();
 
-        DropDownButton.onValueChanged.AddListener(delegate(bool value)
+        DropDownButton.onValueChanged.AddListener(delegate (bool value)
         {
             if (featureLayer.FeatureItems.Count != 0)
             {
@@ -67,7 +65,7 @@ public class FeatureLayerUIManager : MonoBehaviour
             dropDownAnim.Play(animToPlay);
         });
 
-        inputField.onSubmit.AddListener(delegate(string weblink)
+        inputField.onSubmit.AddListener(delegate (string weblink)
         {
             inputManager.EmptyPropertiesDropdown();
             propertiesView.SetActive(false);
