@@ -96,6 +96,7 @@ public class FeatureLayerUIManager : MonoBehaviour
 
             inputManager.EmptyPropertiesDropdown();
             propertiesView.SetActive(false);
+            ValidateMinMaxFeatures();
             StartCoroutine(featureLayer.GetFeatures());
         });
 
@@ -119,29 +120,21 @@ public class FeatureLayerUIManager : MonoBehaviour
             MinInputField.interactable = !value;
         });
 
-        MaxInputField.onSubmit.AddListener(delegate(string value)
+        MaxInputField.onValueChanged.AddListener(delegate (string value)
         {
-            if (Convert.ToInt32(value) > 0 && Convert.ToInt32(value) > featureLayer.StartValue)
+            int parsedResult;
+            if (int.TryParse(value, out parsedResult))
             {
-                featureLayer.LastValue = Convert.ToInt32(value);
-            }
-            else
-            {
-                featureLayer.LastValue = 10;
-                MaxInputField.text = featureLayer.LastValue.ToString();
+                featureLayer.LastValue = parsedResult;
             }
         });
 
-        MinInputField.onSubmit.AddListener(delegate(string value)
+        MinInputField.onValueChanged.AddListener(delegate (string value)
         {
-            if (Convert.ToInt32(value) > 0 && Convert.ToInt32(value) < featureLayer.LastValue)
+            int parsedResult;
+            if (int.TryParse(value, out parsedResult))
             {
-                featureLayer.StartValue = Convert.ToInt32(value);
-            }
-            else
-            {
-                featureLayer.StartValue = 0;
-                MinInputField.text = featureLayer.StartValue.ToString();
+                featureLayer.StartValue = parsedResult;
             }
         });
     }
@@ -189,6 +182,20 @@ public class FeatureLayerUIManager : MonoBehaviour
                     DisplayText = TextToDisplay.Information;
                 }
             }
+        }
+    }
+
+    private void ValidateMinMaxFeatures()
+    {
+        if (featureLayer.LastValue < 1)
+        {
+            featureLayer.LastValue = 10;
+            MaxInputField.text = featureLayer.LastValue.ToString();
+        }
+        if (featureLayer.StartValue >= featureLayer.LastValue || featureLayer.StartValue < 0)
+        {
+            featureLayer.StartValue = 0;
+            MinInputField.text = featureLayer.StartValue.ToString();
         }
     }
 }
