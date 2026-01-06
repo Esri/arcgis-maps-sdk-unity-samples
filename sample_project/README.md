@@ -39,7 +39,7 @@ This repository is made up of two separate Unity projects. If you would like to 
 
 ## Licensing
 
-Copyright 2022 - 2025 Esri.
+Copyright 2022 - 2026 Esri.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
