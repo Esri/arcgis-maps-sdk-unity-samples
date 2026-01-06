@@ -6,7 +6,7 @@ Here is a Unity project containing a set of samples showing you how to accomplis
 
 ### Note
 
-This repository is made up of two separate Unity projects. If you would like to see the samples made for regular use such as Feature Layer and Routing, please use and set up the **sample_project**. If you are interested in XR Samples such as the Virtual Reality Sample and the XR version of our Table Top Sample, please use and set up the **sample_xr**. Both projects may be used and set up simultaneously, but they do not contain the same samples.
+This repository is made up of two separate Unity projects. If you would like to see the samples made for regular use such as Feature Layer and Routing, please use and set up the [**sample_project**](sample_project/README.md). If you are interested in XR Samples such as the Virtual Reality Sample and the XR version of our Table Top Sample, please use and set up the [**sample_xr**](xr_sample_project/README.md). Both projects may be used and set up simultaneously, but they do not contain the same samples.
 
 ### Requirements for Sample Project
 
@@ -17,53 +17,41 @@ This repository is made up of two separate Unity projects. If you would like to 
 ### Requirements for XR Sample Project
 
 * Computer running Windows (OpenXR is not supported on macOS)
-* The Unity project requires a minimum of Unity `2022.3.62f2`
+* The Unity project requires a minimum of Unity `6000.3.0f1`
 * ArcGISMaps SDK for Unity
 * A VR Headset and the necessary software to run through Desktop Mode
 
 ## Features
-* [Building Filter](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/sample_project/Assets/SampleViewer/Samples/BuildingFilter) - Explore a building scene layer by toggling the visibility of different attributes.
-* [Feature service REST API](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/sample_project/Assets/SampleViewer/Samples/FeatureLayer) - See how to query a feature service to create game objects in Unity located at real-world positions.
-* [Geocoding](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/sample_project/Assets/SampleViewer/Samples/Geocoding) - Search for an address or click on the surface to get the address of that location.
-* [Geometry](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/sample_project/Assets/SampleViewer/Samples/Geometry) - Draw polylines, polygons and envelopes on the map and get their lengths or areas.
-* [HitTest](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/sample_project/Assets/SampleViewer/Samples/HitTest) - Visualize individual Buildings ID's from a 3D Object Scene Layer.
-* [Identify](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/sample_project/Assets/SampleViewer/Samples/Identify/readme.md) - Identify individual or multiple buildings feature ID's.
-* [Line of sight](https://github.com/Esri/arcgis-maps-sdk-unreal-engine-samples/tree/main/sample_project/Content/SampleViewer/Samples/LineOfSight) - See how to check line of sight between two objects in Unity.
-* [Material By Attribute](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/sample_project/Assets/SampleViewer/Samples/MaterialByAttribute) - Apply materials to 3DObject Scene layer based on specific attributes.
-* [Measure](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/sample_project/Assets/SampleViewer/Samples/Measure) - Click on the map to get real-world distances between points.
-* [Overview Map](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/sample_project/Assets/SampleViewer/Samples/OverviewMap/readme.md) - Use an overview map to better understand where you are in the world.
+* [Building Filter](sample_project/Assets/SampleViewer/Samples/BuildingFilter/readme.md) - Explore a building scene layer by toggling the visibility of different attributes.
+* [Feature service REST API](sample_project/Assets/SampleViewer/Samples/FeatureLayer/readme.md) - See how to query a feature service to create game objects in Unity located at real-world positions.
+* [Geocoding](sample_project/Assets/SampleViewer/Samples/Geocoding/readme.md) - Search for an address or click on the surface to get the address of that location.
+* [Geometry](sample_project/Assets/SampleViewer/Samples/Geometry/readme.md) - Draw polylines, polygons and envelopes on the map and get their lengths or areas.
+* [HitTest](sample_project/Assets/SampleViewer/Samples/HitTest/readme.md) - Visualize individual Buildings ID's from a 3D Object Scene Layer.
+* [Identify](sample_project/Assets/SampleViewer/Samples/Identify/readme.md) - Identify individual or multiple buildings feature ID's.
+* [Line of sight](https://github.com/Esri/arcgis-maps-sdk-unreal-engine-samples/tree/main/sample_project/Content/SampleViewer/Samples/LineOfSight/readme.md) - See how to check line of sight between two objects in Unity.
+* [Material By Attribute](sample_project/Assets/SampleViewer/Samples/MaterialByAttribute/readme.md) - Apply materials to 3DObject Scene layer based on specific attributes.
+* [Measure](sample_project/Assets/SampleViewer/Samples/Measure/readme.md) - Click on the map to get real-world distances between points.
+* [Overview Map](sample_project/Assets/SampleViewer/Samples/OverviewMap/readme.md) - Use an overview map to better understand where you are in the world.
 * [Real Time Weather Query](https://github.com/Esri/arcgis-maps-sdk-unity-samples/blob/main/sample_project/Assets/SampleViewer/Samples/WeatherQuery/readme.md) - Query the current weather in a city using the feature layer query work flow.
-* [Routing](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/sample_project/Assets/SampleViewer/Samples/Routing) - See how to query Esri's routing service to get the shortest path between two points and visualize that route in Unity.
-* [Stream Layer](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/sample_project/Assets/SampleViewer/Samples/StreamLayer) - See how to use web sockets to connect to an Esri real-time service to update game objects locations in real-time.
-* [Third Person Controller](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/sample_project/Assets/SampleViewer/Samples/ThirdPerson) - Explore from the perspective of a third person camera following a controllable character.
-* [Time of Day](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/sample_project/Assets/SampleViewer/Samples/TimeOfDay/readme.md) - Visualize and control the time of day in a scene. Use a feature layer for geographically accurate street lamps
+* [Routing](sample_project/Assets/SampleViewer/Samples/Routing/readme.md) - See how to query Esri's routing service to get the shortest path between two points and visualize that route in Unity.
+* [Stream Layer](sample_project/Assets/SampleViewer/Samples/StreamLayer/readme.md) - See how to use web sockets to connect to an Esri real-time service to update game objects locations in real-time.
+* [Third Person Controller](sample_project/Assets/SampleViewer/Samples/ThirdPerson/readme.md) - Explore from the perspective of a third person camera following a controllable character.
+* [Time of Day](sample_project/Assets/SampleViewer/Samples/TimeOfDay/readme.md) - Visualize and control the time of day in a scene. Use a feature layer for geographically accurate street lamps
 * [Viewshed](https://github.com/Esri/arcgis-maps-sdk-unity-samples/blob/main/sample_project/Assets/SampleViewer/Samples/Viewshed/readme.md) - See how to visualize a viewshed effect.
 
 ## Features in XR Sample Project
 
-* [ARTableTop](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/xr_sample_project/Assets/SampleViewer/Samples/XRTableTop) - See how to configure the camera to visualize a tabletop map on an AR/VR device and control the map with AR/VR controllers and hand tracking.
-* [VRSample](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/xr_sample_project//Assets/SampleViewer/Samples/VRSample) - See how to configure the camera to visualize content on a VR device and move the camera with VR locomotion.
-* [VRTableTop](https://github.com/Esri/arcgis-maps-sdk-unity-samples/tree/main/xr_sample_project/Assets/SampleViewer/Samples/XRTableTop) - See how to configure the camera to visualize a tabletop map on a VR device and control the map with VR controllers and hand tracking.
+* [ARTableTop](xr_sample_project/Assets/SampleViewer/Samples/XRTableTop/readme.md) - See how to configure the camera to visualize a tabletop map on an AR/VR device and control the map with AR/VR controllers and hand tracking.
+* [VRSample](xr_sample_project/Assets/SampleViewer/Samples/VRSample/readme.md) - See how to configure the camera to visualize content on a VR device and move the camera with VR locomotion.
+* [VRTableTop](xr_sample_project/Assets/SampleViewer/Samples/XRTableTop/readme.md) - See how to configure the camera to visualize a tabletop map on a VR device and control the map with VR controllers and hand tracking.
 
 ## Instructions
 
 1. Clone this repo.
-2. Refer to the [ArcGIS Maps SDK for Unity's documentation on getting started](https://developers.arcgis.com/unity/get-started/) on how to download `Unity` and the `ArcGIS Maps SDK for Unity`.
-3. Open the project in Unity ignoring the errors when prompted to enter `Safe Mode`.
-4. Use the package manager to import the `.tarball` downloaded in step 2.
+2. Follow individual instructions for each sample project (sample_project or xr_sample_project) as desired:
+   - [sample_project](sample_project/readme.md)
+   - [xr_sample_project](xr_sample_project/readme.md)
 
-   ![image](package-manager.png)
-
-5. Import the samples. These samples include some components necessary for this repo to function including the `ArcGIS Camera Controller` component.
-
-6. Launch Unity and open the `SampleViewer` level (it should open by default).
-
-7. In the hierarchy select the `SampleSwitcher` Game Object and then in the inspector set your [API key](https://developers.arcgis.com/documentation/security-and-authentication/api-key-authentication/). For the detailed steps to create an API key, see [Create and manage an API key tutorials](https://developers.arcgis.com/documentation/security-and-authentication/api-key-authentication/tutorials/create-an-api-key/) in the _Security and authentication guide_.
-
-8. (Optional) If you want to be able to open the `.cs` files in this project and have IntelliSense recognize variable correctly, in Unity navigate to `Edit -> Preferences -> External Tools -> Generate .csproj files for 'local tarball`
-
-### Setting Up the XR Sample Project
-Once you are ready, please open the XR Sample Project. Once open you will need to add the ArcGIS Maps SDK for Unity Plugin. You may do so through the Unity Asset Store, or from the ArcGIS Developer hub. In addition to the Maps SDK, you will also need to import the ArcGIS Maps SDK Samples. This can be found within the package manager under the ArcGIS Maps SDK Package. You will also need to import the samples for the XR Hands Package and the Samples called 'Starter Assets', 'HandsViewer', and 'XR Hands Demo' from the XR Interaction Toolkit Package.
 
 ## Requirements
 
@@ -85,7 +73,7 @@ Esri welcomes contributions from anyone and everyone. Please see our [guidelines
 
 ## Licensing
 
-Copyright 2022 - 2025 Esri.
+Copyright 2022 - 2026 Esri.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
