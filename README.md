@@ -49,8 +49,8 @@ This repository is made up of two separate Unity projects. If you would like to 
 
 1. Clone this repo.
 2. Follow individual instructions for each sample project (sample_project or xr_sample_project) as desired:
-   - [sample_project](sample_project//README.md)
-   - [xr_sample_project](xr_sample_project//README.md)
+   - [sample_project](sample_project/README.md)
+   - [xr_sample_project](xr_sample_project/README.md)
 
 ## Requirements
 
