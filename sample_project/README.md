@@ -31,6 +31,8 @@ This repository is made up of two separate Unity projects. If you would like to 
 
 3. Import the samples. These samples include some components necessary for this repo to function including the `ArcGIS Camera Controller` component.
 
+      ![image](../unity6asset.png)
+
 4. Launch Unity and open the `SampleViewer` level (it should open by default).
 
 5. In the hierarchy select the `SampleSwitcher` Game Object and then in the inspector set your [API key](https://developers.arcgis.com/documentation/security-and-authentication/api-key-authentication/). For the detailed steps to create an API key, see [Create and manage an API key tutorials](https://developers.arcgis.com/documentation/security-and-authentication/api-key-authentication/tutorials/create-an-api-key/) in the _Security and authentication guide_.
