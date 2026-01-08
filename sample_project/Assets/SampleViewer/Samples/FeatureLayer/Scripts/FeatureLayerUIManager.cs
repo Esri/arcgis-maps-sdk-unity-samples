@@ -5,10 +5,8 @@
 //
 
 using FeatureLayerData;
-using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class FeatureLayerUIManager : MonoBehaviour
@@ -21,6 +19,7 @@ public class FeatureLayerUIManager : MonoBehaviour
     [SerializeField] private Animator infoAnim;
     [SerializeField] private Toggle infoButton;
     [SerializeField] private TMP_InputField inputField;
+    [SerializeField] private GameObject minMaxArea;
     [SerializeField] private GameObject outfieldsList;
     [SerializeField] private GameObject propertiesView;
     [SerializeField] private Button requestButton;
@@ -54,7 +53,7 @@ public class FeatureLayerUIManager : MonoBehaviour
         propertiesView.SetActive(false);
         var inputManager = FindFirstObjectByType<FeatureLayerInputManager>();
 
-        DropDownButton.onValueChanged.AddListener(delegate(bool value)
+        DropDownButton.onValueChanged.AddListener(delegate (bool value)
         {
             if (featureLayer.FeatureItems.Count != 0)
             {
@@ -66,7 +65,7 @@ public class FeatureLayerUIManager : MonoBehaviour
             dropDownAnim.Play(animToPlay);
         });
 
-        inputField.onSubmit.AddListener(delegate(string weblink)
+        inputField.onSubmit.AddListener(delegate (string weblink)
         {
             inputManager.EmptyPropertiesDropdown();
             propertiesView.SetActive(false);
@@ -96,6 +95,7 @@ public class FeatureLayerUIManager : MonoBehaviour
 
             inputManager.EmptyPropertiesDropdown();
             propertiesView.SetActive(false);
+            ValidateMinMaxFeatures();
             StartCoroutine(featureLayer.GetFeatures());
         });
 
@@ -112,31 +112,27 @@ public class FeatureLayerUIManager : MonoBehaviour
             }
         });
 
-        getAllToggle.onValueChanged.AddListener(delegate(bool value) { featureLayer.GetAllFeatures = value; });
-
-        MaxInputField.onSubmit.AddListener(delegate(string value)
+        getAllToggle.onValueChanged.AddListener(delegate (bool value)
         {
-            if (Convert.ToInt32(value) > 0 && Convert.ToInt32(value) > featureLayer.StartValue)
+            featureLayer.GetAllFeatures = value;
+            minMaxArea.SetActive(!value);
+        });
+
+        MaxInputField.onValueChanged.AddListener(delegate (string value)
+        {
+            int parsedResult;
+            if (int.TryParse(value, out parsedResult))
             {
-                featureLayer.LastValue = Convert.ToInt32(value);
-            }
-            else
-            {
-                featureLayer.LastValue = 10;
-                MaxInputField.text = featureLayer.LastValue.ToString();
+                featureLayer.LastValue = parsedResult;
             }
         });
 
-        MinInputField.onSubmit.AddListener(delegate(string value)
+        MinInputField.onValueChanged.AddListener(delegate (string value)
         {
-            if (Convert.ToInt32(value) > 0 && Convert.ToInt32(value) < featureLayer.LastValue)
+            int parsedResult;
+            if (int.TryParse(value, out parsedResult))
             {
-                featureLayer.StartValue = Convert.ToInt32(value);
-            }
-            else
-            {
-                featureLayer.StartValue = 0;
-                MinInputField.text = featureLayer.StartValue.ToString();
+                featureLayer.StartValue = parsedResult;
             }
         });
     }
@@ -184,6 +180,20 @@ public class FeatureLayerUIManager : MonoBehaviour
                     DisplayText = TextToDisplay.Information;
                 }
             }
+        }
+    }
+
+    private void ValidateMinMaxFeatures()
+    {
+        if (featureLayer.LastValue < 1)
+        {
+            featureLayer.LastValue = 10;
+            MaxInputField.text = featureLayer.LastValue.ToString();
+        }
+        if (featureLayer.StartValue >= featureLayer.LastValue || featureLayer.StartValue < 0)
+        {
+            featureLayer.StartValue = 0;
+            MinInputField.text = featureLayer.StartValue.ToString();
         }
     }
 }

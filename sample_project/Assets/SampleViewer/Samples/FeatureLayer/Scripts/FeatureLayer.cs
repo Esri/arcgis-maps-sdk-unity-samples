@@ -54,7 +54,8 @@ public class FeatureLayer : MonoBehaviour
     private int featureSRWKID = 4326;
     private ArcGISLocationComponent locationComponent;
     [SerializeField] private List<string> outfields = new List<string>();
-    private float stadiumSpawnHeight = 10000.0f;
+    private const float ObjectSpawnHeight = 10000.0f;
+    private const int CameraHeight = 500;
     private FeatureLayerUIManager UIManager;
 
     public List<FeatureQuery> Features = new List<FeatureQuery>();
@@ -213,7 +214,7 @@ public class FeatureLayer : MonoBehaviour
 
             featureInfo.ArcGISCamera = arcGISCamera;
             var position = new ArcGISPoint(featureInfo.Coordinates[0], featureInfo.Coordinates[1],
-                stadiumSpawnHeight, new ArcGISSpatialReference(featureSRWKID));
+                ObjectSpawnHeight, new ArcGISSpatialReference(featureSRWKID));
             var rotation = new ArcGISRotation(0.0, 90.0, 0.0);
             locationComponent.enabled = true;
             locationComponent.Position = position;
@@ -264,10 +265,10 @@ public class FeatureLayer : MonoBehaviour
             return;
         }
 
-        var index = GetAllFeatures ? 0 : StartValue;
         var cameraLocationComponent = arcGISCamera.gameObject.GetComponent<ArcGISLocationComponent>();
-        var position = new ArcGISPoint(FeatureItems[index].GetComponent<ArcGISLocationComponent>().Position.X,
-            FeatureItems[index].GetComponent<ArcGISLocationComponent>().Position.Y, 500,
+        var featureLocationPoint = FeatureItems[0].GetComponent<ArcGISLocationComponent>().Position;
+        var position = new ArcGISPoint(featureLocationPoint.X,
+            featureLocationPoint.Y, CameraHeight,
             cameraLocationComponent.Position.SpatialReference);
         cameraLocationComponent.Position = position;
         cameraLocationComponent.Rotation = new ArcGISRotation(cameraLocationComponent.Rotation.Heading, 0.0,
