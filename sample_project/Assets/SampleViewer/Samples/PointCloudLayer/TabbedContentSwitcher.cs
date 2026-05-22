@@ -10,8 +10,7 @@ public sealed class TabbedContentSwitcher : MonoBehaviour
 	{
 		public Toggle toggle;
 		public GameObject[] content;
-		public Vector2 backgroundAnchoredPosition;
-		public Vector2 backgroundSizeDelta;
+		public float backgroundBottomExtension;
 	}
 
 	[SerializeField] private RectTransform backgroundTarget;
@@ -104,8 +103,8 @@ public sealed class TabbedContentSwitcher : MonoBehaviour
 
 		if (backgroundTarget && activeTab.HasValue)
 		{
-			backgroundTarget.anchoredPosition = activeTab.Value.backgroundAnchoredPosition;
-			backgroundTarget.sizeDelta = activeTab.Value.backgroundSizeDelta;
+			backgroundTarget.offsetMin = new Vector2(0f, -activeTab.Value.backgroundBottomExtension);
+			backgroundTarget.offsetMax = Vector2.zero;
 		}
 	}
 }
