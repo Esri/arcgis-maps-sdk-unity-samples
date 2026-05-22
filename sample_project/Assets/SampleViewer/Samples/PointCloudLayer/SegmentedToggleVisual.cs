@@ -4,14 +4,14 @@ using UnityEngine.UI;
 public sealed class SegmentedToggleVisual : MonoBehaviour
 {
 	[SerializeField] private Toggle toggle;
-	[SerializeField] private Graphic[] targetGraphics;
-	[SerializeField] private Color selectedColor = new Color(0.48f, 0.44f, 0.58f, 1f);
-	[SerializeField] private Color normalColor = new Color(0.5921569f, 0.2784314f, 1f, 1f);
+	[SerializeField] private Image[] targetImages;
+	[SerializeField] private Sprite selectedSprite;
+	[SerializeField] private Sprite normalSprite;
 
 	private void Reset()
 	{
 		toggle = GetComponent<Toggle>();
-		targetGraphics = GetComponentsInChildren<Graphic>();
+		targetImages = GetComponentsInChildren<Image>();
 	}
 
 	private void OnEnable()
@@ -48,18 +48,23 @@ public sealed class SegmentedToggleVisual : MonoBehaviour
 
 	private void UpdateVisual(bool isSelected)
 	{
-		if (targetGraphics == null)
+		if (targetImages == null)
 		{
 			return;
 		}
 
-		var color = isSelected ? selectedColor : normalColor;
-
-		foreach (var targetGraphic in targetGraphics)
+		var sprite = isSelected ? selectedSprite : normalSprite;
+		if (!sprite)
 		{
-			if (targetGraphic)
+			return;
+		}
+
+		foreach (var targetImage in targetImages)
+		{
+			if (targetImage)
 			{
-				targetGraphic.color = color;
+				targetImage.sprite = sprite;
+				targetImage.color = Color.white;
 			}
 		}
 	}
