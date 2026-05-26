@@ -152,6 +152,8 @@ public sealed class RendererLegendMockPanel : MonoBehaviour
 
 		var shouldShow = visualizeTab && visualizeTab.isOn;
 		canvasGroup.alpha = shouldShow ? 1f : 0f;
+		canvasGroup.interactable = shouldShow;
+		canvasGroup.blocksRaycasts = shouldShow;
 
 		if (!shouldShow)
 		{
@@ -191,20 +193,19 @@ public sealed class RendererLegendMockPanel : MonoBehaviour
 				CreatePanel(500f, 440f);
 				AddAccent();
 				AddTitle(150f);
-				AddText("Generated_ClassHeader", "Class Code", new Vector2(65f, 70f), new Vector2(260f, 40f), 28, TextAnchor.MiddleLeft, textColor);
+				AddText("Generated_ClassHeader", "Class Code", new Vector2(80f, 70f), new Vector2(430f, 40f), 28, TextAnchor.MiddleLeft, textColor);
 				AddClassRows();
-				AddScrollbar();
 				break;
 			case RendererMode.Elevation:
-				CreatePanel(500f, 360f);
+				CreatePanel(500f, 400f);
 				AddAccent();
-				AddTitle(120f);
+				AddTitle(145f);
 				AddStretchLegend("Elevation", true);
 				break;
 			case RendererMode.Intensity:
-				CreatePanel(500f, 360f);
+				CreatePanel(500f, 400f);
 				AddAccent();
-				AddTitle(120f);
+				AddTitle(145f);
 				AddStretchLegend("Intensity", false);
 				break;
 			default:
@@ -272,23 +273,136 @@ public sealed class RendererLegendMockPanel : MonoBehaviour
 			new Color(0.93f, 0.93f, 0.05f, 1f)
 		};
 
+		const float rowSpacing = 36f;
+		const float viewportHeight = 250f;
+		var contentHeight = labels.Length * rowSpacing;
+		var content = AddClassScrollArea(new Vector2(25f, -82f), new Vector2(340f, viewportHeight), contentHeight);
+
 		for (var i = 0; i < labels.Length; i++)
 		{
-			var y = 25f - i * 35f;
-			AddCircle("Generated_ClassDot_" + i, new Vector2(-115f, y), new Vector2(26f, 26f), colors[i]);
-			AddText("Generated_ClassLabel_" + i, labels[i], new Vector2(65f, y), new Vector2(340f, 34f), 26, TextAnchor.MiddleLeft, textColor);
+			var y = contentHeight * 0.5f - rowSpacing * 0.5f - i * rowSpacing;
+			AddCircle("Generated_ClassDot_" + i, new Vector2(-145f, y), new Vector2(26f, 26f), colors[i], content);
+			AddText("Generated_ClassLabel_" + i, labels[i], new Vector2(40f, y), new Vector2(260f, 38f), 26, TextAnchor.MiddleLeft, textColor, content);
 		}
 	}
 
-	private void AddScrollbar()
+	private RectTransform AddClassScrollArea(Vector2 anchoredPosition, Vector2 size, float contentHeight)
 	{
-		AddImage("Generated_ScrollTrack", new Vector2(205f, -62f), new Vector2(28f, 250f), new Color(0.28f, 0.28f, 0.28f, 0.82f));
-		AddImage("Generated_ScrollThumb", new Vector2(205f, -25f), new Vector2(28f, 190f), new Color(0.75f, 0.75f, 0.75f, 1f));
+		var scrollRoot = new GameObject("Generated_ClassScrollRect", typeof(RectTransform), typeof(ScrollRect));
+		scrollRoot.layer = gameObject.layer;
+		scrollRoot.transform.SetParent(panelRect, false);
+
+		var scrollRectTransform = scrollRoot.GetComponent<RectTransform>();
+		scrollRectTransform.anchorMin = new Vector2(0.5f, 0.5f);
+		scrollRectTransform.anchorMax = new Vector2(0.5f, 0.5f);
+		scrollRectTransform.pivot = new Vector2(0.5f, 0.5f);
+		scrollRectTransform.anchoredPosition = anchoredPosition;
+		scrollRectTransform.sizeDelta = size;
+
+		var viewport = new GameObject("Generated_ClassViewport", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(RectMask2D));
+		viewport.layer = gameObject.layer;
+		viewport.transform.SetParent(scrollRoot.transform, false);
+
+		var viewportRect = viewport.GetComponent<RectTransform>();
+		viewportRect.anchorMin = Vector2.zero;
+		viewportRect.anchorMax = Vector2.one;
+		viewportRect.pivot = new Vector2(0.5f, 0.5f);
+		viewportRect.offsetMin = Vector2.zero;
+		viewportRect.offsetMax = Vector2.zero;
+
+		var viewportImage = viewport.GetComponent<Image>();
+		viewportImage.color = Color.clear;
+		viewportImage.raycastTarget = true;
+
+		var content = new GameObject("Generated_ClassContent", typeof(RectTransform));
+		content.layer = gameObject.layer;
+		content.transform.SetParent(viewport.transform, false);
+
+		var contentRect = content.GetComponent<RectTransform>();
+		contentRect.anchorMin = new Vector2(0f, 1f);
+		contentRect.anchorMax = new Vector2(1f, 1f);
+		contentRect.pivot = new Vector2(0.5f, 1f);
+		contentRect.anchoredPosition = Vector2.zero;
+		contentRect.sizeDelta = new Vector2(0f, contentHeight);
+
+		var scrollbar = AddClassScrollbar(new Vector2(205f, -82f), new Vector2(28f, size.y));
+
+		var scrollRect = scrollRoot.GetComponent<ScrollRect>();
+		scrollRect.content = contentRect;
+		scrollRect.viewport = viewportRect;
+		scrollRect.horizontal = false;
+		scrollRect.vertical = true;
+		scrollRect.movementType = ScrollRect.MovementType.Clamped;
+		scrollRect.inertia = false;
+		scrollRect.scrollSensitivity = 36f;
+		scrollRect.verticalScrollbar = scrollbar;
+		scrollRect.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.Permanent;
+		scrollRect.verticalNormalizedPosition = 1f;
+
+		scrollbar.value = 1f;
+		scrollbar.size = Mathf.Clamp01(size.y / contentHeight);
+		return contentRect;
+	}
+
+	private Scrollbar AddClassScrollbar(Vector2 anchoredPosition, Vector2 size)
+	{
+		var scrollbarGo = new GameObject("Generated_ClassScrollbar", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Scrollbar));
+		scrollbarGo.layer = gameObject.layer;
+		scrollbarGo.transform.SetParent(panelRect, false);
+
+		var scrollbarRect = scrollbarGo.GetComponent<RectTransform>();
+		scrollbarRect.anchorMin = new Vector2(0.5f, 0.5f);
+		scrollbarRect.anchorMax = new Vector2(0.5f, 0.5f);
+		scrollbarRect.pivot = new Vector2(0.5f, 0.5f);
+		scrollbarRect.anchoredPosition = anchoredPosition;
+		scrollbarRect.sizeDelta = size;
+
+		var track = scrollbarGo.GetComponent<Image>();
+		track.color = new Color(0.28f, 0.28f, 0.28f, 0.82f);
+		track.raycastTarget = true;
+
+		var slidingArea = new GameObject("Generated_ClassScrollbarSlidingArea", typeof(RectTransform));
+		slidingArea.layer = gameObject.layer;
+		slidingArea.transform.SetParent(scrollbarGo.transform, false);
+
+		var slidingAreaRect = slidingArea.GetComponent<RectTransform>();
+		slidingAreaRect.anchorMin = Vector2.zero;
+		slidingAreaRect.anchorMax = Vector2.one;
+		slidingAreaRect.pivot = new Vector2(0.5f, 0.5f);
+		slidingAreaRect.offsetMin = Vector2.zero;
+		slidingAreaRect.offsetMax = Vector2.zero;
+
+		var handle = new GameObject("Generated_ClassScrollbarHandle", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+		handle.layer = gameObject.layer;
+		handle.transform.SetParent(slidingArea.transform, false);
+
+		var handleRect = handle.GetComponent<RectTransform>();
+		handleRect.anchorMin = Vector2.zero;
+		handleRect.anchorMax = Vector2.one;
+		handleRect.pivot = new Vector2(0.5f, 0.5f);
+		handleRect.offsetMin = Vector2.zero;
+		handleRect.offsetMax = Vector2.zero;
+
+		var handleImage = handle.GetComponent<Image>();
+		handleImage.color = new Color(0.75f, 0.75f, 0.75f, 1f);
+		handleImage.raycastTarget = true;
+
+		var scrollbar = scrollbarGo.GetComponent<Scrollbar>();
+		scrollbar.direction = Scrollbar.Direction.BottomToTop;
+		scrollbar.targetGraphic = handleImage;
+		scrollbar.handleRect = handleRect;
+		scrollbar.transition = Selectable.Transition.None;
+		return scrollbar;
 	}
 
 	private void AddStretchLegend(string label, bool isElevation)
 	{
-		AddText("Generated_StretchHeader", label, new Vector2(0f, 45f), new Vector2(270f, 40f), 28, TextAnchor.MiddleLeft, textColor);
+		const float rampCenterY = -60f;
+		const float topBreakY = 10f;
+		const float middleBreakY = -60f;
+		const float bottomBreakY = -130f;
+
+		AddText("Generated_StretchHeader", label, new Vector2(0f, 70f), new Vector2(270f, 40f), 28, TextAnchor.MiddleLeft, textColor);
 
 		var gradientColors = isElevation
 			? new[]
@@ -307,19 +421,19 @@ public sealed class RendererLegendMockPanel : MonoBehaviour
 				Color.black
 			};
 
-		AddGradient("Generated_Gradient", new Vector2(-80f, -65f), new Vector2(56f, 170f), gradientColors);
+		AddGradient("Generated_Gradient", new Vector2(-80f, rampCenterY), new Vector2(56f, 170f), gradientColors);
 
 		if (isElevation)
 		{
-			AddBreakLabel("> 3.5", 5f);
-			AddBreakLabel("1.5", -65f);
-			AddBreakLabel("< -1.5", -135f);
+			AddBreakLabel("> 3.5", topBreakY);
+			AddBreakLabel("1.5", middleBreakY);
+			AddBreakLabel("< -1.5", bottomBreakY);
 		}
 		else
 		{
-			AddBreakLabel("> 65,680", 5f);
-			AddBreakLabel("38,032", -65f);
-			AddBreakLabel("<10,385", -135f);
+			AddBreakLabel("> 65,680", topBreakY);
+			AddBreakLabel("38,032", middleBreakY);
+			AddBreakLabel("<10,385", bottomBreakY);
 		}
 	}
 
@@ -331,9 +445,14 @@ public sealed class RendererLegendMockPanel : MonoBehaviour
 
 	private Text AddText(string name, string text, Vector2 anchoredPosition, Vector2 size, int fontSize, TextAnchor alignment, Color color)
 	{
+		return AddText(name, text, anchoredPosition, size, fontSize, alignment, color, panelRect ? panelRect : rectTransform);
+	}
+
+	private Text AddText(string name, string text, Vector2 anchoredPosition, Vector2 size, int fontSize, TextAnchor alignment, Color color, Transform parent)
+	{
 		var go = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Text));
 		go.layer = gameObject.layer;
-		go.transform.SetParent(panelRect ? panelRect : rectTransform, false);
+		go.transform.SetParent(parent, false);
 
 		var rect = go.GetComponent<RectTransform>();
 		rect.anchorMin = new Vector2(0.5f, 0.5f);
@@ -346,7 +465,6 @@ public sealed class RendererLegendMockPanel : MonoBehaviour
 		textComponent.text = text;
 		textComponent.font = font;
 		textComponent.fontSize = fontSize;
-		textComponent.fontStyle = FontStyle.Bold;
 		textComponent.alignment = alignment;
 		textComponent.horizontalOverflow = HorizontalWrapMode.Overflow;
 		textComponent.verticalOverflow = VerticalWrapMode.Overflow;
@@ -357,9 +475,14 @@ public sealed class RendererLegendMockPanel : MonoBehaviour
 
 	private Image AddImage(string name, Vector2 anchoredPosition, Vector2 size, Color color)
 	{
+		return AddImage(name, anchoredPosition, size, color, panelRect ? panelRect : rectTransform);
+	}
+
+	private Image AddImage(string name, Vector2 anchoredPosition, Vector2 size, Color color, Transform parent)
+	{
 		var go = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
 		go.layer = gameObject.layer;
-		go.transform.SetParent(panelRect ? panelRect : rectTransform, false);
+		go.transform.SetParent(parent, false);
 
 		var rect = go.GetComponent<RectTransform>();
 		rect.anchorMin = new Vector2(0.5f, 0.5f);
@@ -376,7 +499,12 @@ public sealed class RendererLegendMockPanel : MonoBehaviour
 
 	private void AddCircle(string name, Vector2 anchoredPosition, Vector2 size, Color color)
 	{
-		var image = AddImage(name, anchoredPosition, size, color);
+		AddCircle(name, anchoredPosition, size, color, panelRect ? panelRect : rectTransform);
+	}
+
+	private void AddCircle(string name, Vector2 anchoredPosition, Vector2 size, Color color, Transform parent)
+	{
+		var image = AddImage(name, anchoredPosition, size, color, parent);
 		image.sprite = GetCircleSprite();
 		image.preserveAspect = true;
 	}
