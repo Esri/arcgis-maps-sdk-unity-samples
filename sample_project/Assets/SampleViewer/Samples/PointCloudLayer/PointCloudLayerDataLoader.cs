@@ -23,11 +23,14 @@ public sealed class PointCloudLayerDataLoader : MonoBehaviour
 	private ArcGISMapComponent arcGISMapComponent;
 	private Coroutine loadCoroutine;
 	private ArcGISPointCloudLayer userLoadedLayer;
+	private string loadedSource;
 	private bool subscribed;
 
 	public event Action<ArcGISPointCloudLayer> LayerLoaded;
 
 	public ArcGISPointCloudLayer LoadedLayer => userLoadedLayer;
+	public string LoadedSource => loadedSource;
+	public string APIKey => GetAPIKey();
 
 	private void Reset()
 	{
@@ -157,6 +160,7 @@ public sealed class PointCloudLayerDataLoader : MonoBehaviour
 		{
 			var previousLayer = userLoadedLayer;
 			userLoadedLayer = newLayer;
+			loadedSource = source;
 			RemoveLayer(previousLayer);
 			LayerLoaded?.Invoke(newLayer);
 			yield return ZoomToLoadedLayer(newLayer);

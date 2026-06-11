@@ -24,6 +24,26 @@ public sealed class RendererLegendMockPanel : MonoBehaviour
 	private readonly Color accentColor = new Color(0.56f, 0.25f, 1f, 1f);
 	private readonly Color textColor = new Color(0.95f, 0.95f, 0.95f, 1f);
 	private readonly Color mutedTextColor = new Color(0.78f, 0.78f, 0.78f, 1f);
+	private readonly string[] fallbackClassLabels =
+	{
+		"Unclassified",
+		"Ground",
+		"Low vegetation",
+		"High vegetation",
+		"Building",
+		"Low point (noise)",
+		"Water"
+	};
+	private readonly Color[] fallbackClassColors =
+	{
+		new Color(0.75f, 0.47f, 0.04f, 1f),
+		new Color(0.84f, 1f, 0.39f, 1f),
+		new Color(1f, 0.13f, 0.08f, 1f),
+		new Color(0.77f, 0.06f, 1f, 1f),
+		new Color(1f, 1f, 0.48f, 1f),
+		new Color(0.62f, 0.62f, 0.57f, 1f),
+		new Color(0.93f, 0.93f, 0.05f, 1f)
+	};
 
 	private RectTransform rectTransform;
 	private Image background;
@@ -32,7 +52,18 @@ public sealed class RendererLegendMockPanel : MonoBehaviour
 	private Image panelBackground;
 	private Sprite circleSprite;
 	private Sprite triangleSprite;
+	private string[] classLegendLabels;
+	private Color[] classLegendColors;
+	private bool useClassLegendOverride;
 	private bool isSubscribed;
+
+	public void SetClassLegendEntries(string[] labels, Color[] colors)
+	{
+		classLegendLabels = labels;
+		classLegendColors = colors;
+		useClassLegendOverride = labels != null;
+		Refresh();
+	}
 
 	private void OnEnable()
 	{
@@ -251,37 +282,24 @@ public sealed class RendererLegendMockPanel : MonoBehaviour
 
 	private void AddClassRows()
 	{
-		var labels = new[]
+		var labels = useClassLegendOverride ? classLegendLabels : fallbackClassLabels;
+		if (labels == null || labels.Length == 0)
 		{
-			"Unclassified",
-			"Ground",
-			"Low vegetation",
-			"High vegetation",
-			"Building",
-			"Low point (noise)",
-			"Water"
-		};
+			AddText("Generated_NoClassLegend", "No legend", new Vector2(25f, -45f), new Vector2(360f, 60f), 30, TextAnchor.MiddleCenter, textColor);
+			return;
+		}
 
-		var colors = new[]
-		{
-			new Color(0.75f, 0.47f, 0.04f, 1f),
-			new Color(0.84f, 1f, 0.39f, 1f),
-			new Color(1f, 0.13f, 0.08f, 1f),
-			new Color(0.77f, 0.06f, 1f, 1f),
-			new Color(1f, 1f, 0.48f, 1f),
-			new Color(0.62f, 0.62f, 0.57f, 1f),
-			new Color(0.93f, 0.93f, 0.05f, 1f)
-		};
+		var colors = useClassLegendOverride && classLegendColors != null && classLegendColors.Length > 0 ? classLegendColors : fallbackClassColors;
 
 		const float rowSpacing = 36f;
 		const float viewportHeight = 250f;
-		var contentHeight = labels.Length * rowSpacing;
+		var contentHeight = Mathf.Max(viewportHeight, labels.Length * rowSpacing);
 		var content = AddClassScrollArea(new Vector2(25f, -82f), new Vector2(340f, viewportHeight), contentHeight);
 
 		for (var i = 0; i < labels.Length; i++)
 		{
 			var y = contentHeight * 0.5f - rowSpacing * 0.5f - i * rowSpacing;
-			AddCircle("Generated_ClassDot_" + i, new Vector2(-145f, y), new Vector2(26f, 26f), colors[i], content);
+			AddCircle("Generated_ClassDot_" + i, new Vector2(-145f, y), new Vector2(26f, 26f), colors[i % colors.Length], content);
 			AddText("Generated_ClassLabel_" + i, labels[i], new Vector2(40f, y), new Vector2(260f, 38f), 26, TextAnchor.MiddleLeft, textColor, content);
 		}
 	}
@@ -340,7 +358,7 @@ public sealed class RendererLegendMockPanel : MonoBehaviour
 		scrollRect.verticalNormalizedPosition = 1f;
 
 		scrollbar.value = 1f;
-		scrollbar.size = Mathf.Clamp01(size.y / contentHeight);
+		scrollbar.size = Mathf.Clamp01(size.y / Mathf.Max(size.y, contentHeight));
 		return contentRect;
 	}
 

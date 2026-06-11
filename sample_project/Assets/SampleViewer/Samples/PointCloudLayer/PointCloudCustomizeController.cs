@@ -8,6 +8,9 @@ using UnityEngine.UI;
 
 public sealed class PointCloudCustomizeController : MonoBehaviour
 {
+	private const float MinPointSize = 2f;
+	private const float MaxPointSize = 16f;
+
 	[SerializeField] private PointCloudLayerDataLoader dataLoader;
 	[SerializeField] private Slider pointSizeSlider;
 	[SerializeField] private Slider pointsPerInchSlider;
@@ -47,9 +50,29 @@ public sealed class PointCloudCustomizeController : MonoBehaviour
 			pointSizeSlider = transform.Find("CustomizePanel/Slider_Point_Size")?.GetComponent<Slider>();
 		}
 
+		ConfigurePointSizeSlider();
+
 		if (!pointsPerInchSlider)
 		{
 			pointsPerInchSlider = transform.Find("CustomizePanel/Slider_Point_Per_Inch")?.GetComponent<Slider>();
+		}
+	}
+
+	private void ConfigurePointSizeSlider()
+	{
+		if (!pointSizeSlider)
+		{
+			return;
+		}
+
+		pointSizeSlider.minValue = MinPointSize;
+		pointSizeSlider.maxValue = MaxPointSize;
+		pointSizeSlider.wholeNumbers = true;
+
+		var clampedValue = Mathf.Clamp(pointSizeSlider.value, MinPointSize, MaxPointSize);
+		if (!Mathf.Approximately(pointSizeSlider.value, clampedValue))
+		{
+			pointSizeSlider.SetValueWithoutNotify(clampedValue);
 		}
 	}
 
@@ -136,7 +159,8 @@ public sealed class PointCloudCustomizeController : MonoBehaviour
 
 		if (pointSizeSlider)
 		{
-			activeSizeAlgorithm = new ArcGISPointCloudFixedSizeAlgorithm(Math.Max(0d, pointSizeSlider.value), ArcGISSymbolSizeUnits.DIPs);
+			var pointSize = Math.Max(MinPointSize, Math.Min(MaxPointSize, pointSizeSlider.value));
+			activeSizeAlgorithm = new ArcGISPointCloudFixedSizeAlgorithm(pointSize, ArcGISSymbolSizeUnits.DIPs);
 			renderer.SizeAlgorithm = activeSizeAlgorithm;
 		}
 	}
