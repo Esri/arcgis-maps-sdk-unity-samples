@@ -25,6 +25,8 @@ public sealed class PointCloudLayerDataLoader : MonoBehaviour
 	private ArcGISPointCloudLayer userLoadedLayer;
 	private bool subscribed;
 
+	public event Action<ArcGISPointCloudLayer> LayerLoaded;
+
 	public ArcGISPointCloudLayer LoadedLayer => userLoadedLayer;
 
 	private void Reset()
@@ -156,6 +158,7 @@ public sealed class PointCloudLayerDataLoader : MonoBehaviour
 			var previousLayer = userLoadedLayer;
 			userLoadedLayer = newLayer;
 			RemoveLayer(previousLayer);
+			LayerLoaded?.Invoke(newLayer);
 			yield return ZoomToLoadedLayer(newLayer);
 			ShowStatus("Point scene layer loaded!", successColor);
 		}
