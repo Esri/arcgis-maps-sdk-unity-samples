@@ -10,11 +10,15 @@ using UnityEngine.UI;
 
 public sealed class PointCloudLayerDataLoader : MonoBehaviour
 {
+	private const string DefaultPointCloudSource = "https://tiles.arcgis.com/tiles/V6ZHFr6zdgNZuVG0/arcgis/rest/services/BARNEGAT_BAY_LiDAR_UTM/SceneServer";
+
 	[SerializeField] private InputField sourceInput;
 	[SerializeField] private Button loadButton;
 	[SerializeField] private Text statusText;
 	[SerializeField] private float loadTimeoutSeconds = 30f;
 	[SerializeField] private float loadPollSeconds = 0.25f;
+	[SerializeField] private string defaultSource = DefaultPointCloudSource;
+	[SerializeField] private bool loadDefaultOnStart = true;
 
 	private readonly Color failureColor = new Color(1f, 0.36f, 0.49f, 1f);
 	private readonly Color loadingColor = new Color(0.78f, 0.78f, 0.78f, 1f);
@@ -25,6 +29,7 @@ public sealed class PointCloudLayerDataLoader : MonoBehaviour
 	private ArcGISPointCloudLayer userLoadedLayer;
 	private string loadedSource;
 	private bool subscribed;
+	private bool defaultLoadStarted;
 
 	public event Action<ArcGISPointCloudLayer> LayerLoaded;
 
@@ -40,12 +45,25 @@ public sealed class PointCloudLayerDataLoader : MonoBehaviour
 	private void OnEnable()
 	{
 		FindReferences();
+		ApplyDefaultSource();
 		Subscribe();
 
 		if (Application.isPlaying)
 		{
 			HideStatus();
 		}
+	}
+
+	private void Start()
+	{
+		if (!Application.isPlaying || !loadDefaultOnStart || defaultLoadStarted)
+		{
+			return;
+		}
+
+		defaultLoadStarted = true;
+		ApplyDefaultSource();
+		HandleLoadClicked();
 	}
 
 	private void OnDisable()
@@ -69,6 +87,16 @@ public sealed class PointCloudLayerDataLoader : MonoBehaviour
 		{
 			statusText = transform.Find("DataLoadingPanel/StatusText")?.GetComponent<Text>();
 		}
+	}
+
+	private void ApplyDefaultSource()
+	{
+		if (!sourceInput || !string.IsNullOrWhiteSpace(sourceInput.text))
+		{
+			return;
+		}
+
+		sourceInput.text = string.IsNullOrWhiteSpace(defaultSource) ? DefaultPointCloudSource : defaultSource;
 	}
 
 	private void Subscribe()
@@ -131,6 +159,7 @@ public sealed class PointCloudLayerDataLoader : MonoBehaviour
 		}
 
 		ArcGISPointCloudLayer newLayer = null;
+		var newLayerIndex = arcGISMapComponent.Map.Layers.GetSize();
 		try
 		{
 			newLayer = new ArcGISPointCloudLayer(source, "UserPCL", 1f, true, GetAPIKey());
@@ -158,17 +187,16 @@ public sealed class PointCloudLayerDataLoader : MonoBehaviour
 
 		if (newLayer.LoadStatus == ArcGISLoadStatus.Loaded && HasUsablePointCloudData(newLayer))
 		{
-			var previousLayer = userLoadedLayer;
 			userLoadedLayer = newLayer;
 			loadedSource = source;
-			RemoveLayer(previousLayer);
+			RemovePointCloudLayersExcept(newLayerIndex);
 			LayerLoaded?.Invoke(newLayer);
 			yield return ZoomToLoadedLayer(newLayer);
-			ShowStatus("Point scene layer loaded!", successColor);
+			ShowStatus("Layer loaded successfully...", successColor);
 		}
 		else
 		{
-			RemoveLayer(newLayer);
+			RemoveLayerAt(newLayerIndex);
 			ShowFailure();
 		}
 
@@ -272,21 +300,35 @@ public sealed class PointCloudLayerDataLoader : MonoBehaviour
 		return camera ? camera.gameObject : null;
 	}
 
-	private void RemoveLayer(ArcGISPointCloudLayer layer)
+	private void RemovePointCloudLayersExcept(ulong keepIndex)
 	{
-		if (layer == null || !arcGISMapComponent || arcGISMapComponent.Map == null)
+		if (!arcGISMapComponent || arcGISMapComponent.Map == null)
 		{
 			return;
 		}
 
 		var layers = arcGISMapComponent.Map.Layers;
-		for (ulong i = 0; i < layers.GetSize(); i++)
+		for (var i = (long)layers.GetSize() - 1; i >= 0; --i)
 		{
-			if (layers.At(i) == layer)
+			var index = (ulong)i;
+			if (index != keepIndex && layers.At(index) is ArcGISPointCloudLayer)
 			{
-				layers.Remove(i);
-				return;
+				layers.Remove(index);
 			}
+		}
+	}
+
+	private void RemoveLayerAt(ulong index)
+	{
+		if (!arcGISMapComponent || arcGISMapComponent.Map == null)
+		{
+			return;
+		}
+
+		var layers = arcGISMapComponent.Map.Layers;
+		if (index < layers.GetSize())
+		{
+			layers.Remove(index);
 		}
 	}
 
