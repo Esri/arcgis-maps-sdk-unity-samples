@@ -2,13 +2,10 @@ using Esri.GameEngine.Layers;
 using Esri.GameEngine.Layers.PointCloud;
 using Esri.Standard;
 using Esri.Unity;
-using Newtonsoft.Json.Linq;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
-using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public sealed class PointCloudVisualizeController : MonoBehaviour
@@ -56,7 +53,10 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 	[SerializeField] private Toggle classToggle;
 	[SerializeField] private Toggle elevationToggle;
 	[SerializeField] private Toggle intensityToggle;
-	[SerializeField] private RendererLegendMockPanel rendererLegendPanel;
+	[SerializeField] private Toggle visualizeTab;
+	[SerializeField] private RectTransform rendererLegendRoot;
+	[SerializeField] private Font rendererLegendFont;
+	[SerializeField] private Vector2 rendererLegendPanelOffset = new Vector2(-140f, 80f);
 
 	private const double ElevationLow = -1.5d;
 	private const double ElevationMid = 1.5d;
@@ -79,7 +79,16 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 	private ArcGISRGBColor[] activeColors;
 	private ArcGISPointCloudColorModulation activeColorModulation;
 	private ClassRendererInfo classRendererInfo;
-	private Coroutine classRendererInfoCoroutine;
+	private Image legendRootBackground;
+	private CanvasGroup legendCanvasGroup;
+	private RectTransform legendPanelRect;
+	private Sprite legendCircleSprite;
+	private Sprite legendTriangleSprite;
+
+	private readonly UnityEngine.Color legendPanelColor = new UnityEngine.Color(0.08f, 0.08f, 0.08f, 0.82f);
+	private readonly UnityEngine.Color legendAccentColor = new UnityEngine.Color(0.56f, 0.25f, 1f, 1f);
+	private readonly UnityEngine.Color legendTextColor = new UnityEngine.Color(0.95f, 0.95f, 0.95f, 1f);
+	private readonly UnityEngine.Color legendMutedTextColor = new UnityEngine.Color(0.78f, 0.78f, 0.78f, 1f);
 
 	private void Reset()
 	{
@@ -99,7 +108,6 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 
 	private void OnDisable()
 	{
-		StopClassRendererInfoRequest();
 		Unsubscribe();
 	}
 
@@ -150,10 +158,23 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 			intensityToggle = transform.Find("VisualizePanel/Radio_Intensity")?.GetComponent<Toggle>();
 		}
 
-		if (!rendererLegendPanel)
+		if (!visualizeTab)
 		{
-			rendererLegendPanel = FindFirstObjectByType<RendererLegendMockPanel>();
+			visualizeTab = transform.Find("Tab/VisualizeToggle")?.GetComponent<Toggle>();
 		}
+
+		if (!rendererLegendRoot)
+		{
+			var legendObject = GameObject.Find("RendererLegendPanel");
+			rendererLegendRoot = legendObject ? legendObject.GetComponent<RectTransform>() : null;
+		}
+
+		if (!rendererLegendFont)
+		{
+			rendererLegendFont = Resources.GetBuiltinResource<Font>("Arial.ttf");
+		}
+
+		EnsureLegendRoot();
 	}
 
 	private void Subscribe()
@@ -194,6 +215,11 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 			intensityToggle.onValueChanged.AddListener(HandleRendererToggleChanged);
 		}
 
+		if (visualizeTab)
+		{
+			visualizeTab.onValueChanged.AddListener(HandleVisualizeTabChanged);
+		}
+
 		subscribedToToggles = true;
 	}
 
@@ -230,6 +256,11 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 			{
 				intensityToggle.onValueChanged.RemoveListener(HandleRendererToggleChanged);
 			}
+
+			if (visualizeTab)
+			{
+				visualizeTab.onValueChanged.RemoveListener(HandleVisualizeTabChanged);
+			}
 		}
 
 		subscribedToLoader = false;
@@ -246,787 +277,8 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 		ApplyAvailability();
 		EnsureAvailableRendererSelected();
 		UpdateClassLegend(classRendererInfo);
-		StartClassRendererInfoRequest(layer);
 		ApplySelectedRenderer();
-	}
-
-	private void StartClassRendererInfoRequest(ArcGISPointCloudLayer layer)
-	{
-		StopClassRendererInfoRequest();
-
-		if (!Application.isPlaying || layer == null || dataLoader == null ||
-			string.IsNullOrEmpty(dataLoader.LoadedSource) || string.IsNullOrEmpty(availableAttributes.ClassCode))
-		{
-			return;
-		}
-
-		classRendererInfoCoroutine = StartCoroutine(LoadClassRendererInfo(dataLoader.LoadedSource, layer, availableAttributes.ClassCode));
-	}
-
-	private void StopClassRendererInfoRequest()
-	{
-		if (classRendererInfoCoroutine == null)
-		{
-			return;
-		}
-
-		StopCoroutine(classRendererInfoCoroutine);
-		classRendererInfoCoroutine = null;
-	}
-
-	private IEnumerator LoadClassRendererInfo(string source, ArcGISPointCloudLayer layer, string fallbackAttributeName)
-	{
-		var metadataUrls = new List<string>();
-		AddSceneServerMetadataUrls(source, metadataUrls);
-
-		var itemInfoUrl = TryCreateArcGISItemUrl(source, false);
-		if (!string.IsNullOrEmpty(itemInfoUrl))
-		{
-			string itemInfoJson = null;
-			yield return RequestJson(AddAuthorizationQuery(itemInfoUrl), json => itemInfoJson = json);
-			AddSceneServerMetadataUrlsFromJson(itemInfoJson, metadataUrls);
-
-			string itemDataJson = null;
-			yield return RequestJson(AddAuthorizationQuery(TryCreateArcGISItemUrl(source, true)), json => itemDataJson = json);
-			AddSceneServerMetadataUrlsFromJson(itemDataJson, metadataUrls);
-		}
-
-		ClassRendererInfo rendererInfo = null;
-		ClassRendererInfo standardFallbackInfo = null;
-		foreach (var metadataUrl in metadataUrls)
-		{
-			string metadataJson = null;
-			yield return RequestJson(AddAuthorizationQuery(metadataUrl), json => metadataJson = json);
-			rendererInfo = TryParseClassRendererInfo(metadataJson, fallbackAttributeName);
-			if (rendererInfo != null && rendererInfo.Values.Count > 0)
-			{
-				break;
-			}
-
-			standardFallbackInfo = standardFallbackInfo ?? TryCreateStandardClassRendererInfoFromMetadata(metadataJson, fallbackAttributeName);
-		}
-
-		rendererInfo = rendererInfo ?? standardFallbackInfo;
-
-		classRendererInfoCoroutine = null;
-
-		if (activeLayer != layer || dataLoader == null || dataLoader.LoadedSource != source)
-		{
-			yield break;
-		}
-
-		if (rendererInfo == null)
-		{
-			classRendererInfo = string.IsNullOrEmpty(fallbackAttributeName) ? null : CreateStandardClassRendererInfo(fallbackAttributeName);
-			UpdateClassLegend(classRendererInfo);
-			ApplyAvailability();
-			EnsureAvailableRendererSelected();
-			ApplySelectedRenderer();
-			yield break;
-		}
-
-		classRendererInfo = rendererInfo;
-		ApplyAvailability();
-		EnsureAvailableRendererSelected();
-		UpdateClassLegend(rendererInfo);
-
-		var selectedChoice = GetSelectedChoice();
-		if (selectedChoice == RendererChoice.Class)
-		{
-			ApplySelectedRenderer();
-		}
-	}
-
-	private IEnumerator RequestJson(string url, Action<string> onSuccess)
-	{
-		if (string.IsNullOrEmpty(url))
-		{
-			yield break;
-		}
-
-		using (var request = UnityWebRequest.Get(url))
-		{
-			request.timeout = 12;
-			yield return request.SendWebRequest();
-
-			if (request.result != UnityWebRequest.Result.Success || request.downloadHandler == null)
-			{
-				yield break;
-			}
-
-			var json = request.downloadHandler.text;
-			if (!string.IsNullOrEmpty(json))
-			{
-				onSuccess?.Invoke(json);
-			}
-		}
-	}
-
-	private string AddAuthorizationQuery(string url)
-	{
-		if (string.IsNullOrEmpty(url) || url.IndexOf("token=", StringComparison.OrdinalIgnoreCase) >= 0)
-		{
-			return url;
-		}
-
-		var apiKey = dataLoader ? dataLoader.APIKey : "";
-		if (string.IsNullOrEmpty(apiKey))
-		{
-			return url;
-		}
-
-		return url + (url.Contains("?") ? "&" : "?") + "token=" + Uri.EscapeDataString(apiKey);
-	}
-
-	private static string TryCreateArcGISItemUrl(string source, bool dataEndpoint)
-	{
-		var itemId = TryGetArcGISItemId(source, out var sourceUri);
-		if (string.IsNullOrEmpty(itemId))
-		{
-			return null;
-		}
-
-		var portalRoot = sourceUri != null ? sourceUri.GetLeftPart(UriPartial.Authority) : "https://www.arcgis.com";
-		var endpoint = dataEndpoint ? "/data" : "";
-		return portalRoot + "/sharing/rest/content/items/" + itemId + endpoint + "?f=json";
-	}
-
-	private static string TryGetArcGISItemId(string source, out Uri sourceUri)
-	{
-		sourceUri = null;
-		if (string.IsNullOrWhiteSpace(source))
-		{
-			return null;
-		}
-
-		var trimmedSource = source.Trim();
-		if (IsArcGISItemId(trimmedSource))
-		{
-			return trimmedSource;
-		}
-
-		if (!Uri.TryCreate(trimmedSource, UriKind.Absolute, out sourceUri))
-		{
-			return null;
-		}
-
-		var queryId = GetQueryValue(sourceUri.Query, "id");
-		if (IsArcGISItemId(queryId))
-		{
-			return queryId;
-		}
-
-		var segments = sourceUri.AbsolutePath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-		for (var i = 0; i < segments.Length - 1; i++)
-		{
-			if (segments[i].Equals("items", StringComparison.OrdinalIgnoreCase) && IsArcGISItemId(segments[i + 1]))
-			{
-				return segments[i + 1];
-			}
-		}
-
-		return null;
-	}
-
-	private static string GetQueryValue(string query, string key)
-	{
-		if (string.IsNullOrEmpty(query))
-		{
-			return null;
-		}
-
-		var trimmedQuery = query[0] == '?' ? query.Substring(1) : query;
-		foreach (var pair in trimmedQuery.Split('&'))
-		{
-			var equalsIndex = pair.IndexOf('=');
-			if (equalsIndex <= 0)
-			{
-				continue;
-			}
-
-			var pairKey = Uri.UnescapeDataString(pair.Substring(0, equalsIndex));
-			if (pairKey.Equals(key, StringComparison.OrdinalIgnoreCase))
-			{
-				return Uri.UnescapeDataString(pair.Substring(equalsIndex + 1));
-			}
-		}
-
-		return null;
-	}
-
-	private static bool IsArcGISItemId(string value)
-	{
-		if (string.IsNullOrEmpty(value) || value.Length != 32)
-		{
-			return false;
-		}
-
-		for (var i = 0; i < value.Length; i++)
-		{
-			var character = value[i];
-			if (!((character >= '0' && character <= '9') ||
-				(character >= 'a' && character <= 'f') ||
-				(character >= 'A' && character <= 'F')))
-			{
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	private static void AddSceneServerMetadataUrlsFromJson(string json, List<string> urls)
-	{
-		if (string.IsNullOrEmpty(json))
-		{
-			return;
-		}
-
-		try
-		{
-			var root = JToken.Parse(json);
-			foreach (var urlToken in root.SelectTokens("$..url"))
-			{
-				AddSceneServerMetadataUrls(urlToken.Type == JTokenType.String ? urlToken.Value<string>() : null, urls);
-			}
-		}
-		catch
-		{
-		}
-	}
-
-	private static void AddSceneServerMetadataUrls(string source, List<string> urls)
-	{
-		if (string.IsNullOrEmpty(source) || urls == null)
-		{
-			return;
-		}
-
-		var sourceWithoutQuery = StripQueryAndFragment(source.Trim());
-		var sceneServerIndex = sourceWithoutQuery.IndexOf("/SceneServer", StringComparison.OrdinalIgnoreCase);
-		if (sceneServerIndex < 0)
-		{
-			return;
-		}
-
-		var sceneServerRoot = sourceWithoutQuery.Substring(0, sceneServerIndex + "/SceneServer".Length);
-		var layerIndex = sourceWithoutQuery.IndexOf("/layers/", sceneServerIndex, StringComparison.OrdinalIgnoreCase);
-		if (layerIndex >= 0)
-		{
-			AddMetadataJsonUrl(sourceWithoutQuery, urls);
-		}
-		else
-		{
-			AddMetadataJsonUrl(sceneServerRoot + "/layers/0", urls);
-		}
-
-		AddMetadataJsonUrl(sceneServerRoot, urls);
-	}
-
-	private static void AddMetadataJsonUrl(string url, List<string> urls)
-	{
-		var jsonUrl = StripQueryAndFragment(url) + "?f=json";
-		foreach (var existingUrl in urls)
-		{
-			if (existingUrl.Equals(jsonUrl, StringComparison.OrdinalIgnoreCase))
-			{
-				return;
-			}
-		}
-
-		urls.Add(jsonUrl);
-	}
-
-	private static string StripQueryAndFragment(string value)
-	{
-		if (string.IsNullOrEmpty(value))
-		{
-			return value;
-		}
-
-		var separatorIndex = value.IndexOfAny(new[] { '?', '#' });
-		return separatorIndex >= 0 ? value.Substring(0, separatorIndex) : value;
-	}
-
-	private static ClassRendererInfo TryParseClassRendererInfo(string json, string fallbackAttributeName)
-	{
-		if (string.IsNullOrEmpty(json))
-		{
-			return null;
-		}
-
-		try
-		{
-			var root = JToken.Parse(json);
-			foreach (var renderer in GetRendererTokens(root))
-			{
-				var rendererInfo = TryParseUniqueValueRenderer(renderer, fallbackAttributeName);
-				if (rendererInfo != null && rendererInfo.Values.Count > 0)
-				{
-					return rendererInfo;
-				}
-			}
-		}
-		catch
-		{
-		}
-
-		return null;
-	}
-
-	private static ClassRendererInfo TryCreateStandardClassRendererInfoFromMetadata(string json, string attributeName)
-	{
-		var classValues = TryParseClassValues(json, attributeName);
-		if (classValues == null || classValues.Count == 0)
-		{
-			return null;
-		}
-
-		var rendererInfo = new ClassRendererInfo
-		{
-			AttributeName = attributeName,
-			TransformType = ArcGISPointCloudAttributeTransformType.None
-		};
-
-		var sortedValues = new List<int>(classValues);
-		sortedValues.Sort();
-
-		foreach (var classValue in sortedValues)
-		{
-			AddStandardClassRendererInfoValue(rendererInfo, classValue);
-		}
-
-		return rendererInfo.Values.Count > 0 ? rendererInfo : null;
-	}
-
-	private static HashSet<int> TryParseClassValues(string json, string attributeName)
-	{
-		if (string.IsNullOrEmpty(json) || string.IsNullOrEmpty(attributeName))
-		{
-			return null;
-		}
-
-		var classValues = new HashSet<int>();
-		var normalizedAttributeName = NormalizeName(attributeName);
-
-		try
-		{
-			var root = JToken.Parse(json);
-			CollectClassValuesFromMetadata(root, normalizedAttributeName, classValues);
-		}
-		catch
-		{
-		}
-
-		return classValues.Count > 0 ? classValues : null;
-	}
-
-	private static void CollectClassValuesFromMetadata(JToken token, string normalizedAttributeName, HashSet<int> classValues)
-	{
-		if (token == null)
-		{
-			return;
-		}
-
-		if (token is JObject jsonObject)
-		{
-			if (ObjectReferencesAttribute(jsonObject, normalizedAttributeName))
-			{
-				CollectKnownClassValueProperties(jsonObject, classValues);
-			}
-
-			foreach (var property in jsonObject.Properties())
-			{
-				if (NormalizeName(property.Name) == normalizedAttributeName)
-				{
-					CollectKnownClassValueProperties(property.Value, classValues);
-				}
-
-				CollectClassValuesFromMetadata(property.Value, normalizedAttributeName, classValues);
-			}
-
-			return;
-		}
-
-		if (token is JArray jsonArray)
-		{
-			foreach (var child in jsonArray.Children())
-			{
-				CollectClassValuesFromMetadata(child, normalizedAttributeName, classValues);
-			}
-		}
-	}
-
-	private static bool ObjectReferencesAttribute(JObject jsonObject, string normalizedAttributeName)
-	{
-		foreach (var propertyName in new[] { "name", "field", "fieldName", "attribute", "attributeName", "key" })
-		{
-			var value = ReadString(jsonObject, propertyName);
-			if (NormalizeName(value) == normalizedAttributeName)
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	private static void CollectKnownClassValueProperties(JToken token, HashSet<int> classValues)
-	{
-		if (token == null)
-		{
-			return;
-		}
-
-		if (token is JObject jsonObject)
-		{
-			foreach (var property in jsonObject.Properties())
-			{
-				var normalizedPropertyName = NormalizeName(property.Name);
-				if (IsClassValueProperty(normalizedPropertyName))
-				{
-					CollectIntegralClassValues(property.Value, classValues);
-				}
-				else
-				{
-					CollectKnownClassValueProperties(property.Value, classValues);
-				}
-			}
-
-			return;
-		}
-
-		if (token is JArray jsonArray)
-		{
-			foreach (var child in jsonArray.Children())
-			{
-				CollectKnownClassValueProperties(child, classValues);
-			}
-		}
-	}
-
-	private static bool IsClassValueProperty(string normalizedPropertyName)
-	{
-		switch (normalizedPropertyName)
-		{
-			case "VALUE":
-			case "VALUES":
-			case "UNIQUEVALUE":
-			case "UNIQUEVALUES":
-			case "CODE":
-			case "CODES":
-			case "CLASSCODE":
-			case "CLASSCODES":
-			case "CLASSIFICATION":
-			case "CLASSIFICATIONS":
-			case "CODEDVALUES":
-				return true;
-			default:
-				return false;
-		}
-	}
-
-	private static void CollectIntegralClassValues(JToken token, HashSet<int> classValues)
-	{
-		if (token == null)
-		{
-			return;
-		}
-
-		if (token is JArray jsonArray)
-		{
-			foreach (var child in jsonArray.Children())
-			{
-				CollectIntegralClassValues(child, classValues);
-			}
-
-			return;
-		}
-
-		if (token is JObject jsonObject)
-		{
-			foreach (var property in jsonObject.Properties())
-			{
-				var normalizedPropertyName = NormalizeName(property.Name);
-				if (IsClassValueProperty(normalizedPropertyName))
-				{
-					CollectIntegralClassValues(property.Value, classValues);
-				}
-			}
-
-			return;
-		}
-
-		if (TryReadNumber(token, out var number))
-		{
-			var classValue = Mathf.RoundToInt((float)number);
-			if (Math.Abs(number - classValue) < 0.0001d && classValue >= 0 && classValue <= 255)
-			{
-				classValues.Add(classValue);
-			}
-		}
-	}
-
-	private static IEnumerable<JToken> GetRendererTokens(JToken root)
-	{
-		var directRenderer = root.SelectToken("drawingInfo.renderer") ?? root.SelectToken("renderer");
-		if (directRenderer != null)
-		{
-			yield return directRenderer;
-		}
-
-		foreach (var renderer in root.SelectTokens("$..renderer"))
-		{
-			yield return renderer;
-		}
-	}
-
-	private static ClassRendererInfo TryParseUniqueValueRenderer(JToken renderer, string fallbackAttributeName)
-	{
-		var uniqueValueInfos = GetFirstToken(renderer, "colorUniqueValueInfos", "uniqueValueInfos");
-		if (uniqueValueInfos == null || uniqueValueInfos.Type != JTokenType.Array)
-		{
-			return null;
-		}
-
-		var rendererInfo = new ClassRendererInfo
-		{
-			AttributeName = ReadString(renderer, "field", "fieldName", "attribute", "attributeName") ?? fallbackAttributeName,
-			TransformType = ParseTransform(ReadString(renderer, "fieldTransformType", "transformType", "fieldTransform"))
-		};
-
-		var index = 0;
-		foreach (var uniqueValueInfo in uniqueValueInfos.Children())
-		{
-			var values = ReadValueList(GetFirstToken(uniqueValueInfo, "values", "value", "valuesCollection"));
-			if (values.Length == 0)
-			{
-				continue;
-			}
-
-			var label = ReadString(uniqueValueInfo, "label", "description");
-			if (string.IsNullOrEmpty(label))
-			{
-				label = string.Join(", ", values);
-			}
-
-			if (!TryReadColor(
-				GetFirstToken(uniqueValueInfo, "color") ??
-				uniqueValueInfo.SelectToken("symbol.color") ??
-				uniqueValueInfo.SelectToken("symbol.layers[0].material.color"),
-				index,
-				out var red,
-				out var green,
-				out var blue,
-				out var alpha))
-			{
-				GetFallbackClassColor(index, out red, out green, out blue, out alpha);
-			}
-
-			AddClassRendererInfoValue(rendererInfo, values, label, red, green, blue, alpha);
-			index++;
-		}
-
-		return rendererInfo.Values.Count > 0 ? rendererInfo : null;
-	}
-
-	private static string[] ReadValueList(JToken token)
-	{
-		var values = new List<string>();
-		AddValueToken(token, values);
-
-		var uniqueValues = new List<string>();
-		foreach (var value in values)
-		{
-			if (!string.IsNullOrEmpty(value) && !uniqueValues.Contains(value))
-			{
-				uniqueValues.Add(value);
-			}
-		}
-
-		return uniqueValues.ToArray();
-	}
-
-	private static void AddValueToken(JToken token, List<string> values)
-	{
-		if (token == null)
-		{
-			return;
-		}
-
-		if (token.Type == JTokenType.Array)
-		{
-			foreach (var child in token.Children())
-			{
-				AddValueToken(child, values);
-			}
-
-			return;
-		}
-
-		if (token.Type == JTokenType.Object)
-		{
-			AddValueToken(GetFirstToken(token, "values", "value"), values);
-			return;
-		}
-
-		if (token is JValue valueToken && valueToken.Value != null)
-		{
-			values.Add(Convert.ToString(valueToken.Value, CultureInfo.InvariantCulture)?.Trim());
-		}
-	}
-
-	private static bool TryReadColor(JToken token, int fallbackIndex, out byte red, out byte green, out byte blue, out byte alpha)
-	{
-		red = 0;
-		green = 0;
-		blue = 0;
-		alpha = 255;
-
-		if (token == null)
-		{
-			return false;
-		}
-
-		if (token.Type == JTokenType.Array)
-		{
-			var components = new List<double>();
-			foreach (var component in token.Children())
-			{
-				if (TryReadNumber(component, out var value))
-				{
-					components.Add(value);
-				}
-			}
-
-			if (components.Count < 3)
-			{
-				return false;
-			}
-
-			var normalized = components[0] <= 1d && components[1] <= 1d && components[2] <= 1d;
-			red = ToByteColorComponent(components[0], normalized);
-			green = ToByteColorComponent(components[1], normalized);
-			blue = ToByteColorComponent(components[2], normalized);
-			alpha = components.Count > 3 ? ToByteColorComponent(components[3], normalized && components[3] <= 1d) : (byte)255;
-			return true;
-		}
-
-		if (token.Type == JTokenType.Object)
-		{
-			var nestedColor = GetFirstToken(token, "color", "rgb", "rgba");
-			if (nestedColor != null && TryReadColor(nestedColor, fallbackIndex, out red, out green, out blue, out alpha))
-			{
-				return true;
-			}
-
-			if (!TryReadNumber(GetFirstToken(token, "r", "red"), out var redValue) ||
-				!TryReadNumber(GetFirstToken(token, "g", "green"), out var greenValue) ||
-				!TryReadNumber(GetFirstToken(token, "b", "blue"), out var blueValue))
-			{
-				return false;
-			}
-
-			var alphaToken = GetFirstToken(token, "a", "alpha");
-			var normalized = redValue <= 1d && greenValue <= 1d && blueValue <= 1d;
-			red = ToByteColorComponent(redValue, normalized);
-			green = ToByteColorComponent(greenValue, normalized);
-			blue = ToByteColorComponent(blueValue, normalized);
-			alpha = alphaToken != null && TryReadNumber(alphaToken, out var alphaValue)
-				? ToByteColorComponent(alphaValue, normalized && alphaValue <= 1d)
-				: (byte)255;
-			return true;
-		}
-
-		return false;
-	}
-
-	private static bool TryReadNumber(JToken token, out double value)
-	{
-		value = 0d;
-		if (token == null)
-		{
-			return false;
-		}
-
-		if (token.Type == JTokenType.Integer || token.Type == JTokenType.Float)
-		{
-			value = token.Value<double>();
-			return true;
-		}
-
-		return double.TryParse(token.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture, out value);
-	}
-
-	private static byte ToByteColorComponent(double value, bool normalized)
-	{
-		return (byte)Mathf.Clamp(Mathf.RoundToInt((float)(normalized ? value * 255d : value)), 0, 255);
-	}
-
-	private static void GetFallbackClassColor(int index, out byte red, out byte green, out byte blue, out byte alpha)
-	{
-		var palette = new[]
-		{
-			new byte[] { 190, 137, 12 },
-			new byte[] { 219, 255, 104 },
-			new byte[] { 246, 44, 28 },
-			new byte[] { 199, 24, 255 },
-			new byte[] { 255, 255, 112 },
-			new byte[] { 152, 152, 152 },
-			new byte[] { 246, 244, 22 },
-			new byte[] { 69, 188, 255 },
-			new byte[] { 255, 121, 198 }
-		};
-
-		var color = palette[Mathf.Abs(index) % palette.Length];
-		red = color[0];
-		green = color[1];
-		blue = color[2];
-		alpha = 255;
-	}
-
-	private static JToken GetFirstToken(JToken token, params string[] names)
-	{
-		if (!(token is JObject jsonObject))
-		{
-			return null;
-		}
-
-		foreach (var name in names)
-		{
-			if (jsonObject.TryGetValue(name, StringComparison.OrdinalIgnoreCase, out var value))
-			{
-				return value;
-			}
-		}
-
-		return null;
-	}
-
-	private static string ReadString(JToken token, params string[] names)
-	{
-		var value = GetFirstToken(token, names);
-		return value == null || value.Type == JTokenType.Null ? null : value.ToString();
-	}
-
-	private static ArcGISPointCloudAttributeTransformType ParseTransform(string transform)
-	{
-		switch (NormalizeName(transform))
-		{
-			case "ABSOLUTEVALUE":
-				return ArcGISPointCloudAttributeTransformType.AbsoluteValue;
-			case "HIGHFOURBIT":
-			case "HIGH4BIT":
-				return ArcGISPointCloudAttributeTransformType.HighFourBit;
-			case "LOWFOURBIT":
-			case "LOW4BIT":
-				return ArcGISPointCloudAttributeTransformType.LowFourBit;
-			case "MODULOTEN":
-			case "MODULO10":
-				return ArcGISPointCloudAttributeTransformType.ModuloTen;
-			default:
-				return ArcGISPointCloudAttributeTransformType.None;
-		}
+		RefreshRendererLegend();
 	}
 
 	private void HandleRendererToggleChanged(bool isOn)
@@ -1037,6 +289,12 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 		}
 
 		ApplySelectedRenderer();
+		RefreshRendererLegend();
+	}
+
+	private void HandleVisualizeTabChanged(bool _)
+	{
+		RefreshRendererLegend();
 	}
 
 	private void HandleColorModulationChanged(bool _)
@@ -1385,30 +643,537 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 		}
 	}
 
+	private static void GetFallbackClassColor(int index, out byte red, out byte green, out byte blue, out byte alpha)
+	{
+		var palette = new[]
+		{
+			new byte[] { 190, 137, 12 },
+			new byte[] { 219, 255, 104 },
+			new byte[] { 246, 44, 28 },
+			new byte[] { 199, 24, 255 },
+			new byte[] { 255, 255, 112 },
+			new byte[] { 152, 152, 152 },
+			new byte[] { 246, 244, 22 },
+			new byte[] { 69, 188, 255 },
+			new byte[] { 255, 121, 198 }
+		};
+
+		var color = palette[Mathf.Abs(index) % palette.Length];
+		red = color[0];
+		green = color[1];
+		blue = color[2];
+		alpha = 255;
+	}
+
 	private void UpdateClassLegend(ClassRendererInfo rendererInfo)
 	{
-		if (!rendererLegendPanel || rendererInfo == null || rendererInfo.Values.Count == 0)
+		RefreshRendererLegend();
+	}
+
+	private void EnsureLegendRoot()
+	{
+		if (!rendererLegendRoot)
 		{
 			return;
 		}
 
-		var labels = new string[rendererInfo.Values.Count];
-		var colors = new UnityEngine.Color[rendererInfo.Values.Count];
-		for (var i = 0; i < rendererInfo.Values.Count; i++)
+		legendRootBackground = rendererLegendRoot.GetComponent<Image>();
+		legendCanvasGroup = rendererLegendRoot.GetComponent<CanvasGroup>();
+
+		if (!legendRootBackground)
 		{
-			var value = rendererInfo.Values[i];
-			labels[i] = string.IsNullOrEmpty(value.Label) ? string.Join(", ", value.Values) : value.Label;
-			colors[i] = new Color32(value.Red, value.Green, value.Blue, value.Alpha);
+			legendRootBackground = rendererLegendRoot.gameObject.AddComponent<Image>();
 		}
 
-		rendererLegendPanel.SetClassLegendEntries(labels, colors);
+		if (!legendCanvasGroup)
+		{
+			legendCanvasGroup = rendererLegendRoot.gameObject.AddComponent<CanvasGroup>();
+		}
+
+		legendRootBackground.color = UnityEngine.Color.clear;
+		legendRootBackground.raycastTarget = false;
+		legendCanvasGroup.interactable = false;
+		legendCanvasGroup.blocksRaycasts = false;
+
+		rendererLegendRoot.anchorMin = Vector2.zero;
+		rendererLegendRoot.anchorMax = Vector2.one;
+		rendererLegendRoot.pivot = new Vector2(0.5f, 0.5f);
+		rendererLegendRoot.offsetMin = Vector2.zero;
+		rendererLegendRoot.offsetMax = Vector2.zero;
+		rendererLegendRoot.anchoredPosition = Vector2.zero;
 	}
 
-	private void ClearClassLegend()
+	private void RefreshRendererLegend()
 	{
-		if (rendererLegendPanel)
+		EnsureLegendRoot();
+		if (!rendererLegendRoot || !legendCanvasGroup)
 		{
-			rendererLegendPanel.SetClassLegendEntries(Array.Empty<string>(), Array.Empty<UnityEngine.Color>());
+			return;
+		}
+
+		var shouldShow = visualizeTab && visualizeTab.isOn;
+		legendCanvasGroup.alpha = shouldShow ? 1f : 0f;
+		legendCanvasGroup.interactable = shouldShow;
+		legendCanvasGroup.blocksRaycasts = shouldShow;
+
+		if (!shouldShow)
+		{
+			return;
+		}
+
+		BuildRendererLegend(GetSelectedChoice() ?? RendererChoice.RGB);
+	}
+
+	private void BuildRendererLegend(RendererChoice mode)
+	{
+		ClearGeneratedLegendChildren();
+
+		switch (mode)
+		{
+			case RendererChoice.Class:
+				CreateLegendPanel(500f, 440f);
+				AddLegendAccent();
+				AddLegendTitle(150f);
+				AddLegendText("Generated_ClassHeader", "Class Code", new Vector2(80f, 70f), new Vector2(430f, 40f), 28, TextAnchor.MiddleLeft, legendTextColor);
+				AddClassLegendRows();
+				break;
+			case RendererChoice.Elevation:
+				CreateLegendPanel(500f, 400f);
+				AddLegendAccent();
+				AddLegendTitle(145f);
+				AddStretchLegend("Elevation", true);
+				break;
+			case RendererChoice.Intensity:
+				CreateLegendPanel(500f, 400f);
+				AddLegendAccent();
+				AddLegendTitle(145f);
+				AddStretchLegend("Intensity", false);
+				break;
+			default:
+				CreateLegendPanel(500f, 110f);
+				AddLegendAccent();
+				AddLegendText("Generated_NoLegend", "No legend", Vector2.zero, new Vector2(430f, 60f), 34, TextAnchor.MiddleCenter, legendTextColor);
+				break;
+		}
+	}
+
+	private void CreateLegendPanel(float width, float height)
+	{
+		var go = new GameObject("Generated_Panel", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+		go.layer = rendererLegendRoot.gameObject.layer;
+		go.transform.SetParent(rendererLegendRoot, false);
+
+		legendPanelRect = go.GetComponent<RectTransform>();
+		legendPanelRect.anchorMin = new Vector2(1f, 0f);
+		legendPanelRect.anchorMax = new Vector2(1f, 0f);
+		legendPanelRect.pivot = new Vector2(1f, 0f);
+		legendPanelRect.anchoredPosition = rendererLegendPanelOffset;
+		legendPanelRect.sizeDelta = new Vector2(width, height);
+
+		var panelBackground = go.GetComponent<Image>();
+		panelBackground.color = legendPanelColor;
+		panelBackground.raycastTarget = false;
+	}
+
+	private void AddLegendAccent()
+	{
+		var accent = AddLegendImage("Generated_Accent", Vector2.zero, new Vector2(8f, 0f), legendAccentColor);
+		accent.rectTransform.anchorMin = new Vector2(0f, 0f);
+		accent.rectTransform.anchorMax = new Vector2(0f, 1f);
+		accent.rectTransform.pivot = new Vector2(0f, 0.5f);
+		accent.rectTransform.anchoredPosition = Vector2.zero;
+		accent.rectTransform.sizeDelta = new Vector2(8f, 0f);
+	}
+
+	private void AddLegendTitle(float y)
+	{
+		AddLegendText("Generated_Title", "Tallinn punktipilv", new Vector2(0f, y), new Vector2(430f, 56f), 36, TextAnchor.MiddleCenter, legendMutedTextColor);
+	}
+
+	private void AddClassLegendRows()
+	{
+		if (classRendererInfo == null || classRendererInfo.Values.Count == 0)
+		{
+			AddLegendText("Generated_NoClassLegend", "No legend", new Vector2(25f, -45f), new Vector2(360f, 60f), 30, TextAnchor.MiddleCenter, legendTextColor);
+			return;
+		}
+
+		const float rowSpacing = 36f;
+		const float viewportHeight = 250f;
+		var contentHeight = Mathf.Max(viewportHeight, classRendererInfo.Values.Count * rowSpacing);
+		var content = AddClassLegendScrollArea(new Vector2(25f, -82f), new Vector2(340f, viewportHeight), contentHeight);
+
+		for (var i = 0; i < classRendererInfo.Values.Count; i++)
+		{
+			var value = classRendererInfo.Values[i];
+			var y = contentHeight * 0.5f - rowSpacing * 0.5f - i * rowSpacing;
+			var color = new Color32(value.Red, value.Green, value.Blue, value.Alpha);
+			var label = string.IsNullOrEmpty(value.Label) ? string.Join(", ", value.Values) : value.Label;
+
+			AddLegendCircle("Generated_ClassDot_" + i, new Vector2(-145f, y), new Vector2(26f, 26f), color, content);
+			AddLegendText("Generated_ClassLabel_" + i, label, new Vector2(40f, y), new Vector2(260f, 38f), 26, TextAnchor.MiddleLeft, legendTextColor, content);
+		}
+	}
+
+	private RectTransform AddClassLegendScrollArea(Vector2 anchoredPosition, Vector2 size, float contentHeight)
+	{
+		var scrollRoot = new GameObject("Generated_ClassScrollRect", typeof(RectTransform), typeof(ScrollRect));
+		scrollRoot.layer = rendererLegendRoot.gameObject.layer;
+		scrollRoot.transform.SetParent(legendPanelRect, false);
+
+		var scrollRectTransform = scrollRoot.GetComponent<RectTransform>();
+		scrollRectTransform.anchorMin = new Vector2(0.5f, 0.5f);
+		scrollRectTransform.anchorMax = new Vector2(0.5f, 0.5f);
+		scrollRectTransform.pivot = new Vector2(0.5f, 0.5f);
+		scrollRectTransform.anchoredPosition = anchoredPosition;
+		scrollRectTransform.sizeDelta = size;
+
+		var viewport = new GameObject("Generated_ClassViewport", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(RectMask2D));
+		viewport.layer = rendererLegendRoot.gameObject.layer;
+		viewport.transform.SetParent(scrollRoot.transform, false);
+
+		var viewportRect = viewport.GetComponent<RectTransform>();
+		viewportRect.anchorMin = Vector2.zero;
+		viewportRect.anchorMax = Vector2.one;
+		viewportRect.pivot = new Vector2(0.5f, 0.5f);
+		viewportRect.offsetMin = Vector2.zero;
+		viewportRect.offsetMax = Vector2.zero;
+
+		var viewportImage = viewport.GetComponent<Image>();
+		viewportImage.color = UnityEngine.Color.clear;
+		viewportImage.raycastTarget = true;
+
+		var content = new GameObject("Generated_ClassContent", typeof(RectTransform));
+		content.layer = rendererLegendRoot.gameObject.layer;
+		content.transform.SetParent(viewport.transform, false);
+
+		var contentRect = content.GetComponent<RectTransform>();
+		contentRect.anchorMin = new Vector2(0f, 1f);
+		contentRect.anchorMax = new Vector2(1f, 1f);
+		contentRect.pivot = new Vector2(0.5f, 1f);
+		contentRect.anchoredPosition = Vector2.zero;
+		contentRect.sizeDelta = new Vector2(0f, contentHeight);
+
+		var scrollbar = AddClassLegendScrollbar(new Vector2(205f, -82f), new Vector2(28f, size.y));
+
+		var scrollRect = scrollRoot.GetComponent<ScrollRect>();
+		scrollRect.content = contentRect;
+		scrollRect.viewport = viewportRect;
+		scrollRect.horizontal = false;
+		scrollRect.vertical = true;
+		scrollRect.movementType = ScrollRect.MovementType.Clamped;
+		scrollRect.inertia = false;
+		scrollRect.scrollSensitivity = 36f;
+		scrollRect.verticalScrollbar = scrollbar;
+		scrollRect.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.Permanent;
+		scrollRect.verticalNormalizedPosition = 1f;
+
+		scrollbar.value = 1f;
+		scrollbar.size = Mathf.Clamp01(size.y / Mathf.Max(size.y, contentHeight));
+		return contentRect;
+	}
+
+	private Scrollbar AddClassLegendScrollbar(Vector2 anchoredPosition, Vector2 size)
+	{
+		var scrollbarGo = new GameObject("Generated_ClassScrollbar", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Scrollbar));
+		scrollbarGo.layer = rendererLegendRoot.gameObject.layer;
+		scrollbarGo.transform.SetParent(legendPanelRect, false);
+
+		var scrollbarRect = scrollbarGo.GetComponent<RectTransform>();
+		scrollbarRect.anchorMin = new Vector2(0.5f, 0.5f);
+		scrollbarRect.anchorMax = new Vector2(0.5f, 0.5f);
+		scrollbarRect.pivot = new Vector2(0.5f, 0.5f);
+		scrollbarRect.anchoredPosition = anchoredPosition;
+		scrollbarRect.sizeDelta = size;
+
+		var track = scrollbarGo.GetComponent<Image>();
+		track.color = new UnityEngine.Color(0.28f, 0.28f, 0.28f, 0.82f);
+		track.raycastTarget = true;
+
+		var slidingArea = new GameObject("Generated_ClassScrollbarSlidingArea", typeof(RectTransform));
+		slidingArea.layer = rendererLegendRoot.gameObject.layer;
+		slidingArea.transform.SetParent(scrollbarGo.transform, false);
+
+		var slidingAreaRect = slidingArea.GetComponent<RectTransform>();
+		slidingAreaRect.anchorMin = Vector2.zero;
+		slidingAreaRect.anchorMax = Vector2.one;
+		slidingAreaRect.pivot = new Vector2(0.5f, 0.5f);
+		slidingAreaRect.offsetMin = Vector2.zero;
+		slidingAreaRect.offsetMax = Vector2.zero;
+
+		var handle = new GameObject("Generated_ClassScrollbarHandle", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+		handle.layer = rendererLegendRoot.gameObject.layer;
+		handle.transform.SetParent(slidingArea.transform, false);
+
+		var handleRect = handle.GetComponent<RectTransform>();
+		handleRect.anchorMin = Vector2.zero;
+		handleRect.anchorMax = Vector2.one;
+		handleRect.pivot = new Vector2(0.5f, 0.5f);
+		handleRect.offsetMin = Vector2.zero;
+		handleRect.offsetMax = Vector2.zero;
+
+		var handleImage = handle.GetComponent<Image>();
+		handleImage.color = new UnityEngine.Color(0.75f, 0.75f, 0.75f, 1f);
+		handleImage.raycastTarget = true;
+
+		var scrollbar = scrollbarGo.GetComponent<Scrollbar>();
+		scrollbar.direction = Scrollbar.Direction.BottomToTop;
+		scrollbar.targetGraphic = handleImage;
+		scrollbar.handleRect = handleRect;
+		scrollbar.transition = Selectable.Transition.None;
+		return scrollbar;
+	}
+
+	private void AddStretchLegend(string label, bool isElevation)
+	{
+		const float rampCenterY = -60f;
+		const float topBreakY = 10f;
+		const float middleBreakY = -60f;
+		const float bottomBreakY = -130f;
+
+		AddLegendText("Generated_StretchHeader", label, new Vector2(0f, 70f), new Vector2(270f, 40f), 28, TextAnchor.MiddleLeft, legendTextColor);
+
+		var gradientColors = isElevation
+			? new[]
+			{
+				new UnityEngine.Color(0.95f, 0.12f, 0.08f, 1f),
+				new UnityEngine.Color(1f, 0.9f, 0.2f, 1f),
+				new UnityEngine.Color(0.35f, 0.95f, 0.48f, 1f),
+				new UnityEngine.Color(0.25f, 0.82f, 1f, 1f),
+				new UnityEngine.Color(0.22f, 0.12f, 1f, 1f)
+			}
+			: new[]
+			{
+				UnityEngine.Color.white,
+				new UnityEngine.Color(0.65f, 0.65f, 0.65f, 1f),
+				new UnityEngine.Color(0.16f, 0.16f, 0.16f, 1f),
+				UnityEngine.Color.black
+			};
+
+		AddLegendGradient("Generated_Gradient", new Vector2(-80f, rampCenterY), new Vector2(56f, 170f), gradientColors);
+
+		if (isElevation)
+		{
+			AddBreakLabel("> 3.5", topBreakY);
+			AddBreakLabel("1.5", middleBreakY);
+			AddBreakLabel("< -1.5", bottomBreakY);
+		}
+		else
+		{
+			AddBreakLabel("> 65,680", topBreakY);
+			AddBreakLabel("38,032", middleBreakY);
+			AddBreakLabel("<10,385", bottomBreakY);
+		}
+	}
+
+	private void AddBreakLabel(string label, float y)
+	{
+		AddLegendTriangle("Generated_Triangle_" + label, new Vector2(-35f, y), new Vector2(18f, 22f), legendTextColor);
+		AddLegendText("Generated_BreakLabel_" + label, label, new Vector2(88f, y), new Vector2(210f, 38f), 28, TextAnchor.MiddleLeft, legendTextColor);
+	}
+
+	private Text AddLegendText(string name, string text, Vector2 anchoredPosition, Vector2 size, int fontSize, TextAnchor alignment, UnityEngine.Color color)
+	{
+		return AddLegendText(name, text, anchoredPosition, size, fontSize, alignment, color, legendPanelRect ? legendPanelRect : rendererLegendRoot);
+	}
+
+	private Text AddLegendText(string name, string text, Vector2 anchoredPosition, Vector2 size, int fontSize, TextAnchor alignment, UnityEngine.Color color, Transform parent)
+	{
+		var go = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Text));
+		go.layer = rendererLegendRoot.gameObject.layer;
+		go.transform.SetParent(parent, false);
+
+		var rect = go.GetComponent<RectTransform>();
+		rect.anchorMin = new Vector2(0.5f, 0.5f);
+		rect.anchorMax = new Vector2(0.5f, 0.5f);
+		rect.pivot = new Vector2(0.5f, 0.5f);
+		rect.anchoredPosition = anchoredPosition;
+		rect.sizeDelta = size;
+
+		var textComponent = go.GetComponent<Text>();
+		textComponent.text = text;
+		textComponent.font = rendererLegendFont ? rendererLegendFont : Resources.GetBuiltinResource<Font>("Arial.ttf");
+		textComponent.fontSize = fontSize;
+		textComponent.alignment = alignment;
+		textComponent.horizontalOverflow = HorizontalWrapMode.Overflow;
+		textComponent.verticalOverflow = VerticalWrapMode.Overflow;
+		textComponent.color = color;
+		textComponent.raycastTarget = false;
+		return textComponent;
+	}
+
+	private Image AddLegendImage(string name, Vector2 anchoredPosition, Vector2 size, UnityEngine.Color color)
+	{
+		return AddLegendImage(name, anchoredPosition, size, color, legendPanelRect ? legendPanelRect : rendererLegendRoot);
+	}
+
+	private Image AddLegendImage(string name, Vector2 anchoredPosition, Vector2 size, UnityEngine.Color color, Transform parent)
+	{
+		var go = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+		go.layer = rendererLegendRoot.gameObject.layer;
+		go.transform.SetParent(parent, false);
+
+		var rect = go.GetComponent<RectTransform>();
+		rect.anchorMin = new Vector2(0.5f, 0.5f);
+		rect.anchorMax = new Vector2(0.5f, 0.5f);
+		rect.pivot = new Vector2(0.5f, 0.5f);
+		rect.anchoredPosition = anchoredPosition;
+		rect.sizeDelta = size;
+
+		var image = go.GetComponent<Image>();
+		image.color = color;
+		image.raycastTarget = false;
+		return image;
+	}
+
+	private void AddLegendCircle(string name, Vector2 anchoredPosition, Vector2 size, UnityEngine.Color color, Transform parent)
+	{
+		var image = AddLegendImage(name, anchoredPosition, size, color, parent);
+		image.sprite = GetLegendCircleSprite();
+		image.preserveAspect = true;
+	}
+
+	private void AddLegendTriangle(string name, Vector2 anchoredPosition, Vector2 size, UnityEngine.Color color)
+	{
+		var image = AddLegendImage(name, anchoredPosition, size, color);
+		image.sprite = GetLegendTriangleSprite();
+		image.preserveAspect = true;
+	}
+
+	private void AddLegendGradient(string name, Vector2 anchoredPosition, Vector2 size, UnityEngine.Color[] colors)
+	{
+		var image = AddLegendImage(name, anchoredPosition, size, UnityEngine.Color.white);
+		image.sprite = CreateLegendGradientSprite(colors);
+		image.preserveAspect = false;
+	}
+
+	private Sprite GetLegendCircleSprite()
+	{
+		if (legendCircleSprite)
+		{
+			return legendCircleSprite;
+		}
+
+		const int size = 32;
+		var texture = new Texture2D(size, size, TextureFormat.ARGB32, false)
+		{
+			wrapMode = TextureWrapMode.Clamp
+		};
+
+		var center = (size - 1) * 0.5f;
+		var radius = center - 1f;
+
+		for (var y = 0; y < size; y++)
+		{
+			for (var x = 0; x < size; x++)
+			{
+				var distance = Vector2.Distance(new Vector2(x, y), new Vector2(center, center));
+				var alpha = Mathf.Clamp01(radius + 0.75f - distance);
+				texture.SetPixel(x, y, new UnityEngine.Color(1f, 1f, 1f, alpha));
+			}
+		}
+
+		texture.Apply();
+		legendCircleSprite = Sprite.Create(texture, new Rect(0f, 0f, size, size), new Vector2(0.5f, 0.5f), 100f);
+		return legendCircleSprite;
+	}
+
+	private Sprite GetLegendTriangleSprite()
+	{
+		if (legendTriangleSprite)
+		{
+			return legendTriangleSprite;
+		}
+
+		const int width = 28;
+		const int height = 32;
+		var texture = new Texture2D(width, height, TextureFormat.ARGB32, false)
+		{
+			wrapMode = TextureWrapMode.Clamp
+		};
+
+		for (var y = 0; y < height; y++)
+		{
+			for (var x = 0; x < width; x++)
+			{
+				var halfHeight = height * 0.5f;
+				var maxX = Mathf.Lerp(width - 1f, 2f, Mathf.Abs(y - halfHeight) / halfHeight);
+				texture.SetPixel(x, y, x <= maxX ? UnityEngine.Color.white : UnityEngine.Color.clear);
+			}
+		}
+
+		texture.Apply();
+		legendTriangleSprite = Sprite.Create(texture, new Rect(0f, 0f, width, height), new Vector2(0.5f, 0.5f), 100f);
+		return legendTriangleSprite;
+	}
+
+	private Sprite CreateLegendGradientSprite(UnityEngine.Color[] colors)
+	{
+		const int width = 16;
+		const int height = 128;
+		var texture = new Texture2D(width, height, TextureFormat.ARGB32, false)
+		{
+			wrapMode = TextureWrapMode.Clamp
+		};
+
+		for (var y = 0; y < height; y++)
+		{
+			var t = 1f - y / (float)(height - 1);
+			var color = EvaluateGradient(colors, t);
+
+			for (var x = 0; x < width; x++)
+			{
+				texture.SetPixel(x, y, color);
+			}
+		}
+
+		texture.Apply();
+		return Sprite.Create(texture, new Rect(0f, 0f, width, height), new Vector2(0.5f, 0.5f), 100f);
+	}
+
+	private static UnityEngine.Color EvaluateGradient(UnityEngine.Color[] colors, float t)
+	{
+		if (colors == null || colors.Length == 0)
+		{
+			return UnityEngine.Color.white;
+		}
+
+		if (colors.Length == 1)
+		{
+			return colors[0];
+		}
+
+		var scaled = Mathf.Clamp01(t) * (colors.Length - 1);
+		var index = Mathf.Min(Mathf.FloorToInt(scaled), colors.Length - 2);
+		var localT = scaled - index;
+		return UnityEngine.Color.Lerp(colors[index], colors[index + 1], localT);
+	}
+
+	private void ClearGeneratedLegendChildren()
+	{
+		legendPanelRect = null;
+
+		if (!rendererLegendRoot)
+		{
+			return;
+		}
+
+		for (var i = rendererLegendRoot.childCount - 1; i >= 0; i--)
+		{
+			var child = rendererLegendRoot.GetChild(i);
+			if (!child.name.StartsWith("Generated_"))
+			{
+				continue;
+			}
+
+			if (Application.isPlaying)
+			{
+				Destroy(child.gameObject);
+			}
+			else
+			{
+				DestroyImmediate(child.gameObject);
+			}
 		}
 	}
 

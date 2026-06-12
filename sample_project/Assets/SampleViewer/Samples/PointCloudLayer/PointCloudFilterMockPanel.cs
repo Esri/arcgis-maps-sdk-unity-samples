@@ -1,5 +1,10 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 [ExecuteAlways]
 public sealed class PointCloudFilterMockPanel : MonoBehaviour
@@ -14,18 +19,91 @@ public sealed class PointCloudFilterMockPanel : MonoBehaviour
 	private readonly Color scrollbarHandleColor = new Color(0.75f, 0.75f, 0.75f, 1f);
 
 	private RectTransform rectTransform;
+	private Coroutine runtimeRebuildCoroutine;
+#if UNITY_EDITOR
+	private bool rebuildQueued;
+#endif
 
 	private void OnEnable()
 	{
-		EnsureComponents();
-		Build();
+		QueueBuild();
+	}
+
+	private void OnDisable()
+	{
+		if (runtimeRebuildCoroutine != null)
+		{
+			StopCoroutine(runtimeRebuildCoroutine);
+			runtimeRebuildCoroutine = null;
+		}
+
+#if UNITY_EDITOR
+		if (rebuildQueued)
+		{
+			EditorApplication.delayCall -= RebuildInEditor;
+			rebuildQueued = false;
+		}
+#endif
 	}
 
 	private void OnValidate()
 	{
+		QueueBuild();
+	}
+
+	private void QueueBuild()
+	{
+#if UNITY_EDITOR
+		if (!Application.isPlaying)
+		{
+			if (rebuildQueued)
+			{
+				return;
+			}
+
+			rebuildQueued = true;
+			EditorApplication.delayCall += RebuildInEditor;
+			return;
+		}
+#endif
+
+		if (runtimeRebuildCoroutine != null || !isActiveAndEnabled)
+		{
+			return;
+		}
+
+		runtimeRebuildCoroutine = StartCoroutine(RebuildNextFrame());
+	}
+
+	private IEnumerator RebuildNextFrame()
+	{
+		yield return null;
+		runtimeRebuildCoroutine = null;
+
+		if (!this || !isActiveAndEnabled)
+		{
+			yield break;
+		}
+
 		EnsureComponents();
 		Build();
 	}
+
+#if UNITY_EDITOR
+	private void RebuildInEditor()
+	{
+		EditorApplication.delayCall -= RebuildInEditor;
+		rebuildQueued = false;
+
+		if (!this || Application.isPlaying)
+		{
+			return;
+		}
+
+		EnsureComponents();
+		Build();
+	}
+#endif
 
 	private void EnsureComponents()
 	{
@@ -118,6 +196,7 @@ public sealed class PointCloudFilterMockPanel : MonoBehaviour
 	private RectTransform AddScrollArea(string name, Vector2 anchoredPosition, Vector2 size, float contentHeight, Vector2 scrollbarPosition)
 	{
 		var scrollRoot = new GameObject(name, typeof(RectTransform), typeof(ScrollRect));
+		MarkGeneratedObject(scrollRoot);
 		scrollRoot.layer = gameObject.layer;
 		scrollRoot.transform.SetParent(rectTransform, false);
 
@@ -129,6 +208,7 @@ public sealed class PointCloudFilterMockPanel : MonoBehaviour
 		scrollRectTransform.sizeDelta = size;
 
 		var viewport = new GameObject(name + "_Viewport", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(RectMask2D));
+		MarkGeneratedObject(viewport);
 		viewport.layer = gameObject.layer;
 		viewport.transform.SetParent(scrollRoot.transform, false);
 
@@ -144,6 +224,7 @@ public sealed class PointCloudFilterMockPanel : MonoBehaviour
 		viewportImage.raycastTarget = true;
 
 		var content = new GameObject(name + "_Content", typeof(RectTransform));
+		MarkGeneratedObject(content);
 		content.layer = gameObject.layer;
 		content.transform.SetParent(viewport.transform, false);
 
@@ -176,6 +257,7 @@ public sealed class PointCloudFilterMockPanel : MonoBehaviour
 	private Scrollbar AddScrollbar(string name, Vector2 anchoredPosition, Vector2 size)
 	{
 		var scrollbarGo = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Scrollbar));
+		MarkGeneratedObject(scrollbarGo);
 		scrollbarGo.layer = gameObject.layer;
 		scrollbarGo.transform.SetParent(rectTransform, false);
 
@@ -191,6 +273,7 @@ public sealed class PointCloudFilterMockPanel : MonoBehaviour
 		track.raycastTarget = true;
 
 		var slidingArea = new GameObject(name + "_SlidingArea", typeof(RectTransform));
+		MarkGeneratedObject(slidingArea);
 		slidingArea.layer = gameObject.layer;
 		slidingArea.transform.SetParent(scrollbarGo.transform, false);
 
@@ -202,6 +285,7 @@ public sealed class PointCloudFilterMockPanel : MonoBehaviour
 		slidingAreaRect.offsetMax = Vector2.zero;
 
 		var handle = new GameObject(name + "_Handle", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+		MarkGeneratedObject(handle);
 		handle.layer = gameObject.layer;
 		handle.transform.SetParent(slidingArea.transform, false);
 
@@ -227,6 +311,7 @@ public sealed class PointCloudFilterMockPanel : MonoBehaviour
 	private void AddCheckbox(string name, Vector2 anchoredPosition, Transform parent)
 	{
 		var go = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Toggle));
+		MarkGeneratedObject(go);
 		go.layer = gameObject.layer;
 		go.transform.SetParent(parent, false);
 
@@ -242,6 +327,7 @@ public sealed class PointCloudFilterMockPanel : MonoBehaviour
 		hitArea.raycastTarget = true;
 
 		var fill = new GameObject(name + "_Fill", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+		MarkGeneratedObject(fill);
 		fill.layer = gameObject.layer;
 		fill.transform.SetParent(go.transform, false);
 
@@ -257,6 +343,7 @@ public sealed class PointCloudFilterMockPanel : MonoBehaviour
 		fillImage.raycastTarget = false;
 
 		var outline = new GameObject(name + "_Outline", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+		MarkGeneratedObject(outline);
 		outline.layer = gameObject.layer;
 		outline.transform.SetParent(go.transform, false);
 
@@ -283,6 +370,7 @@ public sealed class PointCloudFilterMockPanel : MonoBehaviour
 	private void AddSeparator(float y)
 	{
 		var line = new GameObject("Generated_FilterSeparator", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+		MarkGeneratedObject(line);
 		line.layer = gameObject.layer;
 		line.transform.SetParent(rectTransform, false);
 
@@ -301,6 +389,7 @@ public sealed class PointCloudFilterMockPanel : MonoBehaviour
 	private Text AddText(string name, string text, Vector2 anchoredPosition, Vector2 size, int fontSize, TextAnchor alignment, Color color, Transform parent)
 	{
 		var go = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Text));
+		MarkGeneratedObject(go);
 		go.layer = gameObject.layer;
 		go.transform.SetParent(parent, false);
 
@@ -343,5 +432,15 @@ public sealed class PointCloudFilterMockPanel : MonoBehaviour
 				DestroyImmediate(child.gameObject);
 			}
 		}
+	}
+
+	private static void MarkGeneratedObject(GameObject generatedObject)
+	{
+#if UNITY_EDITOR
+		if (!Application.isPlaying)
+		{
+			generatedObject.hideFlags = HideFlags.DontSaveInEditor;
+		}
+#endif
 	}
 }
