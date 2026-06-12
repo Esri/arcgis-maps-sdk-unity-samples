@@ -11,6 +11,7 @@ using UnityEngine.UI;
 public sealed class PointCloudLayerDataLoader : MonoBehaviour
 {
 	private const string DefaultPointCloudSource = "https://tiles.arcgis.com/tiles/V6ZHFr6zdgNZuVG0/arcgis/rest/services/BARNEGAT_BAY_LiDAR_UTM/SceneServer";
+	//private const string DefaultPointCloudSource = "https://tiles.arcgis.com/tiles/N82JbI5EYtAkuUKU/arcgis/rest/services/oatlands_pc_rgb/SceneServer";
 
 	[SerializeField] private InputField sourceInput;
 	[SerializeField] private Button loadButton;

@@ -1,4 +1,10 @@
+using Esri.GameEngine.Layers;
+using Esri.GameEngine.Layers.PointCloud;
+using Esri.Unity;
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,8 +15,32 @@ using UnityEditor;
 [ExecuteAlways]
 public sealed class PointCloudFilterMockPanel : MonoBehaviour
 {
+	private enum FilterGroupKind
+	{
+		ClassCode,
+		Returns
+	}
+
+	private sealed class FilterOption
+	{
+		public string Label;
+		public double ClassCode;
+		public ArcGISPointCloudReturnsType ReturnType;
+		public Toggle Toggle;
+	}
+
+	private sealed class FilterGroupState
+	{
+		public FilterGroupKind Kind;
+		public string AttributeName;
+		public Toggle AllToggle;
+		public readonly List<FilterOption> Options = new List<FilterOption>();
+	}
+
 	[SerializeField] private Font font;
 	[SerializeField] private Sprite checkboxOutlineSprite;
+	[SerializeField] private PointCloudLayerDataLoader dataLoader;
+	[SerializeField] private bool logFilterDiagnostics;
 
 	private readonly Color accentColor = new Color(0.56f, 0.25f, 1f, 1f);
 	private readonly Color textColor = Color.white;
@@ -18,19 +48,34 @@ public sealed class PointCloudFilterMockPanel : MonoBehaviour
 	private readonly Color scrollbarTrackColor = new Color(0.28f, 0.28f, 0.28f, 0.82f);
 	private readonly Color scrollbarHandleColor = new Color(0.75f, 0.75f, 0.75f, 1f);
 
+	private readonly List<FilterGroupState> groups = new List<FilterGroupState>();
+
 	private RectTransform rectTransform;
 	private Coroutine runtimeRebuildCoroutine;
+	private ArcGISPointCloudLayer activeLayer;
+	private ArcGISCollection<ArcGISPointCloudFilter> activeFilterCollection;
+	private ArcGISCollection<double> activeClassCodeValues;
+	private ArcGISCollection<ArcGISPointCloudReturnsType> activeReturnsValues;
+	private ArcGISPointCloudValueFilter activeClassCodeFilter;
+	private ArcGISPointCloudReturnFilter activeReturnsFilter;
+	private bool subscribed;
+	private bool suppressToggleEvents;
 #if UNITY_EDITOR
 	private bool rebuildQueued;
 #endif
 
 	private void OnEnable()
 	{
+		FindReferences();
+		Subscribe();
+		activeLayer = Application.isPlaying && dataLoader ? dataLoader.LoadedLayer : null;
 		QueueBuild();
 	}
 
 	private void OnDisable()
 	{
+		Unsubscribe();
+
 		if (runtimeRebuildCoroutine != null)
 		{
 			StopCoroutine(runtimeRebuildCoroutine);
@@ -48,6 +93,42 @@ public sealed class PointCloudFilterMockPanel : MonoBehaviour
 
 	private void OnValidate()
 	{
+		FindReferences();
+		QueueBuild();
+	}
+
+	private void FindReferences()
+	{
+		if (!dataLoader)
+		{
+			dataLoader = GetComponentInParent<PointCloudLayerDataLoader>();
+		}
+	}
+
+	private void Subscribe()
+	{
+		if (subscribed || !dataLoader)
+		{
+			return;
+		}
+
+		dataLoader.LayerLoaded += HandleLayerLoaded;
+		subscribed = true;
+	}
+
+	private void Unsubscribe()
+	{
+		if (subscribed && dataLoader)
+		{
+			dataLoader.LayerLoaded -= HandleLayerLoaded;
+		}
+
+		subscribed = false;
+	}
+
+	private void HandleLayerLoaded(ArcGISPointCloudLayer layer)
+	{
+		activeLayer = layer;
 		QueueBuild();
 	}
 
@@ -133,48 +214,55 @@ public sealed class PointCloudFilterMockPanel : MonoBehaviour
 		}
 
 		ClearGeneratedChildren();
+		groups.Clear();
 
-		AddFilterGroup(
-			"Class Code",
-			new[]
-			{
-				"<all>",
-				"Ground",
-				"High vegetation",
-				"Unclassified",
-				"Building",
-				"Water",
-				"Low vegetation",
-				"Medium vegetation",
-				"Low point (noise)"
-			},
-			175f,
-			38f,
-			200f);
+		if (!Application.isPlaying || activeLayer == null)
+		{
+			return;
+		}
 
-		AddSeparator(-130f);
+		var classCodeAttribute = FindAttributeName(activeLayer, "CLASSCODE", "CLASSIFICATION", "CLASS");
+		var returnsAttribute = FindAttributeName(activeLayer, "RETURNS");
+		var hasClassCodeFilter = !string.IsNullOrEmpty(classCodeAttribute);
+		var hasReturnsFilter = !string.IsNullOrEmpty(returnsAttribute);
 
-		AddFilterGroup(
-			"Returns",
-			new[]
-			{
-				"<all>",
-				"First of many",
-				"Last",
-				"Last of many",
-				"Single",
-				"First return",
-				"Intermediate"
-			},
-			-190f,
-			-318f,
-			190f);
+		if (!hasClassCodeFilter && !hasReturnsFilter)
+		{
+			ClearActiveFilters();
+			return;
+		}
+
+		if (hasClassCodeFilter)
+		{
+			AddFilterGroup(FilterGroupKind.ClassCode, classCodeAttribute, "Class Code", CreateClassCodeOptions(), 175f, 38f, 200f);
+		}
+
+		if (hasClassCodeFilter && hasReturnsFilter)
+		{
+			AddSeparator(-130f);
+		}
+
+		if (hasReturnsFilter)
+		{
+			var titleY = hasClassCodeFilter ? -190f : 175f;
+			var viewportCenterY = hasClassCodeFilter ? -318f : 38f;
+			var viewportHeight = hasClassCodeFilter ? 190f : 200f;
+			AddFilterGroup(FilterGroupKind.Returns, returnsAttribute, "Returns", CreateReturnOptions(), titleY, viewportCenterY, viewportHeight);
+		}
+
+		ApplyFilters();
 	}
 
-	private void AddFilterGroup(string title, string[] options, float titleY, float viewportCenterY, float viewportHeight)
+	private void AddFilterGroup(FilterGroupKind kind, string attributeName, string title, FilterOption[] options, float titleY, float viewportCenterY, float viewportHeight)
 	{
 		const float rowSpacing = 48f;
-		var contentHeight = Mathf.Max(viewportHeight + 120f, options.Length * rowSpacing + 24f);
+		var rowCount = options.Length + 1;
+		var contentHeight = Mathf.Max(viewportHeight + 120f, rowCount * rowSpacing + 24f);
+		var state = new FilterGroupState
+		{
+			Kind = kind,
+			AttributeName = attributeName
+		};
 
 		AddText("Generated_FilterTitle_" + title, title, new Vector2(15f, titleY), new Vector2(560f, 48f), 30, TextAnchor.MiddleLeft, mutedTextColor, rectTransform);
 
@@ -185,12 +273,21 @@ public sealed class PointCloudFilterMockPanel : MonoBehaviour
 			contentHeight,
 			new Vector2(275f, viewportCenterY));
 
+		state.AllToggle = AddCheckbox("Generated_FilterCheckbox_" + title + "_All", new Vector2(-210f, contentHeight * 0.5f - rowSpacing * 0.5f), content);
+		AddText("Generated_FilterLabel_" + title + "_All", "<all>", new Vector2(30f, contentHeight * 0.5f - rowSpacing * 0.5f), new Vector2(410f, 42f), 28, TextAnchor.MiddleLeft, textColor, content);
+		state.AllToggle.onValueChanged.AddListener(isOn => HandleAllToggleChanged(state, isOn));
+
 		for (var i = 0; i < options.Length; i++)
 		{
-			var y = contentHeight * 0.5f - rowSpacing * 0.5f - i * rowSpacing;
-			AddCheckbox("Generated_FilterCheckbox_" + title + "_" + i, new Vector2(-210f, y), content);
-			AddText("Generated_FilterLabel_" + title + "_" + i, options[i], new Vector2(30f, y), new Vector2(410f, 42f), 28, TextAnchor.MiddleLeft, textColor, content);
+			var option = options[i];
+			var y = contentHeight * 0.5f - rowSpacing * 0.5f - (i + 1) * rowSpacing;
+			option.Toggle = AddCheckbox("Generated_FilterCheckbox_" + title + "_" + i, new Vector2(-210f, y), content);
+			option.Toggle.onValueChanged.AddListener(_ => HandleOptionToggleChanged(state));
+			state.Options.Add(option);
+			AddText("Generated_FilterLabel_" + title + "_" + i, option.Label, new Vector2(30f, y), new Vector2(410f, 42f), 28, TextAnchor.MiddleLeft, textColor, content);
 		}
+
+		groups.Add(state);
 	}
 
 	private RectTransform AddScrollArea(string name, Vector2 anchoredPosition, Vector2 size, float contentHeight, Vector2 scrollbarPosition)
@@ -308,7 +405,7 @@ public sealed class PointCloudFilterMockPanel : MonoBehaviour
 		return scrollbar;
 	}
 
-	private void AddCheckbox(string name, Vector2 anchoredPosition, Transform parent)
+	private Toggle AddCheckbox(string name, Vector2 anchoredPosition, Transform parent)
 	{
 		var go = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Toggle));
 		MarkGeneratedObject(go);
@@ -365,6 +462,7 @@ public sealed class PointCloudFilterMockPanel : MonoBehaviour
 		toggle.targetGraphic = hitArea;
 		toggle.graphic = fillImage;
 		toggle.isOn = true;
+		return toggle;
 	}
 
 	private void AddSeparator(float y)
@@ -411,6 +509,338 @@ public sealed class PointCloudFilterMockPanel : MonoBehaviour
 		textComponent.color = color;
 		textComponent.raycastTarget = false;
 		return textComponent;
+	}
+
+	private void HandleAllToggleChanged(FilterGroupState changedGroup, bool isOn)
+	{
+		if (suppressToggleEvents)
+		{
+			return;
+		}
+
+		suppressToggleEvents = true;
+
+		foreach (var option in changedGroup.Options)
+		{
+			if (option.Toggle)
+			{
+				option.Toggle.isOn = isOn;
+			}
+		}
+
+		if (changedGroup.Kind == FilterGroupKind.ClassCode && !isOn)
+		{
+			var returnsGroup = GetGroup(FilterGroupKind.Returns);
+			if (returnsGroup != null)
+			{
+				SetGroupSelection(returnsGroup, false);
+			}
+		}
+
+		suppressToggleEvents = false;
+		ApplyFilters();
+	}
+
+	private void HandleOptionToggleChanged(FilterGroupState changedGroup)
+	{
+		if (suppressToggleEvents)
+		{
+			return;
+		}
+
+		var allSelected = AreAllOptionsSelected(changedGroup);
+		var anySelected = IsAnyOptionSelected(changedGroup);
+		suppressToggleEvents = true;
+
+		if (changedGroup.AllToggle && changedGroup.AllToggle.isOn != allSelected)
+		{
+			changedGroup.AllToggle.isOn = allSelected;
+		}
+
+		if (changedGroup.Kind == FilterGroupKind.ClassCode && !anySelected)
+		{
+			var returnsGroup = GetGroup(FilterGroupKind.Returns);
+			if (returnsGroup != null)
+			{
+				SetGroupSelection(returnsGroup, false);
+			}
+		}
+
+		suppressToggleEvents = false;
+		ApplyFilters();
+	}
+
+	private void SetGroupSelection(FilterGroupState group, bool isOn)
+	{
+		if (group.AllToggle)
+		{
+			group.AllToggle.isOn = isOn;
+		}
+
+		foreach (var option in group.Options)
+		{
+			if (option.Toggle)
+			{
+				option.Toggle.isOn = isOn;
+			}
+		}
+	}
+
+	private void ApplyFilters()
+	{
+		if (!Application.isPlaying || activeLayer == null)
+		{
+			return;
+		}
+
+		try
+		{
+			activeFilterCollection = new ArcGISCollection<ArcGISPointCloudFilter>();
+			activeClassCodeValues = null;
+			activeReturnsValues = null;
+			activeClassCodeFilter = null;
+			activeReturnsFilter = null;
+
+			var classGroup = GetGroup(FilterGroupKind.ClassCode);
+			var returnsGroup = GetGroup(FilterGroupKind.Returns);
+
+			if (classGroup != null && !AreAllOptionsSelected(classGroup))
+			{
+				activeFilterCollection.Add(CreateClassCodeFilter(classGroup));
+			}
+
+			if (returnsGroup != null && !AreAllOptionsSelected(returnsGroup))
+			{
+				activeFilterCollection.Add(CreateReturnsFilter(returnsGroup));
+			}
+
+			activeLayer.Filters = activeFilterCollection;
+			LogFilterDiagnostics(classGroup, returnsGroup);
+		}
+		catch (Exception exception)
+		{
+			Debug.LogWarning("Failed to apply point cloud filters: " + exception.Message);
+		}
+	}
+
+	private ArcGISPointCloudValueFilter CreateClassCodeFilter(FilterGroupState group)
+	{
+		activeClassCodeValues = new ArcGISCollection<double>();
+		foreach (var option in group.Options)
+		{
+			if (option.Toggle && option.Toggle.isOn)
+			{
+				activeClassCodeValues.Add(option.ClassCode);
+			}
+		}
+
+		activeClassCodeFilter = new ArcGISPointCloudValueFilter(group.AttributeName, activeClassCodeValues, ArcGISPointCloudValueFilterMode.Include);
+		return activeClassCodeFilter;
+	}
+
+	private ArcGISPointCloudReturnFilter CreateReturnsFilter(FilterGroupState group)
+	{
+		activeReturnsValues = new ArcGISCollection<ArcGISPointCloudReturnsType>();
+		foreach (var option in group.Options)
+		{
+			if (option.Toggle && option.Toggle.isOn)
+			{
+				activeReturnsValues.Add(option.ReturnType);
+			}
+		}
+
+		activeReturnsFilter = new ArcGISPointCloudReturnFilter(group.AttributeName, activeReturnsValues);
+		return activeReturnsFilter;
+	}
+
+	private void ClearActiveFilters()
+	{
+		if (activeLayer != null)
+		{
+			activeFilterCollection = new ArcGISCollection<ArcGISPointCloudFilter>();
+			activeLayer.Filters = activeFilterCollection;
+		}
+
+		activeClassCodeValues = null;
+		activeReturnsValues = null;
+		activeClassCodeFilter = null;
+		activeReturnsFilter = null;
+	}
+
+	private void LogFilterDiagnostics(FilterGroupState classGroup, FilterGroupState returnsGroup)
+	{
+		if (!logFilterDiagnostics)
+		{
+			return;
+		}
+
+		var filterCount = activeFilterCollection == null ? 0ul : activeFilterCollection.GetSize();
+		var classCount = activeClassCodeValues == null ? 0ul : activeClassCodeValues.GetSize();
+		var returnsCount = activeReturnsValues == null ? 0ul : activeReturnsValues.GetSize();
+		Debug.LogFormat(
+			"Point cloud filters applied. filters={0}, classAttribute={1}, selectedClasses={2}, returnsAttribute={3}, selectedReturns={4}",
+			filterCount,
+			classGroup == null ? "<none>" : classGroup.AttributeName,
+			classCount,
+			returnsGroup == null ? "<none>" : returnsGroup.AttributeName,
+			returnsCount);
+	}
+
+	private FilterGroupState GetGroup(FilterGroupKind kind)
+	{
+		foreach (var group in groups)
+		{
+			if (group.Kind == kind)
+			{
+				return group;
+			}
+		}
+
+		return null;
+	}
+
+	private static bool AreAllOptionsSelected(FilterGroupState group)
+	{
+		if (group == null || group.Options.Count == 0)
+		{
+			return false;
+		}
+
+		foreach (var option in group.Options)
+		{
+			if (!option.Toggle || !option.Toggle.isOn)
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	private static bool IsAnyOptionSelected(FilterGroupState group)
+	{
+		if (group == null)
+		{
+			return false;
+		}
+
+		foreach (var option in group.Options)
+		{
+			if (option.Toggle && option.Toggle.isOn)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private static FilterOption[] CreateClassCodeOptions()
+	{
+		var options = new FilterOption[19];
+		for (var classCode = 0; classCode < options.Length; classCode++)
+		{
+			options[classCode] = new FilterOption
+			{
+				Label = GetClassCodeLabel(classCode),
+				ClassCode = classCode
+			};
+		}
+
+		return options;
+	}
+
+	private static FilterOption[] CreateReturnOptions()
+	{
+		return new[]
+		{
+			new FilterOption { Label = "First of many", ReturnType = ArcGISPointCloudReturnsType.FirstOfMany },
+			new FilterOption { Label = "Last", ReturnType = ArcGISPointCloudReturnsType.Last },
+			new FilterOption { Label = "Last of many", ReturnType = ArcGISPointCloudReturnsType.LastOfMany },
+			new FilterOption { Label = "Single", ReturnType = ArcGISPointCloudReturnsType.Single }
+		};
+	}
+
+	private static string GetClassCodeLabel(int classCode)
+	{
+		switch (classCode)
+		{
+			case 0:
+				return "Created, never classified";
+			case 1:
+				return "Unclassified";
+			case 2:
+				return "Ground";
+			case 3:
+				return "Low vegetation";
+			case 4:
+				return "Medium vegetation";
+			case 5:
+				return "High vegetation";
+			case 6:
+				return "Building";
+			case 7:
+				return "Low point (noise)";
+			case 8:
+				return "Model key-point";
+			case 9:
+				return "Water";
+			case 10:
+				return "Rail";
+			case 11:
+				return "Road surface";
+			case 12:
+				return "Overlap points";
+			case 13:
+				return "Wire guard";
+			case 14:
+				return "Wire conductor";
+			case 15:
+				return "Transmission tower";
+			case 16:
+				return "Wire connector";
+			case 17:
+				return "Bridge deck";
+			case 18:
+				return "High noise";
+			default:
+				return "Class " + classCode.ToString(CultureInfo.InvariantCulture);
+		}
+	}
+
+	private static string FindAttributeName(ArcGISPointCloudLayer layer, params string[] candidates)
+	{
+		if (layer == null || layer.Attributes == null)
+		{
+			return "";
+		}
+
+		var attributes = layer.Attributes;
+		for (ulong i = 0; i < attributes.GetSize(); i++)
+		{
+			var attribute = attributes.At(i);
+			if (attribute == null)
+			{
+				continue;
+			}
+
+			var name = attribute.Name;
+			var normalizedName = NormalizeName(name);
+			foreach (var candidate in candidates)
+			{
+				if (normalizedName == candidate || normalizedName.Contains(candidate))
+				{
+					return name;
+				}
+			}
+		}
+
+		return "";
+	}
+
+	private static string NormalizeName(string name)
+	{
+		return string.IsNullOrEmpty(name) ? "" : name.Replace("_", "").Replace("-", "").Replace(" ", "").ToUpperInvariant();
 	}
 
 	private void ClearGeneratedChildren()
