@@ -267,11 +267,11 @@ public sealed class PointCloudFilterMockPanel : MonoBehaviour
 			AttributeName = attributeName
 		};
 
-		AddText("Generated_FilterTitle_" + title, title, new Vector2(15f, titleY), new Vector2(560f, 48f), 30, TextAnchor.MiddleLeft, mutedTextColor, rectTransform);
+		AddText("Generated_FilterTitle_" + title, title, new Vector2(-15f, titleY), new Vector2(560f, 48f), 30, TextAnchor.MiddleLeft, mutedTextColor, rectTransform);
 
 		var content = AddScrollArea(
 			"Generated_FilterScroll_" + title,
-			new Vector2(-35f, viewportCenterY),
+			new Vector2(-70f, viewportCenterY),
 			new Vector2(480f, viewportHeight),
 			contentHeight,
 			new Vector2(275f, viewportCenterY));

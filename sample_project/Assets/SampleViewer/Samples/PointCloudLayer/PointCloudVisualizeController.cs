@@ -57,6 +57,8 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 	[SerializeField] private RectTransform rendererLegendRoot;
 	[SerializeField] private Font rendererLegendFont;
 	[SerializeField] private Vector2 rendererLegendPanelOffset = new Vector2(-140f, 80f);
+	[SerializeField] private Button instructionOpenButton;
+	[SerializeField] private Button instructionCloseButton;
 
 	private const double ElevationLow = -1.5d;
 	private const double ElevationMid = 1.5d;
@@ -67,7 +69,9 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 
 	private bool subscribedToLoader;
 	private bool subscribedToToggles;
+	private bool subscribedToInstructionButtons;
 	private bool suppressToggleEvents;
+	private bool instructionMenuActive;
 	private AvailableAttributes availableAttributes;
 	private ArcGISPointCloudLayer activeLayer;
 	private ArcGISPointCloudRenderer activeRenderer;
@@ -81,6 +85,7 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 	private ClassRendererInfo classRendererInfo;
 	private Image legendRootBackground;
 	private CanvasGroup legendCanvasGroup;
+	private CanvasGroup settingsMenuCanvasGroup;
 	private RectTransform legendPanelRect;
 	private Sprite legendCircleSprite;
 	private Sprite legendTriangleSprite;
@@ -174,6 +179,18 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 			rendererLegendFont = Resources.GetBuiltinResource<Font>("Arial.ttf");
 		}
 
+		if (!instructionOpenButton)
+		{
+			var openButtonObject = GameObject.Find("Info_iCon");
+			instructionOpenButton = openButtonObject ? openButtonObject.GetComponent<Button>() : null;
+		}
+
+		if (!instructionCloseButton)
+		{
+			var closeButtonObject = GameObject.Find("Button_Cancel");
+			instructionCloseButton = closeButtonObject ? closeButtonObject.GetComponent<Button>() : null;
+		}
+
 		EnsureLegendRoot();
 	}
 
@@ -185,42 +202,56 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 			subscribedToLoader = true;
 		}
 
-		if (subscribedToToggles)
+		if (!subscribedToToggles)
 		{
-			return;
+			if (colorModulationToggle)
+			{
+				colorModulationToggle.onValueChanged.AddListener(HandleColorModulationChanged);
+			}
+
+			if (rgbToggle)
+			{
+				rgbToggle.onValueChanged.AddListener(HandleRendererToggleChanged);
+			}
+
+			if (classToggle)
+			{
+				classToggle.onValueChanged.AddListener(HandleRendererToggleChanged);
+			}
+
+			if (elevationToggle)
+			{
+				elevationToggle.onValueChanged.AddListener(HandleRendererToggleChanged);
+			}
+
+			if (intensityToggle)
+			{
+				intensityToggle.onValueChanged.AddListener(HandleRendererToggleChanged);
+			}
+
+			if (visualizeTab)
+			{
+				visualizeTab.onValueChanged.AddListener(HandleVisualizeTabChanged);
+			}
+
+			subscribedToToggles = true;
 		}
 
-		if (colorModulationToggle)
+		if (!subscribedToInstructionButtons)
 		{
-			colorModulationToggle.onValueChanged.AddListener(HandleColorModulationChanged);
+			if (instructionOpenButton)
+			{
+				instructionOpenButton.onClick.AddListener(HandleInstructionMenuOpened);
+			}
+
+			if (instructionCloseButton)
+			{
+				instructionCloseButton.onClick.AddListener(HandleInstructionMenuClosed);
+			}
+
+			subscribedToInstructionButtons = true;
 		}
 
-		if (rgbToggle)
-		{
-			rgbToggle.onValueChanged.AddListener(HandleRendererToggleChanged);
-		}
-
-		if (classToggle)
-		{
-			classToggle.onValueChanged.AddListener(HandleRendererToggleChanged);
-		}
-
-		if (elevationToggle)
-		{
-			elevationToggle.onValueChanged.AddListener(HandleRendererToggleChanged);
-		}
-
-		if (intensityToggle)
-		{
-			intensityToggle.onValueChanged.AddListener(HandleRendererToggleChanged);
-		}
-
-		if (visualizeTab)
-		{
-			visualizeTab.onValueChanged.AddListener(HandleVisualizeTabChanged);
-		}
-
-		subscribedToToggles = true;
 	}
 
 	private void Unsubscribe()
@@ -265,6 +296,22 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 
 		subscribedToLoader = false;
 		subscribedToToggles = false;
+
+		if (subscribedToInstructionButtons)
+		{
+			if (instructionOpenButton)
+			{
+				instructionOpenButton.onClick.RemoveListener(HandleInstructionMenuOpened);
+			}
+
+			if (instructionCloseButton)
+			{
+				instructionCloseButton.onClick.RemoveListener(HandleInstructionMenuClosed);
+			}
+		}
+
+		subscribedToInstructionButtons = false;
+
 	}
 
 	private void HandleLayerLoaded(ArcGISPointCloudLayer layer)
@@ -295,6 +342,47 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 	private void HandleVisualizeTabChanged(bool _)
 	{
 		RefreshRendererLegend();
+	}
+
+	private void HandleInstructionMenuOpened()
+	{
+		instructionMenuActive = true;
+		ApplyInstructionOverlayVisibility();
+	}
+
+	private void HandleInstructionMenuClosed()
+	{
+		instructionMenuActive = false;
+		ApplyInstructionOverlayVisibility();
+	}
+
+	private void ApplyInstructionOverlayVisibility()
+	{
+		EnsureSettingsMenuCanvasGroup();
+
+		if (settingsMenuCanvasGroup)
+		{
+			settingsMenuCanvasGroup.alpha = instructionMenuActive ? 0f : 1f;
+			settingsMenuCanvasGroup.interactable = !instructionMenuActive;
+			settingsMenuCanvasGroup.blocksRaycasts = !instructionMenuActive;
+		}
+
+		RefreshRendererLegend();
+	}
+
+	private void EnsureSettingsMenuCanvasGroup()
+	{
+		if (settingsMenuCanvasGroup)
+		{
+			return;
+		}
+
+		settingsMenuCanvasGroup = GetComponent<CanvasGroup>();
+
+		if (!settingsMenuCanvasGroup && Application.isPlaying)
+		{
+			settingsMenuCanvasGroup = gameObject.AddComponent<CanvasGroup>();
+		}
 	}
 
 	private void HandleColorModulationChanged(bool _)
@@ -711,7 +799,7 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 			return;
 		}
 
-		var shouldShow = visualizeTab && visualizeTab.isOn;
+		var shouldShow = visualizeTab && visualizeTab.isOn && !instructionMenuActive;
 		legendCanvasGroup.alpha = shouldShow ? 1f : 0f;
 		legendCanvasGroup.interactable = shouldShow;
 		legendCanvasGroup.blocksRaycasts = shouldShow;
@@ -752,7 +840,7 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 			default:
 				CreateLegendPanel(500f, 110f);
 				AddLegendAccent();
-				AddLegendText("Generated_NoLegend", "No legend", Vector2.zero, new Vector2(430f, 60f), 34, TextAnchor.MiddleCenter, legendTextColor);
+				AddLegendText("Generated_NoLegend", "No legend", new Vector2(-130f, 0f), new Vector2(430f, 60f), 34, TextAnchor.MiddleCenter, legendTextColor);
 				break;
 		}
 	}
