@@ -59,6 +59,8 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 	[SerializeField] private Vector2 rendererLegendPanelOffset = new Vector2(-140f, 80f);
 	[SerializeField] private Button instructionOpenButton;
 	[SerializeField] private Button instructionCloseButton;
+	[SerializeField] private Button foldButton;
+	[SerializeField] private Button gearButton;
 
 	private const double ElevationLow = -1.5d;
 	private const double ElevationMid = 1.5d;
@@ -70,8 +72,10 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 	private bool subscribedToLoader;
 	private bool subscribedToToggles;
 	private bool subscribedToInstructionButtons;
+	private bool subscribedToFoldButtons;
 	private bool suppressToggleEvents;
 	private bool instructionMenuActive;
+	private bool settingsMenuCollapsed;
 	private AvailableAttributes availableAttributes;
 	private ArcGISPointCloudLayer activeLayer;
 	private ArcGISPointCloudRenderer activeRenderer;
@@ -191,7 +195,18 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 			instructionCloseButton = closeButtonObject ? closeButtonObject.GetComponent<Button>() : null;
 		}
 
+		if (!foldButton)
+		{
+			foldButton = transform.Find("FoldButton")?.GetComponent<Button>();
+		}
+
+		if (!gearButton)
+		{
+			gearButton = FindChildComponent<Button>(transform.root, "Gear_iCon");
+		}
+
 		EnsureLegendRoot();
+		ApplyFoldVisibility();
 	}
 
 	private void Subscribe()
@@ -250,6 +265,21 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 			}
 
 			subscribedToInstructionButtons = true;
+		}
+
+		if (!subscribedToFoldButtons)
+		{
+			if (foldButton)
+			{
+				foldButton.onClick.AddListener(HandleFoldButtonClicked);
+			}
+
+			if (gearButton)
+			{
+				gearButton.onClick.AddListener(HandleGearButtonClicked);
+			}
+
+			subscribedToFoldButtons = true;
 		}
 
 	}
@@ -312,6 +342,21 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 
 		subscribedToInstructionButtons = false;
 
+		if (subscribedToFoldButtons)
+		{
+			if (foldButton)
+			{
+				foldButton.onClick.RemoveListener(HandleFoldButtonClicked);
+			}
+
+			if (gearButton)
+			{
+				gearButton.onClick.RemoveListener(HandleGearButtonClicked);
+			}
+		}
+
+		subscribedToFoldButtons = false;
+
 	}
 
 	private void HandleLayerLoaded(ArcGISPointCloudLayer layer)
@@ -356,15 +401,48 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 		ApplyInstructionOverlayVisibility();
 	}
 
+	private void HandleFoldButtonClicked()
+	{
+		SetSettingsMenuCollapsed(true);
+	}
+
+	private void HandleGearButtonClicked()
+	{
+		SetSettingsMenuCollapsed(false);
+	}
+
+	private void SetSettingsMenuCollapsed(bool collapsed)
+	{
+		if (settingsMenuCollapsed == collapsed)
+		{
+			return;
+		}
+
+		settingsMenuCollapsed = collapsed;
+		ApplyFoldVisibility();
+	}
+
 	private void ApplyInstructionOverlayVisibility()
+	{
+		ApplyFoldVisibility();
+	}
+
+	private void ApplyFoldVisibility()
 	{
 		EnsureSettingsMenuCanvasGroup();
 
+		var showSettingsMenu = !instructionMenuActive && !settingsMenuCollapsed;
+
 		if (settingsMenuCanvasGroup)
 		{
-			settingsMenuCanvasGroup.alpha = instructionMenuActive ? 0f : 1f;
-			settingsMenuCanvasGroup.interactable = !instructionMenuActive;
-			settingsMenuCanvasGroup.blocksRaycasts = !instructionMenuActive;
+			settingsMenuCanvasGroup.alpha = showSettingsMenu ? 1f : 0f;
+			settingsMenuCanvasGroup.interactable = showSettingsMenu;
+			settingsMenuCanvasGroup.blocksRaycasts = showSettingsMenu;
+		}
+
+		if (gearButton)
+		{
+			gearButton.gameObject.SetActive(settingsMenuCollapsed && !instructionMenuActive);
 		}
 
 		RefreshRendererLegend();
@@ -383,6 +461,30 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 		{
 			settingsMenuCanvasGroup = gameObject.AddComponent<CanvasGroup>();
 		}
+	}
+
+	private static T FindChildComponent<T>(Transform root, string objectName) where T : Component
+	{
+		if (!root)
+		{
+			return null;
+		}
+
+		if (root.name == objectName)
+		{
+			return root.GetComponent<T>();
+		}
+
+		for (var i = 0; i < root.childCount; i++)
+		{
+			var result = FindChildComponent<T>(root.GetChild(i), objectName);
+			if (result)
+			{
+				return result;
+			}
+		}
+
+		return null;
 	}
 
 	private void HandleColorModulationChanged(bool _)
@@ -799,7 +901,7 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 			return;
 		}
 
-		var shouldShow = visualizeTab && visualizeTab.isOn && !instructionMenuActive;
+		var shouldShow = visualizeTab && visualizeTab.isOn && !instructionMenuActive && !settingsMenuCollapsed;
 		legendCanvasGroup.alpha = shouldShow ? 1f : 0f;
 		legendCanvasGroup.interactable = shouldShow;
 		legendCanvasGroup.blocksRaycasts = shouldShow;
