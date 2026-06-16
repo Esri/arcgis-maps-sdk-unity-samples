@@ -733,8 +733,8 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 			case RendererChoice.Class:
 				CreateLegendPanel(500f, 440f);
 				AddLegendAccent();
-				AddLegendTitle(150f);
-				AddLegendText("Generated_ClassHeader", "Class Code", new Vector2(80f, 70f), new Vector2(430f, 40f), 28, TextAnchor.MiddleLeft, legendTextColor);
+				AddLegendTitle(new Vector2(-20f, 150f), new Vector2(360f, 56f), TextAnchor.MiddleLeft);
+				AddLegendText("Generated_ClassHeader", "Class Code", new Vector2(20f, 80f), new Vector2(360f, 40f), 28, TextAnchor.MiddleLeft, legendTextColor);
 				AddClassLegendRows();
 				break;
 			case RendererChoice.Elevation:
@@ -790,6 +790,11 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 		AddLegendText("Generated_Title", "Tallinn punktipilv", new Vector2(0f, y), new Vector2(430f, 56f), 36, TextAnchor.MiddleCenter, legendMutedTextColor);
 	}
 
+	private void AddLegendTitle(Vector2 anchoredPosition, Vector2 size, TextAnchor alignment)
+	{
+		AddLegendText("Generated_Title", "Tallinn punktipilv", anchoredPosition, size, 36, alignment, legendMutedTextColor);
+	}
+
 	private void AddClassLegendRows()
 	{
 		if (classRendererInfo == null || classRendererInfo.Values.Count == 0)
@@ -799,9 +804,9 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 		}
 
 		const float rowSpacing = 36f;
-		const float viewportHeight = 250f;
+		const float viewportHeight = 220f;
 		var contentHeight = Mathf.Max(viewportHeight, classRendererInfo.Values.Count * rowSpacing);
-		var content = AddClassLegendScrollArea(new Vector2(25f, -82f), new Vector2(340f, viewportHeight), contentHeight);
+		var content = AddClassLegendScrollArea(new Vector2(10f, -60f), new Vector2(360f, viewportHeight), contentHeight);
 
 		for (var i = 0; i < classRendererInfo.Values.Count; i++)
 		{
@@ -810,8 +815,8 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 			var color = new Color32(value.Red, value.Green, value.Blue, value.Alpha);
 			var label = string.IsNullOrEmpty(value.Label) ? string.Join(", ", value.Values) : value.Label;
 
-			AddLegendCircle("Generated_ClassDot_" + i, new Vector2(-145f, y), new Vector2(26f, 26f), color, content);
-			AddLegendText("Generated_ClassLabel_" + i, label, new Vector2(40f, y), new Vector2(260f, 38f), 26, TextAnchor.MiddleLeft, legendTextColor, content);
+			AddLegendCircle("Generated_ClassDot_" + i, new Vector2(-155f, y), new Vector2(26f, 26f), color, content);
+			AddLegendText("Generated_ClassLabel_" + i, label, new Vector2(25f, y), new Vector2(300f, 38f), 26, TextAnchor.MiddleLeft, legendTextColor, content);
 		}
 	}
 
@@ -854,7 +859,7 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 		contentRect.anchoredPosition = Vector2.zero;
 		contentRect.sizeDelta = new Vector2(0f, contentHeight);
 
-		var scrollbar = AddClassLegendScrollbar(new Vector2(205f, -82f), new Vector2(28f, size.y));
+		var scrollbar = AddClassLegendScrollbar(new Vector2(210f, -60f), new Vector2(28f, size.y));
 
 		var scrollRect = scrollRoot.GetComponent<ScrollRect>();
 		scrollRect.content = contentRect;

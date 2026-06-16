@@ -1514,7 +1514,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -500, y: -412}
+  m_AnchoredPosition: {x: -511, y: -412}
   m_SizeDelta: {x: 750, y: 670}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &742824847
@@ -4166,7 +4166,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
+  m_Children: []
   m_Father: {fileID: 659585255}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -4188,6 +4188,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   font: {fileID: 12800000, guid: e6fe47876853e974eaa14e1eb6a84372, type: 3}
   checkboxOutlineSprite: {fileID: 21300000, guid: e57e391bdb70226428c29572769ca462, type: 3}
+  dataLoader: {fileID: 914500000}
+  logFilterDiagnostics: 0
 --- !u!1 &914000000
 GameObject:
   m_ObjectHideFlags: 0
@@ -4403,7 +4405,7 @@ MonoBehaviour:
   statusText: {fileID: 914600073}
   loadTimeoutSeconds: 30
   loadPollSeconds: 0.25
-  defaultSource: https://tiles.arcgis.com/tiles/V6ZHFr6zdgNZuVG0/arcgis/rest/services/BARNEGAT_BAY_LiDAR_UTM/SceneServer
+  defaultSource: https://www.arcgis.com/home/item.html?id=93c83277e8c34ea2ab38f2e1eb1e0d63
   loadDefaultOnStart: 1
 --- !u!1 &914546757
 GameObject:
@@ -4754,7 +4756,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.95, g: 0.95, b: 0.95, a: 1}
   m_CustomCaretColor: 1
   m_SelectionColor: {r: 0.56, g: 0.25, b: 1, a: 0.35}
-  m_Text: https://tiles.arcgis.com/tiles/V6ZHFr6zdgNZuVG0/arcgis/rest/services/BARNEGAT_BAY_LiDAR_UTM/SceneServer
+  m_Text: https://www.arcgis.com/home/item.html?id=93c83277e8c34ea2ab38f2e1eb1e0d63
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 2
   m_ReadOnly: 0
@@ -4837,7 +4839,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: https://tiles.arcgis.com/tiles/V6ZHFr6zdgNZuVG0/arcgis/rest/services/BARNEGAT_BAY_LiDAR_UTM/SceneServer
+  m_Text: https://www.arcgis.com/home/item.html?id=93c
 --- !u!1 &914600040
 GameObject:
   m_ObjectHideFlags: 0
@@ -4890,7 +4892,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 914600040}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
@@ -4977,14 +4979,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.56, g: 0.25, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 429fb8d54e603c445b056c7081ec6c0f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5929,7 +5931,7 @@ MonoBehaviour:
   visualizeTab: {fileID: 379465458}
   rendererLegendRoot: {fileID: 912000001}
   rendererLegendFont: {fileID: 12800000, guid: e6fe47876853e974eaa14e1eb6a84372, type: 3}
-  rendererLegendPanelOffset: {x: -140, y: 80}
+  rendererLegendPanelOffset: {x: -40, y: 80}
 --- !u!1 &959710661
 GameObject:
   m_ObjectHideFlags: 0
@@ -7115,7 +7117,7 @@ MonoBehaviour:
   layers:
   - Name: BARNEGAT_BAY_LiDAR_UTM
     Type: 10
-    Source: https://www.arcgis.com/home/item.html?id=fc3f4a4919394808830cd11df4631a54
+    Source: https://www.arcgis.com/home/item.html?id=93c83277e8c34ea2ab38f2e1eb1e0d63
     OccludeSurface: 0
     Opacity: 0
     IsVisible: 1

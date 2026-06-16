@@ -232,21 +232,23 @@ public sealed class PointCloudFilterMockPanel : MonoBehaviour
 			return;
 		}
 
+		const float filterPanelYOffset = -35f;
+
 		if (hasClassCodeFilter)
 		{
-			AddFilterGroup(FilterGroupKind.ClassCode, classCodeAttribute, "Class Code", CreateClassCodeOptions(), 175f, 38f, 200f);
+			AddFilterGroup(FilterGroupKind.ClassCode, classCodeAttribute, "Class Code", CreateClassCodeOptions(), 175f + filterPanelYOffset, 38f + filterPanelYOffset, 212f);
 		}
 
 		if (hasClassCodeFilter && hasReturnsFilter)
 		{
-			AddSeparator(-130f);
+			AddSeparator(-105f + filterPanelYOffset);
 		}
 
 		if (hasReturnsFilter)
 		{
-			var titleY = hasClassCodeFilter ? -190f : 175f;
-			var viewportCenterY = hasClassCodeFilter ? -318f : 38f;
-			var viewportHeight = hasClassCodeFilter ? 190f : 200f;
+			var titleY = (hasClassCodeFilter ? -150f : 175f) + filterPanelYOffset;
+			var viewportCenterY = (hasClassCodeFilter ? -270f : 38f) + filterPanelYOffset;
+			var viewportHeight = hasClassCodeFilter ? 180f : 210f;
 			AddFilterGroup(FilterGroupKind.Returns, returnsAttribute, "Returns", CreateReturnOptions(), titleY, viewportCenterY, viewportHeight);
 		}
 
@@ -255,9 +257,10 @@ public sealed class PointCloudFilterMockPanel : MonoBehaviour
 
 	private void AddFilterGroup(FilterGroupKind kind, string attributeName, string title, FilterOption[] options, float titleY, float viewportCenterY, float viewportHeight)
 	{
-		const float rowSpacing = 48f;
+		const float rowSpacing = 44f;
+		const float verticalPadding = 0f;
 		var rowCount = options.Length + 1;
-		var contentHeight = Mathf.Max(viewportHeight + 120f, rowCount * rowSpacing + 24f);
+		var contentHeight = Mathf.Max(viewportHeight, rowCount * rowSpacing + verticalPadding * 2f);
 		var state = new FilterGroupState
 		{
 			Kind = kind,
@@ -273,14 +276,15 @@ public sealed class PointCloudFilterMockPanel : MonoBehaviour
 			contentHeight,
 			new Vector2(275f, viewportCenterY));
 
-		state.AllToggle = AddCheckbox("Generated_FilterCheckbox_" + title + "_All", new Vector2(-210f, contentHeight * 0.5f - rowSpacing * 0.5f), content);
-		AddText("Generated_FilterLabel_" + title + "_All", "<all>", new Vector2(30f, contentHeight * 0.5f - rowSpacing * 0.5f), new Vector2(410f, 42f), 28, TextAnchor.MiddleLeft, textColor, content);
+		var allRowY = contentHeight * 0.5f - verticalPadding - rowSpacing * 0.5f;
+		state.AllToggle = AddCheckbox("Generated_FilterCheckbox_" + title + "_All", new Vector2(-210f, allRowY), content);
+		AddText("Generated_FilterLabel_" + title + "_All", "<all>", new Vector2(30f, allRowY), new Vector2(410f, 42f), 28, TextAnchor.MiddleLeft, textColor, content);
 		state.AllToggle.onValueChanged.AddListener(isOn => HandleAllToggleChanged(state, isOn));
 
 		for (var i = 0; i < options.Length; i++)
 		{
 			var option = options[i];
-			var y = contentHeight * 0.5f - rowSpacing * 0.5f - (i + 1) * rowSpacing;
+			var y = allRowY - (i + 1) * rowSpacing;
 			option.Toggle = AddCheckbox("Generated_FilterCheckbox_" + title + "_" + i, new Vector2(-210f, y), content);
 			option.Toggle.onValueChanged.AddListener(_ => HandleOptionToggleChanged(state));
 			state.Options.Add(option);
