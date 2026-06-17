@@ -2116,7 +2116,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 16
+  m_text: 4
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e59fb78ae467b9446bad6955a0dd0766, type: 2}
   m_sharedMaterial: {fileID: 8862657535182535335, guid: e59fb78ae467b9446bad6955a0dd0766, type: 2}
@@ -2377,7 +2377,7 @@ MonoBehaviour:
     content:
     - {fileID: 913000000}
     - {fileID: 914700200}
-    backgroundBottomExtension: 440
+    backgroundBottomExtension: 380
 --- !u!1 &910300010
 GameObject:
   m_ObjectHideFlags: 0
@@ -2832,7 +2832,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_IsOn: 0
+  m_IsOn: 1
 --- !u!1 &910300110
 GameObject:
   m_ObjectHideFlags: 0
@@ -3148,7 +3148,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_IsOn: 1
+  m_IsOn: 0
 --- !u!1 &910300210
 GameObject:
   m_ObjectHideFlags: 0
@@ -4406,7 +4406,7 @@ MonoBehaviour:
   statusText: {fileID: 914600073}
   loadTimeoutSeconds: 30
   loadPollSeconds: 0.25
-  defaultSource: https://www.arcgis.com/home/item.html?id=93c83277e8c34ea2ab38f2e1eb1e0d63
+  defaultSource: https://tiles.arcgis.com/tiles/V6ZHFr6zdgNZuVG0/arcgis/rest/services/BARNEGAT_BAY_LiDAR_UTM/SceneServer
   loadDefaultOnStart: 1
 --- !u!1 &914546757
 GameObject:
@@ -4757,7 +4757,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.95, g: 0.95, b: 0.95, a: 1}
   m_CustomCaretColor: 1
   m_SelectionColor: {r: 0.56, g: 0.25, b: 1, a: 0.35}
-  m_Text: https://www.arcgis.com/home/item.html?id=93c83277e8c34ea2ab38f2e1eb1e0d63
+  m_Text: https://tiles.arcgis.com/tiles/V6ZHFr6zdgNZuVG0/arcgis/rest/services/BARNEGAT_BAY_LiDAR_UTM/SceneServer
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 2
   m_ReadOnly: 0
@@ -4840,7 +4840,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: https://www.arcgis.com/home/item.html?id=93c8
+  m_Text: https://tiles.arcgis.com/tiles/V6ZHFr6zdgNZuV
 --- !u!1 &914600040
 GameObject:
   m_ObjectHideFlags: 0
@@ -5697,7 +5697,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -700}
+  m_AnchoredPosition: {x: 0, y: -630}
   m_SizeDelta: {x: 590, y: 84}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &914700202
@@ -6135,7 +6135,7 @@ MonoBehaviour:
   m_MinValue: 2
   m_MaxValue: 16
   m_WholeNumbers: 1
-  m_Value: 16
+  m_Value: 4
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -7435,53 +7435,7 @@ MonoBehaviour:
       x: 0
       y: 0
     UseOriginAsCenter: 0
-  layers:
-  - Name: BARNEGAT_BAY_LiDAR_UTM
-    Type: 10
-    Source: https://www.arcgis.com/home/item.html?id=93c83277e8c34ea2ab38f2e1eb1e0d63
-    OccludeSurface: 0
-    Opacity: 0
-    IsVisible: 1
-    Authentication:
-      ConfigurationIndex: 0
-    AuthenticationType: 0
-    BuildingSceneLayerFilter:
-      ActiveBuildingAttributeFilterIndex: 0
-      BuildingAttributeFilters: []
-      IsBuildingAttributeFilterEnabled: 0
-      IsBuildingDisciplinesCategoriesFilterEnabled: 0
-      EnabledCategories: 
-      EnabledDisciplines: 
-    MeshModifications:
-      IsEnabled: 0
-      MeshModifications: []
-    SpatialFeatureFilter:
-      IsEnabled: 0
-      Polygons: []
-      Type: 0
-  - Name: pcl
-    Type: 10
-    Source: https://tiles.arcgis.com/tiles/N82JbI5EYtAkuUKU/arcgis/rest/services/oatlands_pc_rgb/SceneServer
-    OccludeSurface: 1
-    Opacity: 1
-    IsVisible: 1
-    Authentication:
-      ConfigurationIndex: 0
-    AuthenticationType: 1
-    BuildingSceneLayerFilter:
-      ActiveBuildingAttributeFilterIndex: 0
-      BuildingAttributeFilters: []
-      IsBuildingAttributeFilterEnabled: 0
-      IsBuildingDisciplinesCategoriesFilterEnabled: 0
-      EnabledCategories: 
-      EnabledDisciplines: 
-    MeshModifications:
-      IsEnabled: 0
-      MeshModifications: []
-    SpatialFeatureFilter:
-      IsEnabled: 0
-      Polygons: []
-      Type: 0
+  layers: []
   originPosition:
     X: -122.4783
     Y: 37.8199

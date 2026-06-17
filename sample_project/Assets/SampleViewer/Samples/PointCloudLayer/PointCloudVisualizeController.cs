@@ -54,6 +54,7 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 	[SerializeField] private Toggle elevationToggle;
 	[SerializeField] private Toggle intensityToggle;
 	[SerializeField] private Toggle visualizeTab;
+	[SerializeField] private Toggle filterTab;
 	[SerializeField] private RectTransform rendererLegendRoot;
 	[SerializeField] private Font rendererLegendFont;
 	[SerializeField] private Vector2 rendererLegendPanelOffset = new Vector2(-140f, 80f);
@@ -172,6 +173,11 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 			visualizeTab = transform.Find("Tab/VisualizeToggle")?.GetComponent<Toggle>();
 		}
 
+		if (!filterTab)
+		{
+			filterTab = transform.Find("Tab/FilterToggle")?.GetComponent<Toggle>();
+		}
+
 		if (!rendererLegendRoot)
 		{
 			var legendObject = GameObject.Find("RendererLegendPanel");
@@ -249,6 +255,11 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 				visualizeTab.onValueChanged.AddListener(HandleVisualizeTabChanged);
 			}
 
+			if (filterTab)
+			{
+				filterTab.onValueChanged.AddListener(HandleFilterTabChanged);
+			}
+
 			subscribedToToggles = true;
 		}
 
@@ -322,6 +333,11 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 			{
 				visualizeTab.onValueChanged.RemoveListener(HandleVisualizeTabChanged);
 			}
+
+			if (filterTab)
+			{
+				filterTab.onValueChanged.RemoveListener(HandleFilterTabChanged);
+			}
 		}
 
 		subscribedToLoader = false;
@@ -386,7 +402,20 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 
 	private void HandleVisualizeTabChanged(bool _)
 	{
+		if (visualizeTab && visualizeTab.isOn)
+		{
+			CloseInstructionMenuWithAnimation();
+		}
+
 		RefreshRendererLegend();
+	}
+
+	private void HandleFilterTabChanged(bool isOn)
+	{
+		if (isOn)
+		{
+			CloseInstructionMenuWithAnimation();
+		}
 	}
 
 	private void HandleInstructionMenuOpened()
@@ -399,6 +428,18 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 	{
 		instructionMenuActive = false;
 		ApplyInstructionOverlayVisibility();
+	}
+
+	private void CloseInstructionMenuWithAnimation()
+	{
+		if (instructionCloseButton)
+		{
+			instructionCloseButton.onClick.Invoke();
+		}
+		else
+		{
+			HandleInstructionMenuClosed();
+		}
 	}
 
 	private void HandleFoldButtonClicked()
@@ -523,26 +564,33 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 
 	private void EnsureAvailableRendererSelected()
 	{
-		if (GetSelectedChoice() != null)
-		{
-			return;
-		}
-
 		suppressToggleEvents = true;
 
 		if (rgbToggle && rgbToggle.gameObject.activeSelf)
 		{
 			rgbToggle.isOn = true;
+			if (classToggle)
+			{
+				classToggle.isOn = false;
+			}
+			if (elevationToggle)
+			{
+				elevationToggle.isOn = false;
+			}
+			if (intensityToggle)
+			{
+				intensityToggle.isOn = false;
+			}
 		}
-		else if (classToggle && classToggle.gameObject.activeSelf)
+		else if (GetSelectedChoice() == null && classToggle && classToggle.gameObject.activeSelf)
 		{
 			classToggle.isOn = true;
 		}
-		else if (elevationToggle && elevationToggle.gameObject.activeSelf)
+		else if (GetSelectedChoice() == null && elevationToggle && elevationToggle.gameObject.activeSelf)
 		{
 			elevationToggle.isOn = true;
 		}
-		else if (intensityToggle && intensityToggle.gameObject.activeSelf)
+		else if (GetSelectedChoice() == null && intensityToggle && intensityToggle.gameObject.activeSelf)
 		{
 			intensityToggle.isOn = true;
 		}

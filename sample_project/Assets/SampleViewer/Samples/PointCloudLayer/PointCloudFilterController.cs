@@ -13,7 +13,7 @@ using UnityEditor;
 #endif
 
 [ExecuteAlways]
-public sealed class PointCloudFilterMockPanel : MonoBehaviour
+public sealed class PointCloudFilterController : MonoBehaviour
 {
 	private enum FilterGroupKind
 	{
@@ -532,15 +532,6 @@ public sealed class PointCloudFilterMockPanel : MonoBehaviour
 			}
 		}
 
-		if (changedGroup.Kind == FilterGroupKind.ClassCode && !isOn)
-		{
-			var returnsGroup = GetGroup(FilterGroupKind.Returns);
-			if (returnsGroup != null)
-			{
-				SetGroupSelection(returnsGroup, false);
-			}
-		}
-
 		suppressToggleEvents = false;
 		ApplyFilters();
 	}
@@ -553,7 +544,6 @@ public sealed class PointCloudFilterMockPanel : MonoBehaviour
 		}
 
 		var allSelected = AreAllOptionsSelected(changedGroup);
-		var anySelected = IsAnyOptionSelected(changedGroup);
 		suppressToggleEvents = true;
 
 		if (changedGroup.AllToggle && changedGroup.AllToggle.isOn != allSelected)
@@ -561,33 +551,8 @@ public sealed class PointCloudFilterMockPanel : MonoBehaviour
 			changedGroup.AllToggle.isOn = allSelected;
 		}
 
-		if (changedGroup.Kind == FilterGroupKind.ClassCode && !anySelected)
-		{
-			var returnsGroup = GetGroup(FilterGroupKind.Returns);
-			if (returnsGroup != null)
-			{
-				SetGroupSelection(returnsGroup, false);
-			}
-		}
-
 		suppressToggleEvents = false;
 		ApplyFilters();
-	}
-
-	private void SetGroupSelection(FilterGroupState group, bool isOn)
-	{
-		if (group.AllToggle)
-		{
-			group.AllToggle.isOn = isOn;
-		}
-
-		foreach (var option in group.Options)
-		{
-			if (option.Toggle)
-			{
-				option.Toggle.isOn = isOn;
-			}
-		}
 	}
 
 	private void ApplyFilters()
@@ -608,12 +573,12 @@ public sealed class PointCloudFilterMockPanel : MonoBehaviour
 			var classGroup = GetGroup(FilterGroupKind.ClassCode);
 			var returnsGroup = GetGroup(FilterGroupKind.Returns);
 
-			if (classGroup != null && !AreAllOptionsSelected(classGroup))
+			if (classGroup != null && HasActiveFilterSelection(classGroup))
 			{
 				activeFilterCollection.Add(CreateClassCodeFilter(classGroup));
 			}
 
-			if (returnsGroup != null && !AreAllOptionsSelected(returnsGroup))
+			if (returnsGroup != null && HasActiveFilterSelection(returnsGroup))
 			{
 				activeFilterCollection.Add(CreateReturnsFilter(returnsGroup));
 			}
@@ -719,6 +684,11 @@ public sealed class PointCloudFilterMockPanel : MonoBehaviour
 		}
 
 		return true;
+	}
+
+	private static bool HasActiveFilterSelection(FilterGroupState group)
+	{
+		return group != null && !AreAllOptionsSelected(group) && IsAnyOptionSelected(group);
 	}
 
 	private static bool IsAnyOptionSelected(FilterGroupState group)
