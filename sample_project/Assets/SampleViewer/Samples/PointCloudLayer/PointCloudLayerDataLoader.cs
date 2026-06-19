@@ -162,7 +162,7 @@ public sealed class PointCloudLayerDataLoader : MonoBehaviour
 		var newLayerIndex = arcGISMapComponent.Map.Layers.GetSize();
 		try
 		{
-			newLayer = new ArcGISPointCloudLayer(source, "UserPCL", 1f, true, GetAPIKey());
+			newLayer = new ArcGISPointCloudLayer(source, GetLayerNameFromSource(source), 1f, true, GetAPIKey());
 			arcGISMapComponent.Map.Layers.Add(newLayer);
 
 			if (newLayer.LoadStatus == ArcGISLoadStatus.NotLoaded)
@@ -202,6 +202,37 @@ public sealed class PointCloudLayerDataLoader : MonoBehaviour
 
 		SetControlsInteractable(true);
 		loadCoroutine = null;
+	}
+
+	private static string GetLayerNameFromSource(string source)
+	{
+		const string fallbackName = "Point cloud layer";
+
+		if (string.IsNullOrWhiteSpace(source))
+		{
+			return fallbackName;
+		}
+
+		if (!Uri.TryCreate(source.Trim(), UriKind.Absolute, out var uri))
+		{
+			return fallbackName;
+		}
+
+		var segments = uri.AbsolutePath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+		for (var i = 0; i < segments.Length; i++)
+		{
+			if (string.Equals(segments[i], "SceneServer", StringComparison.OrdinalIgnoreCase) && i > 0)
+			{
+				return Uri.UnescapeDataString(segments[i - 1]);
+			}
+		}
+
+		if (segments.Length > 0)
+		{
+			return Uri.UnescapeDataString(segments[segments.Length - 1]);
+		}
+
+		return fallbackName;
 	}
 
 	private bool HasUsablePointCloudData(ArcGISPointCloudLayer layer)

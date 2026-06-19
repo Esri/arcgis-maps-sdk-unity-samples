@@ -1025,12 +1025,22 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 
 	private void AddLegendTitle(float y)
 	{
-		AddLegendText("Generated_Title", "Tallinn punktipilv", new Vector2(0f, y), new Vector2(430f, 56f), 36, TextAnchor.MiddleCenter, legendMutedTextColor);
+		AddLegendText("Generated_Title", GetLegendLayerTitle(), new Vector2(0f, y), new Vector2(430f, 56f), 28, TextAnchor.MiddleCenter, legendMutedTextColor);
 	}
 
 	private void AddLegendTitle(Vector2 anchoredPosition, Vector2 size, TextAnchor alignment)
 	{
-		AddLegendText("Generated_Title", "Tallinn punktipilv", anchoredPosition, size, 36, alignment, legendMutedTextColor);
+		AddLegendText("Generated_Title", GetLegendLayerTitle(), anchoredPosition, size, 28, alignment, legendMutedTextColor);
+	}
+
+	private string GetLegendLayerTitle()
+	{
+		if (activeLayer == null || string.IsNullOrWhiteSpace(activeLayer.Name))
+		{
+			return "Point cloud layer";
+		}
+
+		return activeLayer.Name;
 	}
 
 	private void AddClassLegendRows()
