@@ -1,3 +1,9 @@
+// Copyright 2026 Esri.
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+//
+
 using Esri.GameEngine.Layers;
 using Esri.GameEngine.Layers.PointCloud;
 using Esri.Standard;
@@ -20,10 +26,10 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 
 	private struct AvailableAttributes
 	{
-		public string RGB;
 		public string ClassCode;
 		public string Elevation;
 		public string Intensity;
+		public string RGB;
 	}
 
 	private sealed class ClassRendererInfo
@@ -35,70 +41,69 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 
 	private sealed class ClassValueInfo
 	{
-		public string Label;
-		public string Description;
-		public string[] Values;
-		public byte Red;
-		public byte Green;
-		public byte Blue;
 		public byte Alpha = 255;
+		public byte Blue;
+		public string Description;
+		public byte Green;
+		public string Label;
+		public byte Red;
+		public string[] Values;
 	}
 
-	[SerializeField] private PointCloudLayerDataLoader dataLoader;
-	[SerializeField] private PointCloudCustomizeController customizeController;
-	[SerializeField] private Toggle colorModulationToggle;
-	[SerializeField] private GameObject colorModulationLabel;
-	[SerializeField] private GameObject colorModulationDivider;
-	[SerializeField] private Toggle rgbToggle;
 	[SerializeField] private Toggle classToggle;
+	[SerializeField] private GameObject colorModulationDivider;
+	[SerializeField] private GameObject colorModulationLabel;
+	[SerializeField] private Toggle colorModulationToggle;
+	[SerializeField] private PointCloudCustomizeController customizeController;
+	[SerializeField] private PointCloudLayerDataLoader dataLoader;
 	[SerializeField] private Toggle elevationToggle;
-	[SerializeField] private Toggle intensityToggle;
-	[SerializeField] private Toggle visualizeTab;
 	[SerializeField] private Toggle filterTab;
-	[SerializeField] private RectTransform rendererLegendRoot;
-	[SerializeField] private Font rendererLegendFont;
-	[SerializeField] private Vector2 rendererLegendPanelOffset = new Vector2(-140f, 80f);
-	[SerializeField] private Button instructionOpenButton;
-	[SerializeField] private Button instructionCloseButton;
 	[SerializeField] private Button foldButton;
 	[SerializeField] private Button gearButton;
+	[SerializeField] private Button instructionCloseButton;
+	[SerializeField] private Button instructionOpenButton;
+	[SerializeField] private Toggle intensityToggle;
+	[SerializeField] private Font rendererLegendFont;
+	[SerializeField] private Vector2 rendererLegendPanelOffset = new Vector2(-140f, 80f);
+	[SerializeField] private RectTransform rendererLegendRoot;
+	[SerializeField] private Toggle rgbToggle;
+	[SerializeField] private Toggle visualizeTab;
 
+	private const double ElevationHigh = 3.5d;
 	private const double ElevationLow = -1.5d;
 	private const double ElevationMid = 1.5d;
-	private const double ElevationHigh = 3.5d;
+	private const double IntensityHigh = 65680d;
 	private const double IntensityLow = 10385d;
 	private const double IntensityMid = 38032d;
-	private const double IntensityHigh = 65680d;
 
-	private bool subscribedToLoader;
-	private bool subscribedToToggles;
-	private bool subscribedToInstructionButtons;
-	private bool subscribedToFoldButtons;
-	private bool suppressToggleEvents;
-	private bool instructionMenuActive;
-	private bool settingsMenuCollapsed;
-	private AvailableAttributes availableAttributes;
+	private ArcGISPointCloudColorModulation activeColorModulation;
+	private ArcGISRGBColor[] activeColors;
 	private ArcGISPointCloudLayer activeLayer;
 	private ArcGISPointCloudRenderer activeRenderer;
 	private ArcGISCollection<ArcGISPointCloudColorStop> activeStopCollection;
+	private ArcGISPointCloudColorStop[] activeStops;
 	private ArcGISCollection<ArcGISPointCloudColorUniqueValue> activeUniqueValueCollection;
 	private ArcGISCollection<string>[] activeUniqueValueGroups;
-	private ArcGISPointCloudColorStop[] activeStops;
 	private ArcGISPointCloudColorUniqueValue[] activeUniqueValues;
-	private ArcGISRGBColor[] activeColors;
-	private ArcGISPointCloudColorModulation activeColorModulation;
+	private AvailableAttributes availableAttributes;
 	private ClassRendererInfo classRendererInfo;
-	private Image legendRootBackground;
-	private CanvasGroup legendCanvasGroup;
-	private CanvasGroup settingsMenuCanvasGroup;
-	private RectTransform legendPanelRect;
-	private Sprite legendCircleSprite;
-	private Sprite legendTriangleSprite;
-
-	private readonly UnityEngine.Color legendPanelColor = new UnityEngine.Color(0.08f, 0.08f, 0.08f, 0.82f);
+	private bool instructionMenuActive;
 	private readonly UnityEngine.Color legendAccentColor = new UnityEngine.Color(0.56f, 0.25f, 1f, 1f);
-	private readonly UnityEngine.Color legendTextColor = new UnityEngine.Color(0.95f, 0.95f, 0.95f, 1f);
+	private CanvasGroup legendCanvasGroup;
+	private Sprite legendCircleSprite;
 	private readonly UnityEngine.Color legendMutedTextColor = new UnityEngine.Color(0.78f, 0.78f, 0.78f, 1f);
+	private readonly UnityEngine.Color legendPanelColor = new UnityEngine.Color(0.08f, 0.08f, 0.08f, 0.82f);
+	private RectTransform legendPanelRect;
+	private Image legendRootBackground;
+	private readonly UnityEngine.Color legendTextColor = new UnityEngine.Color(0.95f, 0.95f, 0.95f, 1f);
+	private Sprite legendTriangleSprite;
+	private CanvasGroup settingsMenuCanvasGroup;
+	private bool settingsMenuCollapsed;
+	private bool subscribedToFoldButtons;
+	private bool subscribedToInstructionButtons;
+	private bool subscribedToLoader;
+	private bool subscribedToToggles;
+	private bool suppressToggleEvents;
 
 	private void Reset()
 	{

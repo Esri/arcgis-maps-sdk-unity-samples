@@ -1,3 +1,9 @@
+// Copyright 2026 Esri.
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+//
+
 using Esri.ArcGISMapsSDK.Components;
 using Esri.ArcGISMapsSDK.Utils;
 using Esri.GameEngine;
@@ -10,26 +16,25 @@ using UnityEngine.UI;
 
 public sealed class PointCloudLayerDataLoader : MonoBehaviour
 {
+	[SerializeField] private string defaultSource = DefaultPointCloudSource;
+	[SerializeField] private Button loadButton;
+	[SerializeField] private bool loadDefaultOnStart = true;
+	[SerializeField] private float loadPollSeconds = 0.25f;
+	[SerializeField] private float loadTimeoutSeconds = 30f;
+	[SerializeField] private InputField sourceInput;
+	[SerializeField] private Text statusText;
+
 	private const string DefaultPointCloudSource = "https://tiles.arcgis.com/tiles/V6ZHFr6zdgNZuVG0/arcgis/rest/services/BARNEGAT_BAY_LiDAR_UTM/SceneServer";
 
-	[SerializeField] private InputField sourceInput;
-	[SerializeField] private Button loadButton;
-	[SerializeField] private Text statusText;
-	[SerializeField] private float loadTimeoutSeconds = 30f;
-	[SerializeField] private float loadPollSeconds = 0.25f;
-	[SerializeField] private string defaultSource = DefaultPointCloudSource;
-	[SerializeField] private bool loadDefaultOnStart = true;
-
-	private readonly Color failureColor = new Color(1f, 0.36f, 0.49f, 1f);
-	private readonly Color loadingColor = new Color(0.78f, 0.78f, 0.78f, 1f);
-	private readonly Color successColor = new Color(0.55f, 1f, 0.62f, 1f);
-
 	private ArcGISMapComponent arcGISMapComponent;
-	private Coroutine loadCoroutine;
-	private ArcGISPointCloudLayer userLoadedLayer;
-	private string loadedSource;
-	private bool subscribed;
 	private bool defaultLoadStarted;
+	private readonly Color failureColor = new Color(1f, 0.36f, 0.49f, 1f);
+	private Coroutine loadCoroutine;
+	private string loadedSource;
+	private readonly Color loadingColor = new Color(0.78f, 0.78f, 0.78f, 1f);
+	private bool subscribed;
+	private readonly Color successColor = new Color(0.55f, 1f, 0.62f, 1f);
+	private ArcGISPointCloudLayer userLoadedLayer;
 
 	public event Action<ArcGISPointCloudLayer> LayerLoaded;
 

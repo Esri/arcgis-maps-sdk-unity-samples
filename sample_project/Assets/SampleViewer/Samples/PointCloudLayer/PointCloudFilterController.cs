@@ -1,3 +1,9 @@
+// Copyright 2026 Esri.
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+//
+
 using Esri.GameEngine.Layers;
 using Esri.GameEngine.Layers.PointCloud;
 using Esri.Unity;
@@ -23,46 +29,45 @@ public sealed class PointCloudFilterController : MonoBehaviour
 
 	private sealed class FilterOption
 	{
-		public string Label;
 		public double ClassCode;
+		public string Label;
 		public ArcGISPointCloudReturnsType ReturnType;
 		public Toggle Toggle;
 	}
 
 	private sealed class FilterGroupState
 	{
-		public FilterGroupKind Kind;
-		public string AttributeName;
 		public Toggle AllToggle;
+		public string AttributeName;
+		public FilterGroupKind Kind;
 		public readonly List<FilterOption> Options = new List<FilterOption>();
 	}
 
-	[SerializeField] private Font font;
 	[SerializeField] private Sprite checkboxOutlineSprite;
 	[SerializeField] private PointCloudLayerDataLoader dataLoader;
+	[SerializeField] private Font font;
 	[SerializeField] private bool logFilterDiagnostics;
 
 	private readonly Color accentColor = new Color(0.56f, 0.25f, 1f, 1f);
-	private readonly Color textColor = Color.white;
-	private readonly Color mutedTextColor = new Color(0.78f, 0.78f, 0.78f, 1f);
-	private readonly Color scrollbarTrackColor = new Color(0.28f, 0.28f, 0.28f, 0.82f);
-	private readonly Color scrollbarHandleColor = new Color(0.75f, 0.75f, 0.75f, 1f);
-
-	private readonly List<FilterGroupState> groups = new List<FilterGroupState>();
-
-	private RectTransform rectTransform;
-	private Coroutine runtimeRebuildCoroutine;
-	private ArcGISPointCloudLayer activeLayer;
-	private ArcGISCollection<ArcGISPointCloudFilter> activeFilterCollection;
-	private ArcGISCollection<double> activeClassCodeValues;
-	private ArcGISCollection<ArcGISPointCloudReturnsType> activeReturnsValues;
 	private ArcGISPointCloudValueFilter activeClassCodeFilter;
+	private ArcGISCollection<double> activeClassCodeValues;
+	private ArcGISCollection<ArcGISPointCloudFilter> activeFilterCollection;
+	private ArcGISPointCloudLayer activeLayer;
 	private ArcGISPointCloudReturnFilter activeReturnsFilter;
-	private bool subscribed;
-	private bool suppressToggleEvents;
+	private ArcGISCollection<ArcGISPointCloudReturnsType> activeReturnsValues;
+	private readonly List<FilterGroupState> groups = new List<FilterGroupState>();
+	private readonly Color mutedTextColor = new Color(0.78f, 0.78f, 0.78f, 1f);
+
 #if UNITY_EDITOR
 	private bool rebuildQueued;
 #endif
+	private RectTransform rectTransform;
+	private Coroutine runtimeRebuildCoroutine;
+	private readonly Color scrollbarHandleColor = new Color(0.75f, 0.75f, 0.75f, 1f);
+	private readonly Color scrollbarTrackColor = new Color(0.28f, 0.28f, 0.28f, 0.82f);
+	private bool subscribed;
+	private bool suppressToggleEvents;
+	private readonly Color textColor = Color.white;
 
 	private void OnEnable()
 	{

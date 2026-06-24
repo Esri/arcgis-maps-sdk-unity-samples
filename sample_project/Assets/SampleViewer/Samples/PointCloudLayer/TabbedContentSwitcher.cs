@@ -1,3 +1,9 @@
+// Copyright 2026 Esri.
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+//
+
 using System;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,9 +14,9 @@ public sealed class TabbedContentSwitcher : MonoBehaviour
 	[Serializable]
 	private struct TabContent
 	{
-		public Toggle toggle;
-		public GameObject[] content;
 		public float backgroundBottomExtension;
+		public GameObject[] content;
+		public Toggle toggle;
 	}
 
 	[SerializeField] private RectTransform backgroundTarget;

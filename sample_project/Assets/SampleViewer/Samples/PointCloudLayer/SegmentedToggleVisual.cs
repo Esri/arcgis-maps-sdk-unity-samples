@@ -1,12 +1,18 @@
+// Copyright 2026 Esri.
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+//
+
 using UnityEngine;
 using UnityEngine.UI;
 
 public sealed class SegmentedToggleVisual : MonoBehaviour
 {
-	[SerializeField] private Toggle toggle;
-	[SerializeField] private Image[] targetImages;
-	[SerializeField] private Sprite selectedSprite;
 	[SerializeField] private Sprite normalSprite;
+	[SerializeField] private Sprite selectedSprite;
+	[SerializeField] private Image[] targetImages;
+	[SerializeField] private Toggle toggle;
 
 	private void Reset()
 	{

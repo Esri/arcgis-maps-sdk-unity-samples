@@ -1,3 +1,9 @@
+// Copyright 2026 Esri.
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+//
+
 using Esri.GameEngine.Layers;
 using Esri.GameEngine.Layers.PointCloud;
 using Esri.GameEngine.Map.Symbology;
@@ -8,18 +14,18 @@ using UnityEngine.UI;
 
 public sealed class PointCloudCustomizeController : MonoBehaviour
 {
-	private const float MinPointSize = 2f;
-	private const float MaxPointSize = 16f;
-
 	[SerializeField] private PointCloudLayerDataLoader dataLoader;
 	[SerializeField] private Slider pointSizeSlider;
 	[SerializeField] private Slider pointsPerInchSlider;
 
-	private bool subscribedToLoader;
-	private bool subscribedToSliders;
+	private const float MaxPointSize = 16f;
+	private const float MinPointSize = 2f;
+
 	private ArcGISPointCloudLayer activeLayer;
 	private ArcGISPointCloudRenderer activeRenderer;
 	private ArcGISPointCloudSizeAlgorithm activeSizeAlgorithm;
+	private bool subscribedToLoader;
+	private bool subscribedToSliders;
 
 	private void Reset()
 	{
