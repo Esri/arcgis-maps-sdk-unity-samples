@@ -972,7 +972,7 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 				CreateLegendPanel(500f, 440f);
 				AddLegendAccent();
 				AddLegendTitle(new Vector2(-20f, 150f), new Vector2(360f, 56f), TextAnchor.MiddleLeft);
-				AddLegendText("Generated_ClassHeader", "Class Code", new Vector2(20f, 80f), new Vector2(360f, 40f), 28, TextAnchor.MiddleLeft, legendTextColor);
+				AddLegendText("Generated_ClassHeader", "Class Code", new Vector2(0f, 80f), new Vector2(360f, 40f), 28, TextAnchor.MiddleLeft, legendTextColor);
 				AddClassLegendRows();
 				break;
 			case RendererChoice.Elevation:
@@ -1025,7 +1025,7 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 
 	private void AddLegendTitle(float y)
 	{
-		AddLegendText("Generated_Title", GetLegendLayerTitle(), new Vector2(0f, y), new Vector2(430f, 56f), 28, TextAnchor.MiddleCenter, legendMutedTextColor);
+		AddLegendText("Generated_Title", GetLegendLayerTitle(), new Vector2(15f, y), new Vector2(430f, 56f), 28, TextAnchor.MiddleLeft, legendMutedTextColor);
 	}
 
 	private void AddLegendTitle(Vector2 anchoredPosition, Vector2 size, TextAnchor alignment)
@@ -1054,7 +1054,7 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 		const float rowSpacing = 36f;
 		const float viewportHeight = 220f;
 		var contentHeight = Mathf.Max(viewportHeight, classRendererInfo.Values.Count * rowSpacing);
-		var content = AddClassLegendScrollArea(new Vector2(10f, -60f), new Vector2(360f, viewportHeight), contentHeight);
+		var content = AddClassLegendScrollArea(new Vector2(0f, -60f), new Vector2(360f, viewportHeight), contentHeight);
 
 		for (var i = 0; i < classRendererInfo.Values.Count; i++)
 		{
@@ -1107,7 +1107,7 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 		contentRect.anchoredPosition = Vector2.zero;
 		contentRect.sizeDelta = new Vector2(0f, contentHeight);
 
-		var scrollbar = AddClassLegendScrollbar(new Vector2(210f, -60f), new Vector2(28f, size.y));
+		var scrollbar = AddClassLegendScrollbar(new Vector2(190f, -60f), new Vector2(28f, size.y));
 
 		var scrollRect = scrollRoot.GetComponent<ScrollRect>();
 		scrollRect.content = contentRect;
@@ -1184,7 +1184,7 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 		const float middleBreakY = -60f;
 		const float bottomBreakY = -130f;
 
-		AddLegendText("Generated_StretchHeader", label, new Vector2(0f, 70f), new Vector2(270f, 40f), 28, TextAnchor.MiddleLeft, legendTextColor);
+		AddLegendText("Generated_StretchHeader", label, new Vector2(-40f, 70f), new Vector2(270f, 40f), 28, TextAnchor.MiddleLeft, legendTextColor);
 
 		var gradientColors = isElevation
 			? new[]
@@ -1203,7 +1203,7 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 				UnityEngine.Color.black
 			};
 
-		AddLegendGradient("Generated_Gradient", new Vector2(-80f, rampCenterY), new Vector2(56f, 170f), gradientColors);
+		AddLegendGradient("Generated_Gradient", new Vector2(-110f, rampCenterY), new Vector2(56f, 170f), gradientColors);
 
 		if (isElevation)
 		{
@@ -1221,8 +1221,8 @@ public sealed class PointCloudVisualizeController : MonoBehaviour
 
 	private void AddBreakLabel(string label, float y)
 	{
-		AddLegendTriangle("Generated_Triangle_" + label, new Vector2(-35f, y), new Vector2(18f, 22f), legendTextColor);
-		AddLegendText("Generated_BreakLabel_" + label, label, new Vector2(88f, y), new Vector2(210f, 38f), 28, TextAnchor.MiddleLeft, legendTextColor);
+		AddLegendTriangle("Generated_Triangle_" + label, new Vector2(-45f, y), new Vector2(18f, 22f), legendTextColor);
+		AddLegendText("Generated_BreakLabel_" + label, label, new Vector2(80f, y), new Vector2(210f, 38f), 28, TextAnchor.MiddleLeft, legendTextColor);
 	}
 
 	private Text AddLegendText(string name, string text, Vector2 anchoredPosition, Vector2 size, int fontSize, TextAnchor alignment, UnityEngine.Color color)
