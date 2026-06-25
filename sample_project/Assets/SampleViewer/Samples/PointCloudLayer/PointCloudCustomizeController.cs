@@ -20,6 +20,7 @@ public sealed class PointCloudCustomizeController : MonoBehaviour
 
 	private const float MaxPointSize = 16f;
 	private const float MinPointSize = 2f;
+	private const float MinPointsPerInch = 1f;
 
 	private ArcGISPointCloudLayer activeLayer;
 	private ArcGISPointCloudRenderer activeRenderer;
@@ -62,6 +63,8 @@ public sealed class PointCloudCustomizeController : MonoBehaviour
 		{
 			pointsPerInchSlider = transform.Find("CustomizePanel/Slider_Point_Per_Inch")?.GetComponent<Slider>();
 		}
+
+		ConfigurePointsPerInchSlider();
 	}
 
 	private void ConfigurePointSizeSlider()
@@ -79,6 +82,21 @@ public sealed class PointCloudCustomizeController : MonoBehaviour
 		if (!Mathf.Approximately(pointSizeSlider.value, clampedValue))
 		{
 			pointSizeSlider.SetValueWithoutNotify(clampedValue);
+		}
+	}
+
+	private void ConfigurePointsPerInchSlider()
+	{
+		if (!pointsPerInchSlider)
+		{
+			return;
+		}
+
+		pointsPerInchSlider.minValue = MinPointsPerInch;
+		var clampedValue = Mathf.Max(MinPointsPerInch, pointsPerInchSlider.value);
+		if (!Mathf.Approximately(pointsPerInchSlider.value, clampedValue))
+		{
+			pointsPerInchSlider.SetValueWithoutNotify(clampedValue);
 		}
 	}
 
@@ -160,7 +178,7 @@ public sealed class PointCloudCustomizeController : MonoBehaviour
 
 		if (pointsPerInchSlider)
 		{
-			renderer.PointsPerInch = Math.Max(0d, pointsPerInchSlider.value);
+			renderer.PointsPerInch = Math.Max(MinPointsPerInch, pointsPerInchSlider.value);
 		}
 
 		if (pointSizeSlider)
