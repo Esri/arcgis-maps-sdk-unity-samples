@@ -32,6 +32,7 @@ This repository is made up of two separate Unity projects. If you would like to 
 * [Material By Attribute](sample_project/Assets/SampleViewer/Samples/MaterialByAttribute/readme.md) - Apply materials to 3DObject Scene layer based on specific attributes.
 * [Measure](sample_project/Assets/SampleViewer/Samples/Measure/readme.md) - Click on the map to get real-world distances between points.
 * [Overview Map](sample_project/Assets/SampleViewer/Samples/OverviewMap/readme.md) - Use an overview map to better understand where you are in the world.
+* [Point Cloud Layer](sample_project/Assets/SampleViewer/Samples/PointCloudLayer/readme.md) - Load, visualize, customize, and filter a point cloud scene layer.
 * [Real Time Weather Query](https://github.com/Esri/arcgis-maps-sdk-unity-samples/blob/main/sample_project/Assets/SampleViewer/Samples/WeatherQuery/readme.md) - Query the current weather in a city using the feature layer query work flow.
 * [Routing](sample_project/Assets/SampleViewer/Samples/Routing/readme.md) - See how to query Esri's routing service to get the shortest path between two points and visualize that route in Unity.
 * [Stream Layer](sample_project/Assets/SampleViewer/Samples/StreamLayer/readme.md) - See how to use web sockets to connect to an Esri real-time service to update game objects locations in real-time.

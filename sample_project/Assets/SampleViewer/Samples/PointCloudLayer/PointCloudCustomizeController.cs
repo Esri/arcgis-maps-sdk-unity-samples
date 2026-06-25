@@ -79,6 +79,7 @@ public sealed class PointCloudCustomizeController : MonoBehaviour
 		pointSizeSlider.wholeNumbers = true;
 
 		var clampedValue = Mathf.Clamp(pointSizeSlider.value, MinPointSize, MaxPointSize);
+
 		if (!Mathf.Approximately(pointSizeSlider.value, clampedValue))
 		{
 			pointSizeSlider.SetValueWithoutNotify(clampedValue);
@@ -94,6 +95,7 @@ public sealed class PointCloudCustomizeController : MonoBehaviour
 
 		pointsPerInchSlider.minValue = MinPointsPerInch;
 		var clampedValue = Mathf.Max(MinPointsPerInch, pointsPerInchSlider.value);
+
 		if (!Mathf.Approximately(pointsPerInchSlider.value, clampedValue))
 		{
 			pointsPerInchSlider.SetValueWithoutNotify(clampedValue);
@@ -171,6 +173,7 @@ public sealed class PointCloudCustomizeController : MonoBehaviour
 	private void ApplyToLayer(ArcGISPointCloudLayer layer)
 	{
 		var renderer = GetOrCreateRenderer(layer);
+
 		if (renderer == null)
 		{
 			return;
