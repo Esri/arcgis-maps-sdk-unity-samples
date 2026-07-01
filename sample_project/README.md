@@ -9,7 +9,7 @@ This repository is made up of two separate Unity projects. If you would like to 
 ### Requirements for Sample Project
 
 * Computer running Windows or macOS
-* The Unity project requires a minimum of Unity `2022.3.62f2`
+* The Unity project requires a minimum of Unity `6000.3.77f1`
 * ArcGISMaps SDK for Unity
 
 ## Instructions
