@@ -31,7 +31,7 @@ public sealed class PointCloudFilterController : MonoBehaviour
 	{
 		public double ClassCode;
 		public string Label;
-		public ArcGISPointCloudReturnsType ReturnType;
+		public ArcGISPointCloudReturnType ReturnType;
 		public Toggle Toggle;
 	}
 
@@ -54,7 +54,7 @@ public sealed class PointCloudFilterController : MonoBehaviour
 	private ArcGISCollection<ArcGISPointCloudFilter> activeFilterCollection;
 	private ArcGISPointCloudLayer activeLayer;
 	private ArcGISPointCloudReturnFilter activeReturnsFilter;
-	private ArcGISCollection<ArcGISPointCloudReturnsType> activeReturnsValues;
+	private ArcGISCollection<ArcGISPointCloudReturnType> activeReturnsValues;
 	private readonly List<FilterGroupState> groups = new List<FilterGroupState>();
 	private readonly Color mutedTextColor = new Color(0.78f, 0.78f, 0.78f, 1f);
 
@@ -614,7 +614,7 @@ public sealed class PointCloudFilterController : MonoBehaviour
 
 	private ArcGISPointCloudReturnFilter CreateReturnsFilter(FilterGroupState group)
 	{
-		activeReturnsValues = new ArcGISCollection<ArcGISPointCloudReturnsType>();
+		activeReturnsValues = new ArcGISCollection<ArcGISPointCloudReturnType>();
 		foreach (var option in group.Options)
 		{
 			if (option.Toggle && option.Toggle.isOn)
@@ -733,10 +733,10 @@ public sealed class PointCloudFilterController : MonoBehaviour
 	{
 		return new[]
 		{
-			new FilterOption { Label = "First of many", ReturnType = ArcGISPointCloudReturnsType.FirstOfMany },
-			new FilterOption { Label = "Last", ReturnType = ArcGISPointCloudReturnsType.Last },
-			new FilterOption { Label = "Last of many", ReturnType = ArcGISPointCloudReturnsType.LastOfMany },
-			new FilterOption { Label = "Single", ReturnType = ArcGISPointCloudReturnsType.Single }
+			new FilterOption { Label = "First of many", ReturnType = ArcGISPointCloudReturnType.FirstOfMany },
+			new FilterOption { Label = "Last", ReturnType = ArcGISPointCloudReturnType.Last },
+			new FilterOption { Label = "Last of many", ReturnType = ArcGISPointCloudReturnType.LastOfMany },
+			new FilterOption { Label = "Single", ReturnType = ArcGISPointCloudReturnType.Single }
 		};
 	}
 
