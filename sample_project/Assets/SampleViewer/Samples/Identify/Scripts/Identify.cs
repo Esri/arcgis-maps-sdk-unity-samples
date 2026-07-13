@@ -32,6 +32,7 @@ public class Identify : MonoBehaviour
     [SerializeField] private GameObject scrollViewItem;
     [SerializeField] private Color selectColor;
     [SerializeField] private Material selectMaterial;
+    private InputManager inputManager;
 
     [Header("UI Elements")]
     [SerializeField] private GameObject buildingsView;
@@ -56,6 +57,11 @@ public class Identify : MonoBehaviour
     [SerializeField] private bool verboseResultLogging = true; // Dump full attribute JSON-ish payload; disable for brevity.
     private readonly Queue<System.Action> mainThreadActions = new(); // Actions queued from callback
     private Coroutine activeIdentifyLayersCoroutine;
+
+    private void Awake()
+    {
+        inputManager = FindFirstObjectByType<InputManager>();
+    }
 
     private IEnumerator CallbackTimeoutWatcher(ArcGISFuture<ArcGISImmutableCollection<ArcGISIdentifyLayerResult>> future, float start, System.Action onTimeout)
     {
