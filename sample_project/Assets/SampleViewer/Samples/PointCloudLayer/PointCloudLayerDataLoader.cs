@@ -61,6 +61,9 @@ public sealed class PointCloudLayerDataLoader : MonoBehaviour
 
 	private void Start()
 	{
+		EnsureAndroidCameraController();
+		EnsureMobileUIOptimizer();
+
 		if (!Application.isPlaying || !loadDefaultOnStart || defaultLoadStarted)
 		{
 			return;
@@ -334,6 +337,38 @@ public sealed class PointCloudLayerDataLoader : MonoBehaviour
 
 		var camera = arcGISMapComponent ? arcGISMapComponent.GetComponentInChildren<Camera>(true) : null;
 		return camera ? camera.gameObject : null;
+	}
+
+	private void EnsureAndroidCameraController()
+	{
+		if (!Application.isPlaying || !Application.isMobilePlatform)
+		{
+			return;
+		}
+
+		arcGISMapComponent = FindFirstObjectByType<ArcGISMapComponent>();
+		if (!arcGISMapComponent)
+		{
+			return;
+		}
+
+		var cameraGameObject = GetZoomCameraGameObject();
+		if (!cameraGameObject || cameraGameObject.GetComponent<PointCloudAndroidCameraController>())
+		{
+			return;
+		}
+
+		cameraGameObject.AddComponent<PointCloudAndroidCameraController>();
+	}
+
+	private void EnsureMobileUIOptimizer()
+	{
+		if (!Application.isPlaying || !Application.isMobilePlatform || GetComponent<PointCloudMobileUIOptimizer>())
+		{
+			return;
+		}
+
+		gameObject.AddComponent<PointCloudMobileUIOptimizer>();
 	}
 
 	private void RemovePointCloudLayersExcept(ulong keepIndex)
