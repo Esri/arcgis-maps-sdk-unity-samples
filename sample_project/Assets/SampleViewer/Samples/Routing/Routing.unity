@@ -24,7 +24,7 @@ RenderSettings:
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 0
+  m_AmbientMode: 4
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: 0.5
@@ -261,7 +261,8 @@ MonoBehaviour:
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
---- !u!1 &150318280
+  m_ScrollDeltaPerTick: 6
+--- !u!1 &248278066
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -269,17 +270,16 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 150318281}
-  - component: {fileID: 150318289}
-  - component: {fileID: 150318288}
-  - component: {fileID: 150318287}
-  - component: {fileID: 150318286}
-  - component: {fileID: 150318285}
-  - component: {fileID: 150318284}
-  - component: {fileID: 150318283}
-  - component: {fileID: 150318282}
-  - component: {fileID: 150318290}
-  - component: {fileID: 150318291}
+  - component: {fileID: 248278067}
+  - component: {fileID: 248278077}
+  - component: {fileID: 248278076}
+  - component: {fileID: 248278075}
+  - component: {fileID: 248278074}
+  - component: {fileID: 248278073}
+  - component: {fileID: 248278072}
+  - component: {fileID: 248278071}
+  - component: {fileID: 248278069}
+  - component: {fileID: 248278068}
   m_Layer: 0
   m_Name: ArcGISCamera
   m_TagString: MainCamera
@@ -287,53 +287,65 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &150318281
+--- !u!4 &248278067
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 150318280}
+  m_GameObject: {fileID: 248278066}
   serializedVersion: 2
   m_LocalRotation: {x: 0.6861027, y: 0.17106463, z: -0.17106463, w: 0.6861027}
   m_LocalPosition: {x: 4452.78, y: 5900, z: 10050.505}
-  m_LocalScale: {x: 1.0000001, y: 1.0000001, z: 1.0000001}
+  m_LocalScale: {x: 1, y: 1.0000001, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1808036064}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &150318282
+--- !u!114 &248278068
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 150318280}
-  m_Enabled: 0
+  m_GameObject: {fileID: 248278066}
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6715ece696adb074bbe6b0103cdafcff, type: 3}
+  m_Script: {fileID: 11500000, guid: 2aa7e41b614b9b74ebcef63507938d43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &150318283
+--- !u!114 &248278069
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 150318280}
+  m_GameObject: {fileID: 248278066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b7511ad6dd4a23469c6b1d94255a41f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &248278071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 248278066}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9e295d62bf65a7247bc772a43507fd4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   position:
-    x: -73.966
-    y: 40.7812
-    z: 6000
+    X: -73.966
+    Y: 40.7812
+    Z: 6000
     SRWkid: 4326
-    spatialReference:
-      wkid: 4326
-      verticalWKID: 0
+    SpatialReference:
+      WKID: 4326
+      VerticalWKID: 0
     version: 1
   rotation:
     Heading: 28
@@ -341,13 +353,15 @@ MonoBehaviour:
     Roll: 0
   surfacePlacementMode: 0
   surfacePlacementOffset: 0
---- !u!114 &150318284
+  version: 1
+  isInitialized: 1
+--- !u!114 &248278072
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 150318280}
+  m_GameObject: {fileID: 248278066}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 27afbdfc83e47004e95ef7726ed4a9cc, type: 3}
@@ -358,13 +372,13 @@ MonoBehaviour:
   IgnoreUI: 0
   EnableLeftDragging: 1
   EnableRightDragging: 1
---- !u!114 &150318285
+--- !u!114 &248278073
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 150318280}
+  m_GameObject: {fileID: 248278066}
   m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8bbba49acb848c0448694828560b07fc, type: 3}
@@ -377,13 +391,13 @@ MonoBehaviour:
   viewportSizeX: 878
   viewportSizeY: 518
   qualityScalingFactor: 1
---- !u!114 &150318286
+--- !u!114 &248278074
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 150318280}
+  m_GameObject: {fileID: 248278066}
   m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 23c1ce4fb46143f46bc5cb5224c934f6, type: 3}
@@ -506,21 +520,21 @@ MonoBehaviour:
       enableFptlForForwardOpaque: 0
       enableBigTilePrepass: 0
       isFptlEnabled: 0
---- !u!81 &150318287
+--- !u!81 &248278075
 AudioListener:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 150318280}
+  m_GameObject: {fileID: 248278066}
   m_Enabled: 1
---- !u!20 &150318288
+--- !u!20 &248278076
 Camera:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 150318280}
+  m_GameObject: {fileID: 248278066}
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
@@ -565,13 +579,13 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!114 &150318289
+--- !u!114 &248278077
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 150318280}
+  m_GameObject: {fileID: 248278066}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ea4c056ecab070c43bf3f5e9fb15b826, type: 3}
@@ -589,65 +603,9 @@ MonoBehaviour:
       z: -0.17106462
       w: 0.6861027
   m_LocalScale:
-    x: 1.0000001
+    x: 1
     y: 1.0000001
-    z: 1.0000001
---- !u!114 &150318290
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 150318280}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_RenderShadows: 1
-  m_RequiresDepthTextureOption: 2
-  m_RequiresOpaqueTextureOption: 2
-  m_CameraType: 0
-  m_Cameras: []
-  m_RendererIndex: -1
-  m_VolumeLayerMask:
-    serializedVersion: 2
-    m_Bits: 1
-  m_VolumeTrigger: {fileID: 0}
-  m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
-  m_Antialiasing: 0
-  m_AntialiasingQuality: 2
-  m_StopNaN: 0
-  m_Dithering: 0
-  m_ClearDepth: 1
-  m_AllowXRRendering: 1
-  m_AllowHDROutput: 1
-  m_UseScreenCoordOverride: 0
-  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
-  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
-  m_RequiresDepthTexture: 0
-  m_RequiresColorTexture: 0
-  m_Version: 2
-  m_TaaSettings:
-    m_Quality: 3
-    m_FrameInfluence: 0.1
-    m_JitterScale: 1
-    m_MipBias: 0
-    m_VarianceClampScale: 0.9
-    m_ContrastAdaptiveSharpening: 0
---- !u!114 &150318291
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 150318280}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b7511ad6dd4a23469c6b1d94255a41f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+    z: 1
 --- !u!1001 &400085891
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -723,7 +681,7 @@ PrefabInstance:
     - target: {fileID: 3071704059086465574, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
       propertyPath: CameraComponent
       value: 
-      objectReference: {fileID: 150318285}
+      objectReference: {fileID: 0}
     - target: {fileID: 3071704059086465574, guid: 5c8d41469caa00a47b13577f89162b3a, type: 3}
       propertyPath: arcGISMapComponent
       value: 
@@ -888,13 +846,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position:
-    x: -74.006
-    y: 40.7128
-    z: 100
+    X: -74.006
+    Y: 40.7128
+    Z: 100
     SRWkid: 4326
-    spatialReference:
-      wkid: 4326
-      verticalWKID: 0
+    SpatialReference:
+      WKID: 4326
+      VerticalWKID: 0
     version: 1
   rotation:
     Heading: 0
@@ -902,6 +860,8 @@ MonoBehaviour:
     Roll: 0
   surfacePlacementMode: 0
   surfacePlacementOffset: 0
+  version: 1
+  isInitialized: 1
 --- !u!114 &820472298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1068,7 +1028,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1654661343}
-  - {fileID: 150318281}
+  - {fileID: 248278067}
   - {fileID: 820472295}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1106,13 +1066,13 @@ MonoBehaviour:
   enableExtent: 0
   extent:
     GeographicCenter:
-      x: 0
-      y: 0
-      z: 0
+      X: 0
+      Y: 0
+      Z: 0
       SRWkid: 4326
-      spatialReference:
-        wkid: 4326
-        verticalWKID: 0
+      SpatialReference:
+        WKID: 4326
+        VerticalWKID: 0
       version: 1
     ExtentShape: 0
     ShapeDimensions:
@@ -1121,29 +1081,30 @@ MonoBehaviour:
     UseOriginAsCenter: 0
   layers: []
   originPosition:
-    x: -74.006
-    y: 40.7128
-    z: 100
+    X: -74.006
+    Y: 40.7128
+    Z: 100
     SRWkid: 4326
-    spatialReference:
-      wkid: 4326
-      verticalWKID: 0
+    SpatialReference:
+      WKID: 4326
+      VerticalWKID: 0
     version: 1
   mapType: 1
   useCustomMapSpatialReference: 0
   customMapSpatialReference:
-    wkid: 3857
-    verticalWKID: 0
-  editorModeEnabled: 1
-  dataFetchWithSceneView: 1
-  rebaseWithSceneView: 0
+    WKID: 3857
+    VerticalWKID: 0
   meshCollidersEnabled: 1
   configurations: []
   oauthUserConfigurations: []
+  version: 4
+  dataFetchWithSceneView: 1
+  editorModeEnabled: 1
+  rebaseWithSceneView: 0
   RootChanged:
     m_PersistentCalls:
       m_Calls: []
-  version: 3
+  isInitialized: 1
 --- !u!114 &1808036066
 MonoBehaviour:
   m_ObjectHideFlags: 0
