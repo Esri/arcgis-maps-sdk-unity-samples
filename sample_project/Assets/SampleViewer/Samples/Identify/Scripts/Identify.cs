@@ -46,6 +46,7 @@ public class Identify : MonoBehaviour
 
     // Select Variables
     private ArcGISImmutableCollection<ArcGISIdentifyLayerResult> identifyLayerResults;
+    private InputManager inputManager;
     private ulong resultsLength;
     private float selectedID;
     [HideInInspector] public ulong SelectedResult = 0;
@@ -92,6 +93,11 @@ public class Identify : MonoBehaviour
     {
         increaseResult.interactable = enabled;
         decreaseResult.interactable = enabled;
+    }
+
+    private void Awake()
+    {
+        inputManager = FindFirstObjectByType<InputManager>();
     }
 
     public void ResetButton()
