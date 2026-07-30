@@ -25,7 +25,7 @@ namespace FeatureLayerData
 
         private void Start()
         {
-            featureLayer = FindObjectOfType<ArcGISMapComponent>().GetComponentInChildren<FeatureLayer>();
+            featureLayer = FindFirstObjectByType<ArcGISMapComponent>().GetComponentInChildren<FeatureLayer>();
             Data.name = GetComponentInChildren<TextMeshProUGUI>().text;
             InvokeRepeating("CheckDataValues", 0.1f, 0.5f);
         }
