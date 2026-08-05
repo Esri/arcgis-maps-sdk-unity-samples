@@ -9,7 +9,7 @@ This repository is made up of two separate Unity projects. If you would like to 
 ### Requirements for XR Sample Project
 
 * Computer running Windows (OpenXR is not supported on macOS)
-* The Unity project requires a minimum of Unity `6000.3.0f1`
+* The Unity project requires a minimum of Unity `6000.5.0f1`
 * ArcGISMaps SDK for Unity
 * A VR Headset and the necessary software to run through Desktop Mode
 
