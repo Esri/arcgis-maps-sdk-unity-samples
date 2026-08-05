@@ -46,7 +46,9 @@ public class Identify : MonoBehaviour
 
     // Select Variables
     private ArcGISImmutableCollection<ArcGISIdentifyLayerResult> identifyLayerResults;
+#if UNITY_IOS || UNITY_ANDROID || UNITY_VISIONOS
     private InputManager inputManager;
+#endif
     private ulong resultsLength;
     private float selectedID;
     [HideInInspector] public ulong SelectedResult = 0;
@@ -97,7 +99,9 @@ public class Identify : MonoBehaviour
 
     private void Awake()
     {
+#if UNITY_IOS || UNITY_ANDROID || UNITY_VISIONOS
         inputManager = FindFirstObjectByType<InputManager>();
+#endif
     }
 
     public void ResetButton()
