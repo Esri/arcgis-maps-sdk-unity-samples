@@ -196,6 +196,7 @@ public sealed class PointCloudLayerDataLoader : MonoBehaviour
 			loadedSource = source;
 			RemovePointCloudLayersExcept(newLayerIndex);
 			LayerLoaded?.Invoke(newLayer);
+            arcGISMapComponent.OriginPosition = newLayer.Extent.Center;
 			yield return ZoomToLoadedLayer(newLayer);
 			ShowStatus("Layer loaded successfully...", successColor);
 		}
