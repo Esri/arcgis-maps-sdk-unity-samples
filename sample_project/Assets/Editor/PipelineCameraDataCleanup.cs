@@ -17,6 +17,7 @@ public static class PipelineCameraDataCleanup
     private const string URPCameraDataTypeName = "UnityEngine.Rendering.Universal.UniversalAdditionalCameraData";
     private const string HDRPResourcesPath = "Assets/HDRPDefaultResources";
     private const string InactiveHDRPResourcesPath = "HDRPDefaultResources";
+    private const string SampleViewerAssetsPath = "Assets/SampleViewer";
 
     static PipelineCameraDataCleanup()
     {
@@ -124,7 +125,7 @@ public static class PipelineCameraDataCleanup
 
         try
         {
-            foreach (var sceneGuid in AssetDatabase.FindAssets("t:Scene"))
+            foreach (var sceneGuid in AssetDatabase.FindAssets("t:Scene", new[] { SampleViewerAssetsPath }))
             {
                 var scenePath = AssetDatabase.GUIDToAssetPath(sceneGuid);
                 var scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
@@ -141,7 +142,7 @@ public static class PipelineCameraDataCleanup
             EditorSceneManager.RestoreSceneManagerSetup(sceneSetup);
         }
 
-        foreach (var prefabGuid in AssetDatabase.FindAssets("t:Prefab"))
+        foreach (var prefabGuid in AssetDatabase.FindAssets("t:Prefab", new[] { SampleViewerAssetsPath }))
         {
             var prefabPath = AssetDatabase.GUIDToAssetPath(prefabGuid);
             var prefabRoot = PrefabUtility.LoadPrefabContents(prefabPath);
