@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -15,7 +16,7 @@ public static class PipelineCameraDataCleanup
     private const string HDRPCameraDataTypeName = "UnityEngine.Rendering.HighDefinition.HDAdditionalCameraData";
     private const string URPCameraDataTypeName = "UnityEngine.Rendering.Universal.UniversalAdditionalCameraData";
     private const string HDRPResourcesPath = "Assets/HDRPDefaultResources";
-    private const string InactiveHDRPResourcesPath = "Assets/HDRPDefaultResources~";
+    private const string InactiveHDRPResourcesPath = "HDRPDefaultResources";
 
     static PipelineCameraDataCleanup()
     {
@@ -194,3 +195,4 @@ public static class PipelineCameraDataCleanup
         return null;
     }
 }
+#endif
