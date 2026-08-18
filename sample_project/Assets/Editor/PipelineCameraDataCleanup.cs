@@ -1,10 +1,11 @@
-using UnityEditor;
-using UnityEditor.SceneManagement;
-using UnityEditor.PackageManager;
-using UnityEngine;
-using UnityEngine.SceneManagement;
 using System;
 using System.Collections.ObjectModel;
+using System.IO;
+using UnityEditor;
+using UnityEditor.PackageManager;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [InitializeOnLoad]
 public static class PipelineCameraDataCleanup
@@ -13,6 +14,8 @@ public static class PipelineCameraDataCleanup
     private const string URPPackageName = "com.unity.render-pipelines.universal";
     private const string HDRPCameraDataTypeName = "UnityEngine.Rendering.HighDefinition.HDAdditionalCameraData";
     private const string URPCameraDataTypeName = "UnityEngine.Rendering.Universal.UniversalAdditionalCameraData";
+    private const string HDRPResourcesPath = "Assets/HDRPDefaultResources";
+    private const string InactiveHDRPResourcesPath = "Assets/HDRPDefaultResources~";
 
     static PipelineCameraDataCleanup()
     {
@@ -28,7 +31,13 @@ public static class PipelineCameraDataCleanup
 
         if (ContainsPackage(args.added, HDRPPackageName))
         {
+            RestoreHDRPResources();
             AddCameraData(HDRPCameraDataTypeName, "HDRP");
+        }
+
+        if (ContainsPackage(args.removed, HDRPPackageName))
+        {
+            ParkHDRPResources();
         }
 
         if (ContainsPackage(args.removed, URPPackageName) || ContainsPackage(args.removed, HDRPPackageName))
@@ -48,6 +57,37 @@ public static class PipelineCameraDataCleanup
         }
 
         return false;
+    }
+
+    private static void ParkHDRPResources()
+    {
+        MoveDirectory(HDRPResourcesPath, InactiveHDRPResourcesPath);
+    }
+
+    private static void RestoreHDRPResources()
+    {
+        MoveDirectory(InactiveHDRPResourcesPath, HDRPResourcesPath);
+    }
+
+    private static void MoveDirectory(string sourcePath, string destinationPath)
+    {
+        var projectPath = Directory.GetParent(Application.dataPath).FullName;
+        var source = Path.Combine(projectPath, sourcePath);
+        var destination = Path.Combine(projectPath, destinationPath);
+
+        if (!Directory.Exists(source) || Directory.Exists(destination))
+        {
+            return;
+        }
+
+        Directory.Move(source, destination);
+        var sourceMeta = source + ".meta";
+        var destinationMeta = destination + ".meta";
+        if (File.Exists(sourceMeta))
+        {
+            File.Move(sourceMeta, destinationMeta);
+        }
+        AssetDatabase.Refresh();
     }
 
     private static void AddCameraData(string componentTypeName, string pipelineName)
