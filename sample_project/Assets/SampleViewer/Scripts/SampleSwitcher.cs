@@ -27,7 +27,11 @@ public class SampleSwitcher : MonoBehaviour
     private string currentSceneName;
     private string nextSceneName;
     private string projectAPIKey;
+#if USE_HDRP_PACKAGE
     private bool isHDRP = true;
+#else
+    private bool isHDRP;
+#endif
 
     public GameObject MenuVideo;
     public Button ExitButton;
@@ -65,6 +69,9 @@ public class SampleSwitcher : MonoBehaviour
 
 #if (UNITY_ANDROID || UNITY_IOS || UNITY_WSA)
         isHDRP = false;
+#endif
+#if !USE_HDRP_PACKAGE
+        HDRPButton.gameObject.SetActive(false);
 #endif
         SetPipeline();
     }
@@ -214,8 +221,12 @@ public class SampleSwitcher : MonoBehaviour
 
         clickedButton.interactable = false;
 
-        HDRPButton.gameObject.SetActive(true);
         URPButton.gameObject.SetActive(true);
+#if USE_HDRP_PACKAGE
+        HDRPButton.gameObject.SetActive(true);
+#else
+        HDRPButton.gameObject.SetActive(false);
+#endif
 
         if (clickedButton.gameObject.GetComponent<DisableSampleButtonsForURP>())
         {
@@ -262,6 +273,9 @@ public class SampleSwitcher : MonoBehaviour
 
     private void SetPipeline()
     {
+#if !USE_HDRP_PACKAGE
+        isHDRP = false;
+#endif
         var pipelineString = isHDRP ? "HDRP" : "URP";
         var assetPath = $"SampleGraphicSettings/Sample{pipelineString}ipeline";
         RenderPipelineAsset pipeline = Resources.Load<RenderPipelineAsset>(assetPath);
