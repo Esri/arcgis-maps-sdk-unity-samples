@@ -4,7 +4,14 @@
 
 Here is a Unity project containing a set of samples showing you how to accomplish various things using the combined features of Unity and the ArcGIS Maps SDK for Unity. The `main` branch is configured to work with our most recent release. If you want to use the sample repo with an older release, check out the corresponding tag of the sample repo, `git checkout 1.0.0` for the sample repo that worked with our 1.0.0 SDK release.
 
-### Note
+## Quick Start
+
+1. Clone this repo.
+2. Follow individual instructions for each sample project (sample_project or xr_sample_project) as desired:
+   - [sample_project](sample_project/README.md)
+   - [xr_sample_project](xr_sample_project/README.md)
+
+## About this Repository
 
 This repository is made up of two separate Unity projects. If you would like to see the samples made for regular use such as Feature Layer and Routing, please use and set up the [**sample_project**](sample_project/README.md). If you are interested in XR Samples such as the Virtual Reality Sample and the XR version of our Table Top Sample, please use and set up the [**sample_xr**](xr_sample_project/README.md). Both projects may be used and set up simultaneously, but they do not contain the same samples.
 
@@ -46,14 +53,7 @@ This repository is made up of two separate Unity projects. If you would like to 
 * [VRSample](xr_sample_project/Assets/SampleViewer/Samples/VRSample/readme.md) - See how to configure the camera to visualize content on a VR device and move the camera with VR locomotion.
 * [VRTableTop](xr_sample_project/Assets/SampleViewer/Samples/XRTableTop/readme.md) - See how to configure the camera to visualize a tabletop map on a VR device and control the map with VR controllers and hand tracking.
 
-## Instructions
-
-1. Clone this repo.
-2. Follow individual instructions for each sample project (sample_project or xr_sample_project) as desired:
-   - [sample_project](sample_project/README.md)
-   - [xr_sample_project](xr_sample_project/README.md)
-
-## Requirements
+## System Requirements
 
 * Refer to the [ArcGIS Maps SDK for Unity's documentation on system requirements](https://developers.arcgis.com/unity/system-requirements/)
 

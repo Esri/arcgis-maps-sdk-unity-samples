@@ -2,6 +2,8 @@
 
 Load a point cloud scene layer and explore renderering and filtering workflows.
 
+![PointCloud](pointcloud.png)
+
 ## How to set up (Point Cloud Layer Scene)
 
 1. Open the **PointCloudLayer** scene.
