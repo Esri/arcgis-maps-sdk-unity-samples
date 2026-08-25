@@ -67,7 +67,7 @@ public class APIMapCreator : MonoBehaviour
 	// All geographically located objects need to be a parent of this object
 	private void CreateArcGISMapComponent()
 	{
-		mapComponent = FindFirstObjectByType<ArcGISMapComponent>();
+		mapComponent = FindAnyObjectByType<ArcGISMapComponent>();
 
 		if (!mapComponent)
 		{
@@ -127,7 +127,7 @@ public class APIMapCreator : MonoBehaviour
 	{
 #if USE_HDRP_PACKAGE
 		// Add Sky Component
-		var currentSky = FindFirstObjectByType<UnityEngine.Rendering.Volume>();
+		var currentSky = FindAnyObjectByType<UnityEngine.Rendering.Volume>();
 		if (currentSky)
 		{
 			// The ArcGISSkyReposition component changes the sky's parameters to account for differences between global and local map types

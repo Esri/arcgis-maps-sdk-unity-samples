@@ -31,7 +31,7 @@ public class ArcGISRaycast : MonoBehaviour
 
     private void Awake()
     {
-        inputManager = FindFirstObjectByType<InputManager>();
+        inputManager = FindAnyObjectByType<InputManager>();
     }
 
     private void CreateLink(string objectID)

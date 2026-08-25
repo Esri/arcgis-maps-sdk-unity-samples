@@ -182,7 +182,7 @@ public class SkyControllerComponent : MonoBehaviour
         speedText.text = String.Format("{0:0.#}", speedValue);
         RotateSky();
 
-        lampPosts = FindFirstObjectByType<LampPostFeatureQuery>().FeatureItems;
+        lampPosts = FindAnyObjectByType<LampPostFeatureQuery>().FeatureItems;
 
         foreach (var lampPost in lampPosts)
         {
