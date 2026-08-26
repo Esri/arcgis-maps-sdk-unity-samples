@@ -1,22 +1,42 @@
 using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
 [InitializeOnLoad]
 public class ArcGISSamplesPostProcessor : AssetPostprocessor
 {
+    private static int framesToWait = 60;
+
     static ArcGISSamplesPostProcessor()
     {
-        EditorApplication.delayCall += ProcessProjectShaderGraphs;
+        EditorApplication.update += WaitingForDatabaseIndex;
+    }
+
+    private static void WaitingForDatabaseIndex()
+    {
+        if (EditorUtility.scriptCompilationFailed || EditorApplication.isCompiling)
+        {
+            return;
+        }
+
+        framesToWait--;
+
+        if (framesToWait > 0)
+        {
+            return;
+        }
+
+        EditorApplication.update -= WaitingForDatabaseIndex;
+        ProcessProjectShaderGraphs();
     }
 
     private static void OnPostprocessAllAssets(
-        string[] importedAssets,
-        string[] deletedAssets,
-        string[] movedAssets,
+        string[] importedAssets, 
+        string[] deletedAssets, 
+        string[] movedAssets, 
         string[] movedFromAssetPaths)
     {
-        // Check if any imported asset was a shader graph
         foreach (string path in importedAssets)
         {
             if (path.StartsWith("Assets/") && path.EndsWith(".shadergraph"))
@@ -27,28 +47,34 @@ public class ArcGISSamplesPostProcessor : AssetPostprocessor
         }
     }
 
-    private static void ProcessProjectShaderGraphs()
+    public static void ProcessProjectShaderGraphs()
     {
         if (EditorUtility.scriptCompilationFailed || EditorApplication.isCompiling)
         {
             return;
         }
 
-        string[] guids = AssetDatabase.FindAssets("t:Shader", new[] { "Assets" });
+        List<string> graphPathsOnDisk = new List<string>();
+        if (Directory.Exists("Assets"))
+        {
+            string[] rawFiles = Directory.GetFiles("Assets", "*.shadergraph", SearchOption.AllDirectories);
+            
+            foreach (string rawFile in rawFiles)
+            {
+                string unityPath = rawFile.Replace("\\", "/");
+                graphPathsOnDisk.Add(unityPath);
+            }
+        }
+
         List<string> brokenGraphs = new List<string>();
 
-        foreach (string guid in guids)
+        foreach (string path in graphPathsOnDisk)
         {
-            string path = AssetDatabase.GUIDToAssetPath(guid);
+            Shader shader = AssetDatabase.LoadAssetAtPath<Shader>(path);
 
-            if (path.EndsWith(".shadergraph"))
+            if (shader == null || !shader.isSupported || shader.name.Contains("InternalErrorShader"))
             {
-                Shader shader = AssetDatabase.LoadAssetAtPath<Shader>(path);
-
-                if (shader == null || shader.name.Contains("InternalErrorShader"))
-                {
-                    brokenGraphs.Add(path);
-                }
+                brokenGraphs.Add(path);
             }
         }
 
@@ -60,9 +86,8 @@ public class ArcGISSamplesPostProcessor : AssetPostprocessor
             {
                 AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceUpdate);
             }
-
+            
             AssetDatabase.StopAssetEditing();
-            Debug.Log($"[ShaderGraph Fixer] Auto-reimported {brokenGraphs.Count} shader graph(s).");
         }
     }
 }
