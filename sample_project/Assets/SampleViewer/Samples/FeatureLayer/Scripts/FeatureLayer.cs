@@ -61,9 +61,9 @@ public class FeatureLayer : MonoBehaviour
     public List<FeatureQuery> Features = new List<FeatureQuery>();
     public bool GetAllFeatures = true;
     public bool GetAllOutfields = true;
-    public JToken[] jFeatures;
     public int LastValue = 1;
     public List<GameObject> FeatureItems = new List<GameObject>();
+    [System.NonSerialized] public JToken[] jFeatures;
     public List<Toggle> ListItems = new List<Toggle>();
     public bool NewLink = true;
     public GameObject OutfieldItem;

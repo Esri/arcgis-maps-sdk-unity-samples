@@ -21,11 +21,11 @@ namespace FeatureLayerData
     public class ScrollViewItem : MonoBehaviour, IPointerClickHandler
     {
         private FeatureLayer featureLayer;
-        public ScrollItemData Data;
+        [System.NonSerialized] public ScrollItemData Data;
 
         private void Start()
         {
-            featureLayer = FindFirstObjectByType<ArcGISMapComponent>().GetComponentInChildren<FeatureLayer>();
+            featureLayer = FindAnyObjectByType<ArcGISMapComponent>().GetComponentInChildren<FeatureLayer>();
             Data.name = GetComponentInChildren<TextMeshProUGUI>().text;
             InvokeRepeating("CheckDataValues", 0.1f, 0.5f);
         }

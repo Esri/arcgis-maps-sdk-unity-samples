@@ -20,7 +20,7 @@ public class ViewshedMap : MonoBehaviour
     {
         yield return new WaitForSeconds(3);
 
-        var mapComponent = FindFirstObjectByType<ArcGISMapComponent>();
+        var mapComponent = FindAnyObjectByType<ArcGISMapComponent>();
 
         if (string.IsNullOrEmpty(APIKey))
         {

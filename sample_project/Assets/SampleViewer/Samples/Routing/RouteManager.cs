@@ -51,7 +51,7 @@ public class RouteManager : MonoBehaviour
 
     private void Awake()
     {
-        inputManager = FindFirstObjectByType<InputManager>();
+        inputManager = FindAnyObjectByType<InputManager>();
     }
 
     public async void StartRouting()
@@ -113,11 +113,11 @@ public class RouteManager : MonoBehaviour
     void Start()
     {
         // We need HPRoot for the HitToGeoPosition Method
-        hpRoot = FindFirstObjectByType<HPRoot>();
+        hpRoot = FindAnyObjectByType<HPRoot>();
 
         // We need this ArcGISMapComponent for the FromCartesianPosition Method
         // defined on the ArcGISMapComponent.View
-        arcGISMapComponent = FindFirstObjectByType<ArcGISMapComponent>();
+        arcGISMapComponent = FindAnyObjectByType<ArcGISMapComponent>();
 
         animator = GameObject.Find("InfoMenu").GetComponent<Animator>();
 

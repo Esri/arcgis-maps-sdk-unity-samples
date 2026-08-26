@@ -58,7 +58,7 @@ public class Geocoder : MonoBehaviour
 
     private void Awake()
     {
-        inputManager = FindFirstObjectByType<InputManager>();
+        inputManager = FindAnyObjectByType<InputManager>();
     }
 
     public void Geocode()
@@ -84,7 +84,7 @@ public class Geocoder : MonoBehaviour
 
     void Start()
     {
-        arcGISMapComponent = FindFirstObjectByType<ArcGISMapComponent>();
+        arcGISMapComponent = FindAnyObjectByType<ArcGISMapComponent>();
         MainCamera = Camera.main;
         animator = GameObject.Find("InfoMenu").GetComponent<Animator>();
         SearchButton.onClick.AddListener(delegate { HandleTextInput(textInput); });

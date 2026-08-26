@@ -5,16 +5,17 @@
 //
 
 using Esri.ArcGISMapsSDK.Components;
+using Esri.ArcGISMapsSDK.Utils;
 using Esri.HPFramework;
+using System;
 using System.Collections;
+using System.Linq;
+using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using Esri.ArcGISMapsSDK.Utils;
-using TMPro;
-using System;
-using System.Linq;
 
 public class SampleSwitcher : MonoBehaviour
 {
@@ -72,8 +73,8 @@ public class SampleSwitcher : MonoBehaviour
     private void ApplyApiKey()
     {
         // API scripts handle api key differently than mapcomponent.
-        var apiMapCreator = FindFirstObjectByType<APIMapCreator>();
-        var viewShedMapCreator = FindFirstObjectByType<ViewshedMap>();
+        var apiMapCreator = FindAnyObjectByType<APIMapCreator>();
+        var viewShedMapCreator = FindAnyObjectByType<ViewshedMap>();
 
         if (apiMapCreator != null && string.IsNullOrEmpty(apiMapCreator.APIKey))
         {
@@ -86,7 +87,11 @@ public class SampleSwitcher : MonoBehaviour
             return;
         }
 
+#if UNITY_6000_5_OR_NEWER
+        var mapComponents = FindObjectsByType<ArcGISMapComponent>();
+#else
         var mapComponents = FindObjectsByType<ArcGISMapComponent>(FindObjectsSortMode.None);
+#endif
 
         if (mapComponents.Count() == 1)
         {
@@ -245,7 +250,7 @@ public class SampleSwitcher : MonoBehaviour
 
     private IEnumerator PipelineChanged()
     {
-        var sky = FindFirstObjectByType<ArcGISSkyRepositionComponent>();
+        var sky = FindAnyObjectByType<ArcGISSkyRepositionComponent>();
         if (sky != null)
         {
             DestroyImmediate(sky.gameObject);
