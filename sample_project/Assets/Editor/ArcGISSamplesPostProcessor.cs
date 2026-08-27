@@ -39,8 +39,8 @@ public class ArcGISSamplesPostProcessor : AssetPostprocessor
             return;
         }
 
-        List<string> brokenGraphs = new List<string>();
-        string[] rawFiles = Directory.GetFiles("Assets", "*.shadergraph", SearchOption.AllDirectories);
+        var brokenGraphs = new List<string>();
+        var rawFiles = Directory.GetFiles("Assets", "*.shadergraph", SearchOption.AllDirectories);
 
         foreach (string rawFile in rawFiles)
         {
