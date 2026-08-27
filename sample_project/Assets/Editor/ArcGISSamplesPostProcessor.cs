@@ -1,3 +1,9 @@
+// Copyright 2026 Esri.
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+//
+
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
@@ -6,7 +12,6 @@ using UnityEngine;
 [InitializeOnLoad]
 public class ArcGISSamplesPostProcessor : AssetPostprocessor
 {
-    private static readonly HashSet<string> processedPaths = new HashSet<string>();
     private static int framesToWait = 60;
 
     static ArcGISSamplesPostProcessor()
@@ -34,7 +39,7 @@ public class ArcGISSamplesPostProcessor : AssetPostprocessor
 
     public static void ProcessProjectShaderGraphs()
     {
-        if (!Directory.Exists("Assets")) 
+        if (!Directory.Exists("Assets"))
         {
             return;
         }
@@ -42,16 +47,16 @@ public class ArcGISSamplesPostProcessor : AssetPostprocessor
         var brokenGraphs = new List<string>();
         var rawFiles = Directory.GetFiles("Assets", "*.shadergraph", SearchOption.AllDirectories);
 
-        foreach (string rawFile in rawFiles)
+        foreach (var rawFile in rawFiles)
         {
-            string unityPath = rawFile.Replace("\\", "/");
+            var unityPath = rawFile.Replace("\\", "/");
 
-            if (processedPaths.Contains(unityPath) || !IsProjectLocalShaderGraph(unityPath))
+            if (!IsProjectLocalShaderGraph(unityPath))
             {
                 continue;
             }
 
-            Shader shader = AssetDatabase.LoadAssetAtPath<Shader>(unityPath);
+            var shader = AssetDatabase.LoadAssetAtPath<Shader>(unityPath);
 
             if (shader == null || !shader.isSupported || shader.name.Contains("InternalErrorShader"))
             {
@@ -61,36 +66,31 @@ public class ArcGISSamplesPostProcessor : AssetPostprocessor
 
         if (brokenGraphs.Count > 0)
         {
-            foreach (string path in brokenGraphs)
-            {
-                processedPaths.Add(path);
-            }
-
             AssetDatabase.StartAssetEditing();
 
-            foreach (string path in brokenGraphs)
+            foreach (var path in brokenGraphs)
             {
                 AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceUpdate);
             }
 
             AssetDatabase.StopAssetEditing();
-            Debug.Log("[ShaderGraph Fixer] Reimport complete!");
+            Debug.Log($"[ShaderGraph Fixer] Auto-reimported {brokenGraphs.Count} broken shader graph(s).");
         }
     }
 
     private static bool IsProjectLocalShaderGraph(string path)
     {
-        if (!path.EndsWith(".shadergraph")) 
+        if (!path.EndsWith(".shadergraph"))
         {
             return false;
         }
 
-        if (!path.StartsWith("Assets/")) 
+        if (!path.StartsWith("Assets/"))
         {
             return false;
         }
 
-        if (path.Contains("Packages/") || path.Contains("PackageCache/")) 
+        if (path.Contains("Packages/") || path.Contains("PackageCache/"))
         {
             return false;
         }
