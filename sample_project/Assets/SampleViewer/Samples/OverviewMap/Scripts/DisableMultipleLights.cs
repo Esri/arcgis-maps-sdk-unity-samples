@@ -10,16 +10,17 @@ using UnityEngine.Rendering;
 [ExecuteAlways]
 public class DisableMultipleLights : MonoBehaviour
 {
+    private const string HDRPPipelineTypeName = "UnityEngine.Rendering.HighDefinition.HDRenderPipelineAsset";
+    private const float HDRPLightIntensity = 100000f;
+    private const float URPLightIntensity = 0.65f;
+
     private void Start()
     {
-        if (GraphicsSettings.defaultRenderPipeline == null)
-        {
-            return;
-        }
-
-#if USE_HDRP_PACKAGE
         var directionalLight = GetComponent<Light>();
-        directionalLight.enabled = GraphicsSettings.defaultRenderPipeline.GetType() == typeof(UnityEngine.Rendering.HighDefinition.HDRenderPipelineAsset);
-#endif
+        var pipelineTypeName = GraphicsSettings.defaultRenderPipeline?.GetType().FullName;
+        var isHDRP = pipelineTypeName == HDRPPipelineTypeName;
+
+        directionalLight.intensity = isHDRP ? HDRPLightIntensity : URPLightIntensity;
+        directionalLight.enabled = isHDRP;
     }
 }
