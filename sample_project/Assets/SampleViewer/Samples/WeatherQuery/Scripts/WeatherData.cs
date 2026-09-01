@@ -40,14 +40,14 @@ public class WeatherData : MonoBehaviour
 
     private void Awake()
     {
-        ArcGISMap = FindFirstObjectByType<ArcGISMapComponent>();
-        ArcGISCamera = FindFirstObjectByType<ArcGISCameraComponent>();
+        ArcGISMap = FindAnyObjectByType<ArcGISMapComponent>();
+        ArcGISCamera = FindAnyObjectByType<ArcGISCameraComponent>();
         cameraLocationComponent = ArcGISCamera.gameObject.GetComponent<ArcGISLocationComponent>();
         locationComponent = GetComponent<ArcGISLocationComponent>();
-        directionalLight = FindFirstObjectByType<Light>();
-        volume = FindFirstObjectByType<Volume>();
+        directionalLight = FindAnyObjectByType<Light>();
+        volume = FindAnyObjectByType<Volume>();
         volumeProfile = volume.profile;
-        weatherQuery = FindFirstObjectByType<WeatherQuery>();
+        weatherQuery = FindAnyObjectByType<WeatherQuery>();
         lightningAnim = directionalLight.GetComponent<Animation>();
         lightningAudio = lightning.GetComponent<AudioSource>();
     }

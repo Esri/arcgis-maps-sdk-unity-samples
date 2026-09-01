@@ -17,22 +17,26 @@ public class BuildingToggleItem : MonoBehaviour
     private Button toggle;
 
     [HideInInspector] public ulong BuildingNumber;
+    [System.NonSerialized] public ArcGISImmutableCollection<ArcGISIdentifyLayerResult> IdentifyLayerResults;
     public Image toggleImage;
     public Sprite isOn;
     public Sprite isOff;
-    public ArcGISImmutableCollection<ArcGISIdentifyLayerResult> IdentifyLayerResults;
-
+    
     private void Awake()
     {
         toggle = GetComponentInChildren<Button>();   
-        identify = FindFirstObjectByType<Identify>();
+        identify = FindAnyObjectByType<Identify>();
     }
 
     void Start()
     {
         toggle.onClick.AddListener(delegate
         {
+#if UNITY_6000_5_OR_NEWER
+            foreach (var item in FindObjectsByType<BuildingToggleItem>())
+#else
             foreach (var item in FindObjectsByType<BuildingToggleItem>(FindObjectsSortMode.None))
+#endif
             {
                 item.toggleImage.sprite = isOff;
             }

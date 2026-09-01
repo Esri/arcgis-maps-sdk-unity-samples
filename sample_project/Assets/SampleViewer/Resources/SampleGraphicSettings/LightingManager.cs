@@ -20,8 +20,8 @@ public class LightingManager : MonoBehaviour
 #if USE_HDRP_PACKAGE
             var HDRPLightingObject = Instantiate(HDRPLighting, transform);
             var Sky = HDRPLightingObject.GetComponentInChildren<ArcGISSkyRepositionComponent>();
-            Sky.CameraComponent = FindFirstObjectByType<ArcGISCameraComponent>();
-            Sky.arcGISMapComponent = FindFirstObjectByType<ArcGISMapComponent>();
+            Sky.CameraComponent = FindAnyObjectByType<ArcGISCameraComponent>();
+            Sky.arcGISMapComponent = FindAnyObjectByType<ArcGISMapComponent>();
             HDRPLightingObject.SetActive(true);
 #endif
         }

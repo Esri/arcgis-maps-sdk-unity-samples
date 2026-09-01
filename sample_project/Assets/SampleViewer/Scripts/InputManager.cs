@@ -13,10 +13,10 @@ public class InputManager : MonoBehaviour
 {
     public UnityEvent InputTriggered;
     public UnityEvent InputEnded;
-    public TouchControls touchControls;
 
     private InputActions inputActions;
     private bool isLeftShiftPressed;
+    private TouchControls touchControls;
 
     private void Awake()
     {
@@ -76,13 +76,13 @@ public class InputManager : MonoBehaviour
     private void OnLeftShiftStarted(InputAction.CallbackContext context)
     {
         isLeftShiftPressed = true;
-        FindFirstObjectByType<ArcGISCameraControllerComponent>().enabled = false;
+        FindAnyObjectByType<ArcGISCameraControllerComponent>().enabled = false;
     }
 
     private void OnLeftShiftCanceled(InputAction.CallbackContext context)
     {
         isLeftShiftPressed = false;
-        FindFirstObjectByType<ArcGISCameraControllerComponent>().enabled = true;
+        FindAnyObjectByType<ArcGISCameraControllerComponent>().enabled = true;
     }
 
     private void OnTouchStarted(InputAction.CallbackContext obj)

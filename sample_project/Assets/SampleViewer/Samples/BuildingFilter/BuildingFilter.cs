@@ -19,6 +19,8 @@ using UnityEngine.UI;
 
 public class BuildingFilter : MonoBehaviour
 {
+    [System.NonSerialized] public List<Discipline> DisciplineCategoryData = new List<Discipline>();
+
     [SerializeField] private Button addNewBSL;
     [SerializeField] private ArcGISLocationComponent cameraLocation;
     [SerializeField] private Toggle disciplineToggle;
@@ -46,7 +48,6 @@ public class BuildingFilter : MonoBehaviour
     private int levelNumber;
     private int phaseNumber;
     private BuildingStatistics buildingStatistics = new BuildingStatistics();
-    public List<Discipline> DisciplineCategoryData = new List<Discipline>();
     private bool initialized = false;
 
     // Start is called before the first frame update
@@ -63,7 +64,7 @@ public class BuildingFilter : MonoBehaviour
             {
                 disciplineToggle.isOn = active;
                 interfaceObject.SetActive(active);
-                contentBoxes = FindFirstObjectByType<ContentBoxes>();
+                contentBoxes = FindAnyObjectByType<ContentBoxes>();
                 GetStatistics();
                 AddDisciplineCategoryData();
                 if (disciplineToggle.isOn)
@@ -181,7 +182,7 @@ public class BuildingFilter : MonoBehaviour
 
     private void InitializeBuildingSceneLayer()
     {
-        arcGISMapComponent = FindFirstObjectByType<ArcGISMapComponent>();
+        arcGISMapComponent = FindAnyObjectByType<ArcGISMapComponent>();
         if (arcGISMapComponent == null)
         {
             return;

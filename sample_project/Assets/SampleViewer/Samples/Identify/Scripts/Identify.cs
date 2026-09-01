@@ -13,6 +13,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -284,7 +285,11 @@ public class Identify : MonoBehaviour
                 buildingsView.SetActive(true);
                 results.SetActive(false);
 
+#if UNITY_6000_5_OR_NEWER
+                foreach (var item in FindObjectsByType<BuildingToggleItem>())
+#else
                 foreach (var item in FindObjectsByType<BuildingToggleItem>(FindObjectsSortMode.None))
+#endif
                 {
                     if (item.BuildingNumber == SelectedResult)
                     {
@@ -323,7 +328,11 @@ public class Identify : MonoBehaviour
 
             if (buildingsView.activeInHierarchy)
             {
+#if UNITY_6000_5_OR_NEWER
+                foreach (var item in FindObjectsByType<BuildingToggleItem>())
+#else
                 foreach (var item in FindObjectsByType<BuildingToggleItem>(FindObjectsSortMode.None))
+#endif
                 {
                     if (item.BuildingNumber == SelectedResult)
                     {
@@ -356,7 +365,11 @@ public class Identify : MonoBehaviour
 
             if (buildingsView.activeInHierarchy)
             {
+#if UNITY_6000_5_OR_NEWER
+                foreach (var item in FindObjectsByType<BuildingToggleItem>())
+#else
                 foreach (var item in FindObjectsByType<BuildingToggleItem>(FindObjectsSortMode.None))
+#endif
                 {
                     if (item.BuildingNumber == SelectedResult)
                     {

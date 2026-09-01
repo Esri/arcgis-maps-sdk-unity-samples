@@ -42,7 +42,7 @@ public class FeatureLayerInputManager : MonoBehaviour
 
     private void Awake()
     {
-        inputManager = FindFirstObjectByType<InputManager>();
+        inputManager = FindAnyObjectByType<InputManager>();
     }
 
     public void ClearAdditionalMaterial(GameObject feature)
@@ -98,7 +98,7 @@ public class FeatureLayerInputManager : MonoBehaviour
                 ClearAdditionalMaterial(FeatureData.gameObject);
             }
 
-            FindFirstObjectByType<FeatureLayerUIManager>().DropDownButton.isOn = false;
+            FindAnyObjectByType<FeatureLayerUIManager>().DropDownButton.isOn = false;
             EmptyPropertiesDropdown();
             FeatureData = hit.collider.gameObject.GetComponent<FeatureData>();
 
@@ -107,9 +107,9 @@ public class FeatureLayerInputManager : MonoBehaviour
                 return;
             }
 
-            if (!FindFirstObjectByType<FeatureLayer>().GetAllOutfields)
+            if (!FindAnyObjectByType<FeatureLayer>().GetAllOutfields)
             {
-                var featureLayer = FindFirstObjectByType<FeatureLayer>();
+                var featureLayer = FindAnyObjectByType<FeatureLayer>();
                 featureLayer.RefreshProperties(FeatureData.gameObject);
             }
 

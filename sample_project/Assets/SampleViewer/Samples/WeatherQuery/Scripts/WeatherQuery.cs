@@ -167,7 +167,7 @@ public class WeatherQuery : MonoBehaviour
     {
         string APIToken;
         string query;
-        ArcGISMapComponent mapComponent = GameObject.FindFirstObjectByType<ArcGISMapComponent>();
+        ArcGISMapComponent mapComponent = GameObject.FindAnyObjectByType<ArcGISMapComponent>();
 
         if (mapComponent.APIKey != "")
         {

@@ -155,7 +155,7 @@ public sealed class PointCloudLayerDataLoader : MonoBehaviour
 		SetControlsInteractable(false);
 		ShowStatus("Loading point scene layer...", loadingColor);
 
-		arcGISMapComponent = FindFirstObjectByType<ArcGISMapComponent>();
+		arcGISMapComponent = FindAnyObjectByType<ArcGISMapComponent>();
 		if (!arcGISMapComponent || arcGISMapComponent.Map == null)
 		{
 			ShowFailure();

@@ -42,7 +42,7 @@ public class Measure : MonoBehaviour
 
     private void Awake()
     {
-        inputManager = FindFirstObjectByType<InputManager>();
+        inputManager = FindAnyObjectByType<InputManager>();
     }
 
     public void StartMeasure()
@@ -91,7 +91,7 @@ public class Measure : MonoBehaviour
 
     private void Start()
     {
-        arcGISMapComponent = FindFirstObjectByType<ArcGISMapComponent>();
+        arcGISMapComponent = FindAnyObjectByType<ArcGISMapComponent>();
 
         lineRenderer = Line.GetComponent<LineRenderer>();
         lineRenderer.widthMultiplier = LineWidth;

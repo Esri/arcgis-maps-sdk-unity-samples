@@ -51,7 +51,7 @@ public class FeatureLayerUIManager : MonoBehaviour
         MinInputField.text = featureLayer.StartValue.ToString();
         getAllToggle.isOn = featureLayer.GetAllFeatures;
         propertiesView.SetActive(false);
-        var inputManager = FindFirstObjectByType<FeatureLayerInputManager>();
+        var inputManager = FindAnyObjectByType<FeatureLayerInputManager>();
 
         DropDownButton.onValueChanged.AddListener(delegate (bool value)
         {

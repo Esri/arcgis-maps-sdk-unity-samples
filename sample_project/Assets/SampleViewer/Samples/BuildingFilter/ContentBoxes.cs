@@ -22,7 +22,7 @@ public class ContentBoxes : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        filter = FindFirstObjectByType<BuildingFilter>();
+        filter = FindAnyObjectByType<BuildingFilter>();
         AddDisciplines(filter.DisciplineCategoryData);
     }
 

@@ -26,7 +26,7 @@ public class LocationMarker : MonoBehaviour
 
     private void Awake()
     {
-        cameraController = FindFirstObjectByType<ArcGISCameraControllerComponent>();
+        cameraController = FindAnyObjectByType<ArcGISCameraControllerComponent>();
         cameraLocationComponent = cameraController.GetComponent<ArcGISLocationComponent>();
         locationComponent = GetComponent<ArcGISLocationComponent>();
         mapComponent = GetComponentInParent<ArcGISMapComponent>();
