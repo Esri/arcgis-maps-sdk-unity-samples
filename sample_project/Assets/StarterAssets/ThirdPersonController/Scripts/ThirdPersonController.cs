@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UIElements;
+using Cursor = UnityEngine.Cursor;
 #if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
@@ -141,6 +143,16 @@ namespace StarterAssets
         private void Start()
         {
             HideMouseCursor();
+
+            foreach (var document in FindObjectsByType<UIDocument>(FindObjectsSortMode.None))
+            {
+                // Let scene clicks pass through the full-screen container, but keep its labels pickable.
+                var attribution = document.rootVisualElement?.Q("attributionDisplay");
+                if (attribution != null)
+                {
+                    attribution.pickingMode = PickingMode.Ignore;
+                }
+            }
 
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
 
