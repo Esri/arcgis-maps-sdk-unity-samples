@@ -64,9 +64,13 @@ public class BuildingFilter : MonoBehaviour
             {
                 disciplineToggle.isOn = active;
                 interfaceObject.SetActive(active);
-                contentBoxes = FindAnyObjectByType<ContentBoxes>();
-                GetStatistics();
-                AddDisciplineCategoryData();
+                if (active && contentBoxes == null)
+                {
+                    // Set up the first view without resetting sublayer visibility on reopen.
+                    contentBoxes = interfaceObject.GetComponentInChildren<ContentBoxes>();
+                    GetStatistics();
+                    AddDisciplineCategoryData();
+                }
                 if (disciplineToggle.isOn)
                 {
                     disciplineToggle.GetComponent<Image>().sprite = visibleSprite;
