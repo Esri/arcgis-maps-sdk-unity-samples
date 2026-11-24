@@ -10,6 +10,7 @@ Explore from the perspective of a third-person camera following a controllable c
 2. Click on **ArcGISMap** 
 3. Set your API key under the **Authentication** section.
 4. Click play and move the character by using the WASD keys. Jump with the space key.
+5. Press **G** to release the mouse cursor. Click the scene away from the UI to resume camera control. Clicking an on-screen control or the attribution labels keeps the cursor available.
 
 ## How it works
 
