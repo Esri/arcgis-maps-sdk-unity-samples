@@ -7,8 +7,6 @@
 using Esri.ArcGISMapsSDK.Samples.Components;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -26,6 +24,7 @@ public class FeatureLayerInputManager : MonoBehaviour
     private bool isRunning;
     private List<GameObject> items = new List<GameObject>();
     private FeatureLayerUIManager uiManager;
+    private GameObject selectionOutline;
 
     private IEnumerator AddItemsToScrollView()
     {
@@ -45,16 +44,19 @@ public class FeatureLayerInputManager : MonoBehaviour
         inputManager = FindAnyObjectByType<InputManager>();
     }
 
-    public void ClearAdditionalMaterial(GameObject feature)
+    private void OnDisable()
     {
-        var renderer = feature.GetComponentInChildren<Renderer>();
+        ClearSelectionOutline();
+    }
 
-        if (renderer == null)
+    private void ClearSelectionOutline()
+    {
+        if (selectionOutline)
         {
-            return;
+            selectionOutline.SetActive(false);
+            Destroy(selectionOutline);
+            selectionOutline = null;
         }
-
-        renderer.materials = renderer.materials.SkipLast(1).ToArray();
     }
 
     public void EmptyPropertiesDropdown()
@@ -93,10 +95,7 @@ public class FeatureLayerInputManager : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit))
         {
-            if (FeatureData)
-            {
-                ClearAdditionalMaterial(FeatureData.gameObject);
-            }
+            ClearSelectionOutline();
 
             FindAnyObjectByType<FeatureLayerUIManager>().DropDownButton.isOn = false;
             EmptyPropertiesDropdown();
@@ -121,23 +120,39 @@ public class FeatureLayerInputManager : MonoBehaviour
             }
 
             StartCoroutine("AddItemsToScrollView");
-            SetAdditionalMaterial(outlineMat, hit.collider);
+            ShowSelectionOutline(FeatureData);
             propertiesView.SetActive(true);
         }
     }
 
-    private void SetAdditionalMaterial(Material outLine, Collider collider)
+    private void ShowSelectionOutline(FeatureData feature)
     {
-        var renderer = collider.GetComponentInChildren<Renderer>();
-        if (renderer == null)
+        var pin = feature.GetComponentInChildren<MeshFilter>();
+        if (!pin || !pin.sharedMesh || !outlineMat)
         {
+            Debug.LogWarning("Cannot highlight the feature pin without a mesh and outline material.", feature);
             return;
         }
 
-        Material[] materialsArray = new Material[renderer.materials.Length + 1];
-        renderer.materials.CopyTo(materialsArray, 0);
-        materialsArray[materialsArray.Length - 1] = outLine;
-        renderer.materials = materialsArray;
+        var mesh = pin.sharedMesh;
+        const float outlineScale = 1.05f;
+        selectionOutline = new GameObject("Selection Outline");
+        selectionOutline.layer = pin.gameObject.layer;
+        selectionOutline.transform.SetParent(pin.transform, false);
+        selectionOutline.transform.localScale = Vector3.one * outlineScale;
+        selectionOutline.transform.localPosition = mesh.bounds.center * (1f - outlineScale);
+        selectionOutline.AddComponent<MeshFilter>().sharedMesh = mesh;
+
+        // A separate renderer draws the outline on every submesh without replacing the pin materials.
+        var materials = new Material[mesh.subMeshCount];
+        for (int i = 0; i < materials.Length; i++)
+        {
+            materials[i] = outlineMat;
+        }
+
+        var renderer = selectionOutline.AddComponent<MeshRenderer>();
+        renderer.sharedMaterials = materials;
+        renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
     }
 
     private void SetScrollViewItems(GameObject item)
